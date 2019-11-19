@@ -1,6 +1,10 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.9)
 
 project(JukeBox)
+
+# needed for Doxygen targets
+cmake_policy(SET CMP0054 NEW)
+
 
 #
 # Sourcen for application and tests
@@ -46,3 +50,14 @@ target_link_libraries(${TEST_TARGET} ${GTEST_BOTH_LIBRARIES})
 
 # add ctest target, so tests can be executed using `make test`
 add_test(${TEST_TARGET} ${TEST_TARGET})
+
+
+#
+# Add Doxygen documentation target
+#
+find_package(Doxygen REQUIRED)
+
+# TODO: set required doxygen configurations
+set(DOXYGEN_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/doc/)
+set(DOXYGEN_FILE_PATTERNS *.cpp *.h)
+doxygen_add_docs(doc ${SOURCES} ${TEST_CASE_SOURCES})

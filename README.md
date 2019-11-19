@@ -15,3 +15,4 @@ TBD
 5. The tests can be executed using:
     - `./testJukeBox`: invokes the program directly
     - `make test`: using the CTest integration of CMake
+6. To create the documentation, use `make doc`
