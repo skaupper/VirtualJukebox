@@ -4,7 +4,9 @@ TODO
 
 ## Dependencies
 
-TBD
+- CMake (minimum version 3.9)
+- Google Test
+- Doxygen
 
 ## Installation
 
