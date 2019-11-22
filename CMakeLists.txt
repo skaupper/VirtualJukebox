@@ -17,6 +17,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(ENTRYPOINT_SOURCE    src/main.cpp)
 # All source file (excluding main) for the application
 set(APP_SOURCES          )
+set(APP_HEADER           src/NetworkListener.h)
 # All source files containing test cases
 set(TEST_CASE_SOURCES    test/helloworld.cpp)
 
@@ -61,6 +62,8 @@ add_test(${TEST_TARGET} ${TEST_TARGET})
 find_package(Doxygen REQUIRED)
 
 # TODO: set required doxygen configurations
-set(DOXYGEN_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/doc/)
+set(DOXYGEN_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/docs/)
+set(DOXYGEN_HTML_OUTPUT .)
+set(DOXYGEN_RECURSIVE YES)
 set(DOXYGEN_FILE_PATTERNS *.cpp *.h)
-doxygen_add_docs(doc ${SOURCES} ${TEST_CASE_SOURCES})
+doxygen_add_docs(doc ${ENTRYPOINT_SOURCE} ${APP_SOURCES} ${APP_HEADER} ${TEST_CASE_SOURCES})
