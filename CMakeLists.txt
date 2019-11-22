@@ -5,9 +5,6 @@ project(VirtualJukebox)
 # needed for Doxygen targets
 cmake_policy(SET CMP0054 NEW)
 
-# set C++ version
-set(CMAKE_CXX_STANDARD 17)
-
 
 #
 # Sourcen for application and tests
@@ -17,7 +14,6 @@ set(CMAKE_CXX_STANDARD 17)
 set(ENTRYPOINT_SOURCE   src/main.cpp)
 # All source file (excluding main) for the application
 set(APP_SOURCES         )
-set(APP_HEADER          src/NetworkListener.h)
 # All source files containing test cases
 set(TEST_CASE_SOURCES   test/helloworld.cpp)
 
@@ -28,8 +24,7 @@ set(TEST_SOURCES ${APP_SOURCES} ${TEST_CASE_SOURCES})
 #
 # Documentation sources
 #
-set(DOC_SOURCES         docs/src/main.md
-                        docs/src/RESTInterface.md)
+set(DOC_SOURCES         docs/src/main.md)
 
 
 
