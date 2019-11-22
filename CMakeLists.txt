@@ -37,6 +37,7 @@ set(APP_SOURCES         src/JukeBox.cpp
                         src/Queue.cpp
                         src/LoggingHandler.cpp
                         src/ConfigHandler.cpp)
+set(APP_HEADER          )
 # All source files containing test cases
 set(TEST_CASE_SOURCES   test/helloworld.cpp)
 
