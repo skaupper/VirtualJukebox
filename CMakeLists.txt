@@ -5,6 +5,9 @@ project(JukeBox)
 # needed for Doxygen targets
 cmake_policy(SET CMP0054 NEW)
 
+# set C++ version
+set(CMAKE_CXX_STANDARD 17)
+
 
 #
 # Sourcen for application and tests
