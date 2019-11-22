@@ -47,7 +47,8 @@ set(TEST_SOURCES ${APP_SOURCES} ${TEST_CASE_SOURCES})
 
 # Documentation
 #-------------------------------------------------------------------------------
-set(DOC_SOURCES         docs/src/main.md)
+set(DOC_SOURCES         docs/src/main.md
+                        docs/src/RESTInterface.md)
 
 # TODO: add compile time dependencies here
 
