@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.9)
 
-project(JukeBox)
+project(VirtualJukebox)
 
 # needed for Doxygen targets
 cmake_policy(SET CMP0054 NEW)
@@ -14,16 +14,23 @@ set(CMAKE_CXX_STANDARD 17)
 #
 
 # Source file containing the main entrypoint
-set(ENTRYPOINT_SOURCE    src/main.cpp)
+set(ENTRYPOINT_SOURCE   src/main.cpp)
 # All source file (excluding main) for the application
-set(APP_SOURCES          )
-set(APP_HEADER           src/NetworkListener.h)
+set(APP_SOURCES         )
+set(APP_HEADER          src/NetworkListener.h)
 # All source files containing test cases
-set(TEST_CASE_SOURCES    test/helloworld.cpp)
+set(TEST_CASE_SOURCES   test/helloworld.cpp)
 
 # Sources separated in application and test sources
 set(SOURCES      ${ENTRYPOINT_SOURCE} ${APP_SOURCES})
 set(TEST_SOURCES ${APP_SOURCES} ${TEST_CASE_SOURCES})
+
+#
+# Documentation sources
+#
+set(DOC_SOURCES         docs/src/main.md
+                        docs/src/RESTInterface.md)
+
 
 
 # TODO: add compile time dependencies here
@@ -63,7 +70,4 @@ find_package(Doxygen REQUIRED)
 
 # TODO: set required doxygen configurations
 set(DOXYGEN_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/docs/)
-set(DOXYGEN_HTML_OUTPUT .)
-set(DOXYGEN_RECURSIVE YES)
-set(DOXYGEN_FILE_PATTERNS *.cpp *.h)
-doxygen_add_docs(doc ${ENTRYPOINT_SOURCE} ${APP_SOURCES} ${APP_HEADER} ${TEST_CASE_SOURCES})
+doxygen_add_docs(doc ${DOC_SOURCES} ${ENTRYPOINT_SOURCE} ${APP_SOURCES} ${APP_HEADER} ${TEST_CASE_SOURCES})
