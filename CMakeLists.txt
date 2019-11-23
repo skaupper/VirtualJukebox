@@ -52,7 +52,7 @@ include_directories(${GTEST_INCLUDE_DIRS})
 
 # add test executable and link to gtest libs
 add_executable(${TEST_TARGET} ${TEST_SOURCES})
-target_link_libraries(${TEST_TARGET} ${GTEST_BOTH_LIBRARIES})
+target_link_libraries(${TEST_TARGET} ${GTEST_BOTH_LIBRARIES} pthread)
 
 # add ctest target, so tests can be executed using `make test`
 add_test(${TEST_TARGET} ${TEST_TARGET})
