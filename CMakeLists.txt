@@ -5,6 +5,10 @@ project(VirtualJukebox)
 # needed for Doxygen targets
 cmake_policy(SET CMP0054 NEW)
 
+# Build debug version by default, unless specified otherwise
+IF(NOT CMAKE_BUILD_TYPE)
+   SET(CMAKE_BUILD_TYPE Debug)
+ENDIF()
 
 #
 # Sourcen for application and tests
