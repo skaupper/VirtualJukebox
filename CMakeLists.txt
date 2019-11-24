@@ -5,6 +5,8 @@ project(VirtualJukebox)
 # needed for Doxygen targets
 cmake_policy(SET CMP0054 NEW)
 
+# Include other CMake sources
+include(cmake/ClangFormat.cmake)
 
 #
 # Sourcen for application and tests
