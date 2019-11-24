@@ -19,7 +19,7 @@ endforeach()
 add_custom_target(
   clang-format
   COMMAND clang-format
-  -style=Google
+  -style=file
   -i
   ${CLANG_FORMAT_SOURCES_ABS}
 )
