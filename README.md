@@ -7,6 +7,7 @@ TODO
 - CMake (minimum version 3.9)
 - Google Test
 - Doxygen
+- clang-format-6.0
 
 ## Installation
 
