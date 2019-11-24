@@ -1,12 +1,12 @@
 find_program(
   CLANG_FORMAT_EXE
-  NAMES "clang-format"
-  DOC "Path to clang-format executable"
+  NAMES "clang-format-6.0"
+  DOC "Path to clang-format-6.0 executable"
   )
 if(NOT CLANG_FORMAT_EXE)
-  message(FATAL_ERROR "clang-format not found.")
+  message(FATAL_ERROR "clang-format-6.0 not found.")
 else()
-  message(STATUS "clang-format found: ${CLANG_FORMAT_EXE}")
+  message(STATUS "clang-format-6.0 found: ${CLANG_FORMAT_EXE}")
 endif()
 
 # Generate absolute paths
@@ -18,7 +18,7 @@ endforeach()
 
 add_custom_target(
   clang-format
-  COMMAND clang-format
+  COMMAND ${CLANG_FORMAT_EXE}
   -style=file
   -i
   ${CLANG_FORMAT_SOURCES_ABS}
