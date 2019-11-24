@@ -5,8 +5,6 @@ project(VirtualJukebox)
 # needed for Doxygen targets
 cmake_policy(SET CMP0054 NEW)
 
-# Include other CMake sources
-include(cmake/ClangFormat.cmake)
 
 #
 # Sourcen for application and tests
@@ -22,6 +20,8 @@ set(TEST_CASE_SOURCES   test/helloworld.cpp)
 # Sources separated in application and test sources
 set(SOURCES      ${ENTRYPOINT_SOURCE} ${APP_SOURCES})
 set(TEST_SOURCES ${APP_SOURCES} ${TEST_CASE_SOURCES})
+
+include(cmake/ClangFormat.cmake)
 
 #
 # Documentation sources
