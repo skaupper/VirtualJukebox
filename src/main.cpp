@@ -6,7 +6,7 @@
 
 #include <iostream>
 
-#include "jukebox.h"
+#include "JukeBox.h"
 
 int main() {
   JukeBox jukebox;

@@ -5,8 +5,6 @@ find_program(
   )
 if(NOT CLANG_FORMAT_EXE)
   message(FATAL_ERROR "clang-format-6.0 not found.")
-else()
-  message(STATUS "clang-format-6.0 found: ${CLANG_FORMAT_EXE}")
 endif()
 
 # Generate absolute paths

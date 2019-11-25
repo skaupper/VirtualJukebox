@@ -4,7 +4,7 @@
 // Description : Class JukeBox implementation
 //------------------------------------------------------------------------------
 
-#include "jukebox.h"
+#include "JukeBox.h"
 
 using namespace std;
 
