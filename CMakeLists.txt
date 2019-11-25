@@ -17,6 +17,12 @@ set(CMAKE_CXX_STANDARD 17)
 set(CXX_STANDARD_REQUIRED ON)
 
 ################################################################################
+# Include other CMake files
+################################################################################
+
+include(cmake/ClangFormat.cmake)
+
+################################################################################
 # Source files
 ################################################################################
 
@@ -36,8 +42,6 @@ set(TEST_CASE_SOURCES   test/helloworld.cpp)
 set(SOURCES      ${ENTRYPOINT_SOURCE} ${APP_SOURCES})
 set(TEST_SOURCES ${APP_SOURCES} ${TEST_CASE_SOURCES})
 
-include(cmake/ClangFormat.cmake)
-
 # Documentation
 #-------------------------------------------------------------------------------
 set(DOC_SOURCES         docs/src/main.md)
@@ -45,10 +49,10 @@ set(DOC_SOURCES         docs/src/main.md)
 # TODO: add compile time dependencies here
 
 ################################################################################
-# Executables
+# Targets
 ################################################################################
 
-# Main program
+# Main program executable
 #-------------------------------------------------------------------------------
 add_executable(${PROJECT_NAME} ${SOURCES})
 
@@ -70,6 +74,10 @@ target_link_libraries(${TEST_TARGET} ${GTEST_BOTH_LIBRARIES} pthread)
 # Add test target, so tests can be executed using `make test`
 add_test(${TEST_TARGET} ${TEST_TARGET})
 
+# Other
+#-------------------------------------------------------------------------------
+
+clang_format_add_target()
 
 ################################################################################
 # Doxygen
