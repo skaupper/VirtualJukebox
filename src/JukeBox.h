@@ -1,8 +1,8 @@
-//------------------------------------------------------------------------------
-// File        : jukebox.h
-// Author      : Michael Wurm <wurm.michael95@gmail.com>
-// Description : Class JukeBox definition
-//------------------------------------------------------------------------------
+/** ----------------------------------------------------------------------------
+ * @file    JukeBox.h
+ * @author  Michael Wurm <wurm.michael95@gmail.com>
+ * @brief   Class JukeBox definition
+ * ---------------------------------------------------------------------------*/
 
 #ifndef _JUKEBOX_H_
 #define _JUKEBOX_H_

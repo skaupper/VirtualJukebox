@@ -1,8 +1,8 @@
-//------------------------------------------------------------------------------
-// File        : main.cpp
-// Author      : Team Server
-// Description : Main program for project "Virtual JukeBox"
-//-----------------------------------------------------------------
+/** ----------------------------------------------------------------------------
+ * @file    main.cpp
+ * @author  Team Server
+ * @brief   Main program for project "Virtual JukeBox"
+ * ---------------------------------------------------------------------------*/
 
 #include <iostream>
 

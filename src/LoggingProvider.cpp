@@ -1,8 +1,8 @@
-//------------------------------------------------------------------------------
-// File        : LoggingProvider.h
-// Author      : Michael Wurm <wurm.michael95@gmail.com>
-// Description : Class LoggingProvider implementation
-//------------------------------------------------------------------------------
+/** ----------------------------------------------------------------------------
+ * @file    LoggingProvider.cpp
+ * @author  Michael Wurm <wurm.michael95@gmail.com>
+ * @brief   Class LoggingProvider implementation
+ * ---------------------------------------------------------------------------*/
 
 #include "LoggingProvider.h"
 

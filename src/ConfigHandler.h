@@ -1,8 +1,8 @@
-//------------------------------------------------------------------------------
-// File        : ConfigHandler.h
-// Author      : Michael Wurm <wurm.michael95@gmail.com>
-// Description : Class ConfigHandler definition
-//------------------------------------------------------------------------------
+/** ----------------------------------------------------------------------------
+ * @file    ConfigHandler.h
+ * @author  Michael Wurm <wurm.michael95@gmail.com>
+ * @brief   Class ConfigHandler definition
+ * ---------------------------------------------------------------------------*/
 
 #ifndef _CONFIGHANDLER_H_
 #define _CONFIGHANDLER_H_

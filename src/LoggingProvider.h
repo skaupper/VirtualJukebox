@@ -1,8 +1,8 @@
-//------------------------------------------------------------------------------
-// File        : LoggingProvider.h
-// Author      : Michael Wurm <wurm.michael95@gmail.com>
-// Description : Class LoggingProvider definition
-//------------------------------------------------------------------------------
+/** ----------------------------------------------------------------------------
+ * @file    LoggingProvider.h
+ * @author  Michael Wurm <wurm.michael95@gmail.com>
+ * @brief   Class LoggingProvider definition
+ * ---------------------------------------------------------------------------*/
 
 #ifndef _LOGGINGPROVIDER_H_
 #define _LOGGINGPROVIDER_H_

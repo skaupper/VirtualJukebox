@@ -1,8 +1,8 @@
-//------------------------------------------------------------------------------
-// File        : ConfigHandler.h
-// Author      : Michael Wurm <wurm.michael95@gmail.com>
-// Description : Class ConfigHandler implementation
-//------------------------------------------------------------------------------
+/** ----------------------------------------------------------------------------
+ * @file    ConfigHandler.cpp
+ * @author  Michael Wurm <wurm.michael95@gmail.com>
+ * @brief   Class ConfigHandler implementation
+ * ---------------------------------------------------------------------------*/
 
 #include "ConfigHandler.h"
 

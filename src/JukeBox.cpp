@@ -1,8 +1,8 @@
-//------------------------------------------------------------------------------
-// File        : jukebox.cpp
-// Author      : Michael Wurm <wurm.michael95@gmail.com>
-// Description : Class JukeBox implementation
-//------------------------------------------------------------------------------
+/** ----------------------------------------------------------------------------
+ * @file    JukeBox.cpp
+ * @author  Michael Wurm <wurm.michael95@gmail.com>
+ * @brief   Class JukeBox implementation
+ * ---------------------------------------------------------------------------*/
 
 #include "JukeBox.h"
 
