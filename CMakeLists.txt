@@ -54,7 +54,7 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 
 # Test program, running unit tests
 #-------------------------------------------------------------------------------
-set(TEST_TARGET test ${PROJECT_NAME})
+set(TEST_TARGET test${PROJECT_NAME})
 
 # Enable testing and look for gtest installation
 enable_testing()
