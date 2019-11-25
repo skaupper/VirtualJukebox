@@ -20,20 +20,20 @@
 //#include "Track.h"
 //#include "User.h"
 
-typedef std::string TError;
+typedef std::string Error;
 
 class JukeBox {
  public:
-  std::variant<bool, TError> start();
+  std::variant<bool, Error> start();
 
  private:
-  std::variant<std::string, TError> generateSession();
-  std::variant<bool, TError> authenticateAdmin(std::string password);
-  // std::variant<std::vector<Track>, TError> queryMusic(std::string name);
-  // std::variant<std::vector<Track>, TError> getCurrentQueue(TQueueType queue);
-  // std::variant<bool, TError> addTrackToQueue(User user, Track track);
-  // std::variant<bool, TError> voteTrack(User user, Track track);
-  // std::variant<bool, TError> controlPlayer(User user, TPlayerAction action);
+  std::variant<std::string, Error> generateSession();
+  std::variant<bool, Error> authenticateAdmin(std::string password);
+  // std::variant<std::vector<Track>, Error> queryMusic(std::string name);
+  // std::variant<std::vector<Track>, Error> getCurrentQueue(TQueueType queue);
+  // std::variant<bool, Error> addTrackToQueue(User user, Track track);
+  // std::variant<bool, Error> voteTrack(User user, Track track);
+  // std::variant<bool, Error> controlPlayer(User user, TPlayerAction action);
 
   std::string const mAdminPassword = "admin";
 
