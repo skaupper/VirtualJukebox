@@ -27,7 +27,8 @@ set(CXX_STANDARD_REQUIRED ON)
 set(ENTRYPOINT_SOURCE   src/main.cpp)
 # All source file (excluding main) for the application
 set(APP_SOURCES         src/JukeBox.cpp
-                        src/LoggingProvider.cpp)
+                        src/LoggingProvider.cpp
+                        src/ConfigHandler.cpp)
 # All source files containing test cases
 set(TEST_CASE_SOURCES   test/helloworld.cpp)
 
