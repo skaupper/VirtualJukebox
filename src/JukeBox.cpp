@@ -8,7 +8,7 @@
 
 using namespace std;
 
-std::variant<bool, TError> JukeBox::start() {
+variant<bool, TError> JukeBox::start() {
   variant<bool, TError> ret;
 
   ret = true;

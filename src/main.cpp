@@ -10,12 +10,14 @@
 #include "JukeBox.h"
 #include "LoggingProvider.h"
 
+using namespace std;
+
 int main() {
   JukeBox jukebox;
   LoggingProvider log;
   ConfigHandler conf;
 
-  std::cout << "Hello world from JukeBox main.cpp !" << std::endl;
+  cout << "Hello world from JukeBox main.cpp !" << endl;
 
   jukebox.start();
 

@@ -10,9 +10,9 @@
 
 using namespace std;
 
-void ConfigHandler::loadConfig(std::string filename) {
+void ConfigHandler::loadConfig(string filename) {
   cout << "loadConfig() in ConfigHandler" << endl;
 }
 
-void ConfigHandler::readConfigFile(std::string filename) {
+void ConfigHandler::readConfigFile(string filename) {
 }

@@ -10,10 +10,10 @@
 
 using namespace std;
 
-void LoggingProvider::logInfo(std::string msg) {
+void LoggingProvider::logInfo(string msg) {
   cout << msg << endl;
 }
 
-void LoggingProvider::logError(std::string msg) {
+void LoggingProvider::logError(string msg) {
   cout << msg << endl;
 }
