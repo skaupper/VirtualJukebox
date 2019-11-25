@@ -11,6 +11,7 @@
 using namespace std;
 
 void ConfigHandler::loadConfig(std::string filename) {
+  cout << "loadConfig() in ConfigHandler" << endl;
 }
 
 void ConfigHandler::readConfigFile(std::string filename) {

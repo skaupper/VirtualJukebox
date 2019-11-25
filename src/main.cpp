@@ -15,6 +15,8 @@ int main() {
   LoggingProvider log;
   ConfigHandler conf;
 
+  std::cout << "Hello world from JukeBox main.cpp !" << std::endl;
+
   jukebox.start();
 
   log.logInfo("Logging the first info message!");
@@ -22,6 +24,5 @@ int main() {
 
   conf.loadConfig("./jukebox_config.ini");
 
-  std::cout << "Hello world" << std::endl;
   return 0;
 }
