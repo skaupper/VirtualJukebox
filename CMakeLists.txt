@@ -5,10 +5,15 @@ project(VirtualJukebox)
 # needed for Doxygen targets
 cmake_policy(SET CMP0054 NEW)
 
+#
+# Compiler settings
+#
 # Build debug version by default, unless specified otherwise
 IF(NOT CMAKE_BUILD_TYPE)
    SET(CMAKE_BUILD_TYPE Debug)
 ENDIF()
+
+set (CMAKE_CXX_STANDARD 17)
 
 #
 # Sourcen for application and tests
@@ -17,7 +22,7 @@ ENDIF()
 # Source file containing the main entrypoint
 set(ENTRYPOINT_SOURCE   src/main.cpp)
 # All source file (excluding main) for the application
-set(APP_SOURCES         )
+set(APP_SOURCES         src/JukeBox.cpp )
 # All source files containing test cases
 set(TEST_CASE_SOURCES   test/helloworld.cpp)
 
