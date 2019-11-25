@@ -25,6 +25,8 @@ set(TEST_CASE_SOURCES   test/helloworld.cpp)
 set(SOURCES      ${ENTRYPOINT_SOURCE} ${APP_SOURCES})
 set(TEST_SOURCES ${APP_SOURCES} ${TEST_CASE_SOURCES})
 
+include(cmake/ClangFormat.cmake)
+
 #
 # Documentation sources
 #
