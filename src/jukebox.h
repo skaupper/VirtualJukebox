@@ -11,8 +11,12 @@
 #include <variant>
 #include <vector>
 
-//#include "Memory.h"
-//#include "PlayerAction.h"
+//#include "ConfigHandler.h"
+//#include "LoggingProvider.h"
+//#include "MemoryAPI.h"
+//#include "MusicBackend.h"
+//#include "MusicPlayer.h"
+//#include "NetworkAPI.h"
 //#include "Track.h"
 //#include "User.h"
 
@@ -20,7 +24,7 @@ typedef std::string TError;
 
 class JukeBox {
  public:
-  void start();
+  std::variant<bool, TError> start();
 
  private:
   std::variant<std::string, TError> generateSession();
@@ -33,7 +37,12 @@ class JukeBox {
 
   std::string const mAdminPassword = "admin";
 
-  //  Memory mMem;
+  //  LoggingProvider mLog;
+  //  ConfigHandler mConfigHandler;
+  //  MemoryAPI mMemory;
+  //  NetworkAPI mNetwork;
+  //  MusicBackend mMusicBackend;
+  //  MusicPlayer mPlayer;
 };
 
 #endif /* _JUKEBOX_H_ */

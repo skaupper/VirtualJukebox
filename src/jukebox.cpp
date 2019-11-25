@@ -8,10 +8,17 @@
 
 using namespace std;
 
+std::variant<bool, TError> JukeBox::start() {
+  variant<bool, TError> ret;
+
+  ret = true;
+  return ret;
+}
+
 variant<string, TError> JukeBox::generateSession() {
   variant<string, TError> ret;
 
-  // ret = mMem.generateSession();
+  //  ret = mMemory.generateSession();
 
   return ret;
 }
