@@ -108,7 +108,7 @@ maximum number of tracks returned.
 {
     "session_id": "<session_id>",
     "pattern": "<some_search_pattern>",
-    "max_entries", <max_entries>
+    "max_entries": <max_entries>
 }
 ~~~~~
 
