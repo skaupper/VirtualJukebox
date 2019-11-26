@@ -13,6 +13,7 @@
 
 #include "GlobalTypes.h"
 #include "Result.h"
+#include "Track.h"
 
 //#include "ConfigHandler.h"
 //#include "LoggingHandler.h"
@@ -20,7 +21,6 @@
 //#include "MusicBackend.h"
 //#include "MusicPlayer.h"
 //#include "NetworkAPI.h"
-//#include "Track.h"
 //#include "User.h"
 //#include "Queue.h"
 
@@ -35,7 +35,7 @@ class JukeBox {
 
  private:
   TResult<TSessionID> generateSession(TPassword pw);
-  // TResult<std::vector<Track>> queryMusic(std::string searchPattern);
+  TResult<std::vector<Track>> queryMusic(std::string searchPattern);
   // TResult<Queues> getCurrentQueues();
   TResultOpt addTrackToQueue(TSessionID sid, TTrackID trkid, QueueType type);
   TResultOpt voteTrack(TSessionID sid, TTrackID trkid);

@@ -22,11 +22,11 @@ TResult<TSessionID> generateSession(TPassword pw) {
   return ret;
 }
 
-// TResult<std::vector<Track>> queryMusic(std::string searchPattern) {
-//   TResult<std::vector<Track>> ret;
-//
-//   return ret;
-// }
+TResult<std::vector<Track>> queryMusic(std::string searchPattern) {
+  TResult<std::vector<Track>> ret;
+
+  return ret;
+}
 
 // TResult<Queues> getCurrentQueues() {
 //  TResult<Queues> ret;
