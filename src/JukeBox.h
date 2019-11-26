@@ -12,6 +12,7 @@
 #include <vector>
 
 #include "GlobalTypes.h"
+#include "NetworkListener.h"
 #include "Queue.h"
 #include "Result.h"
 #include "Track.h"
