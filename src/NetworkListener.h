@@ -28,7 +28,6 @@ class NetworkListener {
  public:
   virtual void start(std::string configFilePath) = 0;
 
- private:
   virtual TResult<TSessionID> generateSession(TPassword pw) = 0;
   virtual TResult<std::vector<Track>> queryMusic(std::string searchPattern) = 0;
   virtual TResult<Queues> getCurrentQueues() = 0;

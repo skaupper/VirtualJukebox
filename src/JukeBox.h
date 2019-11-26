@@ -29,11 +29,10 @@
  */
 using Queues = Queue[2];
 
-class JukeBox {
+class JukeBox : public NetworkListener {
  public:
   void start(std::string configFilePath);
 
- private:
   TResult<TSessionID> generateSession(TPassword pw);
   TResult<std::vector<Track>> queryMusic(std::string searchPattern);
   TResult<Queues> getCurrentQueues();
@@ -41,6 +40,7 @@ class JukeBox {
   TResultOpt voteTrack(TSessionID sid, TTrackID trkid);
   TResultOpt controlPlayer(TSessionID sid, PlayerAction action);
 
+ private:
   //  LoggingHandler mLog;
   //  ConfigHandler mConfigHandler;
   //  DataStore mDataStore;
