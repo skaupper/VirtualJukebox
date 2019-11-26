@@ -4,9 +4,9 @@
  * @brief   Class LoggingHandler implementation
  * ---------------------------------------------------------------------------*/
 
-#include <iostream>
-
 #include "LoggingHandler.h"
+
+#include <iostream>
 
 using namespace std;
 
