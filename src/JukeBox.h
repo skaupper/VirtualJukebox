@@ -12,6 +12,7 @@
 #include <vector>
 
 #include "GlobalTypes.h"
+#include "Queue.h"
 #include "Result.h"
 #include "Track.h"
 
@@ -22,12 +23,11 @@
 //#include "MusicPlayer.h"
 //#include "NetworkAPI.h"
 //#include "User.h"
-//#include "Queue.h"
 
 /**
  * @brief Type for multiple queues
  */
-// using Queues = Queue[2];
+using Queues = Queue[2];
 
 class JukeBox {
  public:
@@ -36,7 +36,7 @@ class JukeBox {
  private:
   TResult<TSessionID> generateSession(TPassword pw);
   TResult<std::vector<Track>> queryMusic(std::string searchPattern);
-  // TResult<Queues> getCurrentQueues();
+  TResult<Queues> getCurrentQueues();
   TResultOpt addTrackToQueue(TSessionID sid, TTrackID trkid, QueueType type);
   TResultOpt voteTrack(TSessionID sid, TTrackID trkid);
   TResultOpt controlPlayer(TSessionID sid, PlayerAction action);

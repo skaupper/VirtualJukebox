@@ -28,11 +28,8 @@ TResult<std::vector<Track>> queryMusic(std::string searchPattern) {
   return ret;
 }
 
-// TResult<Queues> getCurrentQueues() {
-//  TResult<Queues> ret;
-//
-//  return ret;
-//}
+TResult<Queues> getCurrentQueues() {
+}
 
 TResultOpt addTrackToQueue(TSessionID sid, TTrackID trkid, QueueType type) {
   return Error(ErrorCode::AccessDedied, "this is an example error message");

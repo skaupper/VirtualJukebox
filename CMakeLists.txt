@@ -34,6 +34,7 @@ set(ENTRYPOINT_SOURCE   src/main.cpp)
 # All source file (excluding main) for the application
 set(APP_SOURCES         src/JukeBox.cpp
                         src/Track.cpp
+                        src/Queue.cpp
                         src/LoggingHandler.cpp
                         src/ConfigHandler.cpp)
 # All source files containing test cases
