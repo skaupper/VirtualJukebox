@@ -11,6 +11,8 @@
 #include <variant>
 #include <vector>
 
+#include "Result.h"
+
 //#include "ConfigHandler.h"
 //#include "LoggingProvider.h"
 //#include "MemoryAPI.h"
@@ -19,8 +21,6 @@
 //#include "NetworkAPI.h"
 //#include "Track.h"
 //#include "User.h"
-
-typedef std::string Error;
 
 class JukeBox {
  public:

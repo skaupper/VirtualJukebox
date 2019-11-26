@@ -11,15 +11,35 @@
 #include <variant>
 
 /**
+ * @brief Specifies valid error codes
+ */
+enum class ErrorCode {
+  AccessDedied,
+  SessionExpired,
+  anotherone,
+  anothertwo,
+  anotherthree
+};
+
+/**
  * @brief A customized error type
  */
 class Error {
  public:
-  virtual ~Error() {
+  Error(ErrorCode code, std::string msg) : mCode(code), mMsg(msg) {
   }
 
-  virtual int getErrorCode() = 0;
-  virtual std::string getErrorMessage() = 0;
+  ErrorCode getErrorCode() {
+    return mCode;
+  }
+
+  std::string getErrorMessage() {
+    return mMsg;
+  }
+
+ private:
+  ErrorCode mCode;
+  std::string mMsg;
 };
 
 /**
@@ -31,6 +51,6 @@ class Error {
  * the same).
  */
 template <class GOOD_TYPE>
-using TResult = std::variant<GOOD_TYPE, TError>;
+using TResult = std::variant<GOOD_TYPE, Error>;
 
 #endif /* _RESULT_H_ */
