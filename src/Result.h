@@ -11,7 +11,7 @@
 #include <variant>
 
 /**
- * @brief Specifies valid error codes
+ * @brief Valid error codes enumerator
  */
 enum class ErrorCode {
   AccessDedied,

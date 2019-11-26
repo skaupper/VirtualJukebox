@@ -11,6 +11,7 @@
 #include <variant>
 #include <vector>
 
+#include "GlobalTypes.h"
 #include "Result.h"
 
 //#include "ConfigHandler.h"
