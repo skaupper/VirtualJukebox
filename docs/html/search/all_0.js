@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['virtualjukebox_20landing_20page_0',['VirtualJukebox landing page',['../index.html',1,'']]]
+  ['confighandler_2ecpp_0',['ConfigHandler.cpp',['../ConfigHandler_8cpp.html',1,'']]]
 ];
