@@ -37,6 +37,7 @@ set(APP_SOURCES         src/JukeBox.cpp
                         src/Queue.cpp
                         src/LoggingHandler.cpp
                         src/ConfigHandler.cpp)
+set(APP_HEADER          )
 # All source files containing test cases
 set(TEST_CASE_SOURCES   test/helloworld.cpp)
 
@@ -46,7 +47,8 @@ set(TEST_SOURCES ${APP_SOURCES} ${TEST_CASE_SOURCES})
 
 # Documentation
 #-------------------------------------------------------------------------------
-set(DOC_SOURCES         docs/src/main.md)
+set(DOC_SOURCES         docs/src/main.md
+                        docs/src/RESTInterface.md)
 
 # TODO: add compile time dependencies here
 
