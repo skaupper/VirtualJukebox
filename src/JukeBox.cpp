@@ -6,56 +6,40 @@
 
 #include "JukeBox.h"
 
+#include "GlobalTypes.h"
+#include "Result.h"
+
 using namespace std;
 
 void JukeBox::start(string configFilePath) {
 }
 
-variant<string, Error> JukeBox::generateSession() {
-  variant<string, Error> ret;
+TResult<TSessionID> generateSession(TPassword pw) {
+  TResult<TSessionID> ret;
 
   //  ret = mMemory.generateSession();
 
   return ret;
 }
 
-variant<bool, Error> JukeBox::authenticateAdmin(string password) {
-  variant<bool, Error> ret;
+// TResult<std::vector<Track>> queryMusic(std::string searchPattern) {
+//   TResult<std::vector<Track>> ret;
+//
+//   return ret;
+// }
 
-  if (password == mAdminPassword)
-    ret = true;
+// TResult<Queues> getCurrentQueues() {
+//  TResult<Queues> ret;
+//
+//  return ret;
+//}
 
-  return ret;
+TResultOpt addTrackToQueue(TSessionID sid, TTrackID trkid, QueueType type) {
+  return Error(ErrorCode::AccessDedied, "this is an example error message");
 }
 
-/*
-variant<vector<Track>, Error> JukeBox::queryMusic(string name) {
-  variant<vector<Track>, Error> ret;
-
-  return ret;
+TResultOpt voteTrack(TSessionID sid, TTrackID trkid) {
 }
 
-variant<vector<Track>, Error> JukeBox::getCurrentQueue(TQueueType queue) {
-  variant<vector<Track>, Error> ret;
-
-  return ret;
+TResultOpt controlPlayer(TSessionID sid, PlayerAction action) {
 }
-
-variant<bool, Error> JukeBox::addTrackToQueue(User user, Track track) {
-  variant<bool, Error> ret;
-
-  return ret;
-}
-
-variant<bool, Error> JukeBox::voteTrack(User user, Track track) {
-  variant<bool, Error> ret;
-
-  return ret;
-}
-
-variant<bool, Error> JukeBox::controlPlayer(User user, TPlayerAction action) {
-  variant<bool, Error> ret;
-
-  return ret;
-}
-*/

@@ -5,6 +5,7 @@
  * ---------------------------------------------------------------------------*/
 
 #include <iostream>
+#include <string>
 
 #include "ConfigHandler.h"
 #include "JukeBox.h"
@@ -19,7 +20,8 @@ int main() {
 
   cout << "Hello world from JukeBox main.cpp !" << endl;
 
-  jukebox.start();
+  string configFilePath = "config_file.ini";
+  jukebox.start(configFilePath);
 
   log.logInfo("Logging the first info message!");
   log.logError("Logging the first error message!");

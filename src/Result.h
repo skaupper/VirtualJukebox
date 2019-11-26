@@ -7,6 +7,7 @@
 #ifndef _RESULT_H_
 #define _RESULT_H_
 
+#include <optional>
 #include <string>
 #include <variant>
 
@@ -46,11 +47,21 @@ class Error {
  * @typedef TResult
  * @brief Used as return type of functions.
  *
- * Abstracts away the need to specify `std::variant` for the default return type
- * and the alternative error type for the respective function (which is always
- * the same).
+ * Abstracts away the need to specify `std::variant`.
+ * By default, functions return the type specified in GOOD_TYPE.
+ * In the case of an error, the alternative type can be set.
  */
 template <class GOOD_TYPE>
 using TResult = std::variant<GOOD_TYPE, Error>;
+
+/**
+ * @typedef TResultOpt
+ * @brief Used as an optional return type of functions.
+ *
+ * Abstracts away the need to specify `std::optional`.
+ * By default, functions do not return a value.
+ * In the case of an error, the optional type can be returned.
+ */
+using TResultOpt = std::optional<Error>;
 
 #endif /* _RESULT_H_ */

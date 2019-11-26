@@ -37,9 +37,9 @@ class JukeBox {
   TResult<TSessionID> generateSession(TPassword pw);
   // TResult<std::vector<Track>> queryMusic(std::string searchPattern);
   // TResult<Queues> getCurrentQueues();
-  TResult<void> addTrackToQueue(TSessionID sid, TTrackID trkid, QueueType type);
-  TResult<void> voteTrack(TSessionID sid, TTrackID trkid);
-  TResult<void> controlPlayer(TSessionID sid, PlayerAction action);
+  TResultOpt addTrackToQueue(TSessionID sid, TTrackID trkid, QueueType type);
+  TResultOpt voteTrack(TSessionID sid, TTrackID trkid);
+  TResultOpt controlPlayer(TSessionID sid, PlayerAction action);
 
   //  LoggingHandler mLog;
   //  ConfigHandler mConfigHandler;
