@@ -1,18 +1,18 @@
 /** ----------------------------------------------------------------------------
- * @file    LoggingProvider.h
+ * @file    LoggingHandler.h
  * @author  Michael Wurm <wurm.michael95@gmail.com>
- * @brief   Class LoggingProvider definition
+ * @brief   Class LoggingHandler definition
  * ---------------------------------------------------------------------------*/
 
-#ifndef _LOGGINGPROVIDER_H_
-#define _LOGGINGPROVIDER_H_
+#ifndef _LoggingHandler_H_
+#define _LoggingHandler_H_
 
 #include <string>
 
-class LoggingProvider {
+class LoggingHandler {
  public:
   void logInfo(std::string msg);
   void logError(std::string msg);
 };
 
-#endif /* _LOGGINGPROVIDER_H_ */
+#endif /* _LoggingHandler_H_ */

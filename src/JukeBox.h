@@ -15,7 +15,7 @@
 #include "Result.h"
 
 //#include "ConfigHandler.h"
-//#include "LoggingProvider.h"
+//#include "LoggingHandler.h"
 //#include "MemoryAPI.h"
 //#include "MusicBackend.h"
 //#include "MusicPlayer.h"
@@ -41,7 +41,7 @@ class JukeBox {
   TResult<void> voteTrack(TSessionID sid, TTrackID trkid);
   TResult<void> controlPlayer(TSessionID sid, PlayerAction action);
 
-  //  LoggingProvider mLog;
+  //  LoggingHandler mLog;
   //  ConfigHandler mConfigHandler;
   //  MemoryAPI mMemory;
   //  NetworkAPI mNetwork;

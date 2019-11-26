@@ -8,13 +8,13 @@
 
 #include "ConfigHandler.h"
 #include "JukeBox.h"
-#include "LoggingProvider.h"
+#include "LoggingHandler.h"
 
 using namespace std;
 
 int main() {
   JukeBox jukebox;
-  LoggingProvider log;
+  LoggingHandler log;
   ConfigHandler conf;
 
   cout << "Hello world from JukeBox main.cpp !" << endl;

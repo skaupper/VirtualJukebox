@@ -1,19 +1,19 @@
 /** ----------------------------------------------------------------------------
- * @file    LoggingProvider.cpp
+ * @file    LoggingHandler.cpp
  * @author  Michael Wurm <wurm.michael95@gmail.com>
- * @brief   Class LoggingProvider implementation
+ * @brief   Class LoggingHandler implementation
  * ---------------------------------------------------------------------------*/
-
-#include "LoggingProvider.h"
 
 #include <iostream>
 
+#include "LoggingHandler.h"
+
 using namespace std;
 
-void LoggingProvider::logInfo(string msg) {
+void LoggingHandler::logInfo(string msg) {
   cout << msg << endl;
 }
 
-void LoggingProvider::logError(string msg) {
+void LoggingHandler::logError(string msg) {
   cout << msg << endl;
 }
