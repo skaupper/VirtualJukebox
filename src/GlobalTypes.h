@@ -34,4 +34,9 @@ using TSessionID = std::string;
  */
 using TTrackID = std::string;
 
+/**
+ * @brief Password type
+ */
+using TPassword = std::string;
+
 #endif /* _GLOBALTYPES_H_ */

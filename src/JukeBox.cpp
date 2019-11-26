@@ -8,11 +8,7 @@
 
 using namespace std;
 
-variant<bool, Error> JukeBox::start() {
-  variant<bool, Error> ret;
-
-  ret = true;
-  return ret;
+void JukeBox::start(string configFilePath) {
 }
 
 variant<string, Error> JukeBox::generateSession() {

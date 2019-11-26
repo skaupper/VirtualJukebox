@@ -22,21 +22,24 @@
 //#include "NetworkAPI.h"
 //#include "Track.h"
 //#include "User.h"
+//#include "Queue.h"
+
+/**
+ * @brief Type for multiple queues
+ */
+// using Queues = Queue[2];
 
 class JukeBox {
  public:
-  std::variant<bool, Error> start();
+  void start(std::string configFilePath);
 
  private:
-  std::variant<std::string, Error> generateSession();
-  std::variant<bool, Error> authenticateAdmin(std::string password);
-  // std::variant<std::vector<Track>, Error> queryMusic(std::string name);
-  // std::variant<std::vector<Track>, Error> getCurrentQueue(TQueueType queue);
-  // std::variant<bool, Error> addTrackToQueue(User user, Track track);
-  // std::variant<bool, Error> voteTrack(User user, Track track);
-  // std::variant<bool, Error> controlPlayer(User user, TPlayerAction action);
-
-  std::string const mAdminPassword = "admin";
+  TResult<TSessionID> generateSession(TPassword pw);
+  // TResult<std::vector<Track>> queryMusic(std::string searchPattern);
+  // TResult<Queues> getCurrentQueues();
+  TResult<void> addTrackToQueue(TSessionID sid, TTrackID trkid, QueueType type);
+  TResult<void> voteTrack(TSessionID sid, TTrackID trkid);
+  TResult<void> controlPlayer(TSessionID sid, PlayerAction action);
 
   //  LoggingProvider mLog;
   //  ConfigHandler mConfigHandler;
