@@ -12,19 +12,19 @@ TResultOpt SpotifyBackend::initBackend() {
     return std::nullopt;
 }
 
-TResult<std::vector<std::shared_ptr<Track>>> SpotifyBackend::queryTracks(std::string const &pattern, size_t const num) {
-    auto tmp = std::vector<std::shared_ptr<Track>>();
-    tmp.emplace_back(std::make_shared<Track>());
+TResult<std::vector<Track>> SpotifyBackend::queryTracks(std::string const &pattern, size_t const num) {
+    auto tmp = std::vector<Track>();
+    tmp.emplace_back(Track());
     return tmp;
 }
 
-TResultOpt SpotifyBackend::setPlayback(std::shared_ptr<Track> const track) {
+TResultOpt SpotifyBackend::setPlayback(Track const &track) {
     return std::nullopt;
 }
 
-TResult<std::shared_ptr<PlaybackTrack>> SpotifyBackend::getCurrentPlayback(void){
+TResult<PlaybackTrack> SpotifyBackend::getCurrentPlayback(void){
 
-    return std::make_shared<PlaybackTrack>(Track());
+    return PlaybackTrack(Track());
 }
 
 TResultOpt SpotifyBackend::pause() {
