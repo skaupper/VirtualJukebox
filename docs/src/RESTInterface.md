@@ -83,7 +83,7 @@ which is needed if the user wants to undo a vote or prevents him from voting twi
 `password` is used to authorize a client as admin. If no password is given a normal (non-privileged) user session
 is generated. If a wrong password is given an `401` error is returned.
 
-**TODO**: Allow refreshing of an old session.
+**TODO**: Allow refreshing an old session.
 
 #### Response
 
