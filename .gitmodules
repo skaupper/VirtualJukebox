@@ -1,3 +1,6 @@
 [submodule "lib/libhttpserver"]
 	path = lib/libhttpserver
 	url = https://github.com/etr/libhttpserver
+[submodule "lib/libmicrohttpd"]
+	path = lib/libmicrohttpd
+	url = https://git.gnunet.org/libmicrohttpd.git
