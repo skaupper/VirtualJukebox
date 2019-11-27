@@ -73,6 +73,8 @@ $(function() {
 <li class="level2"><a href="#autotoc_md11">Add track to queue</a></li>
 <li class="level2"><a href="#autotoc_md14">Vote track</a></li>
 <li class="level2"><a href="#autotoc_md17">Control player</a></li>
+<li class="level2"><a href="#autotoc_md20">Move tracks between queues</a></li>
+<li class="level2"><a href="#autotoc_md23">Remove tracks from queues</a></li>
 </ul>
 </li>
 </ul>
@@ -84,17 +86,20 @@ Status response</h1>
 Requests which are handled successfully always respond with a HTTP status code of <code>200 OK</code>. Every other code indicates an error.</p>
 <p>The known errors are:</p>
 <ul>
+<li><code>401 Unauthorized</code><br  />
+ If a client requested a new admin session but specified a wrong password.</li>
 <li><code>403 Forbidden</code><br  />
  The request was done by an unauthorized user. That includes requests to admin endpoints by non-admins or an attempt to do multiple votes on the same track.</li>
 <li><code>404 Not found</code><br  />
- The requested endpoint has not been found.</li>
+ The requested endpoint has not been found.<br  />
+ For now, unknown <code>track_id</code>s also trigger this error.</li>
 <li><code>405 Method not allowed</code><br  />
  The requested endpoint was accessed with an unallowed method.</li>
 <li><code>422 Unprocessable Entity</code><br  />
  The content of the request (JSON body) has an unexpected/invalid format.</li>
 <li><code>440 Login-Time-out</code><br  />
  The currently used session is invalid or has expired.</li>
-<li><code>500 Internal Server Error</code><br  />
+<li><code>500 Internal Server <a class="el" href="classError.html" title="A customized error type.">Error</a></code><br  />
  This code may be encountered if the server catched an internal error (which may as well just have crashed the server) and was still able to send a response.<br  />
  If a client gets that status code, please notify the server team!</li>
 </ul>
@@ -125,9 +130,12 @@ Request</h3>
  <code>/api/v1/generateSession</code></li>
 <li>Body: <br  />
  <div class="fragment"><div class="line">{</div>
+<div class="line">    <span class="stringliteral">&quot;password&quot;</span>: <span class="stringliteral">&quot;&lt;admin_password&gt;&quot;</span></div>
 <div class="line">}</div>
 </div><!-- fragment --></li>
 </ul>
+<p><code>password</code> is used to authorize a client as admin. If no password is given a normal (non-privileged) user session is generated. If a wrong password is given an <code>401</code> error is returned.</p>
+<p><b>TODO</b>: Allow refreshing an old session.</p>
 <h3><a class="anchor" id="autotoc_md5"></a>
 Response</h3>
 <ul>
@@ -154,7 +162,7 @@ Request</h3>
  <div class="fragment"><div class="line">{</div>
 <div class="line">    <span class="stringliteral">&quot;session_id&quot;</span>: <span class="stringliteral">&quot;&lt;session_id&gt;&quot;</span>,</div>
 <div class="line">    <span class="stringliteral">&quot;pattern&quot;</span>: <span class="stringliteral">&quot;&lt;some_search_pattern&gt;&quot;</span>,</div>
-<div class="line">    <span class="stringliteral">&quot;max_entries&quot;</span>, &lt;max_entries&gt;</div>
+<div class="line">    <span class="stringliteral">&quot;max_entries&quot;</span>: &lt;max_entries&gt;</div>
 <div class="line">}</div>
 </div><!-- fragment --></li>
 </ul>
@@ -281,6 +289,7 @@ Request</h3>
 </ul>
 <p>The content for <code>track_id</code> has to be queried with a previous call to <a href="#query_tracks">queryTracks</a>.<br  />
 If <code>vote</code> is a <code>0</code> an already given vote is revoked, while setting <code>vote</code> to a non-zero value votes for the track.</p>
+<p><b>Note</b>: The actual value of non-zero values are not important (it will always count as <code>1</code>)!</p>
 <h3><a class="anchor" id="autotoc_md16"></a>
 Response</h3>
 <div class="fragment"><div class="line">{</div>
@@ -315,6 +324,56 @@ Request</h3>
 <li>VolumeDown</li>
 </ul>
 <h3><a class="anchor" id="autotoc_md19"></a>
+Response</h3>
+<div class="fragment"><div class="line">{</div>
+<div class="line">}</div>
+</div><!-- fragment --><p>A successful call responds with an empty JSON object.</p>
+<h2><a class="anchor" id="autotoc_md20"></a>
+Move tracks between queues</h2>
+<p>Moving a track between the admin and the normal queue.</p>
+<p>When moving to the admin queue all votes of the track are deleted (i.e. when moving the track back to the normal queue it will have a vote count of zero).</p>
+<p><b>Note</b>: This endpoint can only be used by the admin.</p>
+<h3><a class="anchor" id="autotoc_md21"></a>
+Request</h3>
+<ul>
+<li>Method: <br  />
+ <code>GET</code></li>
+<li>Path: <br  />
+ <code>/api/v1/moveTrack</code></li>
+<li>Body: <br  />
+ <div class="fragment"><div class="line">{</div>
+<div class="line">    <span class="stringliteral">&quot;session_id&quot;</span>: <span class="stringliteral">&quot;&lt;session_id&gt;&quot;</span>,</div>
+<div class="line">    <span class="stringliteral">&quot;track_id&quot;</span>: <span class="stringliteral">&quot;&lt;track_id&gt;&quot;</span>,</div>
+<div class="line">    <span class="stringliteral">&quot;queue_type&quot;</span>: <span class="stringliteral">&quot;&lt;queue_type&gt;&quot;</span></div>
+<div class="line">}</div>
+</div><!-- fragment --></li>
+</ul>
+<p><code>track_id</code> specifies the track to be moved. <code>queue_type</code> may either be <code>admin</code> or <code>normal</code> depending whether the track should be moved to the admin queue or the normal queue. When <code>queue_type</code> specifies the queue the track is already in, nothing happens (no votes are lost).</p>
+<h3><a class="anchor" id="autotoc_md22"></a>
+Response</h3>
+<div class="fragment"><div class="line">{</div>
+<div class="line">}</div>
+</div><!-- fragment --><p>A successful call responds with an empty JSON object.</p>
+<h2><a class="anchor" id="autotoc_md23"></a>
+Remove tracks from queues</h2>
+<p>Removes a track from either the admin or the normal queue.</p>
+<p><b>Note</b>: This endpoint can only be used by the admin.</p>
+<h3><a class="anchor" id="autotoc_md24"></a>
+Request</h3>
+<ul>
+<li>Method: <br  />
+ <code>GET</code></li>
+<li>Path: <br  />
+ <code>/api/v1/removeTrack</code></li>
+<li>Body: <br  />
+ <div class="fragment"><div class="line">{</div>
+<div class="line">    <span class="stringliteral">&quot;session_id&quot;</span>: <span class="stringliteral">&quot;&lt;session_id&gt;&quot;</span>,</div>
+<div class="line">    <span class="stringliteral">&quot;track_id&quot;</span>: <span class="stringliteral">&quot;&lt;track_id&gt;&quot;</span></div>
+<div class="line">}</div>
+</div><!-- fragment --></li>
+</ul>
+<p><code>track_id</code> specifies the track to be removed. Since one track can only be in one queue at a time no ambiguities are possible!</p>
+<h3><a class="anchor" id="autotoc_md25"></a>
 Response</h3>
 <div class="fragment"><div class="line">{</div>
 <div class="line">}</div>

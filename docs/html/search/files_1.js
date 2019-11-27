@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['jukebox_2ecpp_9',['JukeBox.cpp',['../JukeBox_8cpp.html',1,'']]]
+  ['globaltypes_2eh_42',['GlobalTypes.h',['../GlobalTypes_8h.html',1,'']]]
 ];

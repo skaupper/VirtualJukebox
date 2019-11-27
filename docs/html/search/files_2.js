@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['logginghandler_2ecpp_10',['LoggingHandler.cpp',['../LoggingHandler_8cpp.html',1,'']]]
+  ['jukebox_2ecpp_43',['JukeBox.cpp',['../JukeBox_8cpp.html',1,'']]],
+  ['jukebox_2eh_44',['JukeBox.h',['../JukeBox_8h.html',1,'']]]
 ];
