@@ -21,6 +21,7 @@ set(CXX_STANDARD_REQUIRED ON)
 ################################################################################
 
 include(cmake/ClangFormat.cmake)
+include(cmake/LibHttpServer.cmake)
 
 ################################################################################
 # Source files

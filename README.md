@@ -8,6 +8,7 @@ TODO
 - Google Test
 - Doxygen
 - clang-format-6.0
+- libmicrohttpd >= 0.9.52
 
 ## Installation
 
