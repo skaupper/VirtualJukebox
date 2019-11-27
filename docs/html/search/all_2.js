@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['logginghandler_2ecpp_2',['LoggingHandler.cpp',['../LoggingHandler_8cpp.html',1,'']]]
+  ['globaltypes_2eh_5',['GlobalTypes.h',['../GlobalTypes_8h.html',1,'']]]
 ];
