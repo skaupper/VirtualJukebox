@@ -4,41 +4,43 @@
  * @brief   Class handles Music Playback with a Spotify Backend
  * ---------------------------------------------------------------------------*/
 
-#include <vector>
 #include "SpotifyBackend.h"
+
+#include <vector>
+
 #include "Track.h"
 
 TResultOpt SpotifyBackend::initBackend() {
-    return std::nullopt;
+  return std::nullopt;
 }
 
-TResult<std::vector<Track>> SpotifyBackend::queryTracks(std::string const &pattern, size_t const num) {
-    auto tmp = std::vector<Track>();
-    tmp.emplace_back(Track());
-    return tmp;
+TResult<std::vector<Track>> SpotifyBackend::queryTracks(
+    std::string const &pattern, size_t const num) {
+  auto tmp = std::vector<Track>();
+  tmp.emplace_back(Track());
+  return tmp;
 }
 
 TResultOpt SpotifyBackend::setPlayback(Track const &track) {
-    return std::nullopt;
+  return std::nullopt;
 }
 
-TResult<PlaybackTrack> SpotifyBackend::getCurrentPlayback(void){
-
-    return PlaybackTrack(Track());
+TResult<PlaybackTrack> SpotifyBackend::getCurrentPlayback(void) {
+  return PlaybackTrack(Track());
 }
 
 TResultOpt SpotifyBackend::pause() {
-    return std::nullopt;
+  return std::nullopt;
 }
 
 TResultOpt SpotifyBackend::play() {
-    return std::nullopt;
+  return std::nullopt;
 }
 
 TResult<size_t> SpotifyBackend::getVolume() {
-    return 50;
+  return 50;
 }
 
 TResultOpt SpotifyBackend::setVolume(size_t const percent) {
-    return Error(ErrorCode::SessionExpired,"Error Message Test");
+  return Error(ErrorCode::SessionExpired, "Error Message Test");
 }
