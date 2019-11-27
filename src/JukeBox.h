@@ -24,20 +24,17 @@
 //#include "NetworkAPI.h"
 //#include "User.h"
 
-/**
- * @brief Type for multiple queues
- */
-using Queues = Queue[2];
-
 class JukeBox : public NetworkListener {
  public:
   void start(std::string configFilePath);
 
   TResult<TSessionID> generateSession(TPassword pw);
-  TResult<std::vector<Track>> queryMusic(std::string searchPattern);
-  TResult<Queues> getCurrentQueues();
+  TResult<std::vector<Track>> queryTracks(std::string searchPattern);
+  // TResult<QueueStatus> getCurrentQueues();
   TResultOpt addTrackToQueue(TSessionID sid, TTrackID trkid, QueueType type);
-  TResultOpt voteTrack(TSessionID sid, TTrackID trkid);
+  TResultOpt voteTrack(TSessionID sid, TTrackID trkid, TVote vote);
+  TResult<Track> removeTrack(TSessionID sid, TTrackID trkid);
+  TResult<Track> moveTrack(TSessionID sid, TTrackID trkid);
   TResultOpt controlPlayer(TSessionID sid, PlayerAction action);
 
  private:

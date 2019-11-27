@@ -17,7 +17,7 @@
 enum class ErrorCode {
   AccessDedied,
   SessionExpired,
-  anotherone,
+  FileNotFound,
   anothertwo,
   anotherthree
 };

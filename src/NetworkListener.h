@@ -27,12 +27,15 @@ using Queues = Queue[2];
 class NetworkListener {
  public:
   virtual TResult<TSessionID> generateSession(TPassword pw) = 0;
-  virtual TResult<std::vector<Track>> queryMusic(std::string searchPattern) = 0;
-  virtual TResult<Queues> getCurrentQueues() = 0;
+  virtual TResult<std::vector<Track>> queryTracks(
+      std::string searchPattern) = 0;
+  // virtual TResult<QueueStatus> getCurrentQueues() = 0;
   virtual TResultOpt addTrackToQueue(TSessionID sid,
                                      TTrackID trkid,
                                      QueueType type) = 0;
-  virtual TResultOpt voteTrack(TSessionID sid, TTrackID trkid) = 0;
+  virtual TResultOpt voteTrack(TSessionID sid, TTrackID trkid, TVote vote) = 0;
+  virtual TResult<Track> removeTrack(TSessionID sid, TTrackID trkid) = 0;
+  virtual TResult<Track> moveTrack(TSessionID sid, TTrackID trkid) = 0;
   virtual TResultOpt controlPlayer(TSessionID sid, PlayerAction action) = 0;
 };
 
