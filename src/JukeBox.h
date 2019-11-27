@@ -12,15 +12,15 @@
 #include <vector>
 
 #include "GlobalTypes.h"
+#include "NetworkListener.h"
 #include "Queue.h"
 #include "Result.h"
 #include "Track.h"
 
 //#include "ConfigHandler.h"
 //#include "LoggingHandler.h"
-//#include "MemoryAPI.h"
+//#include "DataStore.h"
 //#include "MusicBackend.h"
-//#include "MusicPlayer.h"
 //#include "NetworkAPI.h"
 //#include "User.h"
 
@@ -29,11 +29,10 @@
  */
 using Queues = Queue[2];
 
-class JukeBox {
+class JukeBox : public NetworkListener {
  public:
   void start(std::string configFilePath);
 
- private:
   TResult<TSessionID> generateSession(TPassword pw);
   TResult<std::vector<Track>> queryMusic(std::string searchPattern);
   TResult<Queues> getCurrentQueues();
@@ -41,12 +40,12 @@ class JukeBox {
   TResultOpt voteTrack(TSessionID sid, TTrackID trkid);
   TResultOpt controlPlayer(TSessionID sid, PlayerAction action);
 
+ private:
   //  LoggingHandler mLog;
   //  ConfigHandler mConfigHandler;
-  //  MemoryAPI mMemory;
+  //  DataStore mDataStore;
   //  NetworkAPI mNetwork;
   //  MusicBackend mMusicBackend;
-  //  MusicPlayer mPlayer;
 };
 
 #endif /* _JUKEBOX_H_ */
