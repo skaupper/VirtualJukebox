@@ -5,19 +5,19 @@
  * ---------------------------------------------------------------------------*/
 
 
-#include "Playback.h"
+#include "PlaybackTrack.h"
 
-Playback::Playback(Track const &track, int progress, bool playing) :
+PlaybackTrack::PlaybackTrack(Track const &track, int progress, bool playing) :
   mTrack(track), mProgress(progress), mPlaying(playing) {}
 
-int Playback::getProgress() const {
+int PlaybackTrack::getProgress() const {
    return mProgress;
 }
 
-Track Playback::getTrack() const {
+Track PlaybackTrack::getTrack() const {
     return mTrack;
 }
 
-bool Playback::isPlaying() const {
+bool PlaybackTrack::isPlaying() const {
     return mPlaying;
 }

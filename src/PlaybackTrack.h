@@ -4,15 +4,15 @@
  * @brief   Class for handling Playback data
  * ---------------------------------------------------------------------------*/
 
-#ifndef PLAYBACK_H_INCLUDED
-#define PLAYBACK_H_INCLUDED
+#ifndef PLAYBACK_TRACK_H_INCLUDED
+#define PLAYBACK_TRACK_H_INCLUDED
 
 #include "Result.h"
 #include "Track.h"
 
-class Playback{
+class PlaybackTrack{
 public:
-    Playback(Track const &track, int progress = 0, bool playing=false);
+    PlaybackTrack(Track const &track, int progress = 0, bool playing=false);
     Track getTrack(void) const;
     int   getProgress(void) const;
     bool  isPlaying(void) const;

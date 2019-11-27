@@ -37,7 +37,7 @@ set(APP_SOURCES         src/JukeBox.cpp
                         src/Queue.cpp
                         src/LoggingHandler.cpp
                         src/ConfigHandler.cpp
-                        src/Playback.cpp
+        src/PlaybackTrack.cpp
                         src/SpotifyBackend.cpp)
 
 
@@ -50,7 +50,7 @@ set(APP_HEADER          src/JukeBox.h
                         src/Result.h
                         src/GlobalTypes.h
                         src/MusicBackend.h
-                        src/Playback.h
+        src/PlaybackTrack.h
                         src/SpotifyBackend.h)
 
 # All source files containing test cases
