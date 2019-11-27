@@ -356,10 +356,18 @@ normal queue. When `queue_type` specifies the queue the track is already in, not
 
 ~~~~~{.c}
 {
+    "track": {
+        "track_id": "<track_id>",
+        "title": "<track_title>",
+        "album": "<album_name>",
+        "author": "<author_name>",
+        "duration": "<duration>",
+        "icon_uri": "<uri>"
+    }
 }
 ~~~~~
 
-A successful call responds with an empty JSON object.
+`track` contains the moved track. If no track has been moved the field does not exist.
 
 ### Remove tracks from queues
 
@@ -388,7 +396,15 @@ Removes a track from either the admin or the normal queue.
 
 ~~~~~{.c}
 {
+    "track": {
+        "track_id": "<track_id>",
+        "title": "<track_title>",
+        "album": "<album_name>",
+        "author": "<author_name>",
+        "duration": "<duration>",
+        "icon_uri": "<uri>"
+    }
 }
 ~~~~~
 
-A successful call responds with an empty JSON object.
+`track` contains the removed track.
