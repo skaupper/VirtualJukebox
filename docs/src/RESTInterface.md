@@ -14,11 +14,14 @@ Requests which are handled successfully always respond with a HTTP status code o
 
 The known errors are:
 
+- `401 Unauthorized`\n
+  If a client requested a new admin session but specified a wrong password.
 - `403 Forbidden`\n
   The request was done by an unauthorized user. That includes requests to admin endpoints by non-admins or an attempt
   to do multiple votes on the same track.
 - `404 Not found`\n
-  The requested endpoint has not been found.
+  The requested endpoint has not been found.\n
+  For now, unknown `track_id`s also trigger this error.
 - `405 Method not allowed`\n
   The requested endpoint was accessed with an unallowed method.
 - `422 Unprocessable Entity`\n
@@ -73,8 +76,14 @@ which is needed if the user wants to undo a vote or prevents him from voting twi
 
 ~~~~~{.c}
 {
+    "password": "<admin_password>"
 }
 ~~~~~
+
+`password` is used to authorize a client as admin. If no password is given a normal (non-privileged) user session
+is generated. If a wrong password is given an `401` error is returned.
+
+**TODO**: Allow refreshing of an old session.
 
 #### Response
 
@@ -262,6 +271,8 @@ Vote for a track or revoke a vote.
 The content for `track_id` has to be queried with a previous call to [queryTracks](#query_tracks).\n
 If `vote` is a `0` an already given vote is revoked, while setting `vote` to a non-zero value votes for the track.
 
+**Note**: The actual value of non-zero values are not important (it will always count as `1`)!
+
 #### Response
 
 ~~~~~{.c}
@@ -302,6 +313,76 @@ The value of `player_action` controls which action the server should take. Valid
 - Skip
 - VolumeUp
 - VolumeDown
+
+#### Response
+
+~~~~~{.c}
+{
+}
+~~~~~
+
+A successful call responds with an empty JSON object.
+
+### Move tracks between queues
+
+Moving a track between the admin and the normal queue.
+
+When moving to the admin queue all votes of the track are deleted (i.e. when moving the track back to the normal queue
+it will have a vote count of zero).
+
+**Note**: This endpoint can only be used by the admin.
+
+#### Request
+
+- Method:   \n
+  `GET`
+- Path:     \n
+  `/api/v1/moveTrack`
+- Body:     \n
+
+~~~~~{.c}
+{
+    "session_id": "<session_id>",
+    "track_id": "<track_id>",
+    "queue_type": "<queue_type>"
+}
+~~~~~
+
+`track_id` specifies the track to be moved.
+`queue_type` may either be `admin` or `normal` depending whether the track should be moved to the admin queue or the
+normal queue. When `queue_type` specifies the queue the track is already in, nothing happens (no votes are lost).
+
+#### Response
+
+~~~~~{.c}
+{
+}
+~~~~~
+
+A successful call responds with an empty JSON object.
+
+### Remove tracks from queues
+
+Removes a track from either the admin or the normal queue.
+
+**Note**: This endpoint can only be used by the admin.
+
+#### Request
+
+- Method:   \n
+  `GET`
+- Path:     \n
+  `/api/v1/removeTrack`
+- Body:     \n
+
+~~~~~{.c}
+{
+    "session_id": "<session_id>",
+    "track_id": "<track_id>"
+}
+~~~~~
+
+`track_id` specifies the track to be removed. Since one track can only be in one queue at a time no ambiguities are possible!
 
 #### Response
 
