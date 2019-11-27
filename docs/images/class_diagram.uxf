@@ -1,0 +1,728 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.3.0">
+  <zoom_level>12</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1680</x>
+      <y>240</y>
+      <w>216</w>
+      <h>132</h>
+    </coordinates>
+    <panel_attributes>User
+--
++ sessionId: TSessionId
++ sessionExpirationDate: int
++ name: string
++ isAdmin: bool
++ votes: vector&lt;TrackId&gt;</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2412</x>
+      <y>324</y>
+      <w>168</w>
+      <h>156</h>
+    </coordinates>
+    <panel_attributes>Track
+--
++ trackId: TTrackId
++ title: string
++ album: string
++ author: string
++ duration: TTime
++ iconUri: string</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2388</x>
+      <y>0</y>
+      <w>240</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>Queue
+--
++ tracks: vector&lt;QueueEntry&gt;</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1332</x>
+      <y>1200</y>
+      <w>540</w>
+      <h>276</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;interface&gt;&gt;
+DataStore
+--
+/+ addUser(User): TResultOpt/
+/+ removeUser(TSessionId): TResult&lt;User&gt;/
+/+ checkSessionExpirations(): TResult&lt;vector&lt;User&gt;&gt;/
+/+ addTrack(Track, QueueType): TResultOpt/
+/+ removeTrack(TTrackId, QueueType): TResult&lt;Track&gt;/
+/+ hasTrack(TTrackId, QueueType): TResult&lt;bool&gt;/
+/+ voteTrack(TSessionId, TTrackId, TVote): TResultOpt/
+/+ getQueue(QueueType): TResult&lt;Queue&gt;/
+/+ getPlayingTrack(): TResult&lt;Track&gt;/
+/+ hasUser(TSessionId): TResult&lt;bool&gt;/
+/+ nextTrack(): TResultOpt/</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1368</x>
+      <y>792</y>
+      <w>480</w>
+      <h>336</h>
+    </coordinates>
+    <panel_attributes>RAMDataStore
+--
++ addUser(User): TResultOpt
++ removeUser(TSessionId): TResult&lt;User&gt;
++ checkSessionExpirations(): TResult&lt;vector&lt;User&gt;&gt;
++ addTrack(Track, QueueType): TResultOpt
++ removeTrack(TTrackId, QueueType): TResult&lt;Track&gt;
++ hasTrack(TTrackId, QueueType): TResult&lt;bool&gt;
++ voteTrack(TSessionId, TTrackId, TVote): TResultOpt
++ getQueue(QueueType): TResult&lt;Queue&gt;
++ getPlayingTrack(): TResult&lt;Track&gt;
++ hasUser(TSessionId): TResult&lt;bool&gt;
++ nextTrack(): TResultOpt
+--
+- mAdminQueue: Queue
+- mNormalQueue: Queue
+- mCurrentTrack: Track
+- mUser: vector&lt;User&gt;</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2088</x>
+      <y>1128</y>
+      <w>120</w>
+      <h>36</h>
+    </coordinates>
+    <panel_attributes>TVote = bool</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2088</x>
+      <y>888</y>
+      <w>156</w>
+      <h>36</h>
+    </coordinates>
+    <panel_attributes>TSessionId = string</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2088</x>
+      <y>1188</y>
+      <w>156</w>
+      <h>36</h>
+    </coordinates>
+    <panel_attributes>TTrackId = string</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2028</x>
+      <y>348</y>
+      <w>252</w>
+      <h>96</h>
+    </coordinates>
+    <panel_attributes>QueueStatus
+--
++ normalQueue: Queue
++ adminQueue: Queue
++ currentTrack: PlaybackTrack</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1584</x>
+      <y>1116</y>
+      <w>36</w>
+      <h>108</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>10.0;70.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>432</x>
+      <y>1596</y>
+      <w>456</w>
+      <h>216</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Interface&gt;&gt;
+MusicBackend
+--
+/+ initBackend(): void /
+/+ queryTracks(TPattern, TCount) : TResult&lt;vector&lt;Track&gt;&gt;/
+/+ setPlayback(Track) : TResultOpt/
+/+ getCurrentPlayback(): TResult&lt;optional&lt;Playback&gt;&gt;/
+/+ pause() : TResultOpt/
+/+ play(): TResultOpt/
+/+ setVolume(int percent): TResultOpt/
+/+ getVolume(): TResult&lt;int&gt;/</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>432</x>
+      <y>1224</y>
+      <w>444</w>
+      <h>240</h>
+    </coordinates>
+    <panel_attributes>SpotifyBackend
+--
++ initBackend(): void 
++ queryTracks(TPattern, TCount) : TResult&lt;vector&lt;Track&gt;&gt;
++ setPlayback(Track) : TResultOpt
++ getCurrentPlayback(): TResult&lt;optional&lt;Playback&gt;&gt;
++ pause() : TResultOpt
++ play(): TResultOpt
++ setVolume(int percent): TResultOpt
++ getVolume(): TResult&lt;int&gt;</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>600</x>
+      <y>1452</y>
+      <w>36</w>
+      <h>168</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>10.0;120.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>936</x>
+      <y>1224</y>
+      <w>312</w>
+      <h>240</h>
+    </coordinates>
+    <panel_attributes>SpotifyAPI
+--
++ SpotifyAPI
++ playerGetDevices()
++ search()
+...
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>60</x>
+      <y>1116</y>
+      <w>192</w>
+      <h>36</h>
+    </coordinates>
+    <panel_attributes>RestAPI (Server)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>0</x>
+      <y>1224</y>
+      <w>312</w>
+      <h>240</h>
+    </coordinates>
+    <panel_attributes>SpotifyAuth
+--
++ startServer()
++ getAccessToken
++ getRefreshToken
++ refreshAccessToken : bool
++ getExpiresAt()
++ setScopes(vector&lt;string&gt;)
++ getScopes(vector&lt;string&gt;)
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1020</x>
+      <y>1128</y>
+      <w>168</w>
+      <h>36</h>
+    </coordinates>
+    <panel_attributes>RestAPI (Client)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1080</x>
+      <y>1152</y>
+      <w>36</w>
+      <h>96</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;60.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>144</x>
+      <y>1140</y>
+      <w>36</w>
+      <h>108</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;70.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>864</x>
+      <y>1332</y>
+      <w>96</w>
+      <h>36</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;60.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>300</x>
+      <y>1332</y>
+      <w>156</w>
+      <h>36</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>110.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>612</x>
+      <y>300</y>
+      <w>372</w>
+      <h>168</h>
+    </coordinates>
+    <panel_attributes>ConfigHandler
+--
+# ConfigHandler()
+_+ initInstance(TConfigPath): void_
+_+ getInstance(): shared_ptr&lt;ConfigHandler&gt;_
+
+_- instance: shared_ptr&lt;ConfigHandler&gt;_
+--
++ getValue(TSectionName, TKeyName): TValue</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>972</x>
+      <y>348</y>
+      <w>96</w>
+      <h>84</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;60.0;10.0;60.0;50.0;10.0;50.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2376</x>
+      <y>588</y>
+      <w>228</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>PlaybackTrack
+--
++ remainingProgress(): int
+--
++ track: Track
++ progressMs: int
++ isPlaying: bool</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1980</x>
+      <y>1908</y>
+      <w>396</w>
+      <h>180</h>
+    </coordinates>
+    <panel_attributes>NetworkAPI
+--
++ setListener(NetworkListener *): void
+/+ handleRequests(): void/</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1824</x>
+      <y>2004</y>
+      <w>180</w>
+      <h>36</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>130.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1272</x>
+      <y>1572</y>
+      <w>564</w>
+      <h>264</h>
+    </coordinates>
+    <panel_attributes>JukeBox
+--
++ start(TConfigPath): void
+- readConfig(TConfigPath): void
+--
++ generateSession(optional&lt;TPassword&gt;): TResult&lt;TSessionId&gt;
++ queryTracks(TPattern): TResult&lt;vector&lt;Track&gt;&gt;
++ getCurrentQueues(): TResult&lt;QueueStatus&gt;
++ addTrackToQueue(TSessionId, TTrackId, QueueType): TResultOpt
++ voteTrack(TSessionId, TTrackId, TVote): TResultOpt
++ controlPlayer(TSessionId, PlayerAction): TResultOpt
++ removeTrack(TSessionId, TTrackId): TResult&lt;Track&gt;
++ moveTrack(TSessionId, TTrackId, QueueType): TResult&lt;Track&gt;
+--
+Interfaces!</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1272</x>
+      <y>1908</y>
+      <w>564</w>
+      <h>192</h>
+    </coordinates>
+    <panel_attributes>/NetworkListener/
+--
+/+ generateSession(optional&lt;TPassword&gt;): TResult&lt;TSessionId&gt;/
+/+ queryTracks(TPattern): TResult&lt;vector&lt;Track&gt;&gt;/
+/+ getCurrentQueues(): TResult&lt;QueueStatus&gt;/
+/+ addTrackToQueue(TSessionId, TTrackId, QueueType): TResultOpt/
+/+ voteTrack(TSessionId, TTrackId, TVote): TResultOpt/
+/+ controlPlayer(TSessionId, PlayerAction): TResultOpt/
+/+ removeTrack(TSessionId, TTrackId): TResult&lt;Track&gt;/
+/+ moveTrack(TSessionId, TTrackId, QueueType): TResult&lt;Track&gt;/</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1584</x>
+      <y>1824</y>
+      <w>36</w>
+      <h>108</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>10.0;70.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1980</x>
+      <y>1584</y>
+      <w>396</w>
+      <h>240</h>
+    </coordinates>
+    <panel_attributes>RestAPI
+--
++ handleRequests(): void
+- newRequest(Connection*): void
+- decodeAndDispatch(Path, Method, Content): void</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2136</x>
+      <y>1812</y>
+      <w>36</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;80.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1824</x>
+      <y>1692</y>
+      <w>180</w>
+      <h>312</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;60.0;10.0;60.0;240.0;130.0;240.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>984</x>
+      <y>744</y>
+      <w>252</w>
+      <h>180</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;enumeration&gt;&gt;
+PlayerAction
+--
+Play
+Pause
+Stop
+Skip
+VolumeUp
+VolumeDown</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1584</x>
+      <y>1464</y>
+      <w>36</w>
+      <h>132</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;90.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>876</x>
+      <y>1692</y>
+      <w>420</w>
+      <h>36</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>330.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLInterface</id>
+    <coordinates>
+      <x>888</x>
+      <y>2064</y>
+      <w>48</w>
+      <h>84</h>
+    </coordinates>
+    <panel_attributes>main</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>960</x>
+      <y>1740</y>
+      <w>336</w>
+      <h>372</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.</panel_attributes>
+    <additional_attributes>260.0;10.0;90.0;10.0;90.0;290.0;10.0;290.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>684</x>
+      <y>528</y>
+      <w>180</w>
+      <h>36</h>
+    </coordinates>
+    <panel_attributes>LoggingHandler</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1332</x>
+      <y>180</y>
+      <w>228</w>
+      <h>84</h>
+    </coordinates>
+    <panel_attributes>Error
+--
++ errorCode: ErrorCode
++ errorMessage: string</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1356</x>
+      <y>348</y>
+      <w>168</w>
+      <h>132</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;enumeration&gt;&gt;
+ErrorCode
+--
+AccessDenied
+SessionExpired
+...</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2088</x>
+      <y>1008</y>
+      <w>372</w>
+      <h>36</h>
+    </coordinates>
+    <panel_attributes>TResult&lt;GOOD&gt; = variant&lt;GOOD, Error&gt;</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2088</x>
+      <y>1068</y>
+      <w>372</w>
+      <h>36</h>
+    </coordinates>
+    <panel_attributes>TResultOpt = optional&lt;Error&gt;</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2412</x>
+      <y>144</y>
+      <w>168</w>
+      <h>96</h>
+    </coordinates>
+    <panel_attributes>QueueEntry
+--
++ track: Track
++ votes: TVote
++ insertedAt: TTime</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1032</x>
+      <y>600</y>
+      <w>168</w>
+      <h>96</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt; enumeration &gt;&gt;
+QueueType
+--
+Admin
+Normal</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2088</x>
+      <y>948</y>
+      <w>156</w>
+      <h>36</h>
+    </coordinates>
+    <panel_attributes>TTime = uint64_t</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2484</x>
+      <y>48</y>
+      <w>36</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;80.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2484</x>
+      <y>228</y>
+      <w>36</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;80.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2484</x>
+      <y>468</y>
+      <w>36</w>
+      <h>144</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;100.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2136</x>
+      <y>24</y>
+      <w>276</w>
+      <h>348</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;270.0;10.0;10.0;210.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2136</x>
+      <y>432</y>
+      <w>264</w>
+      <h>252</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;190.0;200.0;190.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1428</x>
+      <y>252</y>
+      <w>36</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;80.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2088</x>
+      <y>1248</y>
+      <w>144</w>
+      <h>36</h>
+    </coordinates>
+    <panel_attributes>TValue = string</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>
