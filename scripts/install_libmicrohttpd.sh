@@ -7,7 +7,7 @@ SCRIPT_PATH=$(dirname ${BASH_SOURCE})
 cd $SCRIPT_PATH
 
 # go to library directory and build library
-cd ../lib/libhttpserver/
+cd ../lib/libmicrohttpd/
 ./bootstrap
 mkdir -p build
 cd build
