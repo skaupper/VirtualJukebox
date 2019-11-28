@@ -69,7 +69,7 @@ which is needed if the user wants to undo a vote or prevents him from voting twi
 #### Request
 
 - Method:   \n
-  `GET`
+  `POST`
 - Path:     \n
   `/api/v1/generateSession`
 - Body:     \n
@@ -143,7 +143,7 @@ The field `max_entries` is optional. If not specified, it is set to `50`.
 
 If a track has no associated `album` and/or `artist` these fields may be omitted.
 
-### Get current queues
+### Get current queues {#get_current_queues}
 
 Queries the current queues (normal and admin queue) as well as the currently playing track.
 
@@ -354,7 +354,7 @@ it will have a vote count of zero).
 }
 ~~~~~
 
-`track_id` specifies the track to be moved.
+`track_id` specifies the track to be moved. This ID can be received by [getCurrentQueues](#get_current_queues).\n
 `queue_type` may either be `admin` or `normal` depending whether the track should be moved to the admin queue or the
 normal queue. When `queue_type` specifies the queue the track is already in, nothing happens (no votes are lost).
 
@@ -397,6 +397,7 @@ Removes a track from either the admin or the normal queue.
 ~~~~~
 
 `track_id` specifies the track to be removed. Since one track can only be in one queue at a time no ambiguities are possible!
+This ID can be received by [getCurrentQueues](#get_current_queues).
 
 #### Response
 
