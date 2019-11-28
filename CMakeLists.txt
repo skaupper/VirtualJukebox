@@ -16,6 +16,10 @@ ENDIF()
 set(CMAKE_CXX_STANDARD 17)
 set(CXX_STANDARD_REQUIRED ON)
 
+set(SRC_COMPILER_OPTIONS
+        -Wall
+        -Wextra)
+
 ################################################################################
 # Include other CMake files
 ################################################################################
@@ -69,7 +73,7 @@ set(APP_INCLUDE_DIRS    ${LIBHTTPSERVER_INCLUDE_DIRS}
                         ${LIBMICROHTTPD_INCLUDE_DIRS})
 
 # All source files containing test cases
-set(TEST_CASE_SOURCES   test/helloworld.cpp)
+set(TEST_SOURCES        test/Test_ConfigHandler.cpp)
 # Libraries and include directories of dependencies used by the tests
 set(TEST_LIBRARIES      ${GTEST_BOTH_LIBRARIES}
                         pthread)
@@ -78,7 +82,7 @@ set(TEST_INCLUDE_DIRS   ${GTEST_INCLUDE_DIRS})
 
 # Sources separated in application and test sources
 set(SOURCES      ${ENTRYPOINT_SOURCE} ${APP_SOURCES})
-set(TEST_SOURCES ${APP_SOURCES} ${TEST_CASE_SOURCES})
+set(TEST_SOURCES ${APP_SOURCES} ${TEST_SOURCES})
 
 # Documentation
 #-------------------------------------------------------------------------------
@@ -95,6 +99,7 @@ set(DOC_SOURCES         docs/src/main.md
 include_directories(${APP_INCLUDE_DIRS})
 add_executable(${PROJECT_NAME} ${SOURCES})
 target_link_libraries(${PROJECT_NAME} ${APP_LIBRARIES})
+target_compile_options(${PROJECT_NAME} PRIVATE ${SRC_COMPILER_OPTIONS})
 
 # Test program, running unit tests
 #-------------------------------------------------------------------------------
@@ -121,7 +126,7 @@ clang_format_add_target()
 
 # TODO: set required doxygen configurations
 set(DOXYGEN_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/docs/)
-doxygen_add_docs(doc ${DOC_SOURCES} ${ENTRYPOINT_SOURCE} ${APP_SOURCES} ${APP_HEADER} ${TEST_CASE_SOURCES})
+doxygen_add_docs(doc ${DOC_SOURCES} ${ENTRYPOINT_SOURCE} ${APP_SOURCES} ${APP_HEADER} ${TEST_SOURCES})
 
 
 ################################################################################

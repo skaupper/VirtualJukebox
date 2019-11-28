@@ -7,14 +7,27 @@
 #ifndef _CONFIGHANDLER_H_
 #define _CONFIGHANDLER_H_
 
+#include <memory>
 #include <string>
+
+#include "../lib/SimpleIni/SimpleIni.h"
+#include "Result.h"
 
 class ConfigHandler {
  public:
-  void loadConfig(std::string filename);
+  ~ConfigHandler() = default;
+  static std::shared_ptr<ConfigHandler> const getInstance();
+
+  void setConfigFilePath(std::string filepath);
+  TResult<std::string> getValue(std::string section, std::string key);
 
  private:
-  void readConfigFile(std::string filename);
+  ConfigHandler() = default;                                // hide default ctor
+  ConfigHandler(ConfigHandler const&) = delete;             // delete copy ctor
+  ConfigHandler& operator=(ConfigHandler const&) = delete;  // assignment ctor
+
+  static std::shared_ptr<ConfigHandler> mInstance;
+  std::string mConfigFilePath;
 };
 
 #endif /* _CONFIGHANDLER_H_ */

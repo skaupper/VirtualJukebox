@@ -10,19 +10,21 @@
 
 #include "Track.h"
 
+using namespace std;
+
 TResultOpt SpotifyBackend::initBackend() {
-  return std::nullopt;
+  return nullopt;
 }
 
-TResult<std::vector<Track>> SpotifyBackend::queryTracks(
-    std::string const &pattern, size_t const num) {
-  auto tmp = std::vector<Track>();
+TResult<vector<Track>> SpotifyBackend::queryTracks(string const &pattern,
+                                                   size_t const num) {
+  auto tmp = vector<Track>();
   tmp.emplace_back(Track());
   return tmp;
 }
 
 TResultOpt SpotifyBackend::setPlayback(Track const &track) {
-  return std::nullopt;
+  return nullopt;
 }
 
 TResult<PlaybackTrack> SpotifyBackend::getCurrentPlayback(void) {
@@ -30,11 +32,11 @@ TResult<PlaybackTrack> SpotifyBackend::getCurrentPlayback(void) {
 }
 
 TResultOpt SpotifyBackend::pause() {
-  return std::nullopt;
+  return nullopt;
 }
 
 TResultOpt SpotifyBackend::play() {
-  return std::nullopt;
+  return nullopt;
 }
 
 TResult<size_t> SpotifyBackend::getVolume() {
