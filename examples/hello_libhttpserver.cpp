@@ -2,6 +2,10 @@
  * @file    hello_libhttpserver.cpp
  * @author  Sebastian Kaupper <kauppersebastian@gmail.com>
  * @brief   Example program showcasing libhttpserver
+ *
+ * This program starts a server on port 8080 which listens to the endpoint /hello
+ * To verify that it's working use `url -XGET %http://localhost:8080/hello` or use
+ * a browser and go to <http://localhost:8080/hello>
  * ---------------------------------------------------------------------------*/
 
 #include <httpserver.hpp>
