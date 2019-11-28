@@ -213,6 +213,10 @@ The entries in the normal queue are sorted in the same order as they will be pla
 The track listed in `currently_playing` has an additional field for its current playback status (playing or paused)
 and the time it has already been played (in milliseconds).
 
+**Note**: The fields `votes` and `current_vote` are only relevant for tracks in the normal queue. While the order of tracks
+in the normal queue depends on the vote count (and insertion date) the admin queue is ordered only using the insertion date.
+The currently playing track also does not contain the vote fields because he will not be requeued afterwards anyway.
+
 ### Add track to queue
 
 Adds a track to the specified queue on the server.
