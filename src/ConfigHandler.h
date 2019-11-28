@@ -10,8 +10,8 @@
 #include <memory>
 #include <string>
 
+#include "../lib/SimpleIni/SimpleIni.h"
 #include "Result.h"
-#include "SimpleIni/SimpleIni.h"
 
 class ConfigHandler {
  public:
