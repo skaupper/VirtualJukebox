@@ -132,7 +132,7 @@ The field `max_entries` is optional. If not specified, it is set to `50`.
             "track_id": "<track_id>",
             "title": "<track_title>",
             "album": "<album_name>",
-            "author": "<author_name>",
+            "artist": "<artist_name>",
             "duration": "<duration>",
             "icon_uri": "<uri>"
         },
@@ -141,7 +141,7 @@ The field `max_entries` is optional. If not specified, it is set to `50`.
 }
 ~~~~~
 
-If a track has no associated `album` and/or `author` these fields may be omitted.
+If a track has no associated `album` and/or `artist` these fields may be omitted.
 
 ### Get current queues
 
@@ -175,7 +175,7 @@ The field `session_id` may be omitted in this version (thus empty JSON objects a
         "track_id": "<track_id>",
         "title": "<track_title>",
         "album": "<album_name>",
-        "author": "<author_name>",
+        "artist": "<artist_name>",
         "duration": "<duration>",
         "icon_uri": "<uri>",
         "playing": true|false,
@@ -186,10 +186,11 @@ The field `session_id` may be omitted in this version (thus empty JSON objects a
             "track_id": "<track_id>",
             "title": "<track_title>",
             "album": "<album_name>",
-            "author": "<author_name>",
+            "artist": "<artist_name>",
             "duration": "<duration>",
             "icon_uri": "<uri>",
-            "votes": <nr_of_votes>
+            "votes": <nr_of_votes>,
+            "current_vote": <vote>
         },
         ...
     ],
@@ -198,7 +199,7 @@ The field `session_id` may be omitted in this version (thus empty JSON objects a
             "track_id": "<track_id>",
             "title": "<track_title>",
             "album": "<album_name>",
-            "author": "<author_name>",
+            "artist": "<artist_name>",
             "duration": "<duration>",
             "icon_uri": "<uri>"
         },
@@ -207,7 +208,8 @@ The field `session_id` may be omitted in this version (thus empty JSON objects a
 }
 ~~~~~
 
-The entries in the normal queue are sorted in the same order as they will be played (no client-side sorting needed!).\n
+The entries in the normal queue are sorted in the same order as they will be played (no client-side sorting needed!). The field
+`current_vote` indicates if the user has already voted for a track (in the normal queue). For now this can either be `1` or `0`.\n
 The track listed in `currently_playing` has an additional field for its current playback status (playing or paused)
 and the time it has already been played (in milliseconds).
 
@@ -360,7 +362,7 @@ normal queue. When `queue_type` specifies the queue the track is already in, not
         "track_id": "<track_id>",
         "title": "<track_title>",
         "album": "<album_name>",
-        "author": "<author_name>",
+        "artist": "<artist_name>",
         "duration": "<duration>",
         "icon_uri": "<uri>"
     }
@@ -400,7 +402,7 @@ Removes a track from either the admin or the normal queue.
         "track_id": "<track_id>",
         "title": "<track_title>",
         "album": "<album_name>",
-        "author": "<author_name>",
+        "artist": "<artist_name>",
         "duration": "<duration>",
         "icon_uri": "<uri>"
     }
