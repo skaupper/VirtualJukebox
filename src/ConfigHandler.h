@@ -20,7 +20,7 @@ class ConfigHandler {
 
   void setConfigFilePath(std::string filepath);
   TResult<std::string> getValueString(std::string section, std::string key);
-  TResult<std::string> getValueInt(std::string section, std::string key);
+  TResult<int> getValueInt(std::string section, std::string key);
 
  private:
   ConfigHandler() = default;                                // hide default ctor

@@ -37,7 +37,7 @@ TResult<string> ConfigHandler::getValueString(string section, string key) {
   return ini.GetValue(section.c_str(), key.c_str());
 }
 
-TResult<string> ConfigHandler::getValueInt(string section, string key) {
+TResult<int> ConfigHandler::getValueInt(string section, string key) {
   bool const isUtf8 = false;        // use OS native encoding
   bool const useMultiKey = false;   // don't support duplicated keys
   bool const useMultiLine = false;  // don't support multiline values for a key
@@ -48,5 +48,13 @@ TResult<string> ConfigHandler::getValueInt(string section, string key) {
     return Error(ErrorCode::FileNotFound,
                  "ConfigHandler.getValue: couldn't load file");
 
-  return ini.GetValue(section.c_str(), key.c_str());
+  string valStr = ini.GetValue(section.c_str(), key.c_str());
+
+  int valInt;
+  if (sscanf(valStr.c_str(), "%d", &valInt) == 1)
+    cout << "valInt = " << valInt << endl;
+  else
+    cerr << "valInt = BAD INPUT! " << endl;
+
+  return valInt;
 }
