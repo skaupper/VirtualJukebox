@@ -51,7 +51,9 @@ set(APP_SOURCES         src/JukeBox.cpp
                         src/LoggingHandler.cpp
                         src/ConfigHandler.cpp
                         src/PlaybackTrack.cpp
-                        src/SpotifyBackend.cpp)
+                        src/SpotifyBackend.cpp
+                        src/NetworkAPI.cpp
+                        src/RestAPI.cpp)
 
 
 set(APP_HEADER          src/JukeBox.h
@@ -64,25 +66,28 @@ set(APP_HEADER          src/JukeBox.h
                         src/GlobalTypes.h
                         src/MusicBackend.h
                         src/PlaybackTrack.h
-                        src/SpotifyBackend.h)
+                        src/SpotifyBackend.h
+                        src/NetworkAPI.h
+                        src/RestAPI.h)
 
 # Libraries and include directories of dependencies used by the application
 set(APP_LIBRARIES       ${LIBHTTPSERVER_LIBRARIES}
                         ${LIBMICROHTTPD_LIBRARIES})
-set(APP_INCLUDE_DIRS    ${LIBHTTPSERVER_INCLUDE_DIRS}
+set(APP_INCLUDE_DIRS    src/
+                        ${LIBHTTPSERVER_INCLUDE_DIRS}
                         ${LIBMICROHTTPD_INCLUDE_DIRS})
 
 # All source files containing test cases
 set(TEST_SOURCES        test/Test_ConfigHandler.cpp)
 # Libraries and include directories of dependencies used by the tests
-set(TEST_LIBRARIES      ${GTEST_BOTH_LIBRARIES}
+set(TEST_LIBRARIES      ${APP_LIBRARIES}
+                        ${GTEST_BOTH_LIBRARIES}
                         pthread)
 set(TEST_INCLUDE_DIRS   ${GTEST_INCLUDE_DIRS})
 
 
 # Sources separated in application and test sources
-set(SOURCES      ${ENTRYPOINT_SOURCE} ${APP_SOURCES})
-set(TEST_SOURCES ${APP_SOURCES} ${TEST_SOURCES})
+set(TEST_SOURCES        ${TEST_SOURCES})
 
 # Documentation
 #-------------------------------------------------------------------------------
@@ -94,10 +99,16 @@ set(DOC_SOURCES         docs/src/main.md
 # Targets
 ################################################################################
 
+# Compile the sources of the main application into an OBJECT library
+#-------------------------------------------------------------------------------
+set(APP_OBJECTS app_object_library)
+add_library(${APP_OBJECTS} OBJECT ${APP_SOURCES} ${APP_HEADER})
+
+
 # Main program executable
 #-------------------------------------------------------------------------------
 include_directories(${APP_INCLUDE_DIRS})
-add_executable(${PROJECT_NAME} ${SOURCES})
+add_executable(${PROJECT_NAME} ${ENTRYPOINT_SOURCE} $<TARGET_OBJECTS:${APP_OBJECTS}>)
 target_link_libraries(${PROJECT_NAME} ${APP_LIBRARIES})
 target_compile_options(${PROJECT_NAME} PRIVATE ${SRC_COMPILER_OPTIONS})
 
@@ -109,7 +120,7 @@ enable_testing()
 
 # Add test executable and link to required libs
 include_directories(${TEST_INCLUDE_DIRS})
-add_executable(${TEST_TARGET} ${TEST_SOURCES})
+add_executable(${TEST_TARGET} ${TEST_SOURCES} $<TARGET_OBJECTS:${APP_OBJECTS}>)
 target_link_libraries(${TEST_TARGET} ${TEST_LIBRARIES})
 
 # Add test target, so tests can be executed using `make test`
@@ -134,5 +145,13 @@ doxygen_add_docs(doc ${DOC_SOURCES} ${ENTRYPOINT_SOURCE} ${APP_SOURCES} ${APP_HE
 ################################################################################
 # Build examples, unless specified otherwise
 if(NOT BUILD_EXAMPLES)
+  # prepare some variables so the examples can use them easily
+
+  # prepend all sources with the source directory (transforms them to absolute paths)
+  list(TRANSFORM EXAMPLE_APP_SOURCES PREPEND ${CMAKE_CURRENT_SOURCE_DIR}/)
+  set(EXAMPLE_APP_LIBRARIES ${APP_LIBRARIES})
+  set(EXAMPLE_APP_INCLUDE_DIRS ${APP_INCLUDE_DIRS})
+  set(EXAMPLE_APP_OBJECTS ${APP_OBJECTS})
+
   add_subdirectory(examples/)
 endif()

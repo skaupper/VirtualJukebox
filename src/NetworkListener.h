@@ -22,7 +22,7 @@
 /**
  * @brief Type for multiple queues
  */
-using Queues = Queue[2];
+using Queues = Queue;
 
 class NetworkListener {
  public:
