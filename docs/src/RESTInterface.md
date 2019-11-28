@@ -221,7 +221,8 @@ The currently playing track also does not contain the vote fields because he wil
 
 Adds a track to the specified queue on the server.
 
-**Note**: The same track can only be queued once at a time (i.e. as long as a track is in any of the queues, it cannot be queued again).
+**Note**: The same track can only be queued once at a time (i.e. as long as a track is returned by [getCurrentQueues](#get_current_queues),
+it cannot be queued again).
 
 #### Request
 
@@ -240,7 +241,7 @@ Adds a track to the specified queue on the server.
 ~~~~~
 
 `session_id` is used to authorize the admin when adding a track to the admin queue.\n
-The content for `track_id` has to be queried with a previous call to [queryTracks](#query_tracks).\n
+The content for `track_id` has to be queried with a call to [queryTracks](#query_tracks).\n
 `queue_type` indicates in which queue the track should be added. Valid values are `admin` or `normal`. If omitted it is set to `normal`.
 
 #### Response
@@ -274,7 +275,7 @@ Vote for a track or revoke a vote.
 }
 ~~~~~
 
-The content for `track_id` has to be queried with a previous call to [queryTracks](#query_tracks).\n
+The content for `track_id` has to be queried with a call to [queryTracks](#query_tracks).\n
 If `vote` is a `0` an already given vote is revoked, while setting `vote` to a non-zero value votes for the track.
 
 **Note**: The actual value of non-zero values are not important (it will always count as `1`)!
@@ -313,12 +314,16 @@ Using this endpoint the client can cause the player behaviour to change.
 
 The value of `player_action` controls which action the server should take. Valid values are:
 
-- Play
-- Pause
-- Stop
-- Skip
-- VolumeUp
-- VolumeDown
+- `"play"`: Starts or resumes playback
+- `"pause"`: Pauses the playback. If it is already paused or stopped nothing happens.
+- `"stop"`: Stops playback and remove the currently playing track (if any). If playback is paused remove
+  the track as well. If it is already stopped nothing happens.
+- `"skip"`: Removes the currently playing (or paused) track and play the next one in the queue. If playback is stopped
+  remove the next queued track without resuming playback.
+- `"volume_up"`: Raises the volume by a fixed amount if it is not already at its maximum value.
+- `"volume_down"`: Lowers the volume by a fixed amount if it is not already at its minimum value.
+
+**Note**: The current volume level cannot be queried by now.
 
 #### Response
 
@@ -362,18 +367,10 @@ normal queue. When `queue_type` specifies the queue the track is already in, not
 
 ~~~~~{.c}
 {
-    "track": {
-        "track_id": "<track_id>",
-        "title": "<track_title>",
-        "album": "<album_name>",
-        "artist": "<artist_name>",
-        "duration": "<duration>",
-        "icon_uri": "<uri>"
-    }
 }
 ~~~~~
 
-`track` contains the moved track. If no track has been moved the field does not exist.
+A successful call (the track was moved or was already in the right queue) responds with an empty JSON object.
 
 ### Remove tracks from queues
 
@@ -403,15 +400,7 @@ This ID can be received by [getCurrentQueues](#get_current_queues).
 
 ~~~~~{.c}
 {
-    "track": {
-        "track_id": "<track_id>",
-        "title": "<track_title>",
-        "album": "<album_name>",
-        "artist": "<artist_name>",
-        "duration": "<duration>",
-        "icon_uri": "<uri>"
-    }
 }
 ~~~~~
 
-`track` contains the removed track.
+A successful call responds with an empty JSON object.
