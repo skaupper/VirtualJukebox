@@ -116,3 +116,12 @@ clang_format_add_target()
 # TODO: set required doxygen configurations
 set(DOXYGEN_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/docs/)
 doxygen_add_docs(doc ${DOC_SOURCES} ${ENTRYPOINT_SOURCE} ${APP_SOURCES} ${APP_HEADER} ${TEST_CASE_SOURCES})
+
+
+################################################################################
+# Examples
+################################################################################
+
+set(EXAMPLE_LIBRARIES ${APP_LIBRARIES})
+set(EXAMPLE_INCLUDE_DIRS ${APP_INCLUDE_DIRS})
+add_subdirectory(examples/)
