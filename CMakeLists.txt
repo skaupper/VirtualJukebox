@@ -84,7 +84,9 @@ set(APP_HEADER          src/JukeBox.h
                         src/RestRequestHandler.h
                         src/RestEndpointHandlers.h
                         src/RequestInformation.h
-                        src/Serializer.h)
+                        src/Serializer.h
+                        src/RestEndpointHandler.h
+                        src/SpotifyApi/SpotifyAPITypes.h)
 
 # Libraries and include directories of dependencies used by the application
 set(APP_LIBRARIES       ${LIBHTTPSERVER_LIBRARIES}
