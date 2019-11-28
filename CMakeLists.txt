@@ -36,7 +36,10 @@ set(APP_SOURCES         src/JukeBox.cpp
                         src/Track.cpp
                         src/Queue.cpp
                         src/LoggingHandler.cpp
-                        src/ConfigHandler.cpp)
+                        src/ConfigHandler.cpp
+                        src/PlaybackTrack.cpp
+                        src/SpotifyBackend.cpp)
+
 
 set(APP_HEADER          src/JukeBox.h
                         src/Track.h
@@ -45,7 +48,10 @@ set(APP_HEADER          src/JukeBox.h
                         src/ConfigHandler.h
                         src/NetworkListener.h
                         src/Result.h
-                        src/GlobalTypes.h)
+                        src/GlobalTypes.h
+                        src/MusicBackend.h
+                        src/PlaybackTrack.h
+                        src/SpotifyBackend.h)
 
 # All source files containing test cases
 set(TEST_CASE_SOURCES   test/helloworld.cpp)
