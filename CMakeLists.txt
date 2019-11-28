@@ -82,7 +82,7 @@ set(TEST_INCLUDE_DIRS   ${GTEST_INCLUDE_DIRS})
 
 # Sources separated in application and test sources
 set(SOURCES      ${ENTRYPOINT_SOURCE} ${APP_SOURCES})
-set(TEST_SOURCES ${APP_SOURCES} ${TEST_CASE_SOURCES})
+set(TEST_SOURCES ${APP_SOURCES} ${TEST_SOURCES})
 
 # Documentation
 #-------------------------------------------------------------------------------
