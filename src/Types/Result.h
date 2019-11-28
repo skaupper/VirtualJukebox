@@ -31,7 +31,9 @@ enum class ErrorCode {
   SpotifyNotFound,
   SpotifyForbidden,
   SpotifyParseError,
-  SpotifyAPIError
+  SpotifyAPIError,
+  AlreadyExists,
+  DoesntExist
 };
 
 /**
