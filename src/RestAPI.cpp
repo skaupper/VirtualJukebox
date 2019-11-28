@@ -20,18 +20,26 @@ static string const CONFIG_SECTION = "RestAPI";
 
 static TResult<int> parsePort(string const &portStr) {
   int port = -1;
+  size_t idx;
 
-  // check if the configuration value for "port" is an integer and a valid port
-  // number
+  // check if the configuration value for "port" is an integer
   try {
-    port = std::stoi(portStr);
-    if (port < 0 || port > 65535) {
-      throw invalid_argument("Port value is out of range");
-    }
+    port = std::stoi(portStr, &idx);
   } catch (invalid_argument const &) {
     return Error(ErrorCode::InvalidFormat,
                  "RestAPI.handleRequests: Configuration value '" +
-                     CONFIG_SECTION + ".port' cannot is not an integer");
+                     CONFIG_SECTION + ".port' is not an integer");
+  }
+
+  // check if the whole string is an integer (idx is set to one past the end)
+  if (idx != portStr.size()) {
+    return Error(
+        ErrorCode::InvalidFormat,
+        "RestAPI.handleRequests: Configuration value for '" + CONFIG_SECTION + ".port' must only consist of digits");
+  }
+
+  if (port < 0 || port > 65535) {
+    return Error(ErrorCode::InvalidValue, "Port value is out of range");
   }
 
   return port;

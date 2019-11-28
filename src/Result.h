@@ -18,7 +18,8 @@ enum class ErrorCode {
   AccessDenied,
   SessionExpired,
   FileNotFound,
-  InvalidFormat
+  InvalidFormat,
+  InvalidValue
 };
 
 /**
