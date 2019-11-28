@@ -40,7 +40,7 @@ TEST(ConfigHandler, getValue_FileNotFound) {
   EXPECT_EQ(get<Error>(ret).getErrorCode(), ErrorCode::FileNotFound);
 }
 
-TEST(ConfigHandler, getValue_Int) {
+TEST(ConfigHandler, getValueInt) {
   string const configFilePath = "../test/test_config.ini";
   string const section = "MainParams";
   string const key = "port";
@@ -54,4 +54,19 @@ TEST(ConfigHandler, getValue_Int) {
 
   int value = get<int>(ret);
   EXPECT_EQ(value, 4711);
+}
+
+TEST(ConfigHandler, getValueInt_InvalidParameterFormat) {
+  string const configFilePath = "../test/test_config.ini";
+  string const section = "MainParams";
+  string const key = "wrongFormat";
+
+  shared_ptr<ConfigHandler> conf = ConfigHandler::getInstance();
+  conf->setConfigFilePath(configFilePath);
+
+  TResult<int> ret = conf->getValueInt(section, key);
+
+  bool error = holds_alternative<Error>(ret);
+  ASSERT_EQ(error, true);
+  EXPECT_EQ(get<Error>(ret).getErrorCode(), ErrorCode::InvalidParameterFormat);
 }
