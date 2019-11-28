@@ -34,9 +34,17 @@ TResult<string> ConfigHandler::getValueString(string section, string key) {
   SI_Error rc = ini.LoadFile(mConfigFilePath.c_str());
   if (rc < 0)
     return Error(ErrorCode::FileNotFound,
-                 "ConfigHandler.getValueString: couldn't load file");
+                 "ConfigHandler.getValueString: couldn't load file.");
 
-  return ini.GetValue(section.c_str(), key.c_str());
+  string const errorReturnCode = "thisIsAUniqueErrorCode";
+  string val =
+      ini.GetValue(section.c_str(), key.c_str(), errorReturnCode.c_str());
+  if (val == errorReturnCode) {
+    string errmsg = "ConfigHandler.getValueString: Key " + key +
+                    " not found in section " + section;
+    return Error(ErrorCode::KeyNotFound, errmsg);
+  }
+  return val;
 }
 
 /* @brief Returns value of a key as integer
@@ -57,15 +65,14 @@ TResult<int> ConfigHandler::getValueInt(string section, string key) {
   SI_Error rc = ini.LoadFile(mConfigFilePath.c_str());
   if (rc < 0)
     return Error(ErrorCode::FileNotFound,
-                 "ConfigHandler.getValueInt: couldn't load file");
+                 "ConfigHandler.getValueInt: couldn't load file.");
 
   int val = ini.GetLongValue(section.c_str(), key.c_str(), INT32_MAX);
 
   if (val == INT32_MAX) {
-    string errmsg =
-        "ConfigHandler.getValueInt: invalid parameter format in section " +
-        section + ", key " + key;
-    return Error(ErrorCode::InvalidParameterFormat, errmsg);
+    string errmsg = "ConfigHandler.getValueInt: section " + section + ", key " +
+                    key + " not found, or has invalid parameter format.";
+    return Error(ErrorCode::KeyNotFoundOrInvalidKeyFormat, errmsg);
   }
   return val;
 }
