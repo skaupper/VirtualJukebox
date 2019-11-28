@@ -68,10 +68,15 @@ class EmptyNetworkListener : public NetworkListener {
 };
 
 int main(int argc, char *argv[]) {
+  if (argc != 2) {
+    cout << "Usage: " << argv[0] << " <path_to_config_file>" << std::endl;
+    return 0;
+  }
+
   EmptyNetworkListener listener;
   RestAPI api;
 
-  ConfigHandler::getInstance()->setConfigFilePath("../jukebox_config.ini");
+  ConfigHandler::getInstance()->setConfigFilePath(argv[1]);
 
   api.setListener(&listener);
   auto result = api.handleRequests();
