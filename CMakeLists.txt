@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.9)
+cmake_minimum_required(VERSION 3.10.2)
 
 project(VirtualJukebox)
 
@@ -9,9 +9,9 @@ cmake_policy(SET CMP0054 NEW)
 ################################################################################
 
 # Build debug version by default, unless specified otherwise
-IF(NOT CMAKE_BUILD_TYPE)
-   SET(CMAKE_BUILD_TYPE Debug)
-ENDIF()
+if(NOT DEFINED CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Debug)
+endif()
 
 set(CMAKE_CXX_STANDARD 17)
 set(CXX_STANDARD_REQUIRED ON)
@@ -33,7 +33,7 @@ include(cmake/LibHttpServer.cmake)
 ################################################################################
 
 find_package(GTest REQUIRED)
-find_package(Doxygen REQUIRED)
+find_package(Doxygen)
 
 ################################################################################
 # Source files
@@ -86,8 +86,8 @@ set(TEST_LIBRARIES      ${APP_LIBRARIES}
 set(TEST_INCLUDE_DIRS   ${GTEST_INCLUDE_DIRS})
 
 
-# Sources separated in application and test sources
-set(TEST_SOURCES        ${TEST_SOURCES})
+# Specify sources for formatting
+set(FORMATTING_SOURCES ${ENTRYPOINT_SOURCE} ${APP_SOURCES} ${APP_HEADER} ${TEST_SOURCES})
 
 # Documentation
 #-------------------------------------------------------------------------------
@@ -128,30 +128,37 @@ add_test(${TEST_TARGET} ${TEST_TARGET})
 
 # Other
 #-------------------------------------------------------------------------------
-
-clang_format_add_target()
+clang_format_add_target(${FORMATTING_SOURCES})
 
 ################################################################################
 # Doxygen
 ################################################################################
-
-# TODO: set required doxygen configurations
-set(DOXYGEN_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/docs/)
-doxygen_add_docs(doc ${DOC_SOURCES} ${ENTRYPOINT_SOURCE} ${APP_SOURCES} ${APP_HEADER} ${TEST_SOURCES})
+if(DOXYGEN_FOUND)
+  message(STATUS "Add Doxygen target")
+  set(DOXYGEN_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/docs/)
+  doxygen_add_docs(doc ${DOC_SOURCES} ${ENTRYPOINT_SOURCE} ${APP_SOURCES} ${APP_HEADER} ${TEST_SOURCES})
+else()
+  message(STATUS "Do not add Doxygen target (Doxygen was not found)")
+endif()
 
 
 ################################################################################
 # Examples
 ################################################################################
 # Build examples, unless specified otherwise
-if(NOT BUILD_EXAMPLES)
-  # prepare some variables so the examples can use them easily
+if(NOT DEFINED BUILD_EXAMPLES)
+  set(BUILD_EXAMPLES TRUE)
+endif()
 
-  # prepend all sources with the source directory (transforms them to absolute paths)
-  list(TRANSFORM EXAMPLE_APP_SOURCES PREPEND ${CMAKE_CURRENT_SOURCE_DIR}/)
+if(BUILD_EXAMPLES)
+  message(STATUS "Build examples")
+
+  # prepare some variables so the examples can use them easily
   set(EXAMPLE_APP_LIBRARIES ${APP_LIBRARIES})
   set(EXAMPLE_APP_INCLUDE_DIRS ${APP_INCLUDE_DIRS})
   set(EXAMPLE_APP_OBJECTS ${APP_OBJECTS})
 
   add_subdirectory(examples/)
+else()
+  message(STATUS "Do not build examples")
 endif()

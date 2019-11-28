@@ -9,7 +9,8 @@ endif()
 
 function (clang_format_add_target)
   # Generate absolute paths
-  set(CLANG_FORMAT_SOURCES_RELATIVE ${SOURCES} ${TEST_SOURCES})
+  set(FORMATTING_SOURCES ${ARGN}) # ARGN contains all parameters past the last one
+  set(CLANG_FORMAT_SOURCES_RELATIVE ${FORMATTING_SOURCES})
   foreach(source ${CLANG_FORMAT_SOURCES_RELATIVE})
     get_filename_component(source ${source} ABSOLUTE)
     list(APPEND CLANG_FORMAT_SOURCES_ABS ${source})
