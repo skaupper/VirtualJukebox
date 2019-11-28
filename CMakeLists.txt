@@ -73,14 +73,12 @@ set(APP_INCLUDE_DIRS    ${LIBHTTPSERVER_INCLUDE_DIRS}
                         ${LIBMICROHTTPD_INCLUDE_DIRS})
 
 # All source files containing test cases
-set(TEST_CASE_SOURCES   test/helloworld.cpp)
+set(TEST_SOURCES        test/Test_ConfigHandler.cpp)
 # Libraries and include directories of dependencies used by the tests
 set(TEST_LIBRARIES      ${GTEST_BOTH_LIBRARIES}
                         pthread)
 set(TEST_INCLUDE_DIRS   ${GTEST_INCLUDE_DIRS})
 
-# All source files containing test cases
-set(TEST_CASE_SOURCES   test/Test_ConfigHandler.cpp)
 
 # Sources separated in application and test sources
 set(SOURCES      ${ENTRYPOINT_SOURCE} ${APP_SOURCES})
@@ -128,7 +126,7 @@ clang_format_add_target()
 
 # TODO: set required doxygen configurations
 set(DOXYGEN_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/docs/)
-doxygen_add_docs(doc ${DOC_SOURCES} ${ENTRYPOINT_SOURCE} ${APP_SOURCES} ${APP_HEADER} ${TEST_CASE_SOURCES})
+doxygen_add_docs(doc ${DOC_SOURCES} ${ENTRYPOINT_SOURCE} ${APP_SOURCES} ${APP_HEADER} ${TEST_SOURCES})
 
 
 ################################################################################
