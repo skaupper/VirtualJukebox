@@ -2,18 +2,14 @@
 # Build examples
 ################################################################################
 
-# Used variables:
-# - EXAMPLE_LIBRARIES: libraries to link against all examples
-# - EXAMPLE_INCLUDE_DIRS: additional include directories to use
+# Interesting variables:
+# - APP_LIBRARIES: libraries which are by the app (examples normally do not have further libs)
+# - APP_INCLUDE_DIRS: include directories used by the app
 
+include_directories(${APP_INCLUDE_DIRS})
 
-if(BUILD_EXAMPLES)
-  include_directories(${EXAMPLE_INCLUDE_DIRS})
+# libhttpserver example
+add_executable(hello_libhttpserver hello_libhttpserver.cpp)
+target_link_libraries(hello_libhttpserver ${APP_LIBRARIES})
 
-  # libhttpserver example
-  add_executable(hello_libhttpserver hello_libhttpserver.cpp)
-  target_link_libraries(hello_libhttpserver ${EXAMPLE_LIBRARIES})
-
-  # ...
-
-endif()
+# ...

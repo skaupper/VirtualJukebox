@@ -121,7 +121,7 @@ doxygen_add_docs(doc ${DOC_SOURCES} ${ENTRYPOINT_SOURCE} ${APP_SOURCES} ${APP_HE
 ################################################################################
 # Examples
 ################################################################################
-set(BUILD_EXAMPLES TRUE)
-set(EXAMPLE_LIBRARIES ${APP_LIBRARIES})
-set(EXAMPLE_INCLUDE_DIRS ${APP_INCLUDE_DIRS})
-add_subdirectory(examples/)
+# Build examples, unless specified otherwise
+if(NOT BUILD_EXAMPLES)
+  add_subdirectory(examples/)
+endif()
