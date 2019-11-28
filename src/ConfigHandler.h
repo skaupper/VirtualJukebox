@@ -16,7 +16,7 @@
 class ConfigHandler {
  public:
   ~ConfigHandler() = default;
-  static ConfigHandler& GetInstance();
+  static const std::shared_ptr<ConfigHandler>& getInstance();
 
   void setConfigFilePath(std::string filepath);
   TResult<std::string> getValue(std::string section, std::string key);

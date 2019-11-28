@@ -13,10 +13,10 @@ using namespace std;
 /*  Initialize static member */
 shared_ptr<ConfigHandler> ConfigHandler::mInstance{nullptr};
 
-ConfigHandler& ConfigHandler::GetInstance() {
+const std::shared_ptr<ConfigHandler>& ConfigHandler::getInstance() {
   if (mInstance == nullptr)
     mInstance = shared_ptr<ConfigHandler>(new ConfigHandler);
-  return *mInstance;
+  return mInstance;
 }
 
 void ConfigHandler::setConfigFilePath(string filepath) {

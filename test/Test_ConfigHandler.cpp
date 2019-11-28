@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <iostream>
+#include <memory>
 
 #include "../src/ConfigHandler.h"
 #include "../src/Result.h"
@@ -13,9 +14,9 @@ TEST(ConfigHandler, getValue_HappyCase) {
   string const section = "MainParams";
   string const key = "ip";
 
-  ConfigHandler& conf = ConfigHandler::GetInstance();
-  conf.setConfigFilePath(configFilePath);
-  TResult<string> ret = conf.getValue(section, key);
+  shared_ptr<ConfigHandler> conf = ConfigHandler::getInstance();
+  conf->setConfigFilePath(configFilePath);
+  TResult<string> ret = conf->getValue(section, key);
 
   bool error = holds_alternative<Error>(ret);
   ASSERT_EQ(error, false);
@@ -29,10 +30,10 @@ TEST(ConfigHandler, getValue_FileNotFound) {
   string const section = "MainParams";
   string const key = "ip";
 
-  ConfigHandler& conf = ConfigHandler::GetInstance();
-  conf.setConfigFilePath(configFilePath);
+  shared_ptr<ConfigHandler> conf = ConfigHandler::getInstance();
+  conf->setConfigFilePath(configFilePath);
 
-  TResult<string> ret = conf.getValue(section, key);
+  TResult<string> ret = conf->getValue(section, key);
 
   bool error = holds_alternative<Error>(ret);
   ASSERT_EQ(error, true);

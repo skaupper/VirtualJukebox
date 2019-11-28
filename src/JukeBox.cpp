@@ -7,6 +7,7 @@
 #include "JukeBox.h"
 
 #include <iostream>
+#include <memory>
 
 #include "ConfigHandler.h"
 #include "GlobalTypes.h"
@@ -15,8 +16,8 @@
 using namespace std;
 
 void JukeBox::start(string configFilePath) {
-  ConfigHandler& conf = ConfigHandler::GetInstance();
-  conf.setConfigFilePath(configFilePath);
+  shared_ptr<ConfigHandler> conf = ConfigHandler::getInstance();
+  conf->setConfigFilePath(configFilePath);
 }
 
 TResult<TSessionID> JukeBox::generateSession(TPassword pw) {
