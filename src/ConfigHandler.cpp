@@ -23,12 +23,26 @@ void ConfigHandler::setConfigFilePath(string filepath) {
   mConfigFilePath = filepath;
 }
 
-TResult<string> ConfigHandler::getValue(string section, string key) {
-  bool a_bIsUtf8 = false;        // use OS native encoding
-  bool a_bUseMultiKey = false;   // don't support duplicated keys
-  bool a_bUseMultiLine = false;  // don't support multiline values for a key
+TResult<string> ConfigHandler::getValueString(string section, string key) {
+  bool const isUtf8 = false;        // use OS native encoding
+  bool const useMultiKey = false;   // don't support duplicated keys
+  bool const useMultiLine = false;  // don't support multiline values for a key
 
-  CSimpleIniA ini(a_bIsUtf8, a_bUseMultiKey, a_bUseMultiLine);
+  CSimpleIniA ini(isUtf8, useMultiKey, useMultiLine);
+  SI_Error rc = ini.LoadFile(mConfigFilePath.c_str());
+  if (rc < 0)
+    return Error(ErrorCode::FileNotFound,
+                 "ConfigHandler.getValue: couldn't load file");
+
+  return ini.GetValue(section.c_str(), key.c_str());
+}
+
+TResult<string> ConfigHandler::getValueInt(string section, string key) {
+  bool const isUtf8 = false;        // use OS native encoding
+  bool const useMultiKey = false;   // don't support duplicated keys
+  bool const useMultiLine = false;  // don't support multiline values for a key
+
+  CSimpleIniA ini(isUtf8, useMultiKey, useMultiLine);
   SI_Error rc = ini.LoadFile(mConfigFilePath.c_str());
   if (rc < 0)
     return Error(ErrorCode::FileNotFound,
