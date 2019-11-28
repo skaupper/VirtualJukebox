@@ -20,7 +20,7 @@ void JukeBox::start(string configFilePath) {
   conf->setConfigFilePath(configFilePath);
 }
 
-TResult<TSessionID> JukeBox::generateSession(TPassword pw) {
+TResult<TSessionID> JukeBox::generateSession(TPassword const &pw) {
   TResult<TSessionID> ret;
 
   //  ret = mMemory.generateSession();
@@ -28,7 +28,8 @@ TResult<TSessionID> JukeBox::generateSession(TPassword pw) {
   return ret;
 }
 
-TResult<vector<Track>> JukeBox::queryTracks(string searchPattern) {
+TResult<vector<Track>> JukeBox::queryTracks(string const &searchPattern,
+                                            size_t const nrOfEntries) {
   TResult<vector<Track>> ret;
 
   return ret;
@@ -37,20 +38,28 @@ TResult<vector<Track>> JukeBox::queryTracks(string searchPattern) {
 // TResult<QueueStatus> JukeBox::getCurrentQueues() {
 //}
 
-TResultOpt JukeBox::addTrackToQueue(TSessionID sid,
-                                    TTrackID trkid,
+TResultOpt JukeBox::addTrackToQueue(TSessionID const &sid,
+                                    TTrackID const &trkid,
                                     QueueType type) {
   return Error(ErrorCode::AccessDenied, "this is an example error message");
 }
 
-TResultOpt JukeBox::voteTrack(TSessionID sid, TTrackID trkid, TVote vote) {
+TResultOpt JukeBox::voteTrack(TSessionID const &sid,
+                              TTrackID const &trkid,
+                              TVote vote) {
+  return nullopt;
 }
 
-TResult<Track> JukeBox::removeTrack(TSessionID sid, TTrackID trkid) {
+TResultOpt JukeBox::removeTrack(TSessionID const &sid, TTrackID const &trkid) {
+  return nullopt;
 }
 
-TResult<Track> JukeBox::moveTrack(TSessionID sid, TTrackID trkid) {
+TResultOpt JukeBox::moveTrack(TSessionID const &sid,
+                              TTrackID const &trkid,
+                              QueueType type) {
+  return nullopt;
 }
 
-TResultOpt JukeBox::controlPlayer(TSessionID sid, PlayerAction action) {
+TResultOpt JukeBox::controlPlayer(TSessionID const &sid, PlayerAction action) {
+  return nullopt;
 }
