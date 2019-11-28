@@ -13,38 +13,56 @@
 
 #include <iostream>
 
+#include "ConfigHandler.h"
 #include "RestAPI.h"
 
 using namespace std;
 
 class EmptyNetworkListener : public NetworkListener {
-  TResult<TSessionID> generateSession(TPassword pw) {
+  TResult<TSessionID> generateSession(TPassword const &pw) override {
     cout << "generateSession" << endl;
     return static_cast<TSessionID>("12345678");
   }
 
-  TResult<vector<Track>> queryMusic(string searchPattern) {
-    cout << "queryMusic" << endl;
+  TResult<vector<Track>> queryTracks(string const &searchPattern,
+                                     size_t const nrOfEntries) override {
+    cout << "queryTracks" << endl;
     return {};
   }
 
-  TResult<Queues> getCurrentQueues() {
-    cout << "getCurrentQueues" << endl;
-    return Error(ErrorCode::AccessDedied, "currentQueues");
-  }
+  //   TResult<QueueStatus> getCurrentQueues() override{
+  //     cout << "getCurrentQueues" << endl;
+  //   }
 
-  TResultOpt addTrackToQueue(TSessionID sid, TTrackID trkid, QueueType type) {
+  TResultOpt addTrackToQueue(TSessionID const &sid,
+                             TTrackID const &trkid,
+                             QueueType type) override {
     cout << "addTrackToQueue" << endl;
     return nullopt;
   }
 
-  TResultOpt voteTrack(TSessionID sid, TTrackID trkid) {
+  TResultOpt voteTrack(TSessionID const &sid,
+                       TTrackID const &trkid,
+                       TVote vote) override {
     cout << "voteTrack" << endl;
     return nullopt;
   }
 
-  TResultOpt controlPlayer(TSessionID sid, PlayerAction action) {
+  TResultOpt controlPlayer(TSessionID const &sid,
+                           PlayerAction action) override {
     cout << "controlPlayer" << endl;
+    return nullopt;
+  }
+
+  TResultOpt removeTrack(TSessionID const &sid,
+                         TTrackID const &trkid) override {
+    cout << "removeTrack" << endl;
+    return nullopt;
+  }
+  TResultOpt moveTrack(TSessionID const &sid,
+                       TTrackID const &trkid,
+                       QueueType type) override {
+    cout << "removeTrack" << endl;
     return nullopt;
   }
 };
@@ -53,8 +71,13 @@ int main(int argc, char *argv[]) {
   EmptyNetworkListener listener;
   RestAPI api;
 
+  ConfigHandler::getInstance()->setConfigFilePath("../jukebox_config.ini");
+
   api.setListener(&listener);
-  api.handleRequests();
+  auto result = api.handleRequests();
+  if (result.has_value()) {
+    cerr << result.value().getErrorMessage() << std::endl;
+  }
 
   return 0;
 }

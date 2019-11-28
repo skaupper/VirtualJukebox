@@ -16,10 +16,42 @@
 using namespace std;
 using namespace httpserver;
 
+static string const CONFIG_SECTION = "RestAPI";
+
+static TResult<int> parsePort(string const &portStr) {
+  int port = -1;
+
+  // check if the configuration value for "port" is an integer and a valid port
+  // number
+  try {
+    port = std::stoi(portStr);
+    if (port < 0 || port > 65535) {
+      throw invalid_argument("Port value is out of range");
+    }
+  } catch (invalid_argument const &) {
+    return Error(ErrorCode::InvalidFormat,
+                 "RestAPI.handleRequests: Configuration value '" +
+                     CONFIG_SECTION + ".port' cannot is not an integer");
+  }
+
+  return port;
+}
+
 TResultOpt RestAPI::handleRequests() {
-  //   auto configHandler = ConfigHandler::GetInstance();
-  //   auto port = configHandler.getValue("RestAPI");
-  auto port = 8080;
+  auto configHandler = ConfigHandler::getInstance();
+
+  TResult<string> configPort = configHandler->getValue(CONFIG_SECTION, "port");
+  if (holds_alternative<Error>(configPort)) {
+    return std::get<Error>(configPort);
+  }
+
+  auto parsedPort = parsePort(std::get<string>(configPort));
+  if (holds_alternative<Error>(parsedPort)) {
+    return std::get<Error>(parsedPort);
+  }
+
+  int port = std::get<int>(parsedPort);
+
   auto webserverParams =
       create_webserver(port)                                         //
           .not_found_resource(RestEndpointHandler::NotFoundHandler)  //

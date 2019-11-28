@@ -5,13 +5,22 @@ project(VirtualJukebox)
 cmake_policy(SET CMP0054 NEW)
 
 ################################################################################
-# Compiler settings
+# Set default values for input parameter
 ################################################################################
 
+# Build examples, unless specified otherwise
+if(NOT DEFINED BUILD_EXAMPLES)
+  set(BUILD_EXAMPLES TRUE)
+endif()
+
 # Build debug version by default, unless specified otherwise
-if(NOT DEFINED CMAKE_BUILD_TYPE)
+if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Debug)
 endif()
+
+################################################################################
+# Compiler settings
+################################################################################
 
 set(CMAKE_CXX_STANDARD 17)
 set(CXX_STANDARD_REQUIRED ON)
@@ -91,6 +100,11 @@ set(TEST_INCLUDE_DIRS   ${GTEST_INCLUDE_DIRS})
 # Specify sources for formatting
 set(FORMATTING_SOURCES ${ENTRYPOINT_SOURCE} ${APP_SOURCES} ${APP_HEADER} ${TEST_SOURCES})
 
+if(BUILD_EXAMPLES)
+  file(GLOB EXAMPLE_FORMATTING_SOURCES examples/*.cpp examples/*.h)
+  set(FORMATTING_SOURCES ${FORMATTING_SOURCES} ${EXAMPLE_FORMATTING_SOURCES})
+endif()
+
 # Documentation
 #-------------------------------------------------------------------------------
 set(DOC_SOURCES         docs/src/main.md
@@ -105,6 +119,7 @@ set(DOC_SOURCES         docs/src/main.md
 #-------------------------------------------------------------------------------
 set(APP_OBJECTS app_object_library)
 add_library(${APP_OBJECTS} OBJECT ${APP_SOURCES} ${APP_HEADER})
+target_compile_options(${APP_OBJECTS} PRIVATE ${SRC_COMPILER_OPTIONS})
 
 
 # Main program executable
@@ -112,7 +127,6 @@ add_library(${APP_OBJECTS} OBJECT ${APP_SOURCES} ${APP_HEADER})
 include_directories(${APP_INCLUDE_DIRS})
 add_executable(${PROJECT_NAME} ${ENTRYPOINT_SOURCE} $<TARGET_OBJECTS:${APP_OBJECTS}>)
 target_link_libraries(${PROJECT_NAME} ${APP_LIBRARIES})
-target_compile_options(${PROJECT_NAME} PRIVATE ${SRC_COMPILER_OPTIONS})
 
 # Test program, running unit tests
 #-------------------------------------------------------------------------------
@@ -147,10 +161,6 @@ endif()
 ################################################################################
 # Examples
 ################################################################################
-# Build examples, unless specified otherwise
-if(NOT DEFINED BUILD_EXAMPLES)
-  set(BUILD_EXAMPLES TRUE)
-endif()
 
 if(BUILD_EXAMPLES)
   message(STATUS "Build examples")

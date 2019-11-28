@@ -28,14 +28,21 @@ class JukeBox : public NetworkListener {
  public:
   void start(std::string configFilePath);
 
-  TResult<TSessionID> generateSession(TPassword pw);
-  TResult<std::vector<Track>> queryTracks(std::string searchPattern);
+  TResult<TSessionID> generateSession(TPassword const &pw) override;
+  TResult<std::vector<Track>> queryTracks(std::string const &searchPattern,
+                                          size_t const nrOfEntries) override;
   // TResult<QueueStatus> getCurrentQueues();
-  TResultOpt addTrackToQueue(TSessionID sid, TTrackID trkid, QueueType type);
-  TResultOpt voteTrack(TSessionID sid, TTrackID trkid, TVote vote);
-  TResult<Track> removeTrack(TSessionID sid, TTrackID trkid);
-  TResult<Track> moveTrack(TSessionID sid, TTrackID trkid);
-  TResultOpt controlPlayer(TSessionID sid, PlayerAction action);
+  TResultOpt addTrackToQueue(TSessionID const &sid,
+                             TTrackID const &trkid,
+                             QueueType type) override;
+  TResultOpt voteTrack(TSessionID const &sid,
+                       TTrackID const &trkid,
+                       TVote vote) override;
+  TResultOpt removeTrack(TSessionID const &sid, TTrackID const &trkid) override;
+  TResultOpt moveTrack(TSessionID const &sid,
+                       TTrackID const &trkid,
+                       QueueType type) override;
+  TResultOpt controlPlayer(TSessionID const &sid, PlayerAction action) override;
 
  private:
   //  LoggingHandler mLog;

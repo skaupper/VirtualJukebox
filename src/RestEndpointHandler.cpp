@@ -15,7 +15,6 @@
 using namespace std;
 using namespace httpserver;
 
-static string const CONFIG_SECTION = "RestAPI";
 static string const API_BASE_PATH = "/api/v1";
 
 //
