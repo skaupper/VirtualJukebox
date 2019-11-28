@@ -36,6 +36,7 @@ set(SRC_COMPILER_OPTIONS
 include(cmake/ClangFormat.cmake)
 include(cmake/LibMicroHttpd.cmake)
 include(cmake/LibHttpServer.cmake)
+include(cmake/LibRestClient-cpp.cmake)
 
 ################################################################################
 # Find packages with built-in support
@@ -83,10 +84,12 @@ set(APP_HEADER          src/JukeBox.h
 
 # Libraries and include directories of dependencies used by the application
 set(APP_LIBRARIES       ${LIBHTTPSERVER_LIBRARIES}
-                        ${LIBMICROHTTPD_LIBRARIES})
+                        ${LIBMICROHTTPD_LIBRARIES}
+                        ${LIBRESTCLIENT_LIBRARIES})
 set(APP_INCLUDE_DIRS    src/
                         ${LIBHTTPSERVER_INCLUDE_DIRS}
-                        ${LIBMICROHTTPD_INCLUDE_DIRS})
+                        ${LIBMICROHTTPD_INCLUDE_DIRS}
+                        ${LIBRESTCLIENT_INCLUDE_DIRS})
 
 # All source files containing test cases
 set(TEST_SOURCES        test/Test_ConfigHandler.cpp)
