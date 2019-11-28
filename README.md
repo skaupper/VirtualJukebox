@@ -9,6 +9,18 @@ TODO
 - Doxygen
 - clang-format-6.0
 
+### Bundled dependencies
+
+Some dependencies are bundled with this repository as submodules to allow a less painful installation process.
+For these dependencies there are scripts provided which clone, build and install the libraries for your system.
+Note that these scripts require root privileges in order to install the library files and the corresponding headers
+to your system directories!
+
+Bundled dependencies are:
+
+- libmicrohttpd
+- libhttpserver
+
 ## Installation
 
 1. Create a build directory: `mkdir build`

@@ -21,6 +21,15 @@ set(CXX_STANDARD_REQUIRED ON)
 ################################################################################
 
 include(cmake/ClangFormat.cmake)
+include(cmake/LibMicroHttpd.cmake)
+include(cmake/LibHttpServer.cmake)
+
+################################################################################
+# Find packages with built-in support
+################################################################################
+
+find_package(GTest REQUIRED)
+find_package(Doxygen REQUIRED)
 
 ################################################################################
 # Source files
@@ -53,8 +62,19 @@ set(APP_HEADER          src/JukeBox.h
                         src/PlaybackTrack.h
                         src/SpotifyBackend.h)
 
+# Libraries and include directories of dependencies used by the application
+set(APP_LIBRARIES       ${LIBHTTPSERVER_LIBRARIES}
+                        ${LIBMICROHTTPD_LIBRARIES})
+set(APP_INCLUDE_DIRS    ${LIBHTTPSERVER_INCLUDE_DIRS}
+                        ${LIBMICROHTTPD_INCLUDE_DIRS})
+
 # All source files containing test cases
 set(TEST_CASE_SOURCES   test/helloworld.cpp)
+# Libraries and include directories of dependencies used by the tests
+set(TEST_LIBRARIES      ${GTEST_BOTH_LIBRARIES}
+                        pthread)
+set(TEST_INCLUDE_DIRS   ${GTEST_INCLUDE_DIRS})
+
 
 # Sources separated in application and test sources
 set(SOURCES      ${ENTRYPOINT_SOURCE} ${APP_SOURCES})
@@ -66,30 +86,26 @@ set(DOC_SOURCES         docs/src/main.md
                         docs/src/RESTInterface.md
                         docs/src/ClassDiagram.md)
 
-# TODO: add compile time dependencies here
-
 ################################################################################
 # Targets
 ################################################################################
 
 # Main program executable
 #-------------------------------------------------------------------------------
+include_directories(${APP_INCLUDE_DIRS})
 add_executable(${PROJECT_NAME} ${SOURCES})
-
-# TODO: add library dependencies here
+target_link_libraries(${PROJECT_NAME} ${APP_LIBRARIES})
 
 # Test program, running unit tests
 #-------------------------------------------------------------------------------
 set(TEST_TARGET test${PROJECT_NAME})
 
-# Enable testing and look for gtest installation
 enable_testing()
-find_package(GTest REQUIRED)
-include_directories(${GTEST_INCLUDE_DIRS})
 
 # Add test executable and link to required libs
+include_directories(${TEST_INCLUDE_DIRS})
 add_executable(${TEST_TARGET} ${TEST_SOURCES})
-target_link_libraries(${TEST_TARGET} ${GTEST_BOTH_LIBRARIES} pthread)
+target_link_libraries(${TEST_TARGET} ${TEST_LIBRARIES})
 
 # Add test target, so tests can be executed using `make test`
 add_test(${TEST_TARGET} ${TEST_TARGET})
@@ -103,8 +119,15 @@ clang_format_add_target()
 # Doxygen
 ################################################################################
 
-find_package(Doxygen REQUIRED)
-
 # TODO: set required doxygen configurations
 set(DOXYGEN_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/docs/)
 doxygen_add_docs(doc ${DOC_SOURCES} ${ENTRYPOINT_SOURCE} ${APP_SOURCES} ${APP_HEADER} ${TEST_CASE_SOURCES})
+
+
+################################################################################
+# Examples
+################################################################################
+# Build examples, unless specified otherwise
+if(NOT BUILD_EXAMPLES)
+  add_subdirectory(examples/)
+endif()
