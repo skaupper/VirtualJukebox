@@ -70,20 +70,3 @@ TEST(ConfigHandler, getValueInt_InvalidParameterFormat) {
   ASSERT_EQ(error, true);
   EXPECT_EQ(get<Error>(ret).getErrorCode(), ErrorCode::InvalidParameterFormat);
 }
-
-TEST(ConfigHandler, getValueInt_EdgeCaseParameterFormat) {
-  string const configFilePath = "../test/test_config.ini";
-  string const section = "MainParams";
-  string const key = "edgeCaseFormat";
-
-  shared_ptr<ConfigHandler> conf = ConfigHandler::getInstance();
-  conf->setConfigFilePath(configFilePath);
-
-  TResult<int> ret = conf->getValueInt(section, key);
-
-  bool error = holds_alternative<Error>(ret);
-  ASSERT_EQ(error, false);
-
-  int value = get<int>(ret);
-  EXPECT_EQ(value, 47);
-}

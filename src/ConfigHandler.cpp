@@ -44,9 +44,9 @@ TResult<string> ConfigHandler::getValueString(string section, string key) {
  * of a key.
  * [MainParams]
  * goodFormat=4711
- * wrongFormat=xx4711
- * invalidFormat=47xx11 --> This is an "edge case".
- *                          The result would be 47 without returning an error.
+ * wrongFormat1=xx4711
+ * wrongFormat2=4711xx
+ * wrongFormat3=47xx11
  */
 TResult<int> ConfigHandler::getValueInt(string section, string key) {
   bool const isUtf8 = false;        // use OS native encoding
@@ -59,14 +59,13 @@ TResult<int> ConfigHandler::getValueInt(string section, string key) {
     return Error(ErrorCode::FileNotFound,
                  "ConfigHandler.getValueInt: couldn't load file");
 
-  string valStr = ini.GetValue(section.c_str(), key.c_str());
+  int val = ini.GetLongValue(section.c_str(), key.c_str(), INT32_MAX);
 
-  int valInt;
-  if (sscanf(valStr.c_str(), "%d", &valInt) != 1) {
+  if (val == INT32_MAX) {
     string errmsg =
         "ConfigHandler.getValueInt: invalid parameter format in section " +
         section + ", key " + key;
     return Error(ErrorCode::InvalidParameterFormat, errmsg);
   }
-  return valInt;
+  return val;
 }
