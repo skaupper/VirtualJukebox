@@ -1,8 +1,10 @@
+/*****************************************************************************/
 /**
  * @file    NetworkAPI.h
  * @author  Sebastian Kaupper <kauppersebastian@gmail.com>
  * @brief   Definition of class NetworkAPI
  */
+/*****************************************************************************/
 
 #ifndef NETWORK_API_H_INCLUDED
 #define NETWORK_API_H_INCLUDED
@@ -25,6 +27,7 @@ class NetworkAPI {
   NetworkAPI(NetworkAPI const &) = delete;
   NetworkAPI &operator=(NetworkAPI const &) = delete;
 
+ protected:
   NetworkListener *listener;
 };
 

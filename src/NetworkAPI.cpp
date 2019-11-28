@@ -1,8 +1,10 @@
+/*****************************************************************************/
 /**
  * @file    NetworkAPI.cpp
  * @author  Sebastian Kaupper <kauppersebastian@gmail.com>
  * @brief   Implementation of class NetworkAPI
  */
+/*****************************************************************************/
 
 #include "NetworkAPI.h"
 

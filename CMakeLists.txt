@@ -53,7 +53,8 @@ set(APP_SOURCES         src/JukeBox.cpp
                         src/PlaybackTrack.cpp
                         src/SpotifyBackend.cpp
                         src/NetworkAPI.cpp
-                        src/RestAPI.cpp)
+                        src/RestAPI.cpp
+                        src/RestEndpointHandler.cpp)
 
 
 set(APP_HEADER          src/JukeBox.h
@@ -68,7 +69,8 @@ set(APP_HEADER          src/JukeBox.h
                         src/PlaybackTrack.h
                         src/SpotifyBackend.h
                         src/NetworkAPI.h
-                        src/RestAPI.h)
+                        src/RestAPI.h
+                        src/RestEndpointHandler.h)
 
 # Libraries and include directories of dependencies used by the application
 set(APP_LIBRARIES       ${LIBHTTPSERVER_LIBRARIES}
