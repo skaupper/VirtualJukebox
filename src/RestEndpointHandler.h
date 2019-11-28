@@ -13,6 +13,12 @@
 
 #include "NetworkListener.h"
 
+/**
+ * @class RestEndpointHandler
+ * @brief Provides REST endpoints for incoming connections.
+ * @details Is used to validate and dispatch incoming requests. If a valid
+ * request has found the assigned `NetworkListener` is notified.
+ */
 class RestEndpointHandler : public httpserver::http_resource {
  public:
   RestEndpointHandler(NetworkListener *listener);

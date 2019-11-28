@@ -15,8 +15,9 @@
 #include "NetworkAPI.h"
 
 /**
- * @class   RestAPI
- * @brief   Implementation of the a REST API.
+ * @class RestAPI
+ * @brief Implementation of the REST API.
+ * @sa    NetworkAPI, NetworkListener
  */
 class RestAPI : public NetworkAPI {
  public:

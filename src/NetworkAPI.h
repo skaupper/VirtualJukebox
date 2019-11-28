@@ -14,6 +14,9 @@
 /**
  * @class NetworkAPI
  * @brief Base class for all implementations of network interfaces.
+ *
+ * @details Creates a webserver and notifies a listener about (valid) incoming
+ * requests using the observer pattern.
  */
 class NetworkAPI {
  public:

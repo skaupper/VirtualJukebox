@@ -8,6 +8,7 @@
 
 #include "RestEndpointHandler.h"
 
+#include <cassert>
 #include <iostream>
 #include <sstream>
 
@@ -53,6 +54,7 @@ shared_ptr<http_response> const RestEndpointHandler::InternalErrorHandler(
 
 RestEndpointHandler::RestEndpointHandler(NetworkListener *listener)
     : listener(listener) {
+  assert(listener);
 }
 
 bool RestEndpointHandler::isValidBasePath(string const &path) const {
