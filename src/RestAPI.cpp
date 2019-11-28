@@ -33,9 +33,9 @@ static TResult<int> parsePort(string const &portStr) {
 
   // check if the whole string is an integer (idx is set to one past the end)
   if (idx != portStr.size()) {
-    return Error(
-        ErrorCode::InvalidFormat,
-        "RestAPI.handleRequests: Configuration value for '" + CONFIG_SECTION + ".port' must only consist of digits");
+    return Error(ErrorCode::InvalidFormat,
+                 "RestAPI.handleRequests: Configuration value for '" +
+                     CONFIG_SECTION + ".port' must only consist of digits");
   }
 
   if (port < 0 || port > 65535) {
