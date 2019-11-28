@@ -14,13 +14,7 @@
 /**
  * @brief Valid error codes enumerator
  */
-enum class ErrorCode {
-  AccessDedied,
-  SessionExpired,
-  FileNotFound,
-  anothertwo,
-  anotherthree
-};
+enum class ErrorCode { AccessDenied, SessionExpired, FileNotFound };
 
 /**
  * @brief A customized error type

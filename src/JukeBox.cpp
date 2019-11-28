@@ -40,7 +40,7 @@ TResult<vector<Track>> JukeBox::queryTracks(string searchPattern) {
 TResultOpt JukeBox::addTrackToQueue(TSessionID sid,
                                     TTrackID trkid,
                                     QueueType type) {
-  return Error(ErrorCode::AccessDedied, "this is an example error message");
+  return Error(ErrorCode::AccessDenied, "this is an example error message");
 }
 
 TResultOpt JukeBox::voteTrack(TSessionID sid, TTrackID trkid, TVote vote) {
