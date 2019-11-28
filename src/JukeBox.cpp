@@ -27,8 +27,8 @@ TResult<TSessionID> JukeBox::generateSession(TPassword pw) {
   return ret;
 }
 
-TResult<std::vector<Track>> JukeBox::queryTracks(std::string searchPattern) {
-  TResult<std::vector<Track>> ret;
+TResult<vector<Track>> JukeBox::queryTracks(string searchPattern) {
+  TResult<vector<Track>> ret;
 
   return ret;
 }
