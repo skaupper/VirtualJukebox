@@ -222,7 +222,7 @@ Adds a track to the specified queue on the server.
 #### Request
 
 - Method:   \n
-  `GET`
+  `POST`
 - Path:     \n
   `/api/v1/addTrackToQueue`
 - Body:     \n
@@ -257,7 +257,7 @@ Vote for a track or revoke a vote.
 #### Request
 
 - Method:   \n
-  `GET`
+  `PUT`
 - Path:     \n
   `/api/v1/voteTrack`
 - Body:     \n
@@ -295,7 +295,7 @@ Using this endpoint the client can cause the player behaviour to change.
 #### Request
 
 - Method:   \n
-  `GET`
+  `PUT`
 - Path:     \n
   `/api/v1/controlPlayer`
 - Body:     \n
@@ -337,7 +337,7 @@ it will have a vote count of zero).
 #### Request
 
 - Method:   \n
-  `GET`
+  `PUT`
 - Path:     \n
   `/api/v1/moveTrack`
 - Body:     \n
@@ -380,7 +380,7 @@ Removes a track from either the admin or the normal queue.
 #### Request
 
 - Method:   \n
-  `GET`
+  `DELETE`
 - Path:     \n
   `/api/v1/removeTrack`
 - Body:     \n
