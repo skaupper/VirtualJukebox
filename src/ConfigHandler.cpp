@@ -10,7 +10,7 @@
 
 using namespace std;
 
-/*  Initialize static member */
+/* Initialize static member */
 shared_ptr<ConfigHandler> ConfigHandler::mInstance{nullptr};
 
 shared_ptr<ConfigHandler> const ConfigHandler::getInstance() {
@@ -19,26 +19,28 @@ shared_ptr<ConfigHandler> const ConfigHandler::getInstance() {
   return mInstance;
 }
 
-void ConfigHandler::setConfigFilePath(string filepath) {
-  mConfigFilePath = filepath;
-}
-
-/* @brief Returns value of a key as a string
+/** @brief Configures file path to *.ini file.
+ *
  */
-TResult<string> ConfigHandler::getValueString(string section, string key) {
-  bool const isUtf8 = false;        // use OS native encoding
-  bool const useMultiKey = false;   // don't support duplicated keys
-  bool const useMultiLine = false;  // don't support multiline values for a key
+TResultOpt ConfigHandler::setConfigFilePath(string filepath) {
+  mConfigFilePath = filepath;
 
-  CSimpleIniA ini(isUtf8, useMultiKey, useMultiLine);
-  SI_Error rc = ini.LoadFile(mConfigFilePath.c_str());
+  mIni.SetUnicode(false);    // use OS native encoding
+  mIni.SetMultiKey(false);   // don't support duplicated keys
+  mIni.SetMultiLine(false);  // don't support multiline values for a key
+
+  SI_Error rc = mIni.LoadFile(mConfigFilePath.c_str());
   if (rc < 0)
     return Error(ErrorCode::FileNotFound,
                  "ConfigHandler.getValueString: couldn't load file.");
+}
 
+/** @brief Returns value of a key as a string
+ */
+TResult<string> ConfigHandler::getValueString(string section, string key) {
   string const errorReturnCode = "thisIsAUniqueErrorCode";
   string val =
-      ini.GetValue(section.c_str(), key.c_str(), errorReturnCode.c_str());
+      mIni.GetValue(section.c_str(), key.c_str(), errorReturnCode.c_str());
   if (val == errorReturnCode) {
     string errmsg = "ConfigHandler.getValueString: Key " + key +
                     " not found in section " + section;
@@ -47,7 +49,7 @@ TResult<string> ConfigHandler::getValueString(string section, string key) {
   return val;
 }
 
-/* @brief Returns value of a key as integer
+/** @brief Returns value of a key as integer
  * @details The following restrictions are given with respect to the format
  * of a key.
  * [MainParams]
@@ -57,17 +59,7 @@ TResult<string> ConfigHandler::getValueString(string section, string key) {
  * wrongFormat3=47xx11
  */
 TResult<int> ConfigHandler::getValueInt(string section, string key) {
-  bool const isUtf8 = false;        // use OS native encoding
-  bool const useMultiKey = false;   // don't support duplicated keys
-  bool const useMultiLine = false;  // don't support multiline values for a key
-
-  CSimpleIniA ini(isUtf8, useMultiKey, useMultiLine);
-  SI_Error rc = ini.LoadFile(mConfigFilePath.c_str());
-  if (rc < 0)
-    return Error(ErrorCode::FileNotFound,
-                 "ConfigHandler.getValueInt: couldn't load file.");
-
-  int val = ini.GetLongValue(section.c_str(), key.c_str(), INT32_MAX);
+  int val = mIni.GetLongValue(section.c_str(), key.c_str(), INT32_MAX);
 
   if (val == INT32_MAX) {
     string errmsg = "ConfigHandler.getValueInt: section " + section + ", key " +

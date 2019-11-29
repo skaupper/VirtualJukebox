@@ -7,6 +7,8 @@
 #ifndef _CONFIGHANDLER_H_
 #define _CONFIGHANDLER_H_
 
+#include <stdlib.h>
+
 #include <memory>
 #include <string>
 
@@ -18,7 +20,7 @@ class ConfigHandler {
   ~ConfigHandler() = default;
   static std::shared_ptr<ConfigHandler> const getInstance();
 
-  void setConfigFilePath(std::string filepath);
+  TResultOpt setConfigFilePath(std::string filepath);
   TResult<std::string> getValueString(std::string section, std::string key);
   TResult<int> getValueInt(std::string section, std::string key);
 
@@ -29,6 +31,8 @@ class ConfigHandler {
 
   static std::shared_ptr<ConfigHandler> mInstance;
   std::string mConfigFilePath;
+
+  CSimpleIniA mIni;
 };
 
 #endif /* _CONFIGHANDLER_H_ */

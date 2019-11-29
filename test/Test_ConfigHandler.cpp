@@ -10,12 +10,13 @@ using namespace std;
 
 TEST(ConfigHandler, getValueString_HappyCase) {
   string const configFilePath = "../test/test_config.ini";
-  // string const configFilePath = "../jukebox_config.ini";
   string const section = "MainParams";
   string const key = "ip";
 
   shared_ptr<ConfigHandler> conf = ConfigHandler::getInstance();
-  conf->setConfigFilePath(configFilePath);
+  auto setfile = conf->setConfigFilePath(configFilePath);
+  ASSERT_EQ(checkOptionalError(setfile), false);
+
   TResult<string> ret = conf->getValueString(section, key);
 
   bool error = holds_alternative<Error>(ret);
@@ -31,14 +32,8 @@ TEST(ConfigHandler, getValueString_FileNotFound) {
   string const key = "ip";
 
   shared_ptr<ConfigHandler> conf = ConfigHandler::getInstance();
-  conf->setConfigFilePath(configFilePath);
-
-  TResult<string> ret = conf->getValueString(section, key);
-
-  bool error = holds_alternative<Error>(ret);
-  ASSERT_EQ(error, true);
-  EXPECT_EQ(get<Error>(ret).getErrorCode(), ErrorCode::FileNotFound);
-  cout << "Error message is: " << get<Error>(ret).getErrorMessage() << endl;
+  auto setfile = conf->setConfigFilePath(configFilePath);
+  ASSERT_EQ(checkOptionalError(setfile), true);
 }
 
 TEST(ConfigHandler, getValueInt_HappyCase) {
@@ -47,7 +42,9 @@ TEST(ConfigHandler, getValueInt_HappyCase) {
   string const key = "port";
 
   shared_ptr<ConfigHandler> conf = ConfigHandler::getInstance();
-  conf->setConfigFilePath(configFilePath);
+  auto setfile = conf->setConfigFilePath(configFilePath);
+  ASSERT_EQ(checkOptionalError(setfile), false);
+
   TResult<int> ret = conf->getValueInt(section, key);
 
   bool error = holds_alternative<Error>(ret);
@@ -63,7 +60,8 @@ TEST(ConfigHandler, getValueInt_InvalidKeyFormat) {
   string const key = "wrongFormat";
 
   shared_ptr<ConfigHandler> conf = ConfigHandler::getInstance();
-  conf->setConfigFilePath(configFilePath);
+  auto setfile = conf->setConfigFilePath(configFilePath);
+  ASSERT_EQ(checkOptionalError(setfile), false);
 
   TResult<int> ret = conf->getValueInt(section, key);
 
@@ -80,7 +78,8 @@ TEST(ConfigHandler, getValueInt_KeyNotFound) {
   string const key = "this_key_does_not_exist";
 
   shared_ptr<ConfigHandler> conf = ConfigHandler::getInstance();
-  conf->setConfigFilePath(configFilePath);
+  auto setfile = conf->setConfigFilePath(configFilePath);
+  ASSERT_EQ(checkOptionalError(setfile), false);
 
   TResult<int> ret = conf->getValueInt(section, key);
 
@@ -97,7 +96,8 @@ TEST(ConfigHandler, getValueString_KeyNotFound) {
   string const key = "this_key_does_not_exist";
 
   shared_ptr<ConfigHandler> conf = ConfigHandler::getInstance();
-  conf->setConfigFilePath(configFilePath);
+  auto setfile = conf->setConfigFilePath(configFilePath);
+  ASSERT_EQ(checkOptionalError(setfile), false);
 
   TResult<string> ret = conf->getValueString(section, key);
 
