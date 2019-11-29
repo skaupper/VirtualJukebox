@@ -10,10 +10,6 @@ cd $SCRIPT_PATH
 cd ../lib/restclient-cpp/
 ./autogen.sh
 ./configure
-mkdir build
-cd build
-cmake ..
-make
 
 # install library files (needs root privileges)
 sudo make install
