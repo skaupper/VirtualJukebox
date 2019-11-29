@@ -19,8 +19,13 @@
 using namespace std;
 
 class EmptyNetworkListener : public NetworkListener {
-  TResult<TSessionID> generateSession(TPassword const &pw) override {
+  TResult<TSessionID> generateSession(optional<TPassword> const &pw) override {
     cout << "generateSession" << endl;
+    if (pw.has_value()) {
+      cout << "Password: " << pw.value() << std::endl;
+    } else {
+      cout << "No password" << std::endl;
+    }
     return static_cast<TSessionID>("12345678");
   }
 

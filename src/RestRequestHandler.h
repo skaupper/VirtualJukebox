@@ -1,27 +1,27 @@
 /*****************************************************************************/
 /**
- * @file    RestEndpointHandler.h
+ * @file    RestRequestHandler.h
  * @author  Sebastian Kaupper <kauppersebastian@gmail.com>
- * @brief   Definition of class RestEndpointHandler
+ * @brief   Definition of class RestRequestHandler
  */
 /*****************************************************************************/
 
-#ifndef _REST_ENDPOINT_HANDLER_H_
-#define _REST_ENDPOINT_HANDLER_H_
+#ifndef _REST_REQUEST_HANDLER_H_
+#define _REST_REQUEST_HANDLER_H_
 
 #include <httpserver.hpp>
 
 #include "NetworkListener.h"
 
 /**
- * @class RestEndpointHandler
- * @brief Provides REST endpoints for incoming connections.
+ * @class RestRequestHandler
+ * @brief Provides a REST request handler for incoming connections.
  * @details Is used to validate and dispatch incoming requests. If a valid
  * request has found the assigned `NetworkListener` is notified.
  */
-class RestEndpointHandler : public httpserver::http_resource {
+class RestRequestHandler : public httpserver::http_resource {
  public:
-  RestEndpointHandler(NetworkListener *listener);
+  RestRequestHandler(NetworkListener *listener);
 
   static std::shared_ptr<httpserver::http_response> const NotFoundHandler(
       httpserver::http_request const &req);

@@ -40,7 +40,8 @@ class NetworkListener {
    * @return On success the newly generated session ID is returned, an `Error`
    * otherwise.
    */
-  virtual TResult<TSessionID> generateSession(TPassword const &pw) = 0;
+  virtual TResult<TSessionID> generateSession(
+      std::optional<TPassword> const &pw) = 0;
 
   /**
    * @brief Query available tracks using different music backends.

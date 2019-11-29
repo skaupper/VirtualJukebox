@@ -11,7 +11,7 @@
 #include <sstream>
 
 #include "ConfigHandler.h"
-#include "RestEndpointHandler.h"
+#include "RestRequestHandler.h"
 
 using namespace std;
 using namespace httpserver;
@@ -47,7 +47,7 @@ TResultOpt RestAPI::handleRequests() {
   webserver ws{webserverParams};
 
   // use a single handler sensitive on all paths
-  RestEndpointHandler handler(listener);
+  RestRequestHandler handler(listener);
   ws.register_resource("/", &handler, true);
 
   // run the webserver in blocking mode
