@@ -8,6 +8,7 @@ TODO
 - Google Test
 - Doxygen
 - clang-format-6.0
+- curl
 
 ### Bundled dependencies
 
@@ -20,6 +21,7 @@ Bundled dependencies are:
 
 - libmicrohttpd
 - libhttpserver
+- librestclient-cpp
 
 ## Installation
 
