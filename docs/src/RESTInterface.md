@@ -7,7 +7,7 @@ This page describes the available REST endpoints provided for clients and how th
 Each of the following requests define a method, a path and JSON format for the request/response body which is
 expected/can be expected.
 
-## Status response
+## Status response {#status_responses}
 
 Since it cannot be guaranteed that every request can be handled as intended, there needs to be some kind of status report.\n
 Requests which are handled successfully always respond with a HTTP status code of `200 OK`. Every other code indicates an error.
@@ -47,17 +47,20 @@ In case of an error (i.e. HTTP status code is not `200`) the response body looks
 `status_code` will be the repeated HTTP status code (403 for example).\n
 `error` contains a short description which can be used to display an error message to the end user.
 
-## Available requests
+## Available requests {#available_requests}
 
 This section lists all available REST endpoints and their intended usages. Additionally the needed HTTP method
 as well as the path and the body layout is specified.
 
-Request and response bodies need to be in the JSON format. Field values can be of type `int` (32-bit signed integer),
-`string` (quoted with double quotes) or `boolean` (true or false).
+Requests using the `GET` method should pass their parameters in the [query string](https://en.wikipedia.org/wiki/Query_string)
+instead of the body.
+
+The bodies of other methods and all responses are expected/can be expected in the JSON format. Field values can be of type
+`int` (32-bit signed integer), `string` (quoted with double quotes) or `boolean` (true or false).
 
 **Note**: Invalid JSON (or missing required fields) will trigger an `422` error!
 
-### Generating a session
+### Generating a session {#generate_session}
 
 Before doing other requests clients need to get a session ID. This ID is used to identify the user between multiple requests,
 which is needed if the user wants to undo a vote or prevents him from voting twice on the same track.
@@ -76,12 +79,17 @@ which is needed if the user wants to undo a vote or prevents him from voting twi
 
 ~~~~~{.c}
 {
-    "password": "<admin_password>"
+    "password": "<admin_password>",
+    "nickname" "<nickname>"
 }
 ~~~~~
 
 `password` is used to authorize a client as admin. If no password is given a normal (non-privileged) user session
 is generated. If a wrong password is given an `401` error is returned.
+The `nickname` can (optionally) be set to have a readable name associated with a session. This name is also returned for
+each track when using [getCurrentQueues](#get_current_queues).
+
+**Attention**: The `nickname` is explicitly NOT guaranteed to be unique, so do not use it anywhere to uniquely identify users!
 
 **TODO**: Allow refreshing an old session.
 
@@ -111,17 +119,10 @@ maximum number of tracks returned.
   `GET`
 - Path:     \n
   `/api/v1/queryTracks`
-- Body:     \n
-
-~~~~~{.c}
-{
-    "session_id": "<session_id>",
-    "pattern": "<some_search_pattern>",
-    "max_entries": <max_entries>
-}
-~~~~~
-
-The field `max_entries` is optional. If not specified, it is set to `50`.
+- Parameters:
+  - `session_id`: The generated session ID for the user.
+  - `pattern`: A search pattern for filtering (and sorting) the tracks.
+  - `max_entries`: Specifies the maximum number of returned tracks. Optional, defaults to `50`.
 
 #### Response
 
@@ -157,15 +158,10 @@ Queries the current queues (normal and admin queue) as well as the currently pla
   `GET`
 - Path:     \n
   `/api/v1/getCurrentQueues`
-- Body:     \n
+- Parameters:
+  - `session_id`: The generated session ID for the user.
 
-~~~~~{.c}
-{
-    "session_id": "<session_id>"
-}
-~~~~~
-
-The field `session_id` may be omitted in this version (thus empty JSON objects are valid for now).
+The parameter `session_id` may be omitted in this version.
 
 #### Response
 
@@ -178,6 +174,7 @@ The field `session_id` may be omitted in this version (thus empty JSON objects a
         "artist": "<artist_name>",
         "duration": "<duration>",
         "icon_uri": "<uri>",
+        "added_by": "<nickname>",
         "playing": true|false,
         "playing_for": <playing_for_ms>
     },
@@ -189,6 +186,7 @@ The field `session_id` may be omitted in this version (thus empty JSON objects a
             "artist": "<artist_name>",
             "duration": "<duration>",
             "icon_uri": "<uri>",
+            "added_by": "<nickname>",
             "votes": <nr_of_votes>,
             "current_vote": <vote>
         },
@@ -201,7 +199,8 @@ The field `session_id` may be omitted in this version (thus empty JSON objects a
             "album": "<album_name>",
             "artist": "<artist_name>",
             "duration": "<duration>",
-            "icon_uri": "<uri>"
+            "icon_uri": "<uri>",
+            "added_by": "<nickname>"
         },
         ...
     ],
@@ -212,12 +211,13 @@ The entries in the normal queue are sorted in the same order as they will be pla
 `current_vote` indicates if the user has already voted for a track (in the normal queue). For now this can either be `1` or `0`.\n
 The track listed in `currently_playing` has an additional field for its current playback status (playing or paused)
 and the time it has already been played (in milliseconds).
+The nickname of the user who added a specific track can be found in the `added_by`.
 
 **Note**: The fields `votes` and `current_vote` are only relevant for tracks in the normal queue. While the order of tracks
 in the normal queue depends on the vote count (and insertion date) the admin queue is ordered only using the insertion date.
 The currently playing track also does not contain the vote fields because he will not be requeued afterwards anyway.
 
-### Add track to queue
+### Add track to queue {#add_track}
 
 Adds a track to the specified queue on the server.
 
@@ -253,7 +253,7 @@ The content for `track_id` has to be queried with a call to [queryTracks](#query
 
 A successful call responds with an empty JSON object.
 
-### Vote track
+### Vote track {#vote_track}
 
 Vote for a track or revoke a vote.
 
@@ -289,7 +289,7 @@ If `vote` is a `0` an already given vote is revoked, while setting `vote` to a n
 
 A successful call responds with an empty JSON object.
 
-### Control player
+### Control player {#control_player}
 
 Using this endpoint the client can cause the player behaviour to change.
 
@@ -334,12 +334,13 @@ The value of `player_action` controls which action the server should take. Valid
 
 A successful call responds with an empty JSON object.
 
-### Move tracks between queues
+### Move tracks between queues {#move_track}
 
 Moving a track between the admin and the normal queue.
 
-When moving to the admin queue all votes of the track are deleted (i.e. when moving the track back to the normal queue
-it will have a vote count of zero).
+**Note**: A move is equivalent to a call to [removeTrack](#remove_track) followed by [addTrack](#add_track) meaning when
+moving a track all its fields get reset (i.e. the vote count is set to zero, the nickname is set to the
+nickname of the admin etc.).
 
 **Note**: This endpoint can only be used by the admin.
 
@@ -372,7 +373,7 @@ normal queue. When `queue_type` specifies the queue the track is already in, not
 
 A successful call (the track was moved or was already in the right queue) responds with an empty JSON object.
 
-### Remove tracks from queues
+### Remove tracks from queues {#remove_track}
 
 Removes a track from either the admin or the normal queue.
 
