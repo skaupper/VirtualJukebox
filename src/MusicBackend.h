@@ -1,6 +1,6 @@
 /*****************************************************************************/
 /**
- * @file    JukeBox.h
+ * @file    MusicBackend.h
  * @author  Stefan Jahn <stefan.jahn332@gmail.com>
  * @brief   Interface for MusicBackends
  */
