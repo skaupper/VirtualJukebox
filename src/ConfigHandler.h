@@ -20,9 +20,10 @@ class ConfigHandler {
   ~ConfigHandler() = default;
   static std::shared_ptr<ConfigHandler> const getInstance();
 
-  TResultOpt setConfigFilePath(std::string filepath);
-  TResult<std::string> getValueString(std::string section, std::string key);
-  TResult<int> getValueInt(std::string section, std::string key);
+  TResultOpt setConfigFilePath(std::string const& filepath);
+  TResult<std::string> getValueString(std::string const& section,
+                                      std::string const& key);
+  TResult<int> getValueInt(std::string const& section, std::string const& key);
 
  private:
   ConfigHandler() = default;                                // hide default ctor

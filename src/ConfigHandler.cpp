@@ -22,7 +22,7 @@ shared_ptr<ConfigHandler> const ConfigHandler::getInstance() {
 /** @brief Configures file path to *.ini file, configures the SimpleIni reader
  * and loads the ini-file.
  */
-TResultOpt ConfigHandler::setConfigFilePath(string filepath) {
+TResultOpt ConfigHandler::setConfigFilePath(string const& filepath) {
   mConfigFilePath = filepath;
 
   mIni.SetUnicode(false);    // use OS native encoding
@@ -37,7 +37,8 @@ TResultOpt ConfigHandler::setConfigFilePath(string filepath) {
 
 /** @brief Returns value of a key as a string
  */
-TResult<string> ConfigHandler::getValueString(string section, string key) {
+TResult<string> ConfigHandler::getValueString(string const& section,
+                                              string const& key) {
   const char* val = mIni.GetValue(section.c_str(), key.c_str(), nullptr);
   if (!val) {
     return Error(ErrorCode::KeyNotFound,
@@ -56,7 +57,8 @@ TResult<string> ConfigHandler::getValueString(string section, string key) {
  * wrongFormat2=4711xx
  * wrongFormat3=47xx11
  */
-TResult<int> ConfigHandler::getValueInt(string section, string key) {
+TResult<int> ConfigHandler::getValueInt(string const& section,
+                                        string const& key) {
   auto valObj = getValueString(section, key);
   if (holds_alternative<Error>(valObj))
     return get<Error>(valObj);
