@@ -15,3 +15,5 @@ make
 
 # install library files (needs root privileges)
 sudo make install
+
+echo "You can now remove all temporary files that were created."
