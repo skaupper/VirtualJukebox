@@ -18,48 +18,20 @@ using namespace httpserver;
 
 static string const CONFIG_SECTION = "RestAPI";
 
-static TResult<int> parsePort(string const &portStr) {
-  int port = -1;
-  size_t idx;
-
-  // check if the configuration value for "port" is an integer
-  try {
-    port = stoi(portStr, &idx);
-  } catch (invalid_argument const &) {
-    return Error(ErrorCode::InvalidFormat,
-                 "RestAPI.handleRequests: Configuration value '" +
-                     CONFIG_SECTION + ".port' is not an integer");
-  }
-
-  // check if the whole string is an integer (idx is set to one past the end)
-  if (idx != portStr.size()) {
-    return Error(ErrorCode::InvalidFormat,
-                 "RestAPI.handleRequests: Configuration value for '" +
-                     CONFIG_SECTION + ".port' must only consist of digits");
-  }
-
-  if (port < 0 || port > 65535) {
-    return Error(ErrorCode::InvalidValue, "Port value is out of range");
-  }
-
-  return port;
-}
-
 TResultOpt RestAPI::handleRequests() {
   auto configHandler = ConfigHandler::getInstance();
 
-  TResult<string> configPort =
-      configHandler->getValueString(CONFIG_SECTION, "port");
+  TResult<int> configPort = configHandler->getValueInt(CONFIG_SECTION, "port");
   if (holds_alternative<Error>(configPort)) {
     return get<Error>(configPort);
   }
 
-  auto parsedPort = parsePort(get<string>(configPort));
-  if (holds_alternative<Error>(parsedPort)) {
-    return get<Error>(parsedPort);
-  }
+  int port = get<int>(configPort);
 
-  int port = get<int>(parsedPort);
+  if (port < 0 || port > 65535) {
+    return Error(ErrorCode::InvalidValue,
+                 "RestAPI.handleRequests: Port value is out of range");
+  }
 
   auto webserverParams =
       create_webserver(port)                                         //
