@@ -34,14 +34,13 @@ TResultOpt RestAPI::handleRequests() {
   }
 
   auto webserverParams =
-      create_webserver(port)                                         //
-          .not_found_resource(RestEndpointHandler::NotFoundHandler)  //
-          .internal_error_resource(
-              RestEndpointHandler::InternalErrorHandler)  //
-          .no_regex_checking()                            //
-          .single_resource()                              //
-          .no_basic_auth()                                //
-          .no_digest_auth()                               //
+      create_webserver(port)
+          .not_found_resource(RestEndpointHandler::NotFoundHandler)
+          .internal_error_resource(RestEndpointHandler::InternalErrorHandler)
+          .no_regex_checking()
+          .single_resource()
+          .no_basic_auth()
+          .no_digest_auth()
           .start_method(http::http_utils::THREAD_PER_CONNECTION);
 
   // create the webserver
