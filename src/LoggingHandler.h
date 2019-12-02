@@ -11,8 +11,8 @@
 
 #include <string>
 
-static void logInfo(std::string msg);
-static void logWarning(std::string msg);
-static void logError(std::string msg);
+void logInfo(std::string msg);
+void logWarning(std::string msg);
+void logError(std::string msg);
 
 #endif /* _LOGGINGHANDLER_H_ */
