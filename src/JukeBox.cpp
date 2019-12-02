@@ -17,7 +17,8 @@ using namespace std;
 
 void JukeBox::start(string configFilePath) {
   shared_ptr<ConfigHandler> conf = ConfigHandler::getInstance();
-  conf->setConfigFilePath(configFilePath);
+  TResultOpt ret = conf->setConfigFilePath(configFilePath);
+  checkOptionalError(ret);
 }
 
 TResult<TSessionID> JukeBox::generateSession(TPassword const &pw) {

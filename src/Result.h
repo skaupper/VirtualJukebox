@@ -7,6 +7,7 @@
 #ifndef _RESULT_H_
 #define _RESULT_H_
 
+#include <iostream>
 #include <optional>
 #include <string>
 #include <variant>
@@ -19,7 +20,8 @@ enum class ErrorCode {
   SessionExpired,
   FileNotFound,
   InvalidFormat,
-  InvalidValue
+  InvalidValue,
+  KeyNotFound
 };
 
 /**
@@ -63,5 +65,11 @@ using TResult = std::variant<GOOD_TYPE, Error>;
  * In the case of an error, the optional type can be returned.
  */
 using TResultOpt = std::optional<Error>;
+
+/** @brief Checks if given parameter contains optional error value.
+ *         If so, it prints the containing error message.
+ * @return true if parameter contains error type, false otherwise
+ */
+bool checkOptionalError(TResultOpt ret);
 
 #endif /* _RESULT_H_ */

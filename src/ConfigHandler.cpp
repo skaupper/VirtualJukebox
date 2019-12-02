@@ -6,11 +6,11 @@
 
 #include "ConfigHandler.h"
 
-#include <iostream>
+#include <string>
 
 using namespace std;
 
-/*  Initialize static member */
+/* Initialize static member */
 shared_ptr<ConfigHandler> ConfigHandler::mInstance{nullptr};
 
 shared_ptr<ConfigHandler> const ConfigHandler::getInstance() {
@@ -19,20 +19,66 @@ shared_ptr<ConfigHandler> const ConfigHandler::getInstance() {
   return mInstance;
 }
 
-void ConfigHandler::setConfigFilePath(string filepath) {
+/** @brief Configures file path to *.ini file, configures the SimpleIni reader
+ * and loads the ini-file.
+ */
+TResultOpt ConfigHandler::setConfigFilePath(string const& filepath) {
   mConfigFilePath = filepath;
-}
 
-TResult<string> ConfigHandler::getValue(string section, string key) {
-  bool a_bIsUtf8 = false;        // use OS native encoding
-  bool a_bUseMultiKey = false;   // don't support duplicated keys
-  bool a_bUseMultiLine = false;  // don't support multiline values for a key
+  mIni.SetUnicode(false);    // use OS native encoding
+  mIni.SetMultiKey(false);   // don't support duplicated keys
+  mIni.SetMultiLine(false);  // don't support multiline values for a key
 
-  CSimpleIniA ini(a_bIsUtf8, a_bUseMultiKey, a_bUseMultiLine);
-  SI_Error rc = ini.LoadFile(mConfigFilePath.c_str());
+  SI_Error rc = mIni.LoadFile(mConfigFilePath.c_str());
   if (rc < 0)
     return Error(ErrorCode::FileNotFound,
-                 "ConfigHandler.getValue: couldn't load file");
+                 "ConfigHandler.getValueString: Couldn't load file.");
+}
 
-  return ini.GetValue(section.c_str(), key.c_str());
+/** @brief Returns value of a key as a string
+ */
+TResult<string> ConfigHandler::getValueString(string const& section,
+                                              string const& key) {
+  const char* val = mIni.GetValue(section.c_str(), key.c_str(), nullptr);
+  if (!val) {
+    return Error(ErrorCode::KeyNotFound,
+                 "ConfigHandler.getValueString: Key '" + key +
+                     "' not found in section '" + section + "'.");
+  }
+  return val;
+}
+
+/** @brief Returns value of a key as integer
+ * @details The following restrictions are given with respect to the format
+ * of a key.
+ * [MainParams]
+ * goodFormat=4711
+ * wrongFormat1=xx4711
+ * wrongFormat2=4711xx
+ * wrongFormat3=47xx11
+ */
+TResult<int> ConfigHandler::getValueInt(string const& section,
+                                        string const& key) {
+  auto valObj = getValueString(section, key);
+  if (holds_alternative<Error>(valObj))
+    return get<Error>(valObj);
+
+  string valStr = get<string>(valObj);
+
+  int valInt;
+  size_t idx;
+  try {
+    valInt = stoi(valStr, &idx);
+  } catch (invalid_argument const&) {
+    return Error(ErrorCode::InvalidFormat,
+                 "ConfigHandler.getValueInt: Configuration value '" + section +
+                     "." + key + " is not an integer.");
+  }
+
+  if (idx != valStr.size()) {
+    return Error(ErrorCode::InvalidFormat,
+                 "ConfigHandler.getValueInt: Configuration value '" + section +
+                     "." + key + " must only consist of digits.");
+  }
+  return valInt;
 }

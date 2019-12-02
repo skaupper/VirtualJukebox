@@ -40,9 +40,9 @@ shared_ptr<http_response> const RestEndpointHandler::InternalErrorHandler(
   stringstream msg;
   msg << "The request to endpoint '" << req.get_path() << "' ";
   msg << "with method '" << req.get_method() << "' ";
-  msg << "lead to an internal server error." << std::endl;
-  msg << "Please contact the server team!" << std::endl << std::endl;
-  msg << "Request content:" << std::endl;
+  msg << "lead to an internal server error." << endl;
+  msg << "Please contact the server team!" << endl << endl;
+  msg << "Request content:" << endl;
   msg << req.get_content();
   return make_shared<string_response>(msg.str(), 500);
 }
@@ -75,8 +75,8 @@ shared_ptr<http_response> const RestEndpointHandler::render(
 shared_ptr<http_response> const RestEndpointHandler::decodeAndDispatch(
     string const &path, string const &method, string const &body) {
   stringstream msg;
-  msg << "Method  : " << method << std::endl;
-  msg << "Path    : " << path << std::endl;
-  msg << "Content : " << body << std::endl;
+  msg << "Method  : " << method << endl;
+  msg << "Path    : " << path << endl;
+  msg << "Content : " << body << endl;
   return make_shared<string_response>(msg.str());
 }
