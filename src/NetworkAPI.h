@@ -6,8 +6,8 @@
  */
 /*****************************************************************************/
 
-#ifndef NETWORK_API_H_INCLUDED
-#define NETWORK_API_H_INCLUDED
+#ifndef _NETWORK_API_H_
+#define _NETWORK_API_H_
 
 #include "NetworkListener.h"
 
@@ -34,4 +34,4 @@ class NetworkAPI {
   NetworkListener *listener;
 };
 
-#endif  // NETWORK_API_H_INCLUDED
+#endif /* _NETWORK_API_H_ */

@@ -42,4 +42,4 @@ class RestEndpointHandler : public httpserver::http_resource {
       std::string const &body);
 };
 
-#endif  // _REST_ENDPOINT_HANDLER_H_
+#endif /* _REST_ENDPOINT_HANDLER_H_ */

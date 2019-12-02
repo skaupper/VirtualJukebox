@@ -6,8 +6,8 @@
  */
 /*****************************************************************************/
 
-#ifndef SPOTIFYBACKEND_H_INCLUDED
-#define SPOTIFYBACKEND_H_INCLUDED
+#ifndef _SPOTIFYBACKEND_H_
+#define _SPOTIFYBACKEND_H_
 
 #include "GlobalTypes.h"
 #include "MusicBackend.h"
@@ -29,4 +29,4 @@ class SpotifyBackend : public MusicBackend {
   virtual TResultOpt setVolume(size_t const percent) override;
 };
 
-#endif  // SPOTIFYBACKEND_H_INCLUDED
+#endif /* _SPOTIFYBACKEND_H_ */

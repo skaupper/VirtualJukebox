@@ -6,8 +6,8 @@
  */
 /*****************************************************************************/
 
-#ifndef REST_API_H_INCLUDED
-#define REST_API_H_INCLUDED
+#ifndef _REST_API_H_
+#define _REST_API_H_
 
 #include <httpserver.hpp>
 #include <memory>
@@ -24,4 +24,4 @@ class RestAPI : public NetworkAPI {
   TResultOpt handleRequests() override;
 };
 
-#endif  // REST_API_H_INCLUDED
+#endif /* _REST_API_H_ */

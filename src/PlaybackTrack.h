@@ -6,8 +6,8 @@
  */
 /*****************************************************************************/
 
-#ifndef PLAYBACK_TRACK_H_INCLUDED
-#define PLAYBACK_TRACK_H_INCLUDED
+#ifndef _PLAYBACK_TRACK_H_
+#define _PLAYBACK_TRACK_H_
 
 #include "Result.h"
 #include "Track.h"
@@ -25,4 +25,4 @@ class PlaybackTrack {
   Track mTrack;
 };
 
-#endif  // PLAYBACK_H_INCLUDED
+#endif /* _PLAYBACK_TRACK_H_ */
