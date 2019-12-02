@@ -8,14 +8,35 @@
 
 #include "LoggingHandler.h"
 
-#include <iostream>
+#include <glog/logging.h>
 
 using namespace std;
 
-void LoggingHandler::logInfo(string msg) {
-  cout << msg << endl;
+static bool isGlogInitialized = false;
+
+static void initGlog() {
+  FLAGS_log_dir = "./";
+  FLAGS_alsologtostderr = true;
+  FLAGS_colorlogtostderr = true;
+  FLAGS_timestamp_in_logfile_name = false;
+  google::InitGoogleLogging("VirtualJukebox");
+  isGlogInitialized = true;
 }
 
-void LoggingHandler::logError(string msg) {
-  cout << msg << endl;
+static void logInfo(std::string msg) {
+  if (!isGlogInitialized)
+    initGlog();
+  LOG(INFO) << msg;
+}
+
+static void logWarning(std::string msg) {
+  if (!isGlogInitialized)
+    initGlog();
+  LOG(WARNING) << msg;
+}
+
+static void logError(std::string msg) {
+  if (!isGlogInitialized)
+    initGlog();
+  LOG(ERROR) << msg;
 }

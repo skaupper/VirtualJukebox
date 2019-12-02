@@ -6,15 +6,13 @@
  */
 /*****************************************************************************/
 
-#ifndef _LoggingHandler_H_
-#define _LoggingHandler_H_
+#ifndef _LOGGINGHANDLER_H_
+#define _LOGGINGHANDLER_H_
 
 #include <string>
 
-class LoggingHandler {
- public:
-  void logInfo(std::string msg);
-  void logError(std::string msg);
-};
+static void logInfo(std::string msg);
+static void logWarning(std::string msg);
+static void logError(std::string msg);
 
-#endif /* _LoggingHandler_H_ */
+#endif /* _LOGGINGHANDLER_H_ */
