@@ -20,7 +20,8 @@ using namespace std;
 void JukeBox::start(string configFilePath) {
   shared_ptr<ConfigHandler> conf = ConfigHandler::getInstance();
   TResultOpt ret = conf->setConfigFilePath(configFilePath);
-  checkOptionalError(ret);
+  if (ret.has_value())
+    cerr << ret.value().getErrorMessage() << endl;
 }
 
 TResult<TSessionID> JukeBox::generateSession(

@@ -19,12 +19,15 @@
 using namespace std;
 
 int main(int argc, char* argv[]) {
-  //  google::InitGoogleLogging(argv[0]);
+  FLAGS_log_dir = "./";
+  FLAGS_alsologtostderr = true;
+  FLAGS_colorlogtostderr = true;
+  FLAGS_timestamp_in_logfile_name = false;
+  google::InitGoogleLogging(argv[0]);
 
-  //  LOG(INFO) << "This is an info  message";
-  //  LOG(WARNING) << "This is a warning message";
-  //  LOG(ERROR) << "This is an error message";
-  //  LOG(FATAL) << "This is a fatal message";
+  LOG(INFO) << "This is an info message";
+  LOG(WARNING) << "This is a warning message";
+  LOG(ERROR) << "This is an error message";
 
   JukeBox jukebox;
   LoggingHandler log;
@@ -32,7 +35,7 @@ int main(int argc, char* argv[]) {
   cout << "Hello world from JukeBox main.cpp !" << endl;
 
   string configFilePath = "../jukebox_config.ini";
-  jukebox.start(configFilePath);
+  //  jukebox.start(configFilePath);
 
   log.logInfo("Logging the first info message!");
   log.logError("Logging the first error message!");
