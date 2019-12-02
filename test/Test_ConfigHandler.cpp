@@ -68,8 +68,7 @@ TEST(ConfigHandler, getValueInt_InvalidKeyFormat) {
 
   bool error = holds_alternative<Error>(ret);
   ASSERT_EQ(error, true);
-  EXPECT_EQ(get<Error>(ret).getErrorCode(),
-            ErrorCode::KeyNotFoundOrInvalidKeyFormat);
+  EXPECT_EQ(get<Error>(ret).getErrorCode(), ErrorCode::InvalidFormat);
   cout << "Error message is: " << get<Error>(ret).getErrorMessage() << endl;
 }
 
@@ -86,8 +85,7 @@ TEST(ConfigHandler, getValueInt_KeyNotFound) {
 
   bool error = holds_alternative<Error>(ret);
   ASSERT_EQ(error, true);
-  EXPECT_EQ(get<Error>(ret).getErrorCode(),
-            ErrorCode::KeyNotFoundOrInvalidKeyFormat);
+  EXPECT_EQ(get<Error>(ret).getErrorCode(), ErrorCode::KeyNotFound);
   cout << "Error message is: " << get<Error>(ret).getErrorMessage() << endl;
 }
 
