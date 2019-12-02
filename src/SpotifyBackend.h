@@ -1,8 +1,10 @@
-/** ----------------------------------------------------------------------------
+/*****************************************************************************/
+/**
  * @file    SpotifyBackend.h
  * @author  Stefan Jahn <stefan.jahn332@gmail.com>
  * @brief   Class handles Music Playback with a Spotify Backend
- * ---------------------------------------------------------------------------*/
+ */
+/*****************************************************************************/
 
 #ifndef SPOTIFYBACKEND_H_INCLUDED
 #define SPOTIFYBACKEND_H_INCLUDED
