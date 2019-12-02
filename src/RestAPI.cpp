@@ -48,7 +48,8 @@ static TResult<int> parsePort(string const &portStr) {
 TResultOpt RestAPI::handleRequests() {
   auto configHandler = ConfigHandler::getInstance();
 
-  TResult<string> configPort = configHandler->getValue(CONFIG_SECTION, "port");
+  TResult<string> configPort =
+      configHandler->getValueString(CONFIG_SECTION, "port");
   if (holds_alternative<Error>(configPort)) {
     return std::get<Error>(configPort);
   }

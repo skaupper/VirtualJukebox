@@ -19,8 +19,8 @@ shared_ptr<ConfigHandler> const ConfigHandler::getInstance() {
   return mInstance;
 }
 
-/** @brief Configures file path to *.ini file.
- *
+/** @brief Configures file path to *.ini file, configures the SimpleIni reader
+ * and loads the ini-file.
  */
 TResultOpt ConfigHandler::setConfigFilePath(string filepath) {
   mConfigFilePath = filepath;
@@ -38,10 +38,8 @@ TResultOpt ConfigHandler::setConfigFilePath(string filepath) {
 /** @brief Returns value of a key as a string
  */
 TResult<string> ConfigHandler::getValueString(string section, string key) {
-  string const errorReturnCode = "thisIsAUniqueErrorCode";
-  string val =
-      mIni.GetValue(section.c_str(), key.c_str(), errorReturnCode.c_str());
-  if (val == errorReturnCode) {
+  const char* val = mIni.GetValue(section.c_str(), key.c_str(), nullptr);
+  if (!val) {
     string errmsg = "ConfigHandler.getValueString: Key " + key +
                     " not found in section " + section;
     return Error(ErrorCode::KeyNotFound, errmsg);
