@@ -97,20 +97,32 @@ shared_ptr<http_response> const RestRequestHandler::render(
 
   // truncate the base path
   auto path = req.get_path().substr(API_BASE_PATH.size());
-  return decodeAndDispatch(RequestInformation{
+  auto response = decodeAndDispatch(RequestInformation{
       path,               //
       req.get_method(),   //
       req.get_content(),  //
       req.get_args()      //
   });
+
+  if (response) {
+    return response;
+  }
+
+  return NotFoundHandler(req);
 }
 
 shared_ptr<http_response> const RestRequestHandler::decodeAndDispatch(
     RequestInformation const &infos) {
   static const map<pair<string, string>, TEndpointHandler> AVAILABLE_ENDPOINTS =
       {
-          {{"/generateSession", "POST"}, generateSessionHandler},  //
-          {{"/queryTracks", "GET"}, queryTracksHandler}            //
+          {{"/generateSession", "POST"}, generateSessionHandler},   //
+          {{"/queryTracks", "GET"}, queryTracksHandler},            //
+          {{"/getCurrentQueues", "GET"}, getCurrentQueuesHandler},  //
+          {{"/addTrackToQueue", "POST"}, addTrackToQueueHandler},   //
+          {{"/voteTrack", "PUT"}, voteTrackHandler},                //
+          {{"/controlPlayer", "PUT"}, controlPlayerHandler},        //
+          {{"/moveTracks", "PUT"}, moveTracksHandler},              //
+          {{"/removeTrack", "DELETE"}, removeTrackHandler}          //
       };
 
   if (auto handlerIt = AVAILABLE_ENDPOINTS.find({infos.path, infos.method});
@@ -118,9 +130,5 @@ shared_ptr<http_response> const RestRequestHandler::decodeAndDispatch(
     return handlerIt->second(listener, infos);
   }
 
-  stringstream msg;
-  msg << "Method  : " << infos.method << endl;
-  msg << "Path    : " << infos.path << endl;
-  msg << "Content : " << infos.body << endl;
-  return make_shared<string_response>(msg.str());
+  return nullptr;
 }

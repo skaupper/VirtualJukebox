@@ -19,12 +19,19 @@
 using namespace std;
 
 class EmptyNetworkListener : public NetworkListener {
-  TResult<TSessionID> generateSession(optional<TPassword> const &pw) override {
+  TResult<TSessionID> generateSession(
+      optional<TPassword> const &pw,
+      optional<string> const &nickname) override {
     cout << "generateSession" << endl;
     if (pw.has_value()) {
-      cout << "Password: " << pw.value() << std::endl;
+      cout << "Password: " << pw.value() << endl;
     } else {
-      cout << "No password" << std::endl;
+      cout << "No password" << endl;
+    }
+    if (nickname.has_value()) {
+      cout << "Nickname: " << nickname.value() << endl;
+    } else {
+      cout << "No nickname" << endl;
     }
     return static_cast<TSessionID>("12345678");
   }
@@ -42,32 +49,70 @@ class EmptyNetworkListener : public NetworkListener {
   TResultOpt addTrackToQueue(TSessionID const &sid,
                              TTrackID const &trkid,
                              QueueType type) override {
-    cout << "addTrackToQueue" << endl;
+    cout << "Session ID: " << sid << endl;
+    cout << "Track ID: " << trkid << endl;
+    if (type == QueueType::Normal) {
+      cout << "Normal queue" << endl;
+    } else if (type == QueueType::Admin) {
+      cout << "Admin queue" << endl;
+    } else {
+      return Error(ErrorCode::InvalidValue, "Unknown player action");
+    }
     return nullopt;
   }
 
   TResultOpt voteTrack(TSessionID const &sid,
                        TTrackID const &trkid,
                        TVote vote) override {
-    cout << "voteTrack" << endl;
+    cout << "Session ID: " << sid << endl;
+    cout << "Track ID: " << trkid << endl;
+    if (vote) {
+      cout << "Vote set" << endl;
+    } else {
+      cout << "Vote revoked" << endl;
+    }
     return nullopt;
   }
 
   TResultOpt controlPlayer(TSessionID const &sid,
                            PlayerAction action) override {
-    cout << "controlPlayer" << endl;
+    cout << "Session ID: " << sid << endl;
+    switch (action) {
+      case PlayerAction::Play:
+        cout << "Play" << endl;
+        break;
+      case PlayerAction::Pause:
+        cout << "Pause" << endl;
+        break;
+      case PlayerAction::Stop:
+        cout << "Stop" << endl;
+        break;
+      case PlayerAction::Skip:
+        cout << "Skip" << endl;
+        break;
+      case PlayerAction::VolumeDown:
+        cout << "VolumeDown" << endl;
+        break;
+      case PlayerAction::VolumeUp:
+        cout << "VolumeUp" << endl;
+        break;
+      default:
+        return Error(ErrorCode::InvalidValue, "Unknown player action");
+    }
     return nullopt;
   }
 
   TResultOpt removeTrack(TSessionID const &sid,
                          TTrackID const &trkid) override {
-    cout << "removeTrack" << endl;
+    cout << "Session ID: " << sid << endl;
+    cout << "Track ID: " << trkid << endl;
     return nullopt;
   }
   TResultOpt moveTrack(TSessionID const &sid,
                        TTrackID const &trkid,
                        QueueType type) override {
-    cout << "removeTrack" << endl;
+    cout << "Session ID: " << sid << endl;
+    cout << "Track ID: " << trkid << endl;
     return nullopt;
   }
 };

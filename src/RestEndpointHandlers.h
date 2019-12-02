@@ -23,4 +23,22 @@ std::shared_ptr<httpserver::http_response> const generateSessionHandler(
 std::shared_ptr<httpserver::http_response> const queryTracksHandler(
     NetworkListener *, RequestInformation const &);
 
+std::shared_ptr<httpserver::http_response> const getCurrentQueuesHandler(
+    NetworkListener *, RequestInformation const &);
+
+std::shared_ptr<httpserver::http_response> const addTrackToQueueHandler(
+    NetworkListener *, RequestInformation const &);
+
+std::shared_ptr<httpserver::http_response> const voteTrackHandler(
+    NetworkListener *, RequestInformation const &);
+
+std::shared_ptr<httpserver::http_response> const controlPlayerHandler(
+    NetworkListener *, RequestInformation const &);
+
+std::shared_ptr<httpserver::http_response> const moveTracksHandler(
+    NetworkListener *, RequestInformation const &);
+
+std::shared_ptr<httpserver::http_response> const removeTrackHandler(
+    NetworkListener *, RequestInformation const &);
+
 #endif  // _REST_ENDPOINT_HANDLERS_H_

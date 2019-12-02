@@ -35,8 +35,8 @@ TResultOpt RestAPI::handleRequests() {
 
   auto webserverParams =
       create_webserver(port)
-          .not_found_resource(RestEndpointHandler::NotFoundHandler)
-          .internal_error_resource(RestEndpointHandler::InternalErrorHandler)
+          .not_found_resource(RestRequestHandler::NotFoundHandler)
+          .internal_error_resource(RestRequestHandler::InternalErrorHandler)
           .no_regex_checking()
           .single_resource()
           .no_basic_auth()
