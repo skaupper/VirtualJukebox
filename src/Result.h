@@ -21,9 +21,7 @@ enum class ErrorCode {
   FileNotFound,
   InvalidFormat,
   InvalidValue,
-  InvalidParameterFormat,
-  KeyNotFound,
-  KeyNotFoundOrInvalidKeyFormat
+  KeyNotFound
 };
 
 /**
