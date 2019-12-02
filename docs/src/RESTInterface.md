@@ -120,7 +120,6 @@ maximum number of tracks returned.
 - Path:     \n
   `/api/v1/queryTracks`
 - Parameters:
-  - `session_id`: The generated session ID for the user.
   - `pattern`: A search pattern for filtering (and sorting) the tracks.
   - `max_entries`: Specifies the maximum number of returned tracks. Optional, defaults to `50`.
 
@@ -172,7 +171,7 @@ The parameter `session_id` may be omitted in this version.
         "title": "<track_title>",
         "album": "<album_name>",
         "artist": "<artist_name>",
-        "duration": "<duration>",
+        "duration": <duration>,
         "icon_uri": "<uri>",
         "added_by": "<nickname>",
         "playing": true|false,
@@ -184,7 +183,7 @@ The parameter `session_id` may be omitted in this version.
             "title": "<track_title>",
             "album": "<album_name>",
             "artist": "<artist_name>",
-            "duration": "<duration>",
+            "duration": <duration>,
             "icon_uri": "<uri>",
             "added_by": "<nickname>",
             "votes": <nr_of_votes>,
@@ -198,7 +197,7 @@ The parameter `session_id` may be omitted in this version.
             "title": "<track_title>",
             "album": "<album_name>",
             "artist": "<artist_name>",
-            "duration": "<duration>",
+            "duration": <duration>,
             "icon_uri": "<uri>",
             "added_by": "<nickname>"
         },
