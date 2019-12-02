@@ -23,7 +23,8 @@ void JukeBox::start(string configFilePath) {
   checkOptionalError(ret);
 }
 
-TResult<TSessionID> JukeBox::generateSession(optional<TPassword> const &pw) {
+TResult<TSessionID> JukeBox::generateSession(
+    optional<TPassword> const &pw, std::optional<std::string> const &nickname) {
   TResult<TSessionID> ret;
 
   //  ret = mMemory.generateSession();

@@ -12,14 +12,15 @@
 #include <httpserver.hpp>
 
 #include "NetworkListener.h"
+#include "RequestInformation.h"
 
 typedef std::shared_ptr<httpserver::http_response> const (*TEndpointHandler)(
-    NetworkListener *, std::string const &body);
+    NetworkListener *, RequestInformation const &);
 
 std::shared_ptr<httpserver::http_response> const generateSessionHandler(
-    NetworkListener *, std::string const &body);
+    NetworkListener *, RequestInformation const &);
 
 std::shared_ptr<httpserver::http_response> const queryTracksHandler(
-    NetworkListener *, std::string const &body);
+    NetworkListener *, RequestInformation const &);
 
 #endif  // _REST_ENDPOINT_HANDLERS_H_

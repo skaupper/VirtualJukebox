@@ -27,11 +27,11 @@ static string const API_BASE_PATH = "/api/v1";
 
 static optional<string> getCurrentExceptionMessage() {
   try {
-    auto eptr = std::current_exception();
+    auto eptr = current_exception();
     if (eptr) {
-      std::rethrow_exception(eptr);
+      rethrow_exception(eptr);
     }
-  } catch (std::exception const &e) {
+  } catch (exception const &e) {
     return e.what();
   }
 
@@ -61,15 +61,15 @@ shared_ptr<http_response> const RestRequestHandler::InternalErrorHandler(
   stringstream msg;
   msg << "The request to endpoint '" << req.get_path() << "' ";
   msg << "with method '" << req.get_method() << "' ";
-  msg << "lead to an internal server error." << std::endl;
-  msg << "Please contact the server team!" << std::endl << std::endl;
-  msg << "Request content:" << std::endl;
-  msg << req.get_content() << std::endl;
+  msg << "lead to an internal server error." << endl;
+  msg << "Please contact the server team!" << endl << endl;
+  msg << "Request content:" << endl;
+  msg << req.get_content() << endl;
 
   auto exceptionMessageOpt = getCurrentExceptionMessage();
   if (exceptionMessageOpt.has_value()) {
-    msg << std::endl;
-    msg << "Exception:" << std::endl;
+    msg << endl;
+    msg << "Exception:" << endl;
     msg << exceptionMessageOpt.value();
   }
   return make_shared<string_response>(msg.str(), 500);
@@ -97,25 +97,30 @@ shared_ptr<http_response> const RestRequestHandler::render(
 
   // truncate the base path
   auto path = req.get_path().substr(API_BASE_PATH.size());
-  return decodeAndDispatch(path, req.get_method(), req.get_content());
+  return decodeAndDispatch(RequestInformation{
+      path,               //
+      req.get_method(),   //
+      req.get_content(),  //
+      req.get_args()      //
+  });
 }
 
 shared_ptr<http_response> const RestRequestHandler::decodeAndDispatch(
-    string const &path, string const &method, string const &body) {
+    RequestInformation const &infos) {
   static const map<pair<string, string>, TEndpointHandler> AVAILABLE_ENDPOINTS =
       {
           {{"/generateSession", "POST"}, generateSessionHandler},  //
           {{"/queryTracks", "GET"}, queryTracksHandler}            //
       };
 
-  if (auto handlerIt = AVAILABLE_ENDPOINTS.find({path, method});
+  if (auto handlerIt = AVAILABLE_ENDPOINTS.find({infos.path, infos.method});
       handlerIt != AVAILABLE_ENDPOINTS.cend()) {
-    return handlerIt->second(listener, body);
+    return handlerIt->second(listener, infos);
   }
 
   stringstream msg;
-  msg << "Method  : " << method << endl;
-  msg << "Path    : " << path << endl;
-  msg << "Content : " << body << endl;
+  msg << "Method  : " << infos.method << endl;
+  msg << "Path    : " << infos.path << endl;
+  msg << "Content : " << infos.body << endl;
   return make_shared<string_response>(msg.str());
 }

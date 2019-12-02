@@ -10,8 +10,11 @@
 #define _REST_REQUEST_HANDLER_H_
 
 #include <httpserver.hpp>
+#include <map>
+#include <optional>
 
 #include "NetworkListener.h"
+#include "RequestInformation.h"
 
 /**
  * @class RestRequestHandler
@@ -36,10 +39,9 @@ class RestRequestHandler : public httpserver::http_resource {
   bool isValidBasePath(std::string const &path) const;
   std::shared_ptr<httpserver::http_response> const render(
       httpserver::http_request const &req) override;
+
   std::shared_ptr<httpserver::http_response> const decodeAndDispatch(
-      std::string const &path,
-      std::string const &method,
-      std::string const &body);
+      RequestInformation const &);
 };
 
 #endif /* _REST_ENDPOINT_HANDLER_H_ */

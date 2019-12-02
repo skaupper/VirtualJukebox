@@ -83,7 +83,8 @@ set(APP_HEADER          src/JukeBox.h
                         src/NetworkAPI.h
                         src/RestAPI.h
                         src/RestRequestHandler.h
-                        src/RestEndpointHandlers.h)
+                        src/RestEndpointHandlers.h
+                        src/RequestInformation.h)
 
 # Libraries and include directories of dependencies used by the application
 set(APP_LIBRARIES       ${LIBHTTPSERVER_LIBRARIES}

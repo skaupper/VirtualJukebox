@@ -31,7 +31,8 @@ class JukeBox : public NetworkListener {
   void start(std::string configFilePath);
 
   TResult<TSessionID> generateSession(
-      std::optional<TPassword> const &pw) override;
+      std::optional<TPassword> const &pw,
+      std::optional<std::string> const &nickname) override;
   TResult<std::vector<Track>> queryTracks(std::string const &searchPattern,
                                           size_t const nrOfEntries) override;
   // TResult<QueueStatus> getCurrentQueues();

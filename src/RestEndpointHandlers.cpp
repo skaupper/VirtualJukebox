@@ -52,11 +52,11 @@ static shared_ptr<http_response> const mapErrorToResponse(Error const &err) {
 }
 
 shared_ptr<http_response> const generateSessionHandler(
-    NetworkListener *listener, string const &body) {
+    NetworkListener *listener, RequestInformation const &infos) {
   assert(listener);
 
   // parse body into JSON object
-  auto parseResult = parseJsonString(body);
+  auto parseResult = parseJsonString(infos.body);
   if (holds_alternative<Error>(parseResult)) {
     return mapErrorToResponse(get<Error>(parseResult));
   }
@@ -73,8 +73,18 @@ shared_ptr<http_response> const generateSessionHandler(
     password = passwordJson.get<string>();
   }
 
+  optional<string> nickname;
+  if (bodyJson.find("nickname") != bodyJson.cend()) {
+    auto nicknameJson = bodyJson["nickname"];
+    if (!nicknameJson.is_string()) {
+      return mapErrorToResponse(Error(ErrorCode::InvalidFormat,
+                                      "Value of 'nickname' must be a string"));
+    }
+    nickname = nicknameJson.get<string>();
+  }
+
   // notify the listener about the request
-  TResult<TSessionID> result = listener->generateSession(password);
+  TResult<TSessionID> result = listener->generateSession(password, nickname);
   if (holds_alternative<Error>(result)) {
     return mapErrorToResponse(get<Error>(result));
   }
@@ -87,8 +97,8 @@ shared_ptr<http_response> const generateSessionHandler(
   return make_shared<string_response>(responseBody.dump());
 }
 
-shared_ptr<http_response> const queryTracksHandler(NetworkListener *listener,
-                                                   string const &body) {
+shared_ptr<http_response> const queryTracksHandler(
+    NetworkListener *listener, RequestInformation const &infos) {
   assert(listener);
   return make_shared<string_response>("queryTracks");
 }

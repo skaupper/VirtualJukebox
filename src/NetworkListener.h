@@ -37,11 +37,13 @@ class NetworkListener {
    * @brief Generate a session for an user.
    * @details A password may be provided to request admin privileges.
    * @param pw The password used to authenticate as admin user.
+   * @param nickname A nickname the user gets associated with.
    * @return On success the newly generated session ID is returned, an `Error`
    * otherwise.
    */
   virtual TResult<TSessionID> generateSession(
-      std::optional<TPassword> const &pw) = 0;
+      std::optional<TPassword> const &pw,
+      std::optional<std::string> const &nickname) = 0;
 
   /**
    * @brief Query available tracks using different music backends.
