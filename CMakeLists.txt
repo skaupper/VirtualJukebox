@@ -135,7 +135,7 @@ target_compile_options(${APP_OBJECTS} PRIVATE ${SRC_COMPILER_OPTIONS})
 #-------------------------------------------------------------------------------
 include_directories(${APP_INCLUDE_DIRS})
 add_executable(${PROJECT_NAME} ${ENTRYPOINT_SOURCE} $<TARGET_OBJECTS:${APP_OBJECTS}>)
-target_link_libraries(${PROJECT_NAME} ${APP_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${APP_LIBRARIES} glog::glog)
 target_compile_options(${PROJECT_NAME} PRIVATE ${SRC_COMPILER_OPTIONS})
 
 # Test program, running unit tests
@@ -147,7 +147,7 @@ enable_testing()
 # Add test executable and link to required libs
 include_directories(${TEST_INCLUDE_DIRS})
 add_executable(${TEST_TARGET} ${TEST_SOURCES} $<TARGET_OBJECTS:${APP_OBJECTS}>)
-target_link_libraries(${TEST_TARGET} ${TEST_LIBRARIES})
+target_link_libraries(${TEST_TARGET} ${TEST_LIBRARIES} glog::glog)
 target_compile_options(${TEST_TARGET} PRIVATE ${SRC_COMPILER_OPTIONS})
 
 # Add test target, so tests can be executed using `make test`
