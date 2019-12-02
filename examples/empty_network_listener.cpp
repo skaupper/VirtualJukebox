@@ -69,7 +69,7 @@ class EmptyNetworkListener : public NetworkListener {
 
 int main(int argc, char *argv[]) {
   if (argc != 2) {
-    cout << "Usage: " << argv[0] << " <path_to_config_file>" << std::endl;
+    cout << "Usage: " << argv[0] << " <path_to_config_file>" << endl;
     return 0;
   }
 
@@ -81,7 +81,7 @@ int main(int argc, char *argv[]) {
   api.setListener(&listener);
   auto result = api.handleRequests();
   if (result.has_value()) {
-    cerr << result.value().getErrorMessage() << std::endl;
+    cerr << result.value().getErrorMessage() << endl;
   }
 
   return 0;
