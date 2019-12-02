@@ -6,7 +6,7 @@
 
 #include "ConfigHandler.h"
 
-#include <iostream>
+#include <string>
 
 using namespace std;
 
@@ -32,7 +32,7 @@ TResultOpt ConfigHandler::setConfigFilePath(string filepath) {
   SI_Error rc = mIni.LoadFile(mConfigFilePath.c_str());
   if (rc < 0)
     return Error(ErrorCode::FileNotFound,
-                 "ConfigHandler.getValueString: couldn't load file.");
+                 "ConfigHandler.getValueString: Couldn't load file.");
 }
 
 /** @brief Returns value of a key as a string
@@ -40,9 +40,9 @@ TResultOpt ConfigHandler::setConfigFilePath(string filepath) {
 TResult<string> ConfigHandler::getValueString(string section, string key) {
   const char* val = mIni.GetValue(section.c_str(), key.c_str(), nullptr);
   if (!val) {
-    string errmsg = "ConfigHandler.getValueString: Key " + key +
-                    " not found in section " + section;
-    return Error(ErrorCode::KeyNotFound, errmsg);
+    return Error(ErrorCode::KeyNotFound,
+                 "ConfigHandler.getValueString: Key '" + key +
+                     "' not found in section '" + section + "'.");
   }
   return val;
 }
@@ -57,12 +57,26 @@ TResult<string> ConfigHandler::getValueString(string section, string key) {
  * wrongFormat3=47xx11
  */
 TResult<int> ConfigHandler::getValueInt(string section, string key) {
-  int val = mIni.GetLongValue(section.c_str(), key.c_str(), INT32_MAX);
+  auto valObj = getValueString(section, key);
+  if (holds_alternative<Error>(valObj))
+    return get<Error>(valObj);
 
-  if (val == INT32_MAX) {
-    string errmsg = "ConfigHandler.getValueInt: section " + section + ", key " +
-                    key + " not found, or has invalid parameter format.";
-    return Error(ErrorCode::KeyNotFoundOrInvalidKeyFormat, errmsg);
+  string valStr = get<string>(valObj);
+
+  int valInt;
+  size_t idx;
+  try {
+    valInt = stoi(valStr, &idx);
+  } catch (invalid_argument const&) {
+    return Error(ErrorCode::InvalidFormat,
+                 "ConfigHandler.getValueInt: Configuration value '" + section +
+                     "." + key + " is not an integer.");
   }
-  return val;
+
+  if (idx != valStr.size()) {
+    return Error(ErrorCode::InvalidFormat,
+                 "ConfigHandler.getValueInt: Configuration value '" + section +
+                     "." + key + " must only consist of digits.");
+  }
+  return valInt;
 }
