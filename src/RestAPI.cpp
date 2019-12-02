@@ -24,7 +24,7 @@ static TResult<int> parsePort(string const &portStr) {
 
   // check if the configuration value for "port" is an integer
   try {
-    port = std::stoi(portStr, &idx);
+    port = stoi(portStr, &idx);
   } catch (invalid_argument const &) {
     return Error(ErrorCode::InvalidFormat,
                  "RestAPI.handleRequests: Configuration value '" +
@@ -51,15 +51,15 @@ TResultOpt RestAPI::handleRequests() {
   TResult<string> configPort =
       configHandler->getValueString(CONFIG_SECTION, "port");
   if (holds_alternative<Error>(configPort)) {
-    return std::get<Error>(configPort);
+    return get<Error>(configPort);
   }
 
-  auto parsedPort = parsePort(std::get<string>(configPort));
+  auto parsedPort = parsePort(get<string>(configPort));
   if (holds_alternative<Error>(parsedPort)) {
-    return std::get<Error>(parsedPort);
+    return get<Error>(parsedPort);
   }
 
-  int port = std::get<int>(parsedPort);
+  int port = get<int>(parsedPort);
 
   auto webserverParams =
       create_webserver(port)                                         //
