@@ -1,11 +1,13 @@
-/** ----------------------------------------------------------------------------
- * @file    JukeBox.h
+/*****************************************************************************/
+/**
+ * @file    MusicBackend.h
  * @author  Stefan Jahn <stefan.jahn332@gmail.com>
  * @brief   Interface for MusicBackends
- * ---------------------------------------------------------------------------*/
+ */
+/*****************************************************************************/
 
-#ifndef MUSICBACKEND_H_INCLUDED
-#define MUSICBACKEND_H_INCLUDED
+#ifndef _MUSICBACKEND_H_
+#define _MUSICBACKEND_H_
 
 #include <memory>
 #include <vector>
@@ -29,4 +31,4 @@ class MusicBackend {
   virtual TResultOpt setVolume(size_t const percent) = 0;
 };
 
-#endif  // MUSICBACKEND_H_INCLUDED
+#endif /* _MUSICBACKEND_H_ */
