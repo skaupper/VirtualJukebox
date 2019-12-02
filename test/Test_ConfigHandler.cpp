@@ -19,9 +19,8 @@ TEST(ConfigHandler, getValueString_HappyCase) {
 
   TResult<string> ret = conf->getValueString(section, key);
 
-  bool error = holds_alternative<Error>(ret);  // Var 1: This works
-  ASSERT_EQ(error, false);                     // Var 1: This works
-  // ASSERT_EQ(checkAlternativeError(ret), false);  // Var 2: invalid pointer
+  bool error = holds_alternative<Error>(ret);
+  ASSERT_EQ(error, false);
 
   string value = get<string>(ret);
   EXPECT_EQ(value, "192.168.0.101");

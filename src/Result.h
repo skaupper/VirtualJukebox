@@ -66,21 +66,6 @@ using TResult = std::variant<GOOD_TYPE, Error>;
  */
 using TResultOpt = std::optional<Error>;
 
-/** @brief Checks if given parameter contains alternative error value.
- *         If so, it prints the containing error message.
- * @return true if parameter contains error type, false otherwise
- */
-template <class GOOD_TYPE>
-static bool checkAlternativeError(TResult<GOOD_TYPE> ret) {
-  if (std::holds_alternative<Error>(ret)) {
-    std::get<Error>(ret).getErrorCode();
-    std::cerr << "Error message is: " << std::get<Error>(ret).getErrorMessage()
-              << std::endl;
-    return true;
-  }
-  return false;
-}
-
 /** @brief Checks if given parameter contains optional error value.
  *         If so, it prints the containing error message.
  * @return true if parameter contains error type, false otherwise
