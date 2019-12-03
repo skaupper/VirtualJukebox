@@ -24,30 +24,30 @@ class EmptyNetworkListener : public NetworkListener {
   TResult<TSessionID> generateSession(
       optional<TPassword> const &pw,
       optional<string> const &nickname) override {
-    cout << "generateSession" << endl;
+    logInfo("generateSession");
     if (pw.has_value()) {
-      cout << "Password: " << pw.value() << endl;
+      logInfo("Password: " + pw.value());
     } else {
-      cout << "No password" << endl;
+      logInfo("No password");
     }
     if (nickname.has_value()) {
-      cout << "Nickname: " << nickname.value() << endl;
+      logInfo("Nickname: " + nickname.value());
     } else {
-      cout << "No nickname" << endl;
+      logInfo("No nickname");
     }
     return static_cast<TSessionID>("12345678");
   }
 
   TResult<vector<BaseTrack>> queryTracks(string const &searchPattern,
                                          size_t const nrOfEntries) override {
-    cout << "Pattern: " << searchPattern << endl;
-    cout << "Number of entries: " << nrOfEntries << endl;
+    logInfo("Pattern: " + searchPattern);
+    logInfo("Number of entries: " + nrOfEntries);
 
     return TRACK_LIST;
   }
 
   TResult<QueueStatus> getCurrentQueues(TSessionID const &sid) override {
-    cout << "Session ID: " << sid << endl;
+    logInfo("Session ID: " + sid);
 
     QueueStatus status;
     status.normalQueue = NORMAL_QUEUE;
@@ -59,12 +59,12 @@ class EmptyNetworkListener : public NetworkListener {
   TResultOpt addTrackToQueue(TSessionID const &sid,
                              TTrackID const &trkid,
                              QueueType type) override {
-    cout << "Session ID: " << sid << endl;
-    cout << "Track ID: " << trkid << endl;
+    logInfo("Session ID: " + sid);
+    logInfo("Track ID: " + trkid);
     if (type == QueueType::Normal) {
-      cout << "Normal queue" << endl;
+      logInfo("Normal queue");
     } else if (type == QueueType::Admin) {
-      cout << "Admin queue" << endl;
+      logInfo("Admin queue");
     } else {
       return Error(ErrorCode::InvalidValue, "Unknown player action");
     }
@@ -74,37 +74,37 @@ class EmptyNetworkListener : public NetworkListener {
   TResultOpt voteTrack(TSessionID const &sid,
                        TTrackID const &trkid,
                        TVote vote) override {
-    cout << "Session ID: " << sid << endl;
-    cout << "Track ID: " << trkid << endl;
+    logInfo("Session ID: " + sid);
+    logInfo("Track ID: " + trkid);
     if (vote) {
-      cout << "Vote set" << endl;
+      logInfo("Vote set");
     } else {
-      cout << "Vote revoked" << endl;
+      logInfo("Vote revoked");
     }
     return nullopt;
   }
 
   TResultOpt controlPlayer(TSessionID const &sid,
                            PlayerAction action) override {
-    cout << "Session ID: " << sid << endl;
+    logInfo("Session ID: " + sid);
     switch (action) {
       case PlayerAction::Play:
-        cout << "Play" << endl;
+        logInfo("Play");
         break;
       case PlayerAction::Pause:
-        cout << "Pause" << endl;
+        logInfo("Pause");
         break;
       case PlayerAction::Stop:
-        cout << "Stop" << endl;
+        logInfo("Stop");
         break;
       case PlayerAction::Skip:
-        cout << "Skip" << endl;
+        logInfo("Skip");
         break;
       case PlayerAction::VolumeDown:
-        cout << "VolumeDown" << endl;
+        logInfo("VolumeDown");
         break;
       case PlayerAction::VolumeUp:
-        cout << "VolumeUp" << endl;
+        logInfo("VolumeUp");
         break;
       default:
         return Error(ErrorCode::InvalidValue, "Unknown player action");
@@ -114,22 +114,22 @@ class EmptyNetworkListener : public NetworkListener {
 
   TResultOpt removeTrack(TSessionID const &sid,
                          TTrackID const &trkid) override {
-    cout << "Session ID: " << sid << endl;
-    cout << "Track ID: " << trkid << endl;
+    logInfo("Session ID: " + sid);
+    logInfo("Track ID: " + trkid);
     return nullopt;
   }
   TResultOpt moveTrack(TSessionID const &sid,
                        TTrackID const &trkid,
                        QueueType type) override {
-    cout << "Session ID: " << sid << endl;
-    cout << "Track ID: " << trkid << endl;
+    logInfo("Session ID: " + sid);
+    logInfo("Track ID: " + trkid);
     return nullopt;
   }
 };
 
 int main(int argc, char *argv[]) {
   if (argc != 2) {
-    cout << "Usage: " << argv[0] << " <path_to_config_file>" << endl;
+    logError("Usage: " + string(argv[0]) + " <path_to_config_file>");
     return 0;
   }
 
@@ -141,7 +141,7 @@ int main(int argc, char *argv[]) {
   api.setListener(&listener);
   auto result = api.handleRequests();
   if (result.has_value()) {
-    cerr << result.value().getErrorMessage() << endl;
+    cerr << result.value().getErrorMessage();
   }
 
   return 0;
