@@ -16,13 +16,13 @@
 
 using namespace std;
 
-int main(int argc, char* argv[]) {
+int main() {
   JukeBox jukebox;
 
   cout << "Hello world from JukeBox main.cpp !" << endl;
 
   string configFilePath = "../jukebox_config.ini";
-  //  jukebox.start(configFilePath);
+  jukebox.start(configFilePath);
 
   logInfo("Logging the first INFO message!");
   logWarning("Logging the first WARNING message!");

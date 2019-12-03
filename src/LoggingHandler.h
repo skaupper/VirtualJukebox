@@ -2,7 +2,7 @@
 /**
  * @file    LoggingHandler.h
  * @author  Michael Wurm <wurm.michael95@gmail.com>
- * @brief   Class LoggingHandler definition
+ * @brief   LoggingHandler header file
  */
 /*****************************************************************************/
 
