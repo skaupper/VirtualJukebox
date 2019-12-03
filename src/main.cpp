@@ -24,6 +24,7 @@ int main() {
   string configFilePath = "../jukebox_config.ini";
   jukebox.start(configFilePath);
 
+  logDebug("Logging the first DEBUG message!");
   logInfo("Logging the first INFO message!");
   logWarning("Logging the first WARNING message!");
   logError("Logging the first ERROR message!");

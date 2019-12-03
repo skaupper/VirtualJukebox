@@ -23,6 +23,12 @@ static void initGlog() {
   isGlogInitialized = true;
 }
 
+void logDebug(std::string const& msg) {
+  if (!isGlogInitialized)
+    initGlog();
+  DLOG(INFO) << msg;
+}
+
 void logInfo(std::string const& msg) {
   if (!isGlogInitialized)
     initGlog();
