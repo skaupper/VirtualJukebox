@@ -5,7 +5,7 @@ language: cpp
 matrix:
   include:
     - name: "Hello World build step"
-      env: TEST_CASE=4711
+      env: JOB_ENV=4711
 
 script:
   - ./travis.sh
