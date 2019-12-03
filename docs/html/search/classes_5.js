@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['queue_38',['Queue',['../classQueue.html',1,'']]]
+  ['networkapi_65',['NetworkAPI',['../classNetworkAPI.html',1,'']]],
+  ['networklistener_66',['NetworkListener',['../classNetworkListener.html',1,'']]]
 ];

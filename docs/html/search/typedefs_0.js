@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['queues_54',['Queues',['../JukeBox_8h.html#a2908e64dbbe05332fedf2804424edf59',1,'Queues():&#160;JukeBox.h'],['../NetworkListener_8h.html#a2908e64dbbe05332fedf2804424edf59',1,'Queues():&#160;NetworkListener.h']]]
+  ['queues_107',['Queues',['../NetworkListener_8h.html#adcc80250835bc2b99ce350f7cc40730b',1,'NetworkListener.h']]]
 ];

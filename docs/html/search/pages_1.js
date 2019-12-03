@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['virtualjukebox_20landing_20page_65',['VirtualJukebox landing page',['../index.html',1,'']]]
+  ['rest_20interface_118',['REST interface',['../rest_interface.html',1,'']]]
 ];

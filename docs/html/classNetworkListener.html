@@ -68,6 +68,11 @@ $(function() {
 <div class="title">NetworkListener Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Provides interface methods for all supported requests.  
+ <a href="classNetworkListener.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="NetworkListener_8h_source.html">NetworkListener.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for NetworkListener:</div>
 <div class="dyncontent">
@@ -80,25 +85,391 @@ Inheritance diagram for NetworkListener:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a5b9aa9bd367300e8ace4263e41b54655"><td class="memItemLeft" align="right" valign="top"><a id="a5b9aa9bd367300e8ace4263e41b54655"></a>
-virtual <a class="el" href="Result_8h.html#a442760d03514e6c849a35e3f0c768bef">TResult</a>&lt; <a class="el" href="GlobalTypes_8h.html#a0de933f1c954bae9fd7edbff41cf9a91">TSessionID</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>generateSession</b> (<a class="el" href="GlobalTypes_8h.html#a0427177b8e88da62a10f9acfcece1359">TPassword</a> pw)=0</td></tr>
-<tr class="separator:a5b9aa9bd367300e8ace4263e41b54655"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4497a1e18d7c1b759ffa631335755078"><td class="memItemLeft" align="right" valign="top"><a id="a4497a1e18d7c1b759ffa631335755078"></a>
-virtual <a class="el" href="Result_8h.html#a442760d03514e6c849a35e3f0c768bef">TResult</a>&lt; std::vector&lt; <a class="el" href="classTrack.html">Track</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>queryMusic</b> (std::string searchPattern)=0</td></tr>
-<tr class="separator:a4497a1e18d7c1b759ffa631335755078"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5e967f93377c721f10cd0a782c8ca89d"><td class="memItemLeft" align="right" valign="top"><a id="a5e967f93377c721f10cd0a782c8ca89d"></a>
-virtual <a class="el" href="Result_8h.html#a442760d03514e6c849a35e3f0c768bef">TResult</a>&lt; <a class="el" href="JukeBox_8h.html#a2908e64dbbe05332fedf2804424edf59">Queues</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getCurrentQueues</b> ()=0</td></tr>
-<tr class="separator:a5e967f93377c721f10cd0a782c8ca89d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad7549121ccb6bc9a5569f735baa3679f"><td class="memItemLeft" align="right" valign="top"><a id="ad7549121ccb6bc9a5569f735baa3679f"></a>
-virtual <a class="el" href="Result_8h.html#aada7d5476a077b5984176864eefe0c5f">TResultOpt</a>&#160;</td><td class="memItemRight" valign="bottom"><b>addTrackToQueue</b> (<a class="el" href="GlobalTypes_8h.html#a0de933f1c954bae9fd7edbff41cf9a91">TSessionID</a> sid, <a class="el" href="GlobalTypes_8h.html#a913b47270997e628c2767eebc80a2e6a">TTrackID</a> trkid, <a class="el" href="GlobalTypes_8h.html#ad18b8aa57b4ec903e6c8684855647be1">QueueType</a> type)=0</td></tr>
-<tr class="separator:ad7549121ccb6bc9a5569f735baa3679f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3aba5c90d39dbf0789fb149cd0a78cd4"><td class="memItemLeft" align="right" valign="top"><a id="a3aba5c90d39dbf0789fb149cd0a78cd4"></a>
-virtual <a class="el" href="Result_8h.html#aada7d5476a077b5984176864eefe0c5f">TResultOpt</a>&#160;</td><td class="memItemRight" valign="bottom"><b>voteTrack</b> (<a class="el" href="GlobalTypes_8h.html#a0de933f1c954bae9fd7edbff41cf9a91">TSessionID</a> sid, <a class="el" href="GlobalTypes_8h.html#a913b47270997e628c2767eebc80a2e6a">TTrackID</a> trkid)=0</td></tr>
-<tr class="separator:a3aba5c90d39dbf0789fb149cd0a78cd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a30c724bcad89902d95027af2a8ba1703"><td class="memItemLeft" align="right" valign="top"><a id="a30c724bcad89902d95027af2a8ba1703"></a>
-virtual <a class="el" href="Result_8h.html#aada7d5476a077b5984176864eefe0c5f">TResultOpt</a>&#160;</td><td class="memItemRight" valign="bottom"><b>controlPlayer</b> (<a class="el" href="GlobalTypes_8h.html#a0de933f1c954bae9fd7edbff41cf9a91">TSessionID</a> sid, <a class="el" href="GlobalTypes_8h.html#aea132397c26cad8f8637a9422260deca">PlayerAction</a> action)=0</td></tr>
-<tr class="separator:a30c724bcad89902d95027af2a8ba1703"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9a43c5dff18af1a206adb9cb33c9c652"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="Result_8h.html#a442760d03514e6c849a35e3f0c768bef">TResult</a>&lt; <a class="el" href="GlobalTypes_8h.html#a0de933f1c954bae9fd7edbff41cf9a91">TSessionID</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNetworkListener.html#a9a43c5dff18af1a206adb9cb33c9c652">generateSession</a> (<a class="el" href="GlobalTypes_8h.html#a0427177b8e88da62a10f9acfcece1359">TPassword</a> const &amp;pw)=0</td></tr>
+<tr class="memdesc:a9a43c5dff18af1a206adb9cb33c9c652"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate a session for an user.  <a href="classNetworkListener.html#a9a43c5dff18af1a206adb9cb33c9c652">More...</a><br /></td></tr>
+<tr class="separator:a9a43c5dff18af1a206adb9cb33c9c652"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5d27adf3626f08e552a0f1c2f3daab74"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="Result_8h.html#a442760d03514e6c849a35e3f0c768bef">TResult</a>&lt; std::vector&lt; <a class="el" href="classTrack.html">Track</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNetworkListener.html#a5d27adf3626f08e552a0f1c2f3daab74">queryTracks</a> (std::string const &amp;searchPattern, size_t const nrOfEntries)=0</td></tr>
+<tr class="memdesc:a5d27adf3626f08e552a0f1c2f3daab74"><td class="mdescLeft">&#160;</td><td class="mdescRight">Query available tracks using different music backends.  <a href="classNetworkListener.html#a5d27adf3626f08e552a0f1c2f3daab74">More...</a><br /></td></tr>
+<tr class="separator:a5d27adf3626f08e552a0f1c2f3daab74"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a37a93e71aa983e86260345e5e4982359"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="Result_8h.html#aada7d5476a077b5984176864eefe0c5f">TResultOpt</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNetworkListener.html#a37a93e71aa983e86260345e5e4982359">addTrackToQueue</a> (<a class="el" href="GlobalTypes_8h.html#a0de933f1c954bae9fd7edbff41cf9a91">TSessionID</a> const &amp;sid, <a class="el" href="GlobalTypes_8h.html#a913b47270997e628c2767eebc80a2e6a">TTrackID</a> const &amp;trkid, <a class="el" href="GlobalTypes_8h.html#ad18b8aa57b4ec903e6c8684855647be1">QueueType</a> type)=0</td></tr>
+<tr class="memdesc:a37a93e71aa983e86260345e5e4982359"><td class="mdescLeft">&#160;</td><td class="mdescRight">Querie the content of the current queues.  <a href="classNetworkListener.html#a37a93e71aa983e86260345e5e4982359">More...</a><br /></td></tr>
+<tr class="separator:a37a93e71aa983e86260345e5e4982359"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5eaa0385f3f14a0797e47d53aba2a5aa"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="Result_8h.html#aada7d5476a077b5984176864eefe0c5f">TResultOpt</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNetworkListener.html#a5eaa0385f3f14a0797e47d53aba2a5aa">voteTrack</a> (<a class="el" href="GlobalTypes_8h.html#a0de933f1c954bae9fd7edbff41cf9a91">TSessionID</a> const &amp;sid, <a class="el" href="GlobalTypes_8h.html#a913b47270997e628c2767eebc80a2e6a">TTrackID</a> const &amp;trkid, <a class="el" href="GlobalTypes_8h.html#a5842247e6ba9809bdba7898b9fe2b3dd">TVote</a> vote)=0</td></tr>
+<tr class="memdesc:a5eaa0385f3f14a0797e47d53aba2a5aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vote for a track or revoke a vote.  <a href="classNetworkListener.html#a5eaa0385f3f14a0797e47d53aba2a5aa">More...</a><br /></td></tr>
+<tr class="separator:a5eaa0385f3f14a0797e47d53aba2a5aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aafbc105ce3b3008f19fd373df4ebc383"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="Result_8h.html#aada7d5476a077b5984176864eefe0c5f">TResultOpt</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNetworkListener.html#aafbc105ce3b3008f19fd373df4ebc383">controlPlayer</a> (<a class="el" href="GlobalTypes_8h.html#a0de933f1c954bae9fd7edbff41cf9a91">TSessionID</a> const &amp;sid, <a class="el" href="GlobalTypes_8h.html#aea132397c26cad8f8637a9422260deca">PlayerAction</a> action)=0</td></tr>
+<tr class="memdesc:aafbc105ce3b3008f19fd373df4ebc383"><td class="mdescLeft">&#160;</td><td class="mdescRight">Controls the behaviour of the music player.  <a href="classNetworkListener.html#aafbc105ce3b3008f19fd373df4ebc383">More...</a><br /></td></tr>
+<tr class="separator:aafbc105ce3b3008f19fd373df4ebc383"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a017bf4541619e098880ad115fd1ba6e7"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="Result_8h.html#aada7d5476a077b5984176864eefe0c5f">TResultOpt</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNetworkListener.html#a017bf4541619e098880ad115fd1ba6e7">removeTrack</a> (<a class="el" href="GlobalTypes_8h.html#a0de933f1c954bae9fd7edbff41cf9a91">TSessionID</a> const &amp;sid, <a class="el" href="GlobalTypes_8h.html#a913b47270997e628c2767eebc80a2e6a">TTrackID</a> const &amp;trkid)=0</td></tr>
+<tr class="memdesc:a017bf4541619e098880ad115fd1ba6e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove a track from a queue.  <a href="classNetworkListener.html#a017bf4541619e098880ad115fd1ba6e7">More...</a><br /></td></tr>
+<tr class="separator:a017bf4541619e098880ad115fd1ba6e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa40327e801fb55a41362afe09825396c"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="Result_8h.html#aada7d5476a077b5984176864eefe0c5f">TResultOpt</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNetworkListener.html#aa40327e801fb55a41362afe09825396c">moveTrack</a> (<a class="el" href="GlobalTypes_8h.html#a0de933f1c954bae9fd7edbff41cf9a91">TSessionID</a> const &amp;sid, <a class="el" href="GlobalTypes_8h.html#a913b47270997e628c2767eebc80a2e6a">TTrackID</a> const &amp;trkid, <a class="el" href="GlobalTypes_8h.html#ad18b8aa57b4ec903e6c8684855647be1">QueueType</a> type)=0</td></tr>
+<tr class="memdesc:aa40327e801fb55a41362afe09825396c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move a track between queues.  <a href="classNetworkListener.html#aa40327e801fb55a41362afe09825396c">More...</a><br /></td></tr>
+<tr class="separator:aa40327e801fb55a41362afe09825396c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Provides interface methods for all supported requests. </p>
+<p>The receiving part of the observer pattern. </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="classNetworkAPI.html" title="Base class for all implementations of network interfaces.">NetworkAPI</a> </dd></dl>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="a37a93e71aa983e86260345e5e4982359"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a37a93e71aa983e86260345e5e4982359">&#9670;&nbsp;</a></span>addTrackToQueue()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="Result_8h.html#aada7d5476a077b5984176864eefe0c5f">TResultOpt</a> NetworkListener::addTrackToQueue </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="GlobalTypes_8h.html#a0de933f1c954bae9fd7edbff41cf9a91">TSessionID</a> const &amp;&#160;</td>
+          <td class="paramname"><em>sid</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="GlobalTypes_8h.html#a913b47270997e628c2767eebc80a2e6a">TTrackID</a> const &amp;&#160;</td>
+          <td class="paramname"><em>trkid</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="GlobalTypes_8h.html#ad18b8aa57b4ec903e6c8684855647be1">QueueType</a>&#160;</td>
+          <td class="paramname"><em>type</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Querie the content of the current queues. </p>
+<p>Additionally to the current normal and admin queue, the currently playing track is returned as well (if any).</p>
+<dl class="section return"><dt>Returns</dt><dd>On success the current queues and the current track are returned, an <code><a class="el" href="classError.html" title="A customized error type.">Error</a></code> otherwise.</dd></dl>
+<p>Add a track to a given queue (normal or admin).</p>
+<p>Depending on the value of <code>type</code> a track is added to either the normal or the admin queue. If the track is not found, or the user has no permission to add the track to the specified queue, an error is returned.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sid</td><td>The session ID of the user. Used to authenticate as admin if needed. </td></tr>
+    <tr><td class="paramname">trkid</td><td>The ID of the track to add to a queue. Has to be queried using <code>queryMusic</code> beforehand. </td></tr>
+    <tr><td class="paramname">type</td><td>Determines to which queue the track should be added. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Returns an <code><a class="el" href="classError.html" title="A customized error type.">Error</a></code> if something went wrong.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>To add something to the admin queue, the user must have been authenticated as admin when generating the session ID! </dd></dl>
+
+<p>Implemented in <a class="el" href="classJukeBox.html#acbf8e845d6b8ca1e150a91a5c329820b">JukeBox</a>.</p>
+
+</div>
+</div>
+<a id="aafbc105ce3b3008f19fd373df4ebc383"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aafbc105ce3b3008f19fd373df4ebc383">&#9670;&nbsp;</a></span>controlPlayer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="Result_8h.html#aada7d5476a077b5984176864eefe0c5f">TResultOpt</a> NetworkListener::controlPlayer </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="GlobalTypes_8h.html#a0de933f1c954bae9fd7edbff41cf9a91">TSessionID</a> const &amp;&#160;</td>
+          <td class="paramname"><em>sid</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="GlobalTypes_8h.html#aea132397c26cad8f8637a9422260deca">PlayerAction</a>&#160;</td>
+          <td class="paramname"><em>action</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Controls the behaviour of the music player. </p>
+<p>Allows the admin to control some behaviour of the player. This includes pausing/resuming/stopping the playback, skipping a track and adjusting the volume by a fixed percentage at a time.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sid</td><td>The session ID of the user. Used to authenticate as admin. </td></tr>
+    <tr><td class="paramname">action</td><td>Specifies which action to take from the available ones listed above. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Returns an <code><a class="el" href="classError.html" title="A customized error type.">Error</a></code> if something went wrong.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>To control the player, the user must have been authenticated as admin when generating the session ID! </dd></dl>
+
+<p>Implemented in <a class="el" href="classJukeBox.html#a2141a7b4645dde1155b696d7258cd8c1">JukeBox</a>.</p>
+
+</div>
+</div>
+<a id="a9a43c5dff18af1a206adb9cb33c9c652"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9a43c5dff18af1a206adb9cb33c9c652">&#9670;&nbsp;</a></span>generateSession()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="Result_8h.html#a442760d03514e6c849a35e3f0c768bef">TResult</a>&lt;<a class="el" href="GlobalTypes_8h.html#a0de933f1c954bae9fd7edbff41cf9a91">TSessionID</a>&gt; NetworkListener::generateSession </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="GlobalTypes_8h.html#a0427177b8e88da62a10f9acfcece1359">TPassword</a> const &amp;&#160;</td>
+          <td class="paramname"><em>pw</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Generate a session for an user. </p>
+<p>A password may be provided to request admin privileges. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pw</td><td>The password used to authenticate as admin user. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>On success the newly generated session ID is returned, an <code><a class="el" href="classError.html" title="A customized error type.">Error</a></code> otherwise. </dd></dl>
+
+<p>Implemented in <a class="el" href="classJukeBox.html#a09250e342b2dd69438abf04d9f1b194f">JukeBox</a>.</p>
+
+</div>
+</div>
+<a id="aa40327e801fb55a41362afe09825396c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa40327e801fb55a41362afe09825396c">&#9670;&nbsp;</a></span>moveTrack()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="Result_8h.html#aada7d5476a077b5984176864eefe0c5f">TResultOpt</a> NetworkListener::moveTrack </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="GlobalTypes_8h.html#a0de933f1c954bae9fd7edbff41cf9a91">TSessionID</a> const &amp;&#160;</td>
+          <td class="paramname"><em>sid</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="GlobalTypes_8h.html#a913b47270997e628c2767eebc80a2e6a">TTrackID</a> const &amp;&#160;</td>
+          <td class="paramname"><em>trkid</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="GlobalTypes_8h.html#ad18b8aa57b4ec903e6c8684855647be1">QueueType</a>&#160;</td>
+          <td class="paramname"><em>type</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Move a track between queues. </p>
+<p>Can be used to move a track from one queue to another. If the track is already in the specified queue, nothing happens. Otherwise the track will be moved to the end of the queue and loses all queue specific properties (i.e. votes). This action is only allowed for admins.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sid</td><td>The session ID of the user. Used to authenticate as admin. </td></tr>
+    <tr><td class="paramname">trkid</td><td>The track to be moved. Has to be queried using <code>queryMusic</code> beforehand. </td></tr>
+    <tr><td class="paramname">type</td><td>Determines to which queue the track should be moved. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Returns an <code><a class="el" href="classError.html" title="A customized error type.">Error</a></code> if something went wrong.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>To move a track from and to any queue, the user must have been authenticated as admin when generating the session ID! </dd></dl>
+
+<p>Implemented in <a class="el" href="classJukeBox.html#acbf13a27d1dfe0922389b3871739a52b">JukeBox</a>.</p>
+
+</div>
+</div>
+<a id="a5d27adf3626f08e552a0f1c2f3daab74"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5d27adf3626f08e552a0f1c2f3daab74">&#9670;&nbsp;</a></span>queryTracks()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="Result_8h.html#a442760d03514e6c849a35e3f0c768bef">TResult</a>&lt;std::vector&lt;<a class="el" href="classTrack.html">Track</a>&gt; &gt; NetworkListener::queryTracks </td>
+          <td>(</td>
+          <td class="paramtype">std::string const &amp;&#160;</td>
+          <td class="paramname"><em>searchPattern</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t const&#160;</td>
+          <td class="paramname"><em>nrOfEntries</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Query available tracks using different music backends. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">searchPattern</td><td>The search pattern used to query tracks from the backend(s). </td></tr>
+    <tr><td class="paramname">nrOfEntries</td><td>Limits the number of returned track. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>On success the a maximum of <code>nrOfEntries</code> tracks are returned, an <code><a class="el" href="classError.html" title="A customized error type.">Error</a></code> otherwise. </dd></dl>
+
+<p>Implemented in <a class="el" href="classJukeBox.html#a5d9708b771a667cec6b960319c1b0813">JukeBox</a>.</p>
+
+</div>
+</div>
+<a id="a017bf4541619e098880ad115fd1ba6e7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a017bf4541619e098880ad115fd1ba6e7">&#9670;&nbsp;</a></span>removeTrack()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="Result_8h.html#aada7d5476a077b5984176864eefe0c5f">TResultOpt</a> NetworkListener::removeTrack </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="GlobalTypes_8h.html#a0de933f1c954bae9fd7edbff41cf9a91">TSessionID</a> const &amp;&#160;</td>
+          <td class="paramname"><em>sid</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="GlobalTypes_8h.html#a913b47270997e628c2767eebc80a2e6a">TTrackID</a> const &amp;&#160;</td>
+          <td class="paramname"><em>trkid</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Remove a track from a queue. </p>
+<p>Can be used to remove a track from a queue. Since one track can only be in one queue at a time, a queue type is not needed. This action is only allowed for admins.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sid</td><td>The session ID of the user. Used to authenticate as admin. </td></tr>
+    <tr><td class="paramname">trkid</td><td>The track to be removed. Has to be queried using <code>queryMusic</code> beforehand. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Returns an <code><a class="el" href="classError.html" title="A customized error type.">Error</a></code> if something went wrong.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>To remove a track from any queue, the user must have been authenticated as admin when generating the session ID! </dd></dl>
+
+<p>Implemented in <a class="el" href="classJukeBox.html#a4ef7b0f9ab225fc18b606a1ec3fb830d">JukeBox</a>.</p>
+
+</div>
+</div>
+<a id="a5eaa0385f3f14a0797e47d53aba2a5aa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5eaa0385f3f14a0797e47d53aba2a5aa">&#9670;&nbsp;</a></span>voteTrack()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="Result_8h.html#aada7d5476a077b5984176864eefe0c5f">TResultOpt</a> NetworkListener::voteTrack </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="GlobalTypes_8h.html#a0de933f1c954bae9fd7edbff41cf9a91">TSessionID</a> const &amp;&#160;</td>
+          <td class="paramname"><em>sid</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="GlobalTypes_8h.html#a913b47270997e628c2767eebc80a2e6a">TTrackID</a> const &amp;&#160;</td>
+          <td class="paramname"><em>trkid</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="GlobalTypes_8h.html#a5842247e6ba9809bdba7898b9fe2b3dd">TVote</a>&#160;</td>
+          <td class="paramname"><em>vote</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Vote for a track or revoke a vote. </p>
+<p>Depending on the value of <code>type</code> a track is added to either the normal or the admin queue. If the track is not found, or the user has no permission to add the track to the specified queue, an error is returned.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sid</td><td>The session ID of the user. Used to authenticate as admin if needed. </td></tr>
+    <tr><td class="paramname">trkid</td><td>The ID of the track to add to a queue. Has to be queried using <code>queryMusic</code> beforehand. </td></tr>
+    <tr><td class="paramname">type</td><td>Determines to which queue the track should be added. </td></tr>
+    <tr><td class="paramname">vote</td><td>Determines if a vote is set or revoked. There cannot be more than 1 or less than 0 votes from the same user on the same track!</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Returns an <code><a class="el" href="classError.html" title="A customized error type.">Error</a></code> if something went wrong. </dd></dl>
+
+<p>Implemented in <a class="el" href="classJukeBox.html#a63dd8c5ab590dda4ccd3fe3476134acd">JukeBox</a>.</p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>src/<a class="el" href="NetworkListener_8h_source.html">NetworkListener.h</a></li>
 </ul>

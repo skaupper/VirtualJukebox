@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['confighandler_33',['ConfigHandler',['../classConfigHandler.html',1,'']]]
+  ['confighandler_60',['ConfigHandler',['../classConfigHandler.html',1,'']]]
 ];
