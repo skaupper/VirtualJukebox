@@ -58,7 +58,6 @@ include(cmake/FindGlog.cmake)
 set(ENTRYPOINT_SOURCE   src/main.cpp)
 # All source file (excluding main) for the application
 set(APP_SOURCES         src/JukeBox.cpp
-                        src/Result.cpp
                         src/Tracks.cpp
                         src/Queue.cpp
                         src/LoggingHandler.cpp
@@ -101,7 +100,7 @@ set(APP_INCLUDE_DIRS    src/
 
 # All source files containing test cases
 set(TEST_SOURCES        test/Test_ConfigHandler.cpp)
-                        #src/Result.cpp)
+
 # Libraries and include directories of dependencies used by the tests
 set(TEST_LIBRARIES      ${APP_LIBRARIES}
                         ${CMAKE_THREAD_LIBS_INIT}
