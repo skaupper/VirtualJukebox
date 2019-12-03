@@ -8,12 +8,14 @@
  * actually do anything with the incoming data. Use the logging mechanism to get
  * information about recognized requests.
  *
- * Listens to connections on port`8080`.
+ * The listened port can be configured using a key `port` in the section
+ * `RestAPI` in the INI file.
  */
 
 #include <iostream>
 
 #include "ConfigHandler.h"
+#include "DummyData.h"
 #include "RestAPI.h"
 
 using namespace std;
@@ -41,113 +43,16 @@ class EmptyNetworkListener : public NetworkListener {
     cout << "Pattern: " << searchPattern << endl;
     cout << "Number of entries: " << nrOfEntries << endl;
 
-    vector<BaseTrack> tracks = {
-        {"id1", "title1", "album1", "artist1", 123, "uri1", "me"},
-        {"id2", "title2", "album2", "artist2", 223, "uri2", "me"},
-        {"id3", "title3", "album3", "artist3", 323, "uri3", "me"},
-        {"id4", "title4", "album4", "artist4", 423, "uri4", "me"}};
-    return tracks;
+    return TRACK_LIST;
   }
 
   TResult<QueueStatus> getCurrentQueues(TSessionID const &sid) override {
     cout << "Session ID: " << sid << endl;
 
-    Queue normalQueue{{{"id1",
-                        "title1",
-                        "album1",
-                        "artist1",
-                        123,
-                        "uri1",
-                        "me",
-                        1234,
-                        true,
-                        555555},
-                       {"id2",
-                        "title2",
-                        "album2",
-                        "artist2",
-                        223,
-                        "uri2",
-                        "me",
-                        1234,
-                        true,
-                        555555},
-                       {"id3",
-                        "title3",
-                        "album3",
-                        "artist3",
-                        323,
-                        "uri3",
-                        "me",
-                        1234,
-                        true,
-                        555555},
-                       {"id4",
-                        "title4",
-                        "album4",
-                        "artist4",
-                        423,
-                        "uri4",
-                        "me",
-                        1234,
-                        true,
-                        555555}}};
-
-    Queue adminQueue{{{"adminid1",
-                       "admintitle1",
-                       "album1",
-                       "artist1",
-                       456,
-                       "adminuri1",
-                       "me",
-                       1234,
-                       true,
-                       555555},
-                      {"adminid2",
-                       "admintitle2",
-                       "album2",
-                       "artist2",
-                       336,
-                       "adminuri2",
-                       "me",
-                       1234,
-                       true,
-                       555555},
-                      {"adminid3",
-                       "admintitle3",
-                       "album3",
-                       "artist3",
-                       8888,
-                       "adminuri3",
-                       "me",
-                       1234,
-                       true,
-                       555555},
-                      {"adminid4",
-                       "admintitle4",
-                       "album4",
-                       "artist4",
-                       0,
-                       "adminuri4",
-                       "me",
-                       1234,
-                       true,
-                       555555}}};
-
-    PlaybackTrack currentTrack{"adminid1",
-                               "admintitle1",
-                               "album1",
-                               "artist1",
-                               456,
-                               "adminuri1",
-                               "me",
-                               10,
-                               false};
-
     QueueStatus status;
-    status.normalQueue = normalQueue;
-    status.adminQueue = adminQueue;
-    status.currentTrack = currentTrack;
+    status.normalQueue = NORMAL_QUEUE;
+    status.adminQueue = ADMIN_QUEUE;
+    status.currentTrack = CURRENT_TRACK;
     return status;
   }
 
