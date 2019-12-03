@@ -17,6 +17,10 @@ using namespace std;
 using namespace httpserver;
 using json = nlohmann::json;
 
+//
+// Helper functions
+//
+
 static TResult<json const> parseJsonString(string const &str) {
   try {
     return json::parse(str);
@@ -56,6 +60,69 @@ static shared_ptr<http_response> const mapErrorToResponse(Error const &err) {
 }
 
 //
+// Helper macros
+//
+
+#define REQUIRED_STRING_FIELD(name, body)                                      \
+  if (body.find(#name) == body.cend()) {                                       \
+    return mapErrorToResponse(                                                 \
+        Error(ErrorCode::InvalidFormat, "Field '" #name "' not found"));       \
+  }                                                                            \
+  if (!body[#name].is_string()) {                                              \
+    return mapErrorToResponse(Error(ErrorCode::InvalidFormat,                  \
+                                    "Value of '" #name "' must be a string")); \
+  }                                                                            \
+  name = body[#name].get<string>();
+
+#define REQUIRED_INT_FIELD(name, body)                                         \
+  if (body.find(#name) == body.cend()) {                                       \
+    return mapErrorToResponse(                                                 \
+        Error(ErrorCode::InvalidFormat, "Field '" #name "' not found"));       \
+  }                                                                            \
+  if (!body[#name].is_number_integer()) {                                      \
+    return mapErrorToResponse(Error(                                           \
+        ErrorCode::InvalidFormat, "Value of '" #name "' must be an integer")); \
+  }                                                                            \
+  name = body[#name].get<int>();
+
+#define OPTIONAL_STRING_FIELD(name, body)                                      \
+  if (body.find(#name) != body.cend()) {                                       \
+    auto nameJson = body[#name];                                               \
+    if (!nameJson.is_string()) {                                               \
+      return mapErrorToResponse(Error(                                         \
+          ErrorCode::InvalidFormat, "Value of '" #name "' must be a string")); \
+    }                                                                          \
+    name = nameJson.get<string>();                                             \
+  }
+
+#define OPTIONAL_INT_PARAMETER(name, args)                                   \
+  if (args.find(#name) != args.cend()) {                                     \
+    auto paramStr = args.at(#name);                                          \
+    int tmpValue;                                                            \
+    size_t idx;                                                              \
+    try {                                                                    \
+      tmpValue = stoi(paramStr, &idx);                                       \
+    } catch (invalid_argument const &) {                                     \
+      return mapErrorToResponse(Error(ErrorCode::InvalidFormat,              \
+                                      "Parameter '" #name                    \
+                                      "' is not an integer"));               \
+    }                                                                        \
+    if (idx != paramStr.size()) {                                            \
+      return mapErrorToResponse(Error(                                       \
+          ErrorCode::InvalidFormat,                                          \
+          "Parameter '" #name "' must not contain non-integer characters")); \
+    }                                                                        \
+    name = tmpValue;                                                         \
+  }
+
+#define REQUIRED_STRING_PARAMETER(name, args)                                \
+  if (args.find(#name) == args.cend()) {                                     \
+    return mapErrorToResponse(                                               \
+        Error(ErrorCode::InvalidFormat, "Parameter '" #name "' not found")); \
+  }                                                                          \
+  name = args.at(#name);
+
+//
 // GENERATE SESSION
 //
 
@@ -63,33 +130,18 @@ shared_ptr<http_response> const generateSessionHandler(
     NetworkListener *listener, RequestInformation const &infos) {
   assert(listener);
 
-  // parse body into JSON object
   auto parseResult = parseJsonString(infos.body);
   if (holds_alternative<Error>(parseResult)) {
     return mapErrorToResponse(get<Error>(parseResult));
   }
   json const bodyJson = get<json const>(parseResult);
 
-  // parse request specific JSON fields
+  // parse request parameters
   optional<TPassword> password;
-  if (bodyJson.find("password") != bodyJson.cend()) {
-    auto passwordJson = bodyJson["password"];
-    if (!passwordJson.is_string()) {
-      return mapErrorToResponse(Error(ErrorCode::InvalidFormat,
-                                      "Value of 'password' must be a string"));
-    }
-    password = passwordJson.get<string>();
-  }
-
   optional<string> nickname;
-  if (bodyJson.find("nickname") != bodyJson.cend()) {
-    auto nicknameJson = bodyJson["nickname"];
-    if (!nicknameJson.is_string()) {
-      return mapErrorToResponse(Error(ErrorCode::InvalidFormat,
-                                      "Value of 'nickname' must be a string"));
-    }
-    nickname = nicknameJson.get<string>();
-  }
+
+  OPTIONAL_STRING_FIELD(password, bodyJson);
+  OPTIONAL_STRING_FIELD(nickname, bodyJson);
 
   // notify the listener about the request
   TResult<TSessionID> result = listener->generateSession(password, nickname);
@@ -113,37 +165,15 @@ shared_ptr<http_response> const queryTracksHandler(
     NetworkListener *listener, RequestInformation const &infos) {
   assert(listener);
 
-  if (infos.args.find("pattern") == infos.args.cend()) {
-    return mapErrorToResponse(
-        Error(ErrorCode::InvalidFormat, "Parameter 'pattern' not found"));
-  }
-  string pattern = infos.args.at("pattern");
+  // parse request parameters
+  std::string pattern;
+  int max_entries = 50;
 
-  int maxEntries = 50;
-  if (infos.args.find("max_entries") != infos.args.cend()) {
-    auto maxEntriesStr = infos.args.at("max_entries");
-
-    int tmpMaxEntries;
-    size_t idx;
-    try {
-      tmpMaxEntries = stoi(maxEntriesStr, &idx);
-    } catch (invalid_argument const &) {
-      return mapErrorToResponse(
-          Error(ErrorCode::InvalidFormat,
-                "Parameter 'max_entries' is not an integer"));
-    }
-
-    if (idx != maxEntriesStr.size()) {
-      return mapErrorToResponse(Error(
-          ErrorCode::InvalidFormat,
-          "Parameter 'max_entries' must not contain non-integer characters"));
-    }
-
-    maxEntries = tmpMaxEntries;
-  }
+  REQUIRED_STRING_PARAMETER(pattern, infos.args);
+  OPTIONAL_INT_PARAMETER(max_entries, infos.args);
 
   // notify the listener about the request
-  auto result = listener->queryTracks(pattern, maxEntries);
+  auto result = listener->queryTracks(pattern, max_entries);
   if (holds_alternative<Error>(result)) {
     return mapErrorToResponse(get<Error>(result));
   }
@@ -169,14 +199,12 @@ shared_ptr<http_response> const getCurrentQueuesHandler(
     NetworkListener *listener, RequestInformation const &infos) {
   assert(listener);
 
-  if (infos.args.find("session_id") == infos.args.cend()) {
-    return mapErrorToResponse(
-        Error(ErrorCode::InvalidFormat, "Parameter 'session_id' not found"));
-  }
-  TSessionID sessionId = static_cast<TSessionID>(infos.args.at("session_id"));
+  // parse request parameters
+  TSessionID session_id;
+  REQUIRED_STRING_PARAMETER(session_id, infos.args);
 
   // notify the listener about the request
-  auto result = listener->getCurrentQueues(sessionId);
+  auto result = listener->getCurrentQueues(session_id);
   if (holds_alternative<Error>(result)) {
     return mapErrorToResponse(get<Error>(result));
   }
@@ -217,31 +245,19 @@ shared_ptr<http_response> const addTrackToQueueHandler(
   json const bodyJson = get<json const>(parseResult);
 
   // parse request specific JSON fields
-  if (bodyJson.find("session_id") == bodyJson.cend()) {
-    return mapErrorToResponse(
-        Error(ErrorCode::InvalidFormat, "Field 'session_id' not found"));
-  }
-  TSessionID sessionId = bodyJson["session_id"].get<TSessionID>();
+  TSessionID session_id;
+  TTrackID track_id;
+  optional<string> queue_type;
 
-  if (bodyJson.find("track_id") == bodyJson.cend()) {
-    return mapErrorToResponse(
-        Error(ErrorCode::InvalidFormat, "Field 'track_id' not found"));
-  }
-  TTrackID trackId = bodyJson["track_id"].get<TTrackID>();
+  REQUIRED_STRING_FIELD(session_id, bodyJson);
+  REQUIRED_STRING_FIELD(track_id, bodyJson);
+  OPTIONAL_STRING_FIELD(queue_type, bodyJson);
 
   QueueType queueType = QueueType::Normal;
-  if (bodyJson.find("queue_type") != bodyJson.cend()) {
-    auto queueTypeJson = bodyJson["queue_type"];
-    if (!queueTypeJson.is_string()) {
-      return mapErrorToResponse(Error(
-          ErrorCode::InvalidFormat, "Value of 'queue_type' must be a string"));
-    }
-
-    // TODO: do deserialization using the JSON framework
-    auto queueTypeStr = queueTypeJson.get<string>();
-    if (queueTypeStr == "admin") {
+  if (queue_type.has_value()) {
+    if (queue_type.value() == "admin") {
       queueType = QueueType::Admin;
-    } else if (queueTypeStr == "normal") {
+    } else if (queue_type.value() == "normal") {
       queueType = QueueType::Normal;
     } else {
       return mapErrorToResponse(
@@ -251,7 +267,8 @@ shared_ptr<http_response> const addTrackToQueueHandler(
   }
 
   // notify the listener about the request
-  TResultOpt result = listener->addTrackToQueue(sessionId, trackId, queueType);
+  TResultOpt result =
+      listener->addTrackToQueue(session_id, track_id, queueType);
   if (result.has_value()) {
     return mapErrorToResponse(result.value());
   }
@@ -275,31 +292,16 @@ shared_ptr<http_response> const voteTrackHandler(
   json const bodyJson = get<json const>(parseResult);
 
   // parse request specific JSON fields
-  if (bodyJson.find("session_id") == bodyJson.cend()) {
-    return mapErrorToResponse(
-        Error(ErrorCode::InvalidFormat, "Field 'session_id' not found"));
-  }
-  TSessionID sessionId = bodyJson["session_id"].get<TSessionID>();
+  TSessionID session_id;
+  TTrackID track_id;
+  int vote;
 
-  if (bodyJson.find("track_id") == bodyJson.cend()) {
-    return mapErrorToResponse(
-        Error(ErrorCode::InvalidFormat, "Field 'track_id' not found"));
-  }
-  TTrackID trackId = bodyJson["track_id"].get<TTrackID>();
-
-  TVote vote;
-  if (bodyJson.find("vote") != bodyJson.cend()) {
-    auto voteJson = bodyJson["vote"];
-    if (!voteJson.is_number_integer()) {
-      return mapErrorToResponse(Error(ErrorCode::InvalidFormat,
-                                      "Value of 'vote' must be an integer"));
-    }
-
-    vote = (voteJson.get<int>() != 0);
-  }
+  REQUIRED_STRING_FIELD(session_id, bodyJson);
+  REQUIRED_STRING_FIELD(track_id, bodyJson);
+  REQUIRED_INT_FIELD(vote, bodyJson);
 
   // notify the listener about the request
-  TResultOpt result = listener->voteTrack(sessionId, trackId, vote);
+  TResultOpt result = listener->voteTrack(session_id, track_id, (vote != 0));
   if (result.has_value()) {
     return mapErrorToResponse(result.value());
   }
@@ -323,44 +325,34 @@ shared_ptr<http_response> const controlPlayerHandler(
   json const bodyJson = get<json const>(parseResult);
 
   // parse request specific JSON fields
-  if (bodyJson.find("session_id") == bodyJson.cend()) {
-    return mapErrorToResponse(
-        Error(ErrorCode::InvalidFormat, "Field 'session_id' not found"));
-  }
-  TSessionID sessionId = bodyJson["session_id"].get<TSessionID>();
+  TSessionID session_id;
+  string player_action;
+
+  REQUIRED_STRING_FIELD(session_id, bodyJson);
+  REQUIRED_STRING_FIELD(player_action, bodyJson);
 
   PlayerAction playerAction;
-  if (bodyJson.find("player_action") != bodyJson.cend()) {
-    auto playerActionJson = bodyJson["player_action"];
-    if (!playerActionJson.is_string()) {
-      return mapErrorToResponse(
-          Error(ErrorCode::InvalidFormat,
-                "Value of 'player_action' must be a string"));
-    }
-
-    // TODO: do deserialization using the JSON framework
-    auto playerActionStr = playerActionJson.get<string>();
-    if (playerActionStr == "play") {
-      playerAction = PlayerAction::Play;
-    } else if (playerActionStr == "pause") {
-      playerAction = PlayerAction::Pause;
-    } else if (playerActionStr == "stop") {
-      playerAction = PlayerAction::Stop;
-    } else if (playerActionStr == "skip") {
-      playerAction = PlayerAction::Skip;
-    } else if (playerActionStr == "volume_up") {
-      playerAction = PlayerAction::VolumeUp;
-    } else if (playerActionStr == "volume_down") {
-      playerAction = PlayerAction::VolumeDown;
-    } else {
-      return mapErrorToResponse(
-          Error(ErrorCode::InvalidFormat,
-                "Value of 'player_action' must be a valid action."));
-    }
+  // TODO: do deserialization using the JSON framework
+  if (player_action == "play") {
+    playerAction = PlayerAction::Play;
+  } else if (player_action == "pause") {
+    playerAction = PlayerAction::Pause;
+  } else if (player_action == "stop") {
+    playerAction = PlayerAction::Stop;
+  } else if (player_action == "skip") {
+    playerAction = PlayerAction::Skip;
+  } else if (player_action == "volume_up") {
+    playerAction = PlayerAction::VolumeUp;
+  } else if (player_action == "volume_down") {
+    playerAction = PlayerAction::VolumeDown;
+  } else {
+    return mapErrorToResponse(
+        Error(ErrorCode::InvalidFormat,
+              "Value of 'player_action' must be a valid action."));
   }
 
   // notify the listener about the request
-  TResultOpt result = listener->controlPlayer(sessionId, playerAction);
+  TResultOpt result = listener->controlPlayer(session_id, playerAction);
   if (result.has_value()) {
     return mapErrorToResponse(result.value());
   }
@@ -384,34 +376,19 @@ shared_ptr<http_response> const moveTracksHandler(
   json const bodyJson = get<json const>(parseResult);
 
   // parse request specific JSON fields
-  if (bodyJson.find("session_id") == bodyJson.cend()) {
-    return mapErrorToResponse(
-        Error(ErrorCode::InvalidFormat, "Field 'session_id' not found"));
-  }
-  TSessionID sessionId = bodyJson["session_id"].get<TSessionID>();
+  TSessionID session_id;
+  TTrackID track_id;
+  optional<string> queue_type;
 
-  if (bodyJson.find("track_id") == bodyJson.cend()) {
-    return mapErrorToResponse(
-        Error(ErrorCode::InvalidFormat, "Field 'track_id' not found"));
-  }
-  TTrackID trackId = bodyJson["track_id"].get<TTrackID>();
-
-  if (bodyJson.find("queue_type") == bodyJson.cend()) {
-    return mapErrorToResponse(
-        Error(ErrorCode::InvalidFormat, "Field 'queue_type' not found"));
-  }
-  auto queueTypeJson = bodyJson["queue_type"];
-  if (!queueTypeJson.is_string()) {
-    return mapErrorToResponse(Error(ErrorCode::InvalidFormat,
-                                    "Value of 'queue_type' must be a string"));
-  }
+  REQUIRED_STRING_FIELD(session_id, bodyJson);
+  REQUIRED_STRING_FIELD(track_id, bodyJson);
+  OPTIONAL_STRING_FIELD(queue_type, bodyJson);
 
   // TODO: do deserialization using the JSON framework
   QueueType queueType;
-  auto queueTypeStr = queueTypeJson.get<string>();
-  if (queueTypeStr == "admin") {
+  if (queue_type.value() == "admin") {
     queueType = QueueType::Admin;
-  } else if (queueTypeStr == "normal") {
+  } else if (queue_type.value() == "normal") {
     queueType = QueueType::Normal;
   } else {
     return mapErrorToResponse(
@@ -420,7 +397,7 @@ shared_ptr<http_response> const moveTracksHandler(
   }
 
   // notify the listener about the request
-  TResultOpt result = listener->moveTrack(sessionId, trackId, queueType);
+  TResultOpt result = listener->moveTrack(session_id, track_id, queueType);
   if (result.has_value()) {
     return mapErrorToResponse(result.value());
   }
@@ -444,20 +421,14 @@ shared_ptr<http_response> const removeTrackHandler(
   json const bodyJson = get<json const>(parseResult);
 
   // parse request specific JSON fields
-  if (bodyJson.find("session_id") == bodyJson.cend()) {
-    return mapErrorToResponse(
-        Error(ErrorCode::InvalidFormat, "Field 'session_id' not found"));
-  }
-  TSessionID sessionId = bodyJson["session_id"].get<TSessionID>();
+  TSessionID session_id;
+  TTrackID track_id;
 
-  if (bodyJson.find("track_id") == bodyJson.cend()) {
-    return mapErrorToResponse(
-        Error(ErrorCode::InvalidFormat, "Field 'track_id' not found"));
-  }
-  TTrackID trackId = bodyJson["track_id"].get<TTrackID>();
+  REQUIRED_STRING_FIELD(session_id, bodyJson);
+  REQUIRED_STRING_FIELD(track_id, bodyJson);
 
   // notify the listener about the request
-  TResultOpt result = listener->removeTrack(sessionId, trackId);
+  TResultOpt result = listener->removeTrack(session_id, track_id);
   if (result.has_value()) {
     return mapErrorToResponse(result.value());
   }
