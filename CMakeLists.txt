@@ -57,11 +57,10 @@ set(ENTRYPOINT_SOURCE   src/main.cpp)
 # All source file (excluding main) for the application
 set(APP_SOURCES         src/JukeBox.cpp
                         src/Result.cpp
-                        src/Track.cpp
+                        src/Tracks.cpp
                         src/Queue.cpp
                         src/LoggingHandler.cpp
                         src/ConfigHandler.cpp
-                        src/PlaybackTrack.cpp
                         src/SpotifyBackend.cpp
                         src/NetworkAPI.cpp
                         src/RestAPI.cpp
@@ -70,7 +69,7 @@ set(APP_SOURCES         src/JukeBox.cpp
 
 
 set(APP_HEADER          src/JukeBox.h
-                        src/Track.h
+                        src/Tracks.h
                         src/Queue.h
                         src/LoggingHandler.h
                         src/ConfigHandler.h
@@ -78,7 +77,6 @@ set(APP_HEADER          src/JukeBox.h
                         src/Result.h
                         src/GlobalTypes.h
                         src/MusicBackend.h
-                        src/PlaybackTrack.h
                         src/SpotifyBackend.h
                         src/NetworkAPI.h
                         src/RestAPI.h

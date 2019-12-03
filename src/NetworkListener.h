@@ -16,15 +16,6 @@
 #include "GlobalTypes.h"
 #include "Queue.h"
 #include "Result.h"
-#include "Track.h"
-
-//#include "LoggingHandler.h"
-//#include "NetworkAPI.h"
-
-/**
- * @brief Type for multiple queues
- */
-using Queues = Queue;
 
 /**
  * @brief Provides interface methods for all supported requests.
@@ -53,7 +44,7 @@ class NetworkListener {
    * @return On success the a maximum of `nrOfEntries` tracks are returned, an
    * `Error` otherwise.
    */
-  virtual TResult<std::vector<Track>> queryTracks(
+  virtual TResult<std::vector<BaseTrack>> queryTracks(
       std::string const &searchPattern, size_t const nrOfEntries) = 0;
 
   /**
@@ -64,7 +55,7 @@ class NetworkListener {
    * @return On success the current queues and the current track are returned,
    * an `Error` otherwise.
    */
-  // virtual TResult<QueueStatus> getCurrentQueues() = 0;
+  virtual TResult<QueueStatus> getCurrentQueues(TSessionID const &) = 0;
 
   /**
    * @brief Add a track to a given queue (normal or admin).

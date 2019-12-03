@@ -9,9 +9,18 @@
 #ifndef _QUEUE_H_
 #define _QUEUE_H_
 
-class Queue {
- public:
- private:
+#include <vector>
+
+#include "Tracks.h"
+
+struct Queue {
+  std::vector<QueuedTrack> tracks;
+};
+
+struct QueueStatus {
+  Queue normalQueue;
+  Queue adminQueue;
+  PlaybackTrack currentTrack;
 };
 
 #endif /* _QUEUE_H_ */
