@@ -57,19 +57,20 @@ set(ENTRYPOINT_SOURCE   src/main.cpp)
 # All source file (excluding main) for the application
 set(APP_SOURCES         src/JukeBox.cpp
                         src/Result.cpp
-                        src/Track.cpp
+                        src/Tracks.cpp
                         src/Queue.cpp
                         src/LoggingHandler.cpp
                         src/ConfigHandler.cpp
-                        src/PlaybackTrack.cpp
                         src/SpotifyBackend.cpp
                         src/NetworkAPI.cpp
                         src/RestAPI.cpp
-                        src/RestEndpointHandler.cpp)
+                        src/RestRequestHandler.cpp
+                        src/RestEndpointHandlers.cpp
+                        src/Serializer.cpp)
 
 
 set(APP_HEADER          src/JukeBox.h
-                        src/Track.h
+                        src/Tracks.h
                         src/Queue.h
                         src/LoggingHandler.h
                         src/ConfigHandler.h
@@ -77,17 +78,20 @@ set(APP_HEADER          src/JukeBox.h
                         src/Result.h
                         src/GlobalTypes.h
                         src/MusicBackend.h
-                        src/PlaybackTrack.h
                         src/SpotifyBackend.h
                         src/NetworkAPI.h
                         src/RestAPI.h
-                        src/RestEndpointHandler.h)
+                        src/RestRequestHandler.h
+                        src/RestEndpointHandlers.h
+                        src/RequestInformation.h
+                        src/Serializer.h)
 
 # Libraries and include directories of dependencies used by the application
 set(APP_LIBRARIES       ${LIBHTTPSERVER_LIBRARIES}
                         ${LIBMICROHTTPD_LIBRARIES}
                         ${LIBRESTCLIENT_LIBRARIES})
 set(APP_INCLUDE_DIRS    src/
+                        lib/
                         ${LIBHTTPSERVER_INCLUDE_DIRS}
                         ${LIBMICROHTTPD_INCLUDE_DIRS}
                         ${LIBRESTCLIENT_INCLUDE_DIRS})

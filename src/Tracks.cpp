@@ -1,11 +1,11 @@
 /*****************************************************************************/
 /**
- * @file    Track.cpp
+ * @file    BaseTrack.cpp
  * @author  Michael Wurm <wurm.michael95@gmail.com>
- * @brief   Class Track implementation
+ * @brief   Implementations of all track related structs
  */
 /*****************************************************************************/
 
-#include "Track.h"
+#include "Tracks.h"
 
 using namespace std;

@@ -23,7 +23,8 @@ enum class ErrorCode {
   FileNotFound,
   InvalidFormat,
   InvalidValue,
-  KeyNotFound
+  KeyNotFound,
+  NotImplemented
 };
 
 /**
@@ -34,11 +35,11 @@ class Error {
   Error(ErrorCode code, std::string msg) : mCode(code), mMsg(msg) {
   }
 
-  ErrorCode getErrorCode() {
+  ErrorCode getErrorCode() const {
     return mCode;
   }
 
-  std::string getErrorMessage() {
+  std::string getErrorMessage() const {
     return mMsg;
   }
 

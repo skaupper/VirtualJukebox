@@ -17,7 +17,6 @@
 #include "NetworkListener.h"
 #include "Queue.h"
 #include "Result.h"
-#include "Track.h"
 
 //#include "ConfigHandler.h"
 //#include "LoggingHandler.h"
@@ -30,10 +29,12 @@ class JukeBox : public NetworkListener {
  public:
   void start(std::string configFilePath);
 
-  TResult<TSessionID> generateSession(TPassword const &pw) override;
-  TResult<std::vector<Track>> queryTracks(std::string const &searchPattern,
-                                          size_t const nrOfEntries) override;
-  // TResult<QueueStatus> getCurrentQueues();
+  TResult<TSessionID> generateSession(
+      std::optional<TPassword> const &pw,
+      std::optional<std::string> const &nickname) override;
+  TResult<std::vector<BaseTrack>> queryTracks(
+      std::string const &searchPattern, size_t const nrOfEntries) override;
+  TResult<QueueStatus> getCurrentQueues(TSessionID const &);
   TResultOpt addTrackToQueue(TSessionID const &sid,
                              TTrackID const &trkid,
                              QueueType type) override;

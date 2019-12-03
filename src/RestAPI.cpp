@@ -11,7 +11,7 @@
 #include <sstream>
 
 #include "ConfigHandler.h"
-#include "RestEndpointHandler.h"
+#include "RestRequestHandler.h"
 
 using namespace std;
 using namespace httpserver;
@@ -35,8 +35,8 @@ TResultOpt RestAPI::handleRequests() {
 
   auto webserverParams =
       create_webserver(port)
-          .not_found_resource(RestEndpointHandler::NotFoundHandler)
-          .internal_error_resource(RestEndpointHandler::InternalErrorHandler)
+          .not_found_resource(RestRequestHandler::NotFoundHandler)
+          .internal_error_resource(RestRequestHandler::InternalErrorHandler)
           .no_regex_checking()
           .single_resource()
           .no_basic_auth()
@@ -47,7 +47,7 @@ TResultOpt RestAPI::handleRequests() {
   webserver ws{webserverParams};
 
   // use a single handler sensitive on all paths
-  RestEndpointHandler handler(listener);
+  RestRequestHandler handler(listener);
   ws.register_resource("/", &handler, true);
 
   // run the webserver in blocking mode

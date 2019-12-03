@@ -16,15 +16,6 @@
 #include "GlobalTypes.h"
 #include "Queue.h"
 #include "Result.h"
-#include "Track.h"
-
-//#include "LoggingHandler.h"
-//#include "NetworkAPI.h"
-
-/**
- * @brief Type for multiple queues
- */
-using Queues = Queue;
 
 /**
  * @brief Provides interface methods for all supported requests.
@@ -37,10 +28,13 @@ class NetworkListener {
    * @brief Generate a session for an user.
    * @details A password may be provided to request admin privileges.
    * @param pw The password used to authenticate as admin user.
+   * @param nickname A nickname the user gets associated with.
    * @return On success the newly generated session ID is returned, an `Error`
    * otherwise.
    */
-  virtual TResult<TSessionID> generateSession(TPassword const &pw) = 0;
+  virtual TResult<TSessionID> generateSession(
+      std::optional<TPassword> const &pw,
+      std::optional<std::string> const &nickname) = 0;
 
   /**
    * @brief Query available tracks using different music backends.
@@ -50,7 +44,7 @@ class NetworkListener {
    * @return On success the a maximum of `nrOfEntries` tracks are returned, an
    * `Error` otherwise.
    */
-  virtual TResult<std::vector<Track>> queryTracks(
+  virtual TResult<std::vector<BaseTrack>> queryTracks(
       std::string const &searchPattern, size_t const nrOfEntries) = 0;
 
   /**
@@ -61,7 +55,7 @@ class NetworkListener {
    * @return On success the current queues and the current track are returned,
    * an `Error` otherwise.
    */
-  // virtual TResult<QueueStatus> getCurrentQueues() = 0;
+  virtual TResult<QueueStatus> getCurrentQueues(TSessionID const &) = 0;
 
   /**
    * @brief Add a track to a given queue (normal or admin).
