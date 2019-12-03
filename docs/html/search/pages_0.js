@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['rest_20interface_64',['REST interface',['../rest_interface.html',1,'']]]
+  ['class_20diagram_117',['Class diagram',['../class_diagram.html',1,'']]]
 ];

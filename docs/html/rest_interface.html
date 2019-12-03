@@ -66,21 +66,21 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <div class="toc"><h3>Table of Contents</h3>
-<ul><li class="level1"><a href="#autotoc_md1">Status response</a></li>
-<li class="level1"><a href="#autotoc_md2">Available requests</a><ul><li class="level2"><a href="#autotoc_md3">Generating a session</a></li>
+<ul><li class="level1"><a href="#status_responses">Status response</a></li>
+<li class="level1"><a href="#available_requests">Available requests</a><ul><li class="level2"><a href="#generate_session">Generating a session</a></li>
 <li class="level2"><a href="#query_tracks">Querying tracks</a></li>
-<li class="level2"><a href="#autotoc_md8">Get current queues</a></li>
-<li class="level2"><a href="#autotoc_md11">Add track to queue</a></li>
-<li class="level2"><a href="#autotoc_md14">Vote track</a></li>
-<li class="level2"><a href="#autotoc_md17">Control player</a></li>
-<li class="level2"><a href="#autotoc_md20">Move tracks between queues</a></li>
-<li class="level2"><a href="#autotoc_md23">Remove tracks from queues</a></li>
+<li class="level2"><a href="#get_current_queues">Get current queues</a></li>
+<li class="level2"><a href="#add_track">Add track to queue</a></li>
+<li class="level2"><a href="#vote_track">Vote track</a></li>
+<li class="level2"><a href="#control_player">Control player</a></li>
+<li class="level2"><a href="#move_track">Move tracks between queues</a></li>
+<li class="level2"><a href="#remove_track">Remove tracks from queues</a></li>
 </ul>
 </li>
 </ul>
 </div>
 <div class="textblock"><p>This page describes the available REST endpoints provided for clients and how they can be used. Each of the following requests define a method, a path and JSON format for the request/response body which is expected/can be expected.</p>
-<h1><a class="anchor" id="autotoc_md1"></a>
+<h1><a class="anchor" id="status_responses"></a>
 Status response</h1>
 <p>Since it cannot be guaranteed that every request can be handled as intended, there needs to be some kind of status report.<br  />
 Requests which are handled successfully always respond with a HTTP status code of <code>200 OK</code>. Every other code indicates an error.</p>
@@ -111,32 +111,35 @@ Requests which are handled successfully always respond with a HTTP status code o
 <div class="line">}</div>
 </div><!-- fragment --><p><code>status_code</code> will be the repeated HTTP status code (403 for example).<br  />
 <code>error</code> contains a short description which can be used to display an error message to the end user.</p>
-<h1><a class="anchor" id="autotoc_md2"></a>
+<h1><a class="anchor" id="available_requests"></a>
 Available requests</h1>
 <p>This section lists all available REST endpoints and their intended usages. Additionally the needed HTTP method as well as the path and the body layout is specified.</p>
-<p>Request and response bodies need to be in the JSON format. Field values can be of type <code>int</code> (32-bit signed integer), <code>string</code> (quoted with double quotes) or <code>boolean</code> (true or false).</p>
+<p>Requests using the <code>GET</code> method should pass their parameters in the <a href="https://en.wikipedia.org/wiki/Query_string">query string</a> instead of the body.</p>
+<p>The bodies of other methods and all responses are expected/can be expected in the JSON format. Field values can be of type <code>int</code> (32-bit signed integer), <code>string</code> (quoted with double quotes) or <code>boolean</code> (true or false).</p>
 <p><b>Note</b>: Invalid JSON (or missing required fields) will trigger an <code>422</code> error!</p>
-<h2><a class="anchor" id="autotoc_md3"></a>
+<h2><a class="anchor" id="generate_session"></a>
 Generating a session</h2>
 <p>Before doing other requests clients need to get a session ID. This ID is used to identify the user between multiple requests, which is needed if the user wants to undo a vote or prevents him from voting twice on the same track.</p>
 <p><b>Note</b>: When an invalid/expired session ID is used in any request a <code>440</code> error is triggered!</p>
 <p><b>Note</b>: If the client drops the session ID on purpose the voting system can be exploited!</p>
-<h3><a class="anchor" id="autotoc_md4"></a>
+<h3><a class="anchor" id="autotoc_md2"></a>
 Request</h3>
 <ul>
 <li>Method: <br  />
- <code>GET</code></li>
+ <code>POST</code></li>
 <li>Path: <br  />
  <code>/api/v1/generateSession</code></li>
 <li>Body: <br  />
  <div class="fragment"><div class="line">{</div>
-<div class="line">    <span class="stringliteral">&quot;password&quot;</span>: <span class="stringliteral">&quot;&lt;admin_password&gt;&quot;</span></div>
+<div class="line">    <span class="stringliteral">&quot;password&quot;</span>: <span class="stringliteral">&quot;&lt;admin_password&gt;&quot;</span>,</div>
+<div class="line">    <span class="stringliteral">&quot;nickname&quot;</span> <span class="stringliteral">&quot;&lt;nickname&gt;&quot;</span></div>
 <div class="line">}</div>
 </div><!-- fragment --></li>
 </ul>
-<p><code>password</code> is used to authorize a client as admin. If no password is given a normal (non-privileged) user session is generated. If a wrong password is given an <code>401</code> error is returned.</p>
+<p><code>password</code> is used to authorize a client as admin. If no password is given a normal (non-privileged) user session is generated. If a wrong password is given an <code>401</code> error is returned. The <code>nickname</code> can (optionally) be set to have a readable name associated with a session. This name is also returned for each track when using <a href="#get_current_queues">getCurrentQueues</a>.</p>
+<p><b>Attention</b>: The <code>nickname</code> is explicitly NOT guaranteed to be unique, so do not use it anywhere to uniquely identify users!</p>
 <p><b>TODO</b>: Allow refreshing an old session.</p>
-<h3><a class="anchor" id="autotoc_md5"></a>
+<h3><a class="anchor" id="autotoc_md3"></a>
 Response</h3>
 <ul>
 <li>Statuscode: <br  />
@@ -151,23 +154,20 @@ Response</h3>
 Querying tracks</h2>
 <p>Before the user can add tracks to the queue he has to query the available tracks. The available tracks are queried with a user given pattern and are returned in an backend-specific order. To increase flexibility clients may specify the maximum number of tracks returned.</p>
 <p><b>Note</b>: In the future some kind of paging may be implemented.</p>
-<h3><a class="anchor" id="autotoc_md6"></a>
+<h3><a class="anchor" id="autotoc_md4"></a>
 Request</h3>
 <ul>
 <li>Method: <br  />
  <code>GET</code></li>
 <li>Path: <br  />
  <code>/api/v1/queryTracks</code></li>
-<li>Body: <br  />
- <div class="fragment"><div class="line">{</div>
-<div class="line">    <span class="stringliteral">&quot;session_id&quot;</span>: <span class="stringliteral">&quot;&lt;session_id&gt;&quot;</span>,</div>
-<div class="line">    <span class="stringliteral">&quot;pattern&quot;</span>: <span class="stringliteral">&quot;&lt;some_search_pattern&gt;&quot;</span>,</div>
-<div class="line">    <span class="stringliteral">&quot;max_entries&quot;</span>: &lt;max_entries&gt;</div>
-<div class="line">}</div>
-</div><!-- fragment --></li>
+<li>Parameters:<ul>
+<li><code>pattern</code>: A search pattern for filtering (and sorting) the tracks.</li>
+<li><code>max_entries</code>: Specifies the maximum number of returned tracks. Optional, defaults to <code>50</code>.</li>
 </ul>
-<p>The field <code>max_entries</code> is optional. If not specified, it is set to <code>50</code>.</p>
-<h3><a class="anchor" id="autotoc_md7"></a>
+</li>
+</ul>
+<h3><a class="anchor" id="autotoc_md5"></a>
 Response</h3>
 <div class="fragment"><div class="line">{</div>
 <div class="line">    <span class="stringliteral">&quot;tracks&quot;</span>: [</div>
@@ -175,43 +175,43 @@ Response</h3>
 <div class="line">            <span class="stringliteral">&quot;track_id&quot;</span>: <span class="stringliteral">&quot;&lt;track_id&gt;&quot;</span>,</div>
 <div class="line">            <span class="stringliteral">&quot;title&quot;</span>: <span class="stringliteral">&quot;&lt;track_title&gt;&quot;</span>,</div>
 <div class="line">            <span class="stringliteral">&quot;album&quot;</span>: <span class="stringliteral">&quot;&lt;album_name&gt;&quot;</span>,</div>
-<div class="line">            <span class="stringliteral">&quot;author&quot;</span>: <span class="stringliteral">&quot;&lt;author_name&gt;&quot;</span>,</div>
+<div class="line">            <span class="stringliteral">&quot;artist&quot;</span>: <span class="stringliteral">&quot;&lt;artist_name&gt;&quot;</span>,</div>
 <div class="line">            <span class="stringliteral">&quot;duration&quot;</span>: <span class="stringliteral">&quot;&lt;duration&gt;&quot;</span>,</div>
 <div class="line">            <span class="stringliteral">&quot;icon_uri&quot;</span>: <span class="stringliteral">&quot;&lt;uri&gt;&quot;</span></div>
 <div class="line">        },</div>
 <div class="line">        ...</div>
 <div class="line">    ]</div>
 <div class="line">}</div>
-</div><!-- fragment --><p>If a track has no associated <code>album</code> and/or <code>author</code> these fields may be omitted.</p>
-<h2><a class="anchor" id="autotoc_md8"></a>
+</div><!-- fragment --><p>If a track has no associated <code>album</code> and/or <code>artist</code> these fields may be omitted.</p>
+<h2><a class="anchor" id="get_current_queues"></a>
 Get current queues</h2>
 <p>Queries the current queues (normal and admin queue) as well as the currently playing track.</p>
 <p><b>Attention</b>: In the first version this endpoint won't block until a new queue update is available!</p>
 <p><b>Note</b>: For now this endpoint does not provide information on since when or how long a track is still playing!</p>
-<h3><a class="anchor" id="autotoc_md9"></a>
+<h3><a class="anchor" id="autotoc_md6"></a>
 Request</h3>
 <ul>
 <li>Method: <br  />
  <code>GET</code></li>
 <li>Path: <br  />
  <code>/api/v1/getCurrentQueues</code></li>
-<li>Body: <br  />
- <div class="fragment"><div class="line">{</div>
-<div class="line">    <span class="stringliteral">&quot;session_id&quot;</span>: <span class="stringliteral">&quot;&lt;session_id&gt;&quot;</span></div>
-<div class="line">}</div>
-</div><!-- fragment --></li>
+<li>Parameters:<ul>
+<li><code>session_id</code>: The generated session ID for the user.</li>
 </ul>
-<p>The field <code>session_id</code> may be omitted in this version (thus empty JSON objects are valid for now).</p>
-<h3><a class="anchor" id="autotoc_md10"></a>
+</li>
+</ul>
+<p>The parameter <code>session_id</code> may be omitted in this version.</p>
+<h3><a class="anchor" id="autotoc_md7"></a>
 Response</h3>
 <div class="fragment"><div class="line">{</div>
 <div class="line">    <span class="stringliteral">&quot;currently_playing&quot;</span>: {</div>
 <div class="line">        <span class="stringliteral">&quot;track_id&quot;</span>: <span class="stringliteral">&quot;&lt;track_id&gt;&quot;</span>,</div>
 <div class="line">        <span class="stringliteral">&quot;title&quot;</span>: <span class="stringliteral">&quot;&lt;track_title&gt;&quot;</span>,</div>
 <div class="line">        <span class="stringliteral">&quot;album&quot;</span>: <span class="stringliteral">&quot;&lt;album_name&gt;&quot;</span>,</div>
-<div class="line">        <span class="stringliteral">&quot;author&quot;</span>: <span class="stringliteral">&quot;&lt;author_name&gt;&quot;</span>,</div>
-<div class="line">        <span class="stringliteral">&quot;duration&quot;</span>: <span class="stringliteral">&quot;&lt;duration&gt;&quot;</span>,</div>
+<div class="line">        <span class="stringliteral">&quot;artist&quot;</span>: <span class="stringliteral">&quot;&lt;artist_name&gt;&quot;</span>,</div>
+<div class="line">        <span class="stringliteral">&quot;duration&quot;</span>: &lt;duration&gt;,</div>
 <div class="line">        <span class="stringliteral">&quot;icon_uri&quot;</span>: <span class="stringliteral">&quot;&lt;uri&gt;&quot;</span>,</div>
+<div class="line">        <span class="stringliteral">&quot;added_by&quot;</span>: <span class="stringliteral">&quot;&lt;nickname&gt;&quot;</span>,</div>
 <div class="line">        <span class="stringliteral">&quot;playing&quot;</span>: <span class="keyword">true</span>|<span class="keyword">false</span>,</div>
 <div class="line">        <span class="stringliteral">&quot;playing_for&quot;</span>: &lt;playing_for_ms&gt;</div>
 <div class="line">    },</div>
@@ -220,10 +220,12 @@ Response</h3>
 <div class="line">            <span class="stringliteral">&quot;track_id&quot;</span>: <span class="stringliteral">&quot;&lt;track_id&gt;&quot;</span>,</div>
 <div class="line">            <span class="stringliteral">&quot;title&quot;</span>: <span class="stringliteral">&quot;&lt;track_title&gt;&quot;</span>,</div>
 <div class="line">            <span class="stringliteral">&quot;album&quot;</span>: <span class="stringliteral">&quot;&lt;album_name&gt;&quot;</span>,</div>
-<div class="line">            <span class="stringliteral">&quot;author&quot;</span>: <span class="stringliteral">&quot;&lt;author_name&gt;&quot;</span>,</div>
-<div class="line">            <span class="stringliteral">&quot;duration&quot;</span>: <span class="stringliteral">&quot;&lt;duration&gt;&quot;</span>,</div>
+<div class="line">            <span class="stringliteral">&quot;artist&quot;</span>: <span class="stringliteral">&quot;&lt;artist_name&gt;&quot;</span>,</div>
+<div class="line">            <span class="stringliteral">&quot;duration&quot;</span>: &lt;duration&gt;,</div>
 <div class="line">            <span class="stringliteral">&quot;icon_uri&quot;</span>: <span class="stringliteral">&quot;&lt;uri&gt;&quot;</span>,</div>
-<div class="line">            <span class="stringliteral">&quot;votes&quot;</span>: &lt;nr_of_votes&gt;</div>
+<div class="line">            <span class="stringliteral">&quot;added_by&quot;</span>: <span class="stringliteral">&quot;&lt;nickname&gt;&quot;</span>,</div>
+<div class="line">            <span class="stringliteral">&quot;votes&quot;</span>: &lt;nr_of_votes&gt;,</div>
+<div class="line">            <span class="stringliteral">&quot;current_vote&quot;</span>: &lt;vote&gt;</div>
 <div class="line">        },</div>
 <div class="line">        ...</div>
 <div class="line">    ],</div>
@@ -232,24 +234,26 @@ Response</h3>
 <div class="line">            <span class="stringliteral">&quot;track_id&quot;</span>: <span class="stringliteral">&quot;&lt;track_id&gt;&quot;</span>,</div>
 <div class="line">            <span class="stringliteral">&quot;title&quot;</span>: <span class="stringliteral">&quot;&lt;track_title&gt;&quot;</span>,</div>
 <div class="line">            <span class="stringliteral">&quot;album&quot;</span>: <span class="stringliteral">&quot;&lt;album_name&gt;&quot;</span>,</div>
-<div class="line">            <span class="stringliteral">&quot;author&quot;</span>: <span class="stringliteral">&quot;&lt;author_name&gt;&quot;</span>,</div>
-<div class="line">            <span class="stringliteral">&quot;duration&quot;</span>: <span class="stringliteral">&quot;&lt;duration&gt;&quot;</span>,</div>
-<div class="line">            <span class="stringliteral">&quot;icon_uri&quot;</span>: <span class="stringliteral">&quot;&lt;uri&gt;&quot;</span></div>
+<div class="line">            <span class="stringliteral">&quot;artist&quot;</span>: <span class="stringliteral">&quot;&lt;artist_name&gt;&quot;</span>,</div>
+<div class="line">            <span class="stringliteral">&quot;duration&quot;</span>: &lt;duration&gt;,</div>
+<div class="line">            <span class="stringliteral">&quot;icon_uri&quot;</span>: <span class="stringliteral">&quot;&lt;uri&gt;&quot;</span>,</div>
+<div class="line">            <span class="stringliteral">&quot;added_by&quot;</span>: <span class="stringliteral">&quot;&lt;nickname&gt;&quot;</span></div>
 <div class="line">        },</div>
 <div class="line">        ...</div>
 <div class="line">    ],</div>
 <div class="line">}</div>
-</div><!-- fragment --><p>The entries in the normal queue are sorted in the same order as they will be played (no client-side sorting needed!).<br  />
-The track listed in <code>currently_playing</code> has an additional field for its current playback status (playing or paused) and the time it has already been played (in milliseconds).</p>
-<h2><a class="anchor" id="autotoc_md11"></a>
+</div><!-- fragment --><p>The entries in the normal queue are sorted in the same order as they will be played (no client-side sorting needed!). The field <code>current_vote</code> indicates if the user has already voted for a track (in the normal queue). For now this can either be <code>1</code> or <code>0</code>.<br  />
+The track listed in <code>currently_playing</code> has an additional field for its current playback status (playing or paused) and the time it has already been played (in milliseconds). The nickname of the user who added a specific track can be found in the <code>added_by</code>.</p>
+<p><b>Note</b>: The fields <code>votes</code> and <code>current_vote</code> are only relevant for tracks in the normal queue. While the order of tracks in the normal queue depends on the vote count (and insertion date) the admin queue is ordered only using the insertion date. The currently playing track also does not contain the vote fields because he will not be requeued afterwards anyway.</p>
+<h2><a class="anchor" id="add_track"></a>
 Add track to queue</h2>
 <p>Adds a track to the specified queue on the server.</p>
-<p><b>Note</b>: The same track can only be queued once at a time (i.e. as long as a track is in any of the queues, it cannot be queued again).</p>
-<h3><a class="anchor" id="autotoc_md12"></a>
+<p><b>Note</b>: The same track can only be queued once at a time (i.e. as long as a track is returned by <a href="#get_current_queues">getCurrentQueues</a>, it cannot be queued again).</p>
+<h3><a class="anchor" id="autotoc_md8"></a>
 Request</h3>
 <ul>
 <li>Method: <br  />
- <code>GET</code></li>
+ <code>POST</code></li>
 <li>Path: <br  />
  <code>/api/v1/addTrackToQueue</code></li>
 <li>Body: <br  />
@@ -261,22 +265,22 @@ Request</h3>
 </div><!-- fragment --></li>
 </ul>
 <p><code>session_id</code> is used to authorize the admin when adding a track to the admin queue.<br  />
-The content for <code>track_id</code> has to be queried with a previous call to <a href="#query_tracks">queryTracks</a>.<br  />
+The content for <code>track_id</code> has to be queried with a call to <a href="#query_tracks">queryTracks</a>.<br  />
 <code>queue_type</code> indicates in which queue the track should be added. Valid values are <code>admin</code> or <code>normal</code>. If omitted it is set to <code>normal</code>.</p>
-<h3><a class="anchor" id="autotoc_md13"></a>
+<h3><a class="anchor" id="autotoc_md9"></a>
 Response</h3>
 <div class="fragment"><div class="line">{</div>
 <div class="line">}</div>
 </div><!-- fragment --><p>A successful call responds with an empty JSON object.</p>
-<h2><a class="anchor" id="autotoc_md14"></a>
+<h2><a class="anchor" id="vote_track"></a>
 Vote track</h2>
 <p>Vote for a track or revoke a vote.</p>
 <p><b>Note</b>: A user cannot vote for the same track twice, nor can he revoke non existing votes causing a downvote.</p>
-<h3><a class="anchor" id="autotoc_md15"></a>
+<h3><a class="anchor" id="autotoc_md10"></a>
 Request</h3>
 <ul>
 <li>Method: <br  />
- <code>GET</code></li>
+ <code>PUT</code></li>
 <li>Path: <br  />
  <code>/api/v1/voteTrack</code></li>
 <li>Body: <br  />
@@ -287,24 +291,24 @@ Request</h3>
 <div class="line">}</div>
 </div><!-- fragment --></li>
 </ul>
-<p>The content for <code>track_id</code> has to be queried with a previous call to <a href="#query_tracks">queryTracks</a>.<br  />
+<p>The content for <code>track_id</code> has to be queried with a call to <a href="#query_tracks">queryTracks</a>.<br  />
 If <code>vote</code> is a <code>0</code> an already given vote is revoked, while setting <code>vote</code> to a non-zero value votes for the track.</p>
 <p><b>Note</b>: The actual value of non-zero values are not important (it will always count as <code>1</code>)!</p>
-<h3><a class="anchor" id="autotoc_md16"></a>
+<h3><a class="anchor" id="autotoc_md11"></a>
 Response</h3>
 <div class="fragment"><div class="line">{</div>
 <div class="line">}</div>
 </div><!-- fragment --><p>A successful call responds with an empty JSON object.</p>
-<h2><a class="anchor" id="autotoc_md17"></a>
+<h2><a class="anchor" id="control_player"></a>
 Control player</h2>
 <p>Using this endpoint the client can cause the player behaviour to change.</p>
 <p><b>Note</b>: This endpoint can only be used by the admin.</p>
 <p><b>Note</b>: For now querying the current player state is not possible!</p>
-<h3><a class="anchor" id="autotoc_md18"></a>
+<h3><a class="anchor" id="autotoc_md12"></a>
 Request</h3>
 <ul>
 <li>Method: <br  />
- <code>GET</code></li>
+ <code>PUT</code></li>
 <li>Path: <br  />
  <code>/api/v1/controlPlayer</code></li>
 <li>Body: <br  />
@@ -316,28 +320,29 @@ Request</h3>
 </ul>
 <p>The value of <code>player_action</code> controls which action the server should take. Valid values are:</p>
 <ul>
-<li>Play</li>
-<li>Pause</li>
-<li>Stop</li>
-<li>Skip</li>
-<li>VolumeUp</li>
-<li>VolumeDown</li>
+<li><code>"play"</code>: Starts or resumes playback</li>
+<li><code>"pause"</code>: Pauses the playback. If it is already paused or stopped nothing happens.</li>
+<li><code>"stop"</code>: Stops playback and remove the currently playing track (if any). If playback is paused remove the track as well. If it is already stopped nothing happens.</li>
+<li><code>"skip"</code>: Removes the currently playing (or paused) track and play the next one in the queue. If playback is stopped remove the next queued track without resuming playback.</li>
+<li><code>"volume_up"</code>: Raises the volume by a fixed amount if it is not already at its maximum value.</li>
+<li><code>"volume_down"</code>: Lowers the volume by a fixed amount if it is not already at its minimum value.</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md19"></a>
+<p><b>Note</b>: The current volume level cannot be queried by now.</p>
+<h3><a class="anchor" id="autotoc_md13"></a>
 Response</h3>
 <div class="fragment"><div class="line">{</div>
 <div class="line">}</div>
 </div><!-- fragment --><p>A successful call responds with an empty JSON object.</p>
-<h2><a class="anchor" id="autotoc_md20"></a>
+<h2><a class="anchor" id="move_track"></a>
 Move tracks between queues</h2>
 <p>Moving a track between the admin and the normal queue.</p>
-<p>When moving to the admin queue all votes of the track are deleted (i.e. when moving the track back to the normal queue it will have a vote count of zero).</p>
+<p><b>Note</b>: A move is equivalent to a call to <a href="#remove_track">removeTrack</a> followed by <a href="#add_track">addTrack</a> meaning when moving a track all its fields get reset (i.e. the vote count is set to zero, the nickname is set to the nickname of the admin etc.).</p>
 <p><b>Note</b>: This endpoint can only be used by the admin.</p>
-<h3><a class="anchor" id="autotoc_md21"></a>
+<h3><a class="anchor" id="autotoc_md14"></a>
 Request</h3>
 <ul>
 <li>Method: <br  />
- <code>GET</code></li>
+ <code>PUT</code></li>
 <li>Path: <br  />
  <code>/api/v1/moveTrack</code></li>
 <li>Body: <br  />
@@ -348,21 +353,22 @@ Request</h3>
 <div class="line">}</div>
 </div><!-- fragment --></li>
 </ul>
-<p><code>track_id</code> specifies the track to be moved. <code>queue_type</code> may either be <code>admin</code> or <code>normal</code> depending whether the track should be moved to the admin queue or the normal queue. When <code>queue_type</code> specifies the queue the track is already in, nothing happens (no votes are lost).</p>
-<h3><a class="anchor" id="autotoc_md22"></a>
+<p><code>track_id</code> specifies the track to be moved. This ID can be received by <a href="#get_current_queues">getCurrentQueues</a>.<br  />
+<code>queue_type</code> may either be <code>admin</code> or <code>normal</code> depending whether the track should be moved to the admin queue or the normal queue. When <code>queue_type</code> specifies the queue the track is already in, nothing happens (no votes are lost).</p>
+<h3><a class="anchor" id="autotoc_md15"></a>
 Response</h3>
 <div class="fragment"><div class="line">{</div>
 <div class="line">}</div>
-</div><!-- fragment --><p>A successful call responds with an empty JSON object.</p>
-<h2><a class="anchor" id="autotoc_md23"></a>
+</div><!-- fragment --><p>A successful call (the track was moved or was already in the right queue) responds with an empty JSON object.</p>
+<h2><a class="anchor" id="remove_track"></a>
 Remove tracks from queues</h2>
 <p>Removes a track from either the admin or the normal queue.</p>
 <p><b>Note</b>: This endpoint can only be used by the admin.</p>
-<h3><a class="anchor" id="autotoc_md24"></a>
+<h3><a class="anchor" id="autotoc_md16"></a>
 Request</h3>
 <ul>
 <li>Method: <br  />
- <code>GET</code></li>
+ <code>DELETE</code></li>
 <li>Path: <br  />
  <code>/api/v1/removeTrack</code></li>
 <li>Body: <br  />
@@ -372,8 +378,8 @@ Request</h3>
 <div class="line">}</div>
 </div><!-- fragment --></li>
 </ul>
-<p><code>track_id</code> specifies the track to be removed. Since one track can only be in one queue at a time no ambiguities are possible!</p>
-<h3><a class="anchor" id="autotoc_md25"></a>
+<p><code>track_id</code> specifies the track to be removed. Since one track can only be in one queue at a time no ambiguities are possible! This ID can be received by <a href="#get_current_queues">getCurrentQueues</a>.</p>
+<h3><a class="anchor" id="autotoc_md17"></a>
 Response</h3>
 <div class="fragment"><div class="line">{</div>
 <div class="line">}</div>

@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['logginghandler_9',['LoggingHandler',['../classLoggingHandler.html',1,'']]],
-  ['logginghandler_2ecpp_10',['LoggingHandler.cpp',['../LoggingHandler_8cpp.html',1,'']]],
-  ['logginghandler_2eh_11',['LoggingHandler.h',['../LoggingHandler_8h.html',1,'']]]
+  ['jukebox_13',['JukeBox',['../classJukeBox.html',1,'']]],
+  ['jukebox_2ecpp_14',['JukeBox.cpp',['../JukeBox_8cpp.html',1,'']]],
+  ['jukebox_2eh_15',['JukeBox.h',['../JukeBox_8h.html',1,'']]]
 ];
