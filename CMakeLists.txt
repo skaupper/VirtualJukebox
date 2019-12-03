@@ -45,6 +45,7 @@ include(cmake/GoogleTest.cmake)
 
 find_package(Doxygen)
 find_package(Threads)
+include(cmake/FindGlog.cmake)
 
 ################################################################################
 # Source files
@@ -90,12 +91,14 @@ set(APP_HEADER          src/JukeBox.h
 # Libraries and include directories of dependencies used by the application
 set(APP_LIBRARIES       ${LIBHTTPSERVER_LIBRARIES}
                         ${LIBMICROHTTPD_LIBRARIES}
-                        ${LIBRESTCLIENT_LIBRARIES})
+                        ${LIBRESTCLIENT_LIBRARIES}
+                        ${GLOG_LIBRARY})
 set(APP_INCLUDE_DIRS    src/
                         lib/
                         ${LIBHTTPSERVER_INCLUDE_DIRS}
                         ${LIBMICROHTTPD_INCLUDE_DIRS}
-                        ${LIBRESTCLIENT_INCLUDE_DIRS})
+                        ${LIBRESTCLIENT_INCLUDE_DIRS}
+                        ${GLOG_INCLUDE_DIRS})
 
 # All source files containing test cases
 set(TEST_SOURCES        test/Test_ConfigHandler.cpp)
@@ -135,7 +138,7 @@ target_compile_options(${APP_OBJECTS} PRIVATE ${SRC_COMPILER_OPTIONS})
 #-------------------------------------------------------------------------------
 include_directories(${APP_INCLUDE_DIRS})
 add_executable(${PROJECT_NAME} ${ENTRYPOINT_SOURCE} $<TARGET_OBJECTS:${APP_OBJECTS}>)
-target_link_libraries(${PROJECT_NAME} ${APP_LIBRARIES} glog::glog)
+target_link_libraries(${PROJECT_NAME} ${APP_LIBRARIES})
 target_compile_options(${PROJECT_NAME} PRIVATE ${SRC_COMPILER_OPTIONS})
 
 # Test program, running unit tests
@@ -147,7 +150,7 @@ enable_testing()
 # Add test executable and link to required libs
 include_directories(${TEST_INCLUDE_DIRS})
 add_executable(${TEST_TARGET} ${TEST_SOURCES} $<TARGET_OBJECTS:${APP_OBJECTS}>)
-target_link_libraries(${TEST_TARGET} ${TEST_LIBRARIES} glog::glog)
+target_link_libraries(${TEST_TARGET} ${TEST_LIBRARIES})
 target_compile_options(${TEST_TARGET} PRIVATE ${SRC_COMPILER_OPTIONS})
 
 # Add test target, so tests can be executed using `make test`
