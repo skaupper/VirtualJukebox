@@ -8,6 +8,9 @@
 
 #include "RestEndpointHandlers.h"
 
+#include <iostream>
+
+#include "Serializer.h"
 #include "json/json.hpp"
 
 using namespace std;
@@ -18,6 +21,7 @@ static TResult<json const> parseJsonString(string const &str) {
   try {
     return json::parse(str);
   } catch (json::parse_error const &) {
+    cerr << str << endl;
     return Error(ErrorCode::InvalidFormat, "Failed to parse body");
   }
 }
@@ -140,27 +144,20 @@ shared_ptr<http_response> const queryTracksHandler(
   }
 
   // notify the listener about the request
-  TResult<vector<Track>> result = listener->queryTracks(pattern, maxEntries);
+  auto result = listener->queryTracks(pattern, maxEntries);
   if (holds_alternative<Error>(result)) {
     return mapErrorToResponse(get<Error>(result));
   }
 
   // construct the response
-  json responseBody = {};
+  auto queriedTracks = get<0>(result);
+
   json jsonTracks = {};
-
-  for (auto &&track : get<vector<Track>>(result)) {
-    // TODO: fill track and serialize it properly
-    json jsonTrack{{"track_id", "dummyid"},
-                   {"title", "Dummy Title"},
-                   {"album", "Dummy Album"},
-                   {"artist", "Du mmy Artist"},
-                   {"duration", 123456},
-                   {"icon_uri", "https://github.githubassets.com/favicon.ico"}};
-
-    jsonTracks.push_back(jsonTracks);
+  for (auto &&track : queriedTracks) {
+    jsonTracks.push_back(Serializer::serialize(track));
   }
-  responseBody["tracks"] = jsonTracks;
+
+  json responseBody = {{"tracks", jsonTracks}};
 
   return make_shared<string_response>(responseBody.dump());
 }
@@ -180,18 +177,28 @@ shared_ptr<http_response> const getCurrentQueuesHandler(
   TSessionID sessionId = static_cast<TSessionID>(infos.args.at("session_id"));
 
   // notify the listener about the request
-  // TODO: use the actual result type and serialize it
-  //   auto result = listener->getCurrentQueues(sessionId);
-  TResult<Queues> result =
-      Error(ErrorCode::NotImplemented,
-            "Endpoint 'getCurrentQueues' is not implemented yet");
+  auto result = listener->getCurrentQueues(sessionId);
   if (holds_alternative<Error>(result)) {
     return mapErrorToResponse(get<Error>(result));
   }
 
   // construct the response
-  // TODO: use the actual result type and serialize it
-  json responseBody = {};
+
+  auto queueStatus = get<0>(result);
+
+  json playbackTrack = Serializer::serialize(queueStatus.currentTrack);
+  json normalQueue;
+  json adminQueue;
+  for (auto &&track : queueStatus.normalQueue.tracks) {
+    normalQueue.push_back(Serializer::serialize(track));
+  }
+  for (auto &&track : queueStatus.adminQueue.tracks) {
+    adminQueue.push_back(Serializer::serialize(track));
+  }
+
+  json responseBody = {{"currently_playing", playbackTrack},
+                       {"normal_queue", normalQueue},
+                       {"admin_queue", adminQueue}};
 
   return make_shared<string_response>(responseBody.dump());
 }
