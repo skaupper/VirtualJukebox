@@ -21,7 +21,6 @@ static TResult<json const> parseJsonString(string const &str) {
   try {
     return json::parse(str);
   } catch (json::parse_error const &) {
-    cerr << str << endl;
     return Error(ErrorCode::InvalidFormat, "Failed to parse body");
   }
 }
