@@ -65,7 +65,8 @@ set(APP_SOURCES         src/JukeBox.cpp
                         src/NetworkAPI.cpp
                         src/RestAPI.cpp
                         src/RestRequestHandler.cpp
-                        src/RestEndpointHandlers.cpp)
+                        src/RestEndpointHandlers.cpp
+                        src/Serializer.cpp)
 
 
 set(APP_HEADER          src/JukeBox.h
@@ -82,7 +83,8 @@ set(APP_HEADER          src/JukeBox.h
                         src/RestAPI.h
                         src/RestRequestHandler.h
                         src/RestEndpointHandlers.h
-                        src/RequestInformation.h)
+                        src/RequestInformation.h
+                        src/Serializer.h)
 
 # Libraries and include directories of dependencies used by the application
 set(APP_LIBRARIES       ${LIBHTTPSERVER_LIBRARIES}
