@@ -23,19 +23,19 @@ static void initGlog() {
   isGlogInitialized = true;
 }
 
-void logInfo(std::string msg) {
+void logInfo(std::string const& msg) {
   if (!isGlogInitialized)
     initGlog();
   LOG(INFO) << msg;
 }
 
-void logWarning(std::string msg) {
+void logWarning(std::string const& msg) {
   if (!isGlogInitialized)
     initGlog();
   LOG(WARNING) << msg;
 }
 
-void logError(std::string msg) {
+void logError(std::string const& msg) {
   if (!isGlogInitialized)
     initGlog();
   LOG(ERROR) << msg;
