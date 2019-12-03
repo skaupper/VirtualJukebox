@@ -90,7 +90,7 @@ static bool checkOptionalError(TResultOpt& ret) {
 template <class GOOD_TYPE>
 bool checkAlternativeError(TResult<GOOD_TYPE>& ret) {
   if (std::holds_alternative<Error>(ret)) {
-    logError("Error message is: " << std::get<Error>(ret).getErrorMessage());
+    logError("Error message is: " + std::get<Error>(ret).getErrorMessage());
     return true;
   }
   return false;
