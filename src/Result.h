@@ -14,6 +14,8 @@
 #include <string>
 #include <variant>
 
+#include "LoggingHandler.h"
+
 /**
  * @brief Valid error codes enumerator
  */
@@ -75,8 +77,7 @@ using TResultOpt = std::optional<Error>;
  */
 static bool checkOptionalError(TResultOpt& ret) {
   if (ret.has_value()) {
-    std::cerr << "Error message is: " << ret.value().getErrorMessage()
-              << std::endl;
+    logError("Error message is: " + ret.value().getErrorMessage());
     return true;
   }
   return false;
@@ -89,9 +90,7 @@ static bool checkOptionalError(TResultOpt& ret) {
 template <class GOOD_TYPE>
 bool checkAlternativeError(TResult<GOOD_TYPE>& ret) {
   if (std::holds_alternative<Error>(ret)) {
-    std::get<Error>(ret).getErrorCode();
-    std::cerr << "Error message is: " << std::get<Error>(ret).getErrorMessage()
-              << std::endl;
+    logError("Error message is: " << std::get<Error>(ret).getErrorMessage());
     return true;
   }
   return false;
