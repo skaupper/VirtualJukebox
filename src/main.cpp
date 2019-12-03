@@ -19,7 +19,7 @@ using namespace std;
 int main() {
   JukeBox jukebox;
 
-  cout << "Hello world from JukeBox main.cpp !" << endl;
+  logInfo("Hello world from JukeBox main.cpp !");
 
   string configFilePath = "../jukebox_config.ini";
   jukebox.start(configFilePath);

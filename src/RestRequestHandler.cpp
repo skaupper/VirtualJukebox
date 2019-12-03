@@ -95,10 +95,10 @@ shared_ptr<http_response> const RestRequestHandler::render(
     return NotFoundHandler(req);
   }
 
-  cout << "Path: " << req.get_path() << endl;
-  cout << "Method: " << req.get_method() << endl;
-  cout << "Body: " << req.get_content() << endl;
-  cout << "Query parameters: " << req.get_querystring() << endl;
+  logInfo("Path: " + req.get_path());
+  logInfo("Method: " + req.get_method());
+  logInfo("Body: " + req.get_content());
+  logInfo("Query parameters: " + req.get_querystring());
 
   // truncate the base path
   auto path = req.get_path().substr(API_BASE_PATH.size());
