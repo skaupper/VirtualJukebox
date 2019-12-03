@@ -63,64 +63,76 @@ static shared_ptr<http_response> const mapErrorToResponse(Error const &err) {
 // Helper macros
 //
 
-#define REQUIRED_STRING_FIELD(name, body)                                      \
-  if (body.find(#name) == body.cend()) {                                       \
-    return mapErrorToResponse(                                                 \
-        Error(ErrorCode::InvalidFormat, "Field '" #name "' not found"));       \
-  }                                                                            \
-  if (!body[#name].is_string()) {                                              \
-    return mapErrorToResponse(Error(ErrorCode::InvalidFormat,                  \
-                                    "Value of '" #name "' must be a string")); \
-  }                                                                            \
-  name = body[#name].get<string>();
-
-#define REQUIRED_INT_FIELD(name, body)                                         \
-  if (body.find(#name) == body.cend()) {                                       \
-    return mapErrorToResponse(                                                 \
-        Error(ErrorCode::InvalidFormat, "Field '" #name "' not found"));       \
-  }                                                                            \
-  if (!body[#name].is_number_integer()) {                                      \
-    return mapErrorToResponse(Error(                                           \
-        ErrorCode::InvalidFormat, "Value of '" #name "' must be an integer")); \
-  }                                                                            \
-  name = body[#name].get<int>();
-
-#define OPTIONAL_STRING_FIELD(name, body)                                      \
-  if (body.find(#name) != body.cend()) {                                       \
-    auto nameJson = body[#name];                                               \
-    if (!nameJson.is_string()) {                                               \
+#define PARSE_REQUIRED_STRING_FIELD(name, body)                                \
+  do {                                                                         \
+    if (body.find(#name) == body.cend()) {                                     \
+      return mapErrorToResponse(                                               \
+          Error(ErrorCode::InvalidFormat, "Field '" #name "' not found"));     \
+    }                                                                          \
+    if (!body[#name].is_string()) {                                            \
       return mapErrorToResponse(Error(                                         \
           ErrorCode::InvalidFormat, "Value of '" #name "' must be a string")); \
     }                                                                          \
-    name = nameJson.get<string>();                                             \
-  }
+    name = body[#name].get<string>();                                          \
+  } while (0)
 
-#define OPTIONAL_INT_PARAMETER(name, args)                                   \
-  if (args.find(#name) != args.cend()) {                                     \
-    auto paramStr = args.at(#name);                                          \
-    int tmpValue;                                                            \
-    size_t idx;                                                              \
-    try {                                                                    \
-      tmpValue = stoi(paramStr, &idx);                                       \
-    } catch (invalid_argument const &) {                                     \
-      return mapErrorToResponse(Error(ErrorCode::InvalidFormat,              \
-                                      "Parameter '" #name                    \
-                                      "' is not an integer"));               \
-    }                                                                        \
-    if (idx != paramStr.size()) {                                            \
-      return mapErrorToResponse(Error(                                       \
-          ErrorCode::InvalidFormat,                                          \
-          "Parameter '" #name "' must not contain non-integer characters")); \
-    }                                                                        \
-    name = tmpValue;                                                         \
-  }
+#define PARSE_REQUIRED_INT_FIELD(name, body)                               \
+  do {                                                                     \
+    if (body.find(#name) == body.cend()) {                                 \
+      return mapErrorToResponse(                                           \
+          Error(ErrorCode::InvalidFormat, "Field '" #name "' not found")); \
+    }                                                                      \
+    if (!body[#name].is_number_integer()) {                                \
+      return mapErrorToResponse(Error(ErrorCode::InvalidFormat,            \
+                                      "Value of '" #name                   \
+                                      "' must be an integer"));            \
+    }                                                                      \
+    name = body[#name].get<int>();                                         \
+  } while (0)
 
-#define REQUIRED_STRING_PARAMETER(name, args)                                \
-  if (args.find(#name) == args.cend()) {                                     \
-    return mapErrorToResponse(                                               \
-        Error(ErrorCode::InvalidFormat, "Parameter '" #name "' not found")); \
-  }                                                                          \
-  name = args.at(#name);
+#define PARSE_OPTIONAL_STRING_FIELD(name, body)                   \
+  do {                                                            \
+    if (body.find(#name) != body.cend()) {                        \
+      auto nameJson = body[#name];                                \
+      if (!nameJson.is_string()) {                                \
+        return mapErrorToResponse(Error(ErrorCode::InvalidFormat, \
+                                        "Value of '" #name        \
+                                        "' must be a string"));   \
+      }                                                           \
+      name = nameJson.get<string>();                              \
+    }                                                             \
+  } while (0)
+
+#define PARSE_OPTIONAL_INT_PARAMETER(name, args)                               \
+  do {                                                                         \
+    if (args.find(#name) != args.cend()) {                                     \
+      auto paramStr = args.at(#name);                                          \
+      int tmpValue;                                                            \
+      size_t idx;                                                              \
+      try {                                                                    \
+        tmpValue = stoi(paramStr, &idx);                                       \
+      } catch (invalid_argument const &) {                                     \
+        return mapErrorToResponse(Error(ErrorCode::InvalidFormat,              \
+                                        "Parameter '" #name                    \
+                                        "' is not an integer"));               \
+      }                                                                        \
+      if (idx != paramStr.size()) {                                            \
+        return mapErrorToResponse(Error(                                       \
+            ErrorCode::InvalidFormat,                                          \
+            "Parameter '" #name "' must not contain non-integer characters")); \
+      }                                                                        \
+      name = tmpValue;                                                         \
+    }                                                                          \
+  } while (0)
+
+#define PARSE_REQUIRED_STRING_PARAMETER(name, args)                            \
+  do {                                                                         \
+    if (args.find(#name) == args.cend()) {                                     \
+      return mapErrorToResponse(                                               \
+          Error(ErrorCode::InvalidFormat, "Parameter '" #name "' not found")); \
+    }                                                                          \
+    name = args.at(#name);                                                     \
+  } while (0)
 
 //
 // GENERATE SESSION
@@ -140,8 +152,8 @@ shared_ptr<http_response> const generateSessionHandler(
   optional<TPassword> password;
   optional<string> nickname;
 
-  OPTIONAL_STRING_FIELD(password, bodyJson);
-  OPTIONAL_STRING_FIELD(nickname, bodyJson);
+  PARSE_OPTIONAL_STRING_FIELD(password, bodyJson);
+  PARSE_OPTIONAL_STRING_FIELD(nickname, bodyJson);
 
   // notify the listener about the request
   TResult<TSessionID> result = listener->generateSession(password, nickname);
@@ -169,8 +181,8 @@ shared_ptr<http_response> const queryTracksHandler(
   std::string pattern;
   int max_entries = 50;
 
-  REQUIRED_STRING_PARAMETER(pattern, infos.args);
-  OPTIONAL_INT_PARAMETER(max_entries, infos.args);
+  PARSE_REQUIRED_STRING_PARAMETER(pattern, infos.args);
+  PARSE_OPTIONAL_INT_PARAMETER(max_entries, infos.args);
 
   // notify the listener about the request
   auto result = listener->queryTracks(pattern, max_entries);
@@ -201,7 +213,7 @@ shared_ptr<http_response> const getCurrentQueuesHandler(
 
   // parse request parameters
   TSessionID session_id;
-  REQUIRED_STRING_PARAMETER(session_id, infos.args);
+  PARSE_REQUIRED_STRING_PARAMETER(session_id, infos.args);
 
   // notify the listener about the request
   auto result = listener->getCurrentQueues(session_id);
@@ -249,9 +261,9 @@ shared_ptr<http_response> const addTrackToQueueHandler(
   TTrackID track_id;
   optional<string> queue_type;
 
-  REQUIRED_STRING_FIELD(session_id, bodyJson);
-  REQUIRED_STRING_FIELD(track_id, bodyJson);
-  OPTIONAL_STRING_FIELD(queue_type, bodyJson);
+  PARSE_REQUIRED_STRING_FIELD(session_id, bodyJson);
+  PARSE_REQUIRED_STRING_FIELD(track_id, bodyJson);
+  PARSE_OPTIONAL_STRING_FIELD(queue_type, bodyJson);
 
   QueueType queueType = QueueType::Normal;
   if (queue_type.has_value()) {
@@ -296,9 +308,9 @@ shared_ptr<http_response> const voteTrackHandler(
   TTrackID track_id;
   int vote;
 
-  REQUIRED_STRING_FIELD(session_id, bodyJson);
-  REQUIRED_STRING_FIELD(track_id, bodyJson);
-  REQUIRED_INT_FIELD(vote, bodyJson);
+  PARSE_REQUIRED_STRING_FIELD(session_id, bodyJson);
+  PARSE_REQUIRED_STRING_FIELD(track_id, bodyJson);
+  PARSE_REQUIRED_INT_FIELD(vote, bodyJson);
 
   // notify the listener about the request
   TResultOpt result = listener->voteTrack(session_id, track_id, (vote != 0));
@@ -328,8 +340,8 @@ shared_ptr<http_response> const controlPlayerHandler(
   TSessionID session_id;
   string player_action;
 
-  REQUIRED_STRING_FIELD(session_id, bodyJson);
-  REQUIRED_STRING_FIELD(player_action, bodyJson);
+  PARSE_REQUIRED_STRING_FIELD(session_id, bodyJson);
+  PARSE_REQUIRED_STRING_FIELD(player_action, bodyJson);
 
   PlayerAction playerAction;
   // TODO: do deserialization using the JSON framework
@@ -380,9 +392,9 @@ shared_ptr<http_response> const moveTracksHandler(
   TTrackID track_id;
   optional<string> queue_type;
 
-  REQUIRED_STRING_FIELD(session_id, bodyJson);
-  REQUIRED_STRING_FIELD(track_id, bodyJson);
-  OPTIONAL_STRING_FIELD(queue_type, bodyJson);
+  PARSE_REQUIRED_STRING_FIELD(session_id, bodyJson);
+  PARSE_REQUIRED_STRING_FIELD(track_id, bodyJson);
+  PARSE_OPTIONAL_STRING_FIELD(queue_type, bodyJson);
 
   // TODO: do deserialization using the JSON framework
   QueueType queueType;
@@ -424,8 +436,8 @@ shared_ptr<http_response> const removeTrackHandler(
   TSessionID session_id;
   TTrackID track_id;
 
-  REQUIRED_STRING_FIELD(session_id, bodyJson);
-  REQUIRED_STRING_FIELD(track_id, bodyJson);
+  PARSE_REQUIRED_STRING_FIELD(session_id, bodyJson);
+  PARSE_REQUIRED_STRING_FIELD(track_id, bodyJson);
 
   // notify the listener about the request
   TResultOpt result = listener->removeTrack(session_id, track_id);
