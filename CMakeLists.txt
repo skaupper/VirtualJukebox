@@ -70,7 +70,6 @@ set(APP_SOURCES         src/JukeBox.cpp
                         src/RestEndpointHandlers.cpp
                         src/Serializer.cpp)
 
-
 set(APP_HEADER          src/JukeBox.h
                         src/Tracks.h
                         src/Queue.h
@@ -102,6 +101,7 @@ set(APP_INCLUDE_DIRS    src/
 
 # All source files containing test cases
 set(TEST_SOURCES        test/Test_ConfigHandler.cpp)
+                        #src/Result.cpp)
 # Libraries and include directories of dependencies used by the tests
 set(TEST_LIBRARIES      ${APP_LIBRARIES}
                         ${CMAKE_THREAD_LIBS_INIT}

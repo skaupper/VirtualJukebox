@@ -75,4 +75,11 @@ using TResultOpt = std::optional<Error>;
  */
 bool checkOptionalError(TResultOpt ret);
 
+/** @brief Checks if given parameter contains alternative error value.
+ *         If so, it prints the containing error message.
+ * @return true if parameter contains error type, false otherwise
+ */
+template <class GOOD_TYPE>
+bool checkAlternativeError(TResult<GOOD_TYPE> ret);
+
 #endif /* _RESULT_H_ */
