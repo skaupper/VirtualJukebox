@@ -142,7 +142,7 @@ int main(int argc, char *argv[]) {
   api.setListener(&listener);
   auto result = api.handleRequests();
   if (result.has_value()) {
-    cerr << result.value().getErrorMessage();
+    logError(result.value().getErrorMessage());
   }
 
   return 0;
