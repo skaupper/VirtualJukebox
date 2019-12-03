@@ -16,6 +16,7 @@
 
 #include "ConfigHandler.h"
 #include "DummyData.h"
+#include "LoggingHandler.h"
 #include "RestAPI.h"
 
 using namespace std;
