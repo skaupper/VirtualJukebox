@@ -75,13 +75,13 @@ TResult<int> ConfigHandler::getValueInt(string const& section,
   } catch (invalid_argument const&) {
     return Error(ErrorCode::InvalidFormat,
                  "ConfigHandler.getValueInt: Configuration value '" + section +
-                     "." + key + " is not an integer.");
+                     "." + key + "' is not an integer.");
   }
 
   if (idx != valStr.size()) {
     return Error(ErrorCode::InvalidFormat,
                  "ConfigHandler.getValueInt: Configuration value '" + section +
-                     "." + key + " must only consist of digits.");
+                     "." + key + "' must only consist of digits.");
   }
   return valInt;
 }
