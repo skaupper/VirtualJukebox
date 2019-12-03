@@ -73,9 +73,8 @@ using TResultOpt = std::optional<Error>;
  *         If so, it prints the containing error message.
  * @return true if parameter contains error type, false otherwise
  */
-static bool checkOptionalError(TResultOpt ret) {
+static bool checkOptionalError(TResultOpt& ret) {
   if (ret.has_value()) {
-    ret.value().getErrorCode();
     std::cerr << "Error message is: " << ret.value().getErrorMessage()
               << std::endl;
     return true;
@@ -88,7 +87,7 @@ static bool checkOptionalError(TResultOpt ret) {
  * @return true if parameter contains error type, false otherwise
  */
 template <class GOOD_TYPE>
-bool checkAlternativeError(TResult<GOOD_TYPE> ret) {
+bool checkAlternativeError(TResult<GOOD_TYPE>& ret) {
   if (std::holds_alternative<Error>(ret)) {
     std::get<Error>(ret).getErrorCode();
     std::cerr << "Error message is: " << std::get<Error>(ret).getErrorMessage()
