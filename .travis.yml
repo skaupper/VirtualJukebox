@@ -1,4 +1,5 @@
 dist: bionic
+sudo: true
 
 language: cpp
 addons:
