@@ -14,7 +14,7 @@ before_install:
   - ./scripts/check_cache.sh
 
 before_cache:
-  - ./scripts/travis.sh
+  - ./scripts/create_cache.sh
 
 cache:
   directories:
