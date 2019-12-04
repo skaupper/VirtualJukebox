@@ -6,6 +6,7 @@ addons:
     packages:
     - clang-format-6.0
     - libgoogle-glog-dev
+    - libgtest-dev
     - libmicrohttpd-dev
 
 before_install:
