@@ -20,6 +20,6 @@ if [ "$JOB_ENV" == "valgrind" ]; then
   cmake ..
   make
 
-  echo "### Running valgrind on main executable."
-  valgrind ./VirtualJukebox
+  echo "### Running valgrind on test executable."
+  valgrind ./testVirtualJukebox
 fi
