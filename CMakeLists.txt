@@ -43,9 +43,8 @@ include(cmake/GoogleTest.cmake)
 # Find packages with built-in support
 ################################################################################
 
-find_package(GTest REQUIRED)
 find_package(Doxygen)
-find_package (Threads)
+find_package(Threads)
 
 ################################################################################
 # Source files
