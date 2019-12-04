@@ -35,7 +35,7 @@ TResultOpt ConfigHandler::setConfigFilePath(string const& filepath) {
   if (rc < 0)
     return Error(ErrorCode::FileNotFound,
                  "ConfigHandler.getValueString: Couldn't load file.");
-  // return nullopt;
+  return nullopt;
 }
 
 /** @brief Returns value of a key as a string
