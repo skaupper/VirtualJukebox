@@ -48,10 +48,10 @@ Bundled dependencies are:
 ### Installation of dependencies on Ubuntu 18.04
 
 Since installing the dependencies is not always straight-forward, the following commands can be used to install all
-listed dependencies, that are required to manually install.
+listed dependencies, that are required to install manually.
 
 - `sudo apt-get install build-essential cmake doxygen clang-format-6.0`
-- `sudo apt-get install libmicrohttpd-dev libcurl4-gnutls-dev`
+- `sudo apt-get install libmicrohttpd-dev libcurl4-gnutls-dev libgoogle-glog-dev`
 - `sudo apt-get install automake libtool`
 - `./scripts/install_libhttpserver.sh`
 - `./scripts/install_restclient-cpp.sh`
