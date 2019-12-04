@@ -10,4 +10,7 @@ if [ "$JOB_ENV" == "4711" ]; then
   cd build;
   cmake ..
   make
+
+  ./VirtualJukebox
+  ./testVirtualJukebox
 fi
