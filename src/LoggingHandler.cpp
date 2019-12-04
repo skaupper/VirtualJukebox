@@ -14,7 +14,8 @@ using namespace std;
 
 static bool isGlogInitialized = false;
 
-void initLogging() {
+void initLogging(std::string const& exe) {
+  FLAGS_minloglevel = google::INFO;
   FLAGS_log_dir = "./";
   FLAGS_alsologtostderr = true;
   FLAGS_colorlogtostderr = true;

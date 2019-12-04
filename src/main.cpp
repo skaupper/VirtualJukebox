@@ -18,10 +18,10 @@
 
 using namespace std;
 
-int main() {
+int main(int argc, char* argv[]) {
   JukeBox jukebox;
 
-  initLogging();
+  initLogging(argv[0]);
 
   LOG(INFO) << "Hello world from JukeBox main.cpp !";
 

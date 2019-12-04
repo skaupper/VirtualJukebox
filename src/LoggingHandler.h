@@ -11,6 +11,6 @@
 
 #include <string>
 
-void initLogging();
+void initLogging(std::string const& exe);
 
 #endif /* _LOGGINGHANDLER_H_ */
