@@ -19,7 +19,6 @@ This repository contains the sources for the server as well as instructions on h
 ## Dependencies
 
 - CMake (minimum version 3.9)
-- Google Test
 - Doxygen
 - clang-format-6.0
 - libcurl-dev
@@ -49,11 +48,10 @@ Since installing the dependencies is not always straight-forward, the following 
 listed dependencies.
 
 - `sudo apt-get install build-essential cmake doxygen clang-format-6.0`
-- `sudo apt-get install libmicrohttpd-dev libcurl4-gnutls-dev libgtest-dev`
+- `sudo apt-get install libmicrohttpd-dev libcurl4-gnutls-dev`
 - `sudo apt-get install automake libtool`
 - `./scripts/install_libhttpserver.sh`
 - `./scripts/install_restclient-cpp.sh`
-- `cd /usr/src/googletest; sudo cmake .; sudo make install`
 
 ## Installation
 
