@@ -6,10 +6,10 @@ addons:
     packages:
     - clang-format-6.0
     - libgoogle-glog-dev
-#    - libgtest-dev
     - libmicrohttpd-dev
 
 before_install:
+  # Install dependencies from local scripts
   - sudo ./scripts/install_libhttpserver.sh
   - sudo ./scripts/install_librestclient-cpp.sh
   # Install Google Test
@@ -17,16 +17,13 @@ before_install:
   - cd /usr/src/gtest
   - sudo env "PATH=$PATH" cmake CMakeLists.txt
   - sudo make install
-#  - sudo cp *.a /usr/lib
-#  - sudo ln -s /usr/lib/libgtest.a /usr/local/lib/gtest/libgtest.a
-#  - sudo ln -s /usr/lib/libgtest_main.a /usr/local/lib/gtest/libgtest_main.a
   - cd "${TRAVIS_BUILD_DIR}"
 
 jobs:
   include:
     - os: linux
-      name: "Hello World build step"
-      env: JOB_ENV=4711
+      name: "Build and Tests"
+      env: JOB_ENV=BuildAndTests
 
 script:
   - ./travis.sh
