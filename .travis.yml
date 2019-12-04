@@ -10,9 +10,14 @@ addons:
     - valgrind
 
 before_install:
-  # Install dependencies from local scripts
-  - sudo ./scripts/install_libhttpserver.sh
-  - sudo ./scripts/install_librestclient-cpp.sh
+  - ./scripts/check_cache.sh
+
+before_cache:
+  - ./scripts/create_cache.sh
+
+cache:
+  directories:
+  - cached_libs/
 
 jobs:
   include:
