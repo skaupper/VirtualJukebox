@@ -3,8 +3,10 @@
 echo "### Check library cache."
 
 if [ `ls -A cached_libs/` ]; then
-    echo "### Cache found, do not build it."
+    echo "Cache found, do not build libraries."
     sudo cp -r cached_libs/* /usr/local/;
+else
+    echo "No cache found, build libraries.";
 fi
 
 if [ -f /usr/local/lib/libhttpserver.so ]; then
