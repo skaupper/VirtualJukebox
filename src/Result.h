@@ -16,8 +16,6 @@
 #include <string>
 #include <variant>
 
-#include "LoggingHandler.h"
-
 /**
  * @brief Valid error codes enumerator
  */
@@ -72,6 +70,10 @@ using TResult = std::variant<GOOD_TYPE, Error>;
  * In the case of an error, the optional type can be returned.
  */
 using TResultOpt = std::optional<Error>;
+
+/* Include down here, to resolve a circular dependency with
+ * LoggingHandler.h and Result.h */
+#include "LoggingHandler.h"
 
 /** @brief Checks if given parameter contains optional error value.
  *         If so, it prints the containing error message.
