@@ -11,7 +11,4 @@ if [ "$JOB_ENV" == "BuildAndTests" ]; then
 
   echo "### Running test."
   ./testVirtualJukebox
-
-  echo "### Running main executable."
-  ./VirtualJukebox
 fi
