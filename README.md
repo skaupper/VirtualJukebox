@@ -1,6 +1,6 @@
 # VirtualJukebox
 
-[![Build Status][1]]([2])
+[![Build Status][1]][2]
 
 ## Introduction
 
@@ -19,7 +19,6 @@ This repository contains the sources for the server as well as instructions on h
 ## Dependencies
 
 - CMake (minimum version 3.9)
-- Google Test
 - Doxygen
 - clang-format-6.0
 - libcurl-dev
@@ -49,11 +48,10 @@ Since installing the dependencies is not always straight-forward, the following 
 listed dependencies.
 
 - `sudo apt-get install build-essential cmake doxygen clang-format-6.0`
-- `sudo apt-get install libmicrohttpd-dev libcurl4-gnutls-dev libgtest-dev`
+- `sudo apt-get install libmicrohttpd-dev libcurl4-gnutls-dev`
 - `sudo apt-get install automake libtool`
 - `./scripts/install_libhttpserver.sh`
 - `./scripts/install_restclient-cpp.sh`
-- `cd /usr/src/googletest; sudo cmake .; sudo make install`
 
 ## Installation
 
@@ -77,5 +75,5 @@ communicate with its environment (see also the test in `test/`).
 
 TODO
 
-[1]: https://travis-ci.com/skaupper/VirtualJukebox.svg?branch=master
+[1]: https://img.shields.io/travis/com/skaupper/virtualjukebox/master?label=Travis%20Build%20Status&logo=travis
 [2]: https://travis-ci.com/skaupper/VirtualJukebox
