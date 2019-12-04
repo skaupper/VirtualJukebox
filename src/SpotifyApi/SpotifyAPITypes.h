@@ -26,7 +26,12 @@ enum GrantType { AuthorizationCode, ClientCredentials, ImplicitGrant };
 /**
  * @brief return type on valid token request
  */
-struct Token {
+class Token {
+public:
+  Token();
+
+private:
+
   std::string
       accesToken; /**< Access token to interact with the SpotifyWebAPI */
   std::string

@@ -5,6 +5,11 @@
  */
 
 #include "SpotifyAPI.h"
+#include "restclient.h"
+
+#include <cassert>
+#include <memory>
+#include <connection.h>
 
 using namespace SpotifyApi;
 
@@ -13,6 +18,29 @@ TResult<Token> SpotifyAPI::getAccessToken(GrantType grantType,
                                           std::string const &redirectUri,
                                           std::string clientID,
                                           std::string clientSecret) {
+
+  // only authorization code supported until now ..
+  assert(grantType == AuthorizationCode);
+  auto client = std::make_unique<RestClient::Connection>(cSpotifyBaseUrl);
+
+  // build body
+  std::string body;
+  body += std::string("grant_type=authorization_code") +
+          std::string("&code=") + code +
+          std::string("&client_id=" + clientID) +
+          std::string("&client_secret=" + clientSecret) +
+          std::string("&redirect_uri=")+redirectUri;
+
+  // build header
+  RestClient::HeaderFields headers;
+  headers.insert(std::pair<std::string,std::string>("Accept","application/json"));
+  headers.insert(std::pair<std::string,std::string>("Content-Type","application/x-www-form-urlencoded"));
+  client->SetHeaders(headers);
+
+  client->SetTimeout(cRequestTimeout);
+  auto response = client->post("api/token",body);
+
+
   Token token;
   return token;
 }
