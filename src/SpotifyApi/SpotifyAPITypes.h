@@ -15,6 +15,8 @@
 #include <string>
 #include <vector>
 
+#include "json/json.hpp"
+
 namespace SpotifyApi {
 
 /**
@@ -27,19 +29,25 @@ enum GrantType { AuthorizationCode, ClientCredentials, ImplicitGrant };
  * @brief return type on valid token request
  */
 class Token {
-public:
-  Token();
+ public:
+  Token() = default;
+  Token(const nlohmann::json &tokenJson);
 
-private:
+  std::string getAccessToken();
+  std::string getRefreshToken();
+  std::string getTokenType();
+  std::string getScope();
+  size_t getExpiresIn();
 
+ private:
   std::string
-      accesToken; /**< Access token to interact with the SpotifyWebAPI */
+      mAccesToken; /**< Access token to interact with the SpotifyWebAPI */
   std::string
-      refreshToken; /**< Can be used to refresh the accessToken when expired */
-  std::string tokenType; /**< Type of the token (always "Bearer" */
-  std::string scope;     /**< a list of space seperated scopes granted for this
+      mRefreshToken; /**< Can be used to refresh the accessToken when expired */
+  std::string mTokenType; /**< Type of the token (always "Bearer" */
+  std::string mScope;     /**< a list of space seperated scopes granted for this
                             acces token */
-  size_t expiresIn; /**< time period (in seconds) for which the access token is
+  size_t mExpiresIn; /**< time period (in seconds) for which the access token is
                        valid */
 };
 

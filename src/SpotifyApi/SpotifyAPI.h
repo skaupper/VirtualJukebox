@@ -13,12 +13,14 @@
 namespace SpotifyApi {
 
 class SpotifyAPI {
-public:
+ public:
   TResult<Token> getAccessToken(GrantType grantType,
                                 std::string const &code,
                                 std::string const &redirectUri,
                                 std::string clientID,
                                 std::string clientSecret);
+
+  TResult<Token> refreshAccessToken(std::string const &refreshToken);
 
   TResult<std::vector<Device>> getAvailableDevices(
       std::string const &accessToken);
@@ -26,10 +28,12 @@ public:
   TResult<Playback> getCurrentPlayback(std::string const &accessToken,
                                        std::string const &market);
 
+ private:
+  std::string const cSpotifyBaseUrl = "https://accounts.spotify.com";
+  size_t const cRequestTimeout = 5;
 
-private:
-    std::string const cSpotifyBaseUrl = "https://accounts.spotify.com";
-    size_t const      cRequestTimeout = 5;
+  int const cHTTPTimeout = 408;
+  int const cHTTPOK = 200;
 };
 
 }  // namespace SpotifyApi
