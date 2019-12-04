@@ -1,9 +1,6 @@
 [submodule "lib/libhttpserver"]
 	path = lib/libhttpserver
 	url = https://github.com/etr/libhttpserver.git
-[submodule "lib/libmicrohttpd"]
-	path = lib/libmicrohttpd
-	url = https://git.gnunet.org/libmicrohttpd.git
 [submodule "lib/restclient-cpp"]
 	path = lib/restclient-cpp
 	url = https://github.com/mrtazz/restclient-cpp.git

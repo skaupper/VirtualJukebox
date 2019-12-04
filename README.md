@@ -38,7 +38,6 @@ to your system directories (the final step gets executed using `sudo`)!
 
 Bundled dependencies are:
 
-- libmicrohttpd
 - libhttpserver
 - librestclient-cpp
 
