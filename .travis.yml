@@ -2,6 +2,12 @@ dist: bionic
 
 language: cpp
 
+addons:
+  apt:
+    packages:
+    - clang-format-6.0
+    - libgoogle-glog-dev
+
 matrix:
   include:
     - name: "Hello World build step"
