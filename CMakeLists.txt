@@ -102,10 +102,9 @@ set(APP_INCLUDE_DIRS    src/
 set(TEST_SOURCES        test/Test_ConfigHandler.cpp)
 # Libraries and include directories of dependencies used by the tests
 set(TEST_LIBRARIES      ${APP_LIBRARIES}
-                        ${GTEST_BOTH_LIBRARIES}
                         ${CMAKE_THREAD_LIBS_INIT}
                         gtest)
-set(TEST_INCLUDE_DIRS   ${GTEST_INCLUDE_DIRS})
+set(TEST_INCLUDE_DIRS   )
 
 
 # Specify sources for formatting
