@@ -24,8 +24,8 @@ before_install:
 
 jobs:
   include:
-    - name: "Hello World build step"
-      os: linux
+    - os: linux
+      name: "Hello World build step"
       env: JOB_ENV=4711
 
 script:
