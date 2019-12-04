@@ -18,6 +18,7 @@ else()
 
   if(LIBMICROHTTPD_INCLUDE_DIRS AND LIBMICROHTTPD_LIBRARIES)
     set(LIBMICROHTTPD_FOUND TRUE)
+    message(STATUS "Found libmicrohttpd: ${LIBMICROHTTPD_LIBRARIES}")
   else()
     set(LIBMICROHTTPD_FOUND FALSE)
   endif()
@@ -25,9 +26,7 @@ else()
   mark_as_advanced(LIBMICROHTTPD_INCLUDE_DIRS LIBMICROHTTPD_LIBRARIES)
 endif()
 
-if(LIBMICROHTTPD_FOUND)
-  message(STATUS "Found libmicrohttpd: ${LIBMICROHTTPD_LIBRARIES}")
-else()
+if(NOT LIBMICROHTTPD_FOUND)
   message(FATAL_ERROR "libmicrohttpd not found. Consider using the build script \
                        with `sudo ../scripts/install_libmicrohttpd.sh` to install the library on your system")
 endif()

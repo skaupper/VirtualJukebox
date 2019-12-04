@@ -15,4 +15,4 @@ cd build
 make
 
 # install library files (needs root privileges)
-make install
+sudo make install

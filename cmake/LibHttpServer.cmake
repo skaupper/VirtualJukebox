@@ -18,6 +18,7 @@ else()
 
   if(LIBHTTPSERVER_INCLUDE_DIRS AND LIBHTTPSERVER_LIBRARIES)
     set(LIBHTTPSERVER_FOUND TRUE)
+    message(STATUS "Found libhttpserver: ${LIBHTTPSERVER_LIBRARIES}")
   else()
     set(LIBHTTPSERVER_FOUND FALSE)
   endif()
@@ -25,9 +26,7 @@ else()
   mark_as_advanced(LIBHTTPSERVER_INCLUDE_DIRS LIBHTTPSERVER_LIBRARIES)
 endif()
 
-if(LIBHTTPSERVER_FOUND)
-  message(STATUS "Found libhttpserver: ${LIBHTTPSERVER_LIBRARIES}")
-else()
+if(NOT LIBHTTPSERVER_FOUND)
   message(FATAL_ERROR "libhttpserver not found. Consider using the build script \
                        with `sudo ../scripts/install_libhttpserver.sh` to install the library on your system")
 endif()
