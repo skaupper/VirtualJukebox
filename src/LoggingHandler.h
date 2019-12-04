@@ -11,6 +11,8 @@
 
 #include <string>
 
-void initLogging(std::string const& exe);
+#include "Result.h"
+
+TResultOpt initLogging(std::string const& exe);
 
 #endif /* _LOGGINGHANDLER_H_ */
