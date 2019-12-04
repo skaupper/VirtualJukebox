@@ -21,5 +21,5 @@ if [ "$JOB_ENV" == "valgrind" ]; then
   make
 
   echo "### Running valgrind on main executable."
-  ./VirtualJukebox
+  valgrind ./VirtualJukebox
 fi
