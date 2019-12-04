@@ -8,6 +8,8 @@
 
 #include "RestRequestHandler.h"
 
+#include <glog/logging.h>
+
 #include <cassert>
 #include <iostream>
 #include <sstream>
@@ -96,10 +98,10 @@ shared_ptr<http_response> const RestRequestHandler::render(
     return NotFoundHandler(req);
   }
 
-  logInfo("Path: " + req.get_path());
-  logInfo("Method: " + req.get_method());
-  logInfo("Body: " + req.get_content());
-  logInfo("Query parameters: " + req.get_querystring());
+  LOG(INFO) << "Path: " << req.get_path();
+  LOG(INFO) << "Method: " << req.get_method();
+  LOG(INFO) << "Body: " << req.get_content();
+  LOG(INFO) << "Query parameters: " << req.get_querystring();
 
   // truncate the base path
   auto path = req.get_path().substr(API_BASE_PATH.size());

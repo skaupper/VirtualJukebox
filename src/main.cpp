@@ -6,6 +6,8 @@
  */
 /*****************************************************************************/
 
+#include <glog/logging.h>
+
 #include <iostream>
 #include <string>
 
@@ -19,15 +21,17 @@ using namespace std;
 int main() {
   JukeBox jukebox;
 
-  logInfo("Hello world from JukeBox main.cpp !");
+  initLogging();
+
+  LOG(INFO) << "Hello world from JukeBox main.cpp !";
 
   string configFilePath = "../jukebox_config.ini";
   jukebox.start(configFilePath);
 
-  logDebug("Logging the first DEBUG message!");
-  logInfo("Logging the first INFO message!");
-  logWarning("Logging the first WARNING message!");
-  logError("Logging the first ERROR message!");
+  DLOG(INFO) << "Logging the first DEBUG message!";
+  LOG(INFO) << "Logging the first INFO message!";
+  LOG(WARNING) << "Logging the first WARNING message!";
+  LOG(ERROR) << "Logging the first ERROR message!";
 
   return 0;
 }

@@ -11,9 +11,6 @@
 
 #include <string>
 
-void logDebug(std::string const& msg);
-void logInfo(std::string const& msg);
-void logWarning(std::string const& msg);
-void logError(std::string const& msg);
+void initLogging();
 
 #endif /* _LOGGINGHANDLER_H_ */

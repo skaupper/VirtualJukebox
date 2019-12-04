@@ -12,6 +12,8 @@
  * `RestAPI` in the INI file.
  */
 
+#include <glog/logging.h>
+
 #include <iostream>
 
 #include "ConfigHandler.h"
@@ -25,30 +27,30 @@ class EmptyNetworkListener : public NetworkListener {
   TResult<TSessionID> generateSession(
       optional<TPassword> const &pw,
       optional<string> const &nickname) override {
-    logInfo("generateSession");
+    LOG(INFO) << "generateSession";
     if (pw.has_value()) {
-      logInfo("Password: " + pw.value());
+      LOG(INFO) << "Password: " << pw.value();
     } else {
-      logInfo("No password");
+      LOG(INFO) << "No password";
     }
     if (nickname.has_value()) {
-      logInfo("Nickname: " + nickname.value());
+      LOG(INFO) << "Nickname: " << nickname.value();
     } else {
-      logInfo("No nickname");
+      LOG(INFO) << "No nickname";
     }
     return static_cast<TSessionID>("12345678");
   }
 
   TResult<vector<BaseTrack>> queryTracks(string const &searchPattern,
                                          size_t const nrOfEntries) override {
-    logInfo("Pattern: " + searchPattern);
-    logInfo("Number of entries: " + nrOfEntries);
+    LOG(INFO) << "Pattern: " << searchPattern;
+    LOG(INFO) << "Number of entries: " << nrOfEntries;
 
     return TRACK_LIST;
   }
 
   TResult<QueueStatus> getCurrentQueues(TSessionID const &sid) override {
-    logInfo("Session ID: " + sid);
+    LOG(INFO) << "Session ID: " << sid;
 
     QueueStatus status;
     status.normalQueue = NORMAL_QUEUE;
@@ -60,12 +62,12 @@ class EmptyNetworkListener : public NetworkListener {
   TResultOpt addTrackToQueue(TSessionID const &sid,
                              TTrackID const &trkid,
                              QueueType type) override {
-    logInfo("Session ID: " + sid);
-    logInfo("Track ID: " + trkid);
+    LOG(INFO) << "Session ID: " << sid;
+    LOG(INFO) << "Track ID: " << trkid;
     if (type == QueueType::Normal) {
-      logInfo("Normal queue");
+      LOG(INFO) << "Normal queue";
     } else if (type == QueueType::Admin) {
-      logInfo("Admin queue");
+      LOG(INFO) << "Admin queue";
     } else {
       return Error(ErrorCode::InvalidValue, "Unknown player action");
     }
@@ -75,37 +77,37 @@ class EmptyNetworkListener : public NetworkListener {
   TResultOpt voteTrack(TSessionID const &sid,
                        TTrackID const &trkid,
                        TVote vote) override {
-    logInfo("Session ID: " + sid);
-    logInfo("Track ID: " + trkid);
+    LOG(INFO) << "Session ID: " << sid;
+    LOG(INFO) << "Track ID: " << trkid;
     if (vote) {
-      logInfo("Vote set");
+      LOG(INFO) << "Vote set";
     } else {
-      logInfo("Vote revoked");
+      LOG(INFO) << "Vote revoked";
     }
     return nullopt;
   }
 
   TResultOpt controlPlayer(TSessionID const &sid,
                            PlayerAction action) override {
-    logInfo("Session ID: " + sid);
+    LOG(INFO) << "Session ID: " << sid;
     switch (action) {
       case PlayerAction::Play:
-        logInfo("Play");
+        LOG(INFO) << "Play";
         break;
       case PlayerAction::Pause:
-        logInfo("Pause");
+        LOG(INFO) << "Pause";
         break;
       case PlayerAction::Stop:
-        logInfo("Stop");
+        LOG(INFO) << "Stop";
         break;
       case PlayerAction::Skip:
-        logInfo("Skip");
+        LOG(INFO) << "Skip";
         break;
       case PlayerAction::VolumeDown:
-        logInfo("VolumeDown");
+        LOG(INFO) << "VolumeDown";
         break;
       case PlayerAction::VolumeUp:
-        logInfo("VolumeUp");
+        LOG(INFO) << "VolumeUp";
         break;
       default:
         return Error(ErrorCode::InvalidValue, "Unknown player action");
@@ -115,22 +117,22 @@ class EmptyNetworkListener : public NetworkListener {
 
   TResultOpt removeTrack(TSessionID const &sid,
                          TTrackID const &trkid) override {
-    logInfo("Session ID: " + sid);
-    logInfo("Track ID: " + trkid);
+    LOG(INFO) << "Session ID: " << sid;
+    LOG(INFO) << "Track ID: " << trkid;
     return nullopt;
   }
   TResultOpt moveTrack(TSessionID const &sid,
                        TTrackID const &trkid,
                        QueueType type) override {
-    logInfo("Session ID: " + sid);
-    logInfo("Track ID: " + trkid);
+    LOG(INFO) << "Session ID: " << sid;
+    LOG(INFO) << "Track ID: " << trkid;
     return nullopt;
   }
 };
 
 int main(int argc, char *argv[]) {
   if (argc != 2) {
-    logError("Usage: " + string(argv[0]) + " <path_to_config_file>");
+    LOG(ERROR) << "Usage: " << string(argv[0]) << " <path_to_config_file>";
     return 0;
   }
 
@@ -142,7 +144,7 @@ int main(int argc, char *argv[]) {
   api.setListener(&listener);
   auto result = api.handleRequests();
   if (result.has_value()) {
-    logError(result.value().getErrorMessage());
+    LOG(ERROR) << result.value().getErrorMessage();
   }
 
   return 0;

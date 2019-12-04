@@ -9,6 +9,8 @@
 #ifndef _RESULT_H_
 #define _RESULT_H_
 
+#include <glog/logging.h>
+
 #include <iostream>
 #include <optional>
 #include <string>
@@ -77,7 +79,7 @@ using TResultOpt = std::optional<Error>;
  */
 static bool checkOptionalError(TResultOpt& ret) {
   if (ret.has_value()) {
-    logError("Error message is: " + ret.value().getErrorMessage());
+    LOG(ERROR) << "Error message is: " << ret.value().getErrorMessage();
     return true;
   }
   return false;
@@ -90,7 +92,8 @@ static bool checkOptionalError(TResultOpt& ret) {
 template <class GOOD_TYPE>
 bool checkAlternativeError(TResult<GOOD_TYPE>& ret) {
   if (std::holds_alternative<Error>(ret)) {
-    logError("Error message is: " + std::get<Error>(ret).getErrorMessage());
+    LOG(ERROR) << "Error message is: "
+               << std::get<Error>(ret).getErrorMessage();
     return true;
   }
   return false;
