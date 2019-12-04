@@ -20,4 +20,4 @@ jobs:
       env: JOB_ENV=BuildAndTests
 
 script:
-  - ./travis.sh
+  - ./scripts/travis.sh
