@@ -7,6 +7,7 @@ addons:
     - clang-format-6.0
     - libgoogle-glog-dev
     - libmicrohttpd-dev
+    - valgrind
 
 before_install:
   # Install dependencies from local scripts
