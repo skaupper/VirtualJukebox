@@ -37,6 +37,7 @@ include(cmake/ClangFormat.cmake)
 include(cmake/LibMicroHttpd.cmake)
 include(cmake/LibHttpServer.cmake)
 include(cmake/LibRestClient-cpp.cmake)
+include(cmake/GoogleTest.cmake)
 
 ################################################################################
 # Find packages with built-in support
@@ -44,6 +45,7 @@ include(cmake/LibRestClient-cpp.cmake)
 
 find_package(GTest REQUIRED)
 find_package(Doxygen)
+find_package (Threads)
 
 ################################################################################
 # Source files
@@ -101,7 +103,8 @@ set(TEST_SOURCES        test/Test_ConfigHandler.cpp)
 # Libraries and include directories of dependencies used by the tests
 set(TEST_LIBRARIES      ${APP_LIBRARIES}
                         ${GTEST_BOTH_LIBRARIES}
-                        pthread)
+                        ${CMAKE_THREAD_LIBS_INIT}
+                        gtest)
 set(TEST_INCLUDE_DIRS   ${GTEST_INCLUDE_DIRS})
 
 
