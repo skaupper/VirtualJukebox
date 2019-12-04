@@ -11,18 +11,10 @@ addons:
 
 before_install:
   # Install dependencies from local scripts
-  - "test $(ls -A cached_libs/)                  && sudo cp -r cached_libs/* /usr/local/ ||:"
-  - test -f /usr/local/lib/libhttpserver.so     || ./scripts/install_libhttpserver.sh
-  - test -f /usr/local/lib/librestclient-cpp.so || ./scripts/install_librestclient-cpp.sh
+  - ./scripts/check_cache.sh
 
 before_cache:
-  - mkdir -p cached_libs/ cached_libs/lib/ cached_libs/include/
-  - cp    /usr/local/lib/librestclient-cpp.so cached_libs/lib/
-  - cp -r /usr/local/include/restclient-cpp/  cached_libs/include/
-  - cp -r /usr/local/include/httpserver/      cached_libs/include/
-  - cp    /usr/local/include/httpserverpp     cached_libs/include/
-  - cp    /usr/local/include/httpserver.hpp   cached_libs/include/
-
+  - ./scripts/travis.sh
 
 cache:
   directories:
