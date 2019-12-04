@@ -27,7 +27,8 @@ This repository contains the sources for the server as well as instructions on h
 - libhttpserver-dev
 - librestclient-cpp-dev
 
-Check your distros package manager if there are proper packages available.
+Check your distros package manager if there are proper packages available. For some of the dependencies there are
+usually no packages available, so they got bundled in this repository including proper install scripts.
 
 ### Bundled dependencies
 
