@@ -1,6 +1,6 @@
 # JukeBox
 
-TODO
+[![Build Status][1]]([2])
 
 ## Dependencies
 
@@ -33,3 +33,6 @@ Bundled dependencies are:
     - `./testVirtualJukebox`: invokes the program directly
     - `make test`: using the CTest integration of CMake
 6. To create the documentation, use `make doc`
+
+[1]: https://travis-ci.com/skaupper/VirtualJukebox.svg?branch=master
+[2]: https://travis-ci.com/skaupper/VirtualJukebox
