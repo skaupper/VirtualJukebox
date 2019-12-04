@@ -16,8 +16,11 @@ before_install:
 jobs:
   include:
     - os: linux
-      name: "Build and Tests"
-      env: JOB_ENV=BuildAndTests
+      name: "Build and Unit Tests"
+      env: JOB_ENV=unittest
+    - os: linux
+      name: "Valgrind Test"
+      env: JOB_ENV=valgrind
 
 script:
   - ./scripts/travis.sh

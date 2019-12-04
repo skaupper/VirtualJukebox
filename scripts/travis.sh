@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-if [ "$JOB_ENV" == "BuildAndTests" ]; then
+if [ "$JOB_ENV" == "unittest" ]; then
   echo "### Compiling all targets."
   mkdir -p build;
   cd build;
@@ -11,4 +11,15 @@ if [ "$JOB_ENV" == "BuildAndTests" ]; then
 
   echo "### Running test."
   ./testVirtualJukebox
+fi
+
+if [ "$JOB_ENV" == "valgrind" ]; then
+  echo "### Compiling all targets."
+  mkdir -p build;
+  cd build;
+  cmake ..
+  make
+
+  echo "### Running valgrind on main executable."
+  ./VirtualJukebox
 fi
