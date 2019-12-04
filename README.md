@@ -22,23 +22,12 @@ This repository contains the sources for the server as well as instructions on h
 - Google Test
 - Doxygen
 - clang-format-6.0
-- libcurl
-- libmicrohttpd
-- libhttpserver
-- librestclient-cpp
+- libcurl-dev
+- libmicrohttpd-dev
+- libhttpserver-dev
+- librestclient-cpp-dev
 
-For details on the development dependencies take a look at following sections.
-
-### Development dependencies
-
-The sources of the following dependencies are needed to successfully compile the server. Check your distros package
-manager if there is a proper package available!
-
-- libcurl
-- libmicrohttpd
-
-For the rest of the needed development dependencies there are usually no packages available, so they got bundled in
-this repository including proper install scripts.
+Check your distros package manager if there are proper packages available.
 
 ### Bundled dependencies
 
