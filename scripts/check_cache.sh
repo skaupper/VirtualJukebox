@@ -9,12 +9,12 @@ else
     echo "No cache found, build libraries.";
 fi
 
-if [[ -f /usr/local/lib/libhttpserver.so ]]; then
+if [[ ! -f /usr/local/lib/libhttpserver.so ]]; then
     echo "### Build libhttpserver."
     ./scripts/install_libhttpserver.sh;
 fi
 
-if [[ -f /usr/local/lib/librestclient-cpp.so ]]; then
+if [[ ! -f /usr/local/lib/librestclient-cpp.so ]]; then
     echo "### Build librestclient-cpp."
     ./scripts/install_librestclient-cpp.sh;
 fi
