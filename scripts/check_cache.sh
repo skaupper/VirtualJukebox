@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -euo pipefail
+
 echo "### Check library cache."
 
 if [[ "`ls -A cached_libs/`" ]]; then

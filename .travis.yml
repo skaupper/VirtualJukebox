@@ -10,7 +10,6 @@ addons:
     - valgrind
 
 before_install:
-  # Install dependencies from local scripts
   - ./scripts/check_cache.sh
 
 before_cache:
