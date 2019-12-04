@@ -11,9 +11,9 @@ addons:
 
 before_install:
   # Install dependencies from local scripts
-  - test -d cached_libs/ && cp -r cached_libs/* /usr/local/
-  - test -f /usr/local/lib/libhttpserver.so && ./scripts/install_libhttpserver.sh
-  - test -f /usr/local/lib/librestclient-cpp.so && ./scripts/install_librestclient-cpp.sh
+  - test $(ls -A cached_libs/)                  && cp -r cached_libs/* /usr/local/
+  - test -f /usr/local/lib/libhttpserver.so     || ./scripts/install_libhttpserver.sh
+  - test -f /usr/local/lib/librestclient-cpp.so || ./scripts/install_librestclient-cpp.sh
 
 before_cache:
   - mkdir -p cached_libs/ cached_libs/lib/ cached_libs/include/
