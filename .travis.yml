@@ -11,8 +11,17 @@ addons:
 
 before_install:
   # Install dependencies from local scripts
-  - sudo ./scripts/install_libhttpserver.sh
-  - sudo ./scripts/install_librestclient-cpp.sh
+  - [ -f /usr/local/lib/libhttpserver.so ] && ./scripts/install_libhttpserver.sh
+  - [ -f /usr/local/lib/librestclient-cpp.so ] && ./scripts/install_librestclient-cpp.sh
+
+cache:
+  directories:
+  - /usr/local/lib/libhttpserver.so
+  - /usr/local/lib/librestclient-cpp.so
+  - /usr/local/include/restclient-cpp/
+  - /usr/local/include/httpserver/
+  - /usr/local/include/httpserverpp
+  - /usr/local/include/httpserver.hpp
 
 jobs:
   include:
