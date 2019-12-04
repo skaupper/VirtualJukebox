@@ -1,5 +1,4 @@
 dist: bionic
-sudo: true
 
 language: cpp
 addons:
@@ -23,9 +22,10 @@ before_install:
 #  - sudo ln -s /usr/lib/libgtest_main.a /usr/local/lib/gtest/libgtest_main.a
   - cd "${TRAVIS_BUILD_DIR}"
 
-matrix:
+jobs:
   include:
     - name: "Hello World build step"
+      os: linux
       env: JOB_ENV=4711
 
 script:
