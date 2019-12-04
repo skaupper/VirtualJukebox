@@ -78,4 +78,5 @@ communicate with its environment (see also the test in `test/`).
 TODO
 
 [1]: https://travis-ci.com/skaupper/VirtualJukebox.svg?branch=master
+[1]: https://img.shields.io/travis/com/skaupper/virtualjukebox/master?label=Travis%20Build%20Status&logo=travis
 [2]: https://travis-ci.com/skaupper/VirtualJukebox
