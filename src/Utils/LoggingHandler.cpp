@@ -6,13 +6,13 @@
  */
 /*****************************************************************************/
 
-#include "LoggingHandler.h"
+#include "Utils/LoggingHandler.h"
 
 #include <glog/logging.h>
 
 #include <string>
 
-#include "ConfigHandler.h"
+#include "Utils/ConfigHandler.h"
 
 using namespace std;
 

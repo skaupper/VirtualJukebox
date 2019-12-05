@@ -10,7 +10,7 @@
 
 #include <sstream>
 
-#include "ConfigHandler.h"
+#include "Utils/ConfigHandler.h"
 #include "RestRequestHandler.h"
 
 using namespace std;

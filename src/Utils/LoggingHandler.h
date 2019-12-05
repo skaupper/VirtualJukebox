@@ -1,6 +1,6 @@
 /*****************************************************************************/
 /**
- * @file    LoggingHandler.h
+ * @file    Utils/LoggingHandler.h
  * @author  Michael Wurm <wurm.michael95@gmail.com>
  * @brief   LoggingHandler header file
  */

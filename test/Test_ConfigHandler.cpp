@@ -3,8 +3,8 @@
 #include <iostream>
 #include <memory>
 
-#include "../src/ConfigHandler.h"
-#include "../src/Result.h"
+#include "../src/Types/Result.h"
+#include "../src/Utils/ConfigHandler.h"
 
 using namespace std;
 

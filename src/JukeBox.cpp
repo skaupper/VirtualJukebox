@@ -11,10 +11,10 @@
 #include <iostream>
 #include <memory>
 
-#include "ConfigHandler.h"
-#include "GlobalTypes.h"
-#include "LoggingHandler.h"
-#include "Result.h"
+#include "Types/GlobalTypes.h"
+#include "Types/Result.h"
+#include "Utils/ConfigHandler.h"
+#include "Utils/LoggingHandler.h"
 
 using namespace std;
 

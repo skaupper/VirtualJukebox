@@ -12,9 +12,9 @@
 #include <memory>
 #include <vector>
 
-#include "GlobalTypes.h"
-#include "Queue.h"
-#include "Result.h"
+#include "Types/GlobalTypes.h"
+#include "Types/Queue.h"
+#include "Types/Result.h"
 
 class MusicBackend {
  public:

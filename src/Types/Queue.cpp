@@ -6,6 +6,6 @@
  */
 /*****************************************************************************/
 
-#include "Queue.h"
+#include "Types/Queue.h"
 
 using namespace std;

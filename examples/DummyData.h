@@ -9,7 +9,7 @@
 #ifndef _DUMMY_DATA_H_
 #define _DUMMY_DATA_H_
 
-#include "Queue.h"
+#include "Types/Queue.h"
 
 static const Queue NORMAL_QUEUE{{{"id1",
                                   "title1",

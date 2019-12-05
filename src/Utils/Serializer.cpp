@@ -6,10 +6,10 @@
  */
 /*****************************************************************************/
 
-#include "Serializer.h"
+#include "Utils/Serializer.h"
 
-#include "GlobalTypes.h"
-#include "Queue.h"
+#include "Types/GlobalTypes.h"
+#include "Types/Queue.h"
 
 using json = nlohmann::json;
 

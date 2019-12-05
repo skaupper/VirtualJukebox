@@ -9,7 +9,7 @@
 #include <chrono>
 #include <memory>
 
-#include "Result.h"
+#include "Types/Result.h"
 #include "httpserver.hpp"
 
 using namespace SpotifyApi;

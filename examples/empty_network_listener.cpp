@@ -16,10 +16,10 @@
 
 #include <iostream>
 
-#include "ConfigHandler.h"
 #include "DummyData.h"
-#include "LoggingHandler.h"
-#include "RestAPI.h"
+#include "Network/RestAPI.h"
+#include "Utils/ConfigHandler.h"
+#include "Utils/LoggingHandler.h"
 
 using namespace std;
 

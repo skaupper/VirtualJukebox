@@ -9,10 +9,10 @@
 #ifndef _SPOTIFYBACKEND_H_
 #define _SPOTIFYBACKEND_H_
 
-#include "GlobalTypes.h"
 #include "MusicBackend.h"
-#include "Queue.h"
-#include "Result.h"
+#include "Types/GlobalTypes.h"
+#include "Types/Queue.h"
+#include "Types/Result.h"
 
 class SpotifyBackend : public MusicBackend {
  public:

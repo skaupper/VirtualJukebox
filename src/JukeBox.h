@@ -13,14 +13,14 @@
 #include <variant>
 #include <vector>
 
-#include "GlobalTypes.h"
 #include "NetworkListener.h"
-#include "Queue.h"
-#include "Result.h"
+#include "Types/GlobalTypes.h"
+#include "Types/Queue.h"
+#include "Types/Result.h"
 
 //#include "DataStore.h"
 //#include "MusicBackend.h"
-#include "NetworkAPI.h"
+#include "Network/NetworkAPI.h"
 //#include "User.h"
 
 class JukeBox : public NetworkListener {
