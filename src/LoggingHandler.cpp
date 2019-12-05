@@ -51,7 +51,7 @@ void initLoggingHandler(string const& exe) {
 
     FLAGS_minloglevel = getMinLogLevel();
 
-    google::InitGoogleLogging("VirtualJukebox");
+    google::InitGoogleLogging(exe.c_str());
 
     isGlogInitialized = true;
   } else {
