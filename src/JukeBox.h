@@ -13,15 +13,13 @@
 #include <variant>
 #include <vector>
 
+#include "MusicBackend.h"
 #include "Network/NetworkAPI.h"
 #include "NetworkListener.h"
 #include "Types/GlobalTypes.h"
 #include "Types/Queue.h"
 #include "Types/Result.h"
-
 //#include "DataStore.h"
-//#include "MusicBackend.h"
-//#include "User.h"
 
 class JukeBox : public NetworkListener {
  public:
@@ -48,7 +46,7 @@ class JukeBox : public NetworkListener {
  private:
   //  DataStore mDataStore;
   NetworkAPI *mNetwork;
-  //  MusicBackend mMusicBackend;
+  MusicBackend *mMusicBackend;
 };
 
 #endif /* _JUKEBOX_H_ */
