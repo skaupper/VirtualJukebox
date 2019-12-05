@@ -132,14 +132,15 @@ class EmptyNetworkListener : public NetworkListener {
 
 int main(int argc, char *argv[]) {
   if (argc != 2) {
-    LOG(ERROR) << "Usage: " << string(argv[0]) << " <path_to_config_file>";
-    return 0;
+    cerr << "Usage: " << string(argv[0]) << " <path_to_config_file>" << endl;
+    return 1;
   }
 
   EmptyNetworkListener listener;
   RestAPI api;
 
   ConfigHandler::getInstance()->setConfigFilePath(argv[1]);
+  initLoggingHandler(argv[0]);
 
   api.setListener(&listener);
   auto result = api.handleRequests();
