@@ -44,14 +44,21 @@ TResultOpt RestAPI::handleRequests() {
           .start_method(http::http_utils::THREAD_PER_CONNECTION);
 
   // create the webserver
-  webserver ws{webserverParams};
+  ws = make_unique<webserver>(webserverParams);
 
   // use a single handler sensitive on all paths
   RestRequestHandler handler(listener);
-  ws.register_resource("/", &handler, true);
+  ws->register_resource("/", &handler, true);
 
   // run the webserver in blocking mode
-  ws.start(true);
+  ws->start(true);
 
   return nullopt;
+}
+
+void RestAPI::stopServer() {
+  if (ws && ws->is_running()) {
+    ws->stop();
+    ws = nullptr;
+  }
 }

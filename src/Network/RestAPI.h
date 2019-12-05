@@ -22,6 +22,10 @@
 class RestAPI : public NetworkAPI {
  public:
   TResultOpt handleRequests() override;
+  void stopServer();
+
+ private:
+  std::unique_ptr<httpserver::webserver> ws;
 };
 
 #endif /* _REST_API_H_ */

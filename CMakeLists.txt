@@ -112,18 +112,27 @@ set(APP_INCLUDE_DIRS    src/
 set(TEST_SOURCES        test/Test_ConfigHandler.cpp
                         test/Test_DataStore.cpp
                         test/Test_SpotifyAPI.cpp
-                        test/RestAPIFixture.cpp
-                        test/Test_RestAPI.cpp)
+                        test/Test_RestAPI.cpp
+                        test/fixtures/RestAPIFixture.cpp
+                        test/mocks/MockNetworkListener.cpp
+                        test/helpers/NetworkListenerHelper.cpp)
+
+set(TEST_HEADER         test/fixtures/RestAPIFixture.h
+                        test/mocks/MockNetworkListener.h
+                        test/helpers/NetworkListenerHelper.h)
 
 # Libraries and include directories of dependencies used by the tests
 set(TEST_LIBRARIES      ${APP_LIBRARIES}
                         ${CMAKE_THREAD_LIBS_INIT}
                         gtest)
-set(TEST_INCLUDE_DIRS   )
+set(TEST_INCLUDE_DIRS   test/
+                        test/fixtures/
+                        test/mocks/
+                        test/helpers/)
 
 
 # Specify sources for formatting
-set(FORMATTING_SOURCES ${ENTRYPOINT_SOURCE} ${APP_SOURCES} ${APP_HEADER} ${TEST_SOURCES})
+set(FORMATTING_SOURCES ${ENTRYPOINT_SOURCE} ${APP_SOURCES} ${APP_HEADER} ${TEST_SOURCES} ${TEST_HEADER})
 
 if(BUILD_EXAMPLES)
   file(GLOB EXAMPLE_FORMATTING_SOURCES examples/*.cpp examples/*.h)

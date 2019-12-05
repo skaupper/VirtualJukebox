@@ -11,12 +11,24 @@
 
 #include <gtest/gtest.h>
 
+#include <thread>
+
+#include "MockNetworkListener.h"
+#include "RestAPI.h"
+#include "restclient-cpp/restclient.h"
 
 class RestAPIFixture : public ::testing::Test {
-public:
+ public:
+  std::optional<RestClient::Response> post(std::string const &endpoint,
+                                           std::string const &body);
+  MockNetworkListener listener;
 
-protected:
-    void SetUp() override;
+ protected:
+  void SetUp() override;
+  void TearDown() override;
+
+  RestAPI api;
+  std::thread serverThread;
 };
 
 #endif /* _REST_API_FIXTURE_H_ */
