@@ -20,7 +20,7 @@
 
 //#include "DataStore.h"
 //#include "MusicBackend.h"
-//#include "NetworkAPI.h"
+#include "NetworkAPI.h"
 //#include "User.h"
 
 class JukeBox : public NetworkListener {
@@ -47,7 +47,7 @@ class JukeBox : public NetworkListener {
 
  private:
   //  DataStore mDataStore;
-  //  NetworkAPI mNetwork;
+  NetworkAPI *mNetwork;
   //  MusicBackend mMusicBackend;
 };
 
