@@ -71,7 +71,7 @@ TResultOpt RAMDataStore::addTrack(Track track, QueueType q) {
   // select Queue
   Queue *pQueue = SelectQueue(q);
   if (pQueue == nullptr) {
-    return Error(ErrorCode::InvalidParam, "Invalid Parameter in Queue");
+    return Error(ErrorCode::InvalidValue, "Invalid Parameter in Queue");
   }
 
   // check for existing Track
@@ -92,7 +92,7 @@ TResult<Track> RAMDataStore::removeTrack(TTrackID ID, QueueType q) {
   // select Queue
   Queue *pQueue = SelectQueue(q);
   if (pQueue == nullptr) {
-    return Error(ErrorCode::InvalidParam, "Invalid Parameter in Queue");
+    return Error(ErrorCode::InvalidValue, "Invalid Parameter in Queue");
   }
 
   // delete Track
@@ -115,7 +115,7 @@ TResult<bool> RAMDataStore::hasTrack(TTrackID ID, QueueType q) {
   // select Queue
   Queue *pQueue = SelectQueue(q);
   if (pQueue == nullptr) {
-    return Error(ErrorCode::InvalidParam, "Invalid Parameter in Queue");
+    return Error(ErrorCode::InvalidValue, "Invalid Parameter in Queue");
   }
 
   // find Track
@@ -161,7 +161,7 @@ TResult<Queue> RAMDataStore::getQueue(QueueType q) {
   // select Queue
   Queue *pQueue = SelectQueue(q);
   if (pQueue == nullptr) {
-    return Error(ErrorCode::InvalidParam, "Invalid Parameter in Queue");
+    return Error(ErrorCode::InvalidValue, "Invalid Parameter in Queue");
   }
 
   // return read only access to Queue
