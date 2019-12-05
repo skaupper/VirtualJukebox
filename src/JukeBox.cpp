@@ -26,11 +26,7 @@ void JukeBox::start(string exeName, string configFilePath) {
     cerr << ret.value().getErrorMessage() << endl;
   }
 
-  auto log = initLoggingHandler(exeName);
-  if (log.has_value()) {
-    /* Print to cerr here, since LoggingHandler may be uninitialized */
-    cerr << log.value().getErrorMessage() << endl;
-  }
+  initLoggingHandler(exeName);
 }
 
 TResult<TSessionID> JukeBox::generateSession(

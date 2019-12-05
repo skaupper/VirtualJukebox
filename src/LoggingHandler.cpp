@@ -18,13 +18,13 @@ using namespace std;
 
 static bool isGlogInitialized = false;
 
-static TResult<int> getMinLogLevel() {
+static int getMinLogLevel() {
   string const section = "MainParams";
   string const key = "minLogLevel";
 
   auto ret = ConfigHandler::getInstance()->getValueString(section, key);
   if (holds_alternative<Error>(ret))
-    return get<Error>(ret);
+    cerr << get<Error>(ret).getErrorMessage() << endl;
 
   string logLevelStr = get<string>(ret);
 
@@ -35,22 +35,21 @@ static TResult<int> getMinLogLevel() {
   } else if (logLevelStr == "ERROR") {
     return google::ERROR;
   } else {
-    return Error(ErrorCode::InvalidValue,
-                 "LoggingHandler.getMinLogLevel: Configuration value '" +
-                     section + "." + key + "' is invalid.");
+    /* Print to cerr here, since LoggingHandler is uninitialized */
+    cerr << "LoggingHandler.getMinLogLevel: Configuration value '" << section
+         << "." << key << "' is invalid. Using INFO as a default fallback."
+         << endl;
+    return google::INFO;
   }
 }
 
-TResultOpt initLoggingHandler(string const& exe) {
+void initLoggingHandler(string const& exe) {
   if (!isGlogInitialized) {
     FLAGS_log_dir = "./";
     FLAGS_alsologtostderr = true;
     FLAGS_colorlogtostderr = true;
 
-    auto logLevel = getMinLogLevel();
-    if (holds_alternative<Error>(logLevel))
-      return get<Error>(logLevel);
-    FLAGS_minloglevel = get<int>(logLevel);
+    FLAGS_minloglevel = getMinLogLevel();
 
     google::InitGoogleLogging("VirtualJukebox");
 
@@ -58,5 +57,4 @@ TResultOpt initLoggingHandler(string const& exe) {
   } else {
     LOG(ERROR) << "GoogleLogging was already initialized!";
   }
-  return nullopt;
 }

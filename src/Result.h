@@ -71,10 +71,6 @@ using TResult = std::variant<GOOD_TYPE, Error>;
  */
 using TResultOpt = std::optional<Error>;
 
-/* Include down here, to resolve a circular dependency with
- * LoggingHandler.h and Result.h */
-#include "LoggingHandler.h"
-
 /** @brief Checks if given parameter contains optional error value.
  *         If so, it prints the containing error message.
  * @return true if parameter contains error type, false otherwise
