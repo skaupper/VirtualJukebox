@@ -13,6 +13,6 @@
 
 #include "Result.h"
 
-TResultOpt initLogging(std::string const& exe);
+TResultOpt initLoggingHandler(std::string const& exe);
 
 #endif /* _LOGGINGHANDLER_H_ */

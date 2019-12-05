@@ -41,7 +41,7 @@ static TResult<int> getMinLogLevel() {
   }
 }
 
-TResultOpt initLogging(string const& exe) {
+TResultOpt initLoggingHandler(string const& exe) {
   if (!isGlogInitialized) {
     FLAGS_log_dir = "./";
     FLAGS_alsologtostderr = true;

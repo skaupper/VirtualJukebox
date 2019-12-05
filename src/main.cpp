@@ -19,15 +19,11 @@
 using namespace std;
 
 int main(int argc, char* argv[]) {
+  (void)argc;
+
   JukeBox jukebox;
   string configFilePath = "../jukebox_config.ini";
-  jukebox.start(configFilePath);
-
-  auto ret = initLogging(argv[0]);
-  if (ret.has_value()) {
-    cerr << ret.value().getErrorMessage() << endl;
-    return 1;
-  }
+  jukebox.start(argv[0], configFilePath);
 
   LOG(INFO) << "Hello world from JukeBox main.cpp !";
 

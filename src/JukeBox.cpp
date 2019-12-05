@@ -13,14 +13,24 @@
 
 #include "ConfigHandler.h"
 #include "GlobalTypes.h"
+#include "LoggingHandler.h"
 #include "Result.h"
 
 using namespace std;
 
-void JukeBox::start(string configFilePath) {
+void JukeBox::start(string exeName, string configFilePath) {
   shared_ptr<ConfigHandler> conf = ConfigHandler::getInstance();
   TResultOpt ret = conf->setConfigFilePath(configFilePath);
-  checkOptionalError(ret);
+  if (ret.has_value()) {
+    /* Print to cerr here, since LoggingHandler is uninitialized */
+    cerr << ret.value().getErrorMessage() << endl;
+  }
+
+  auto log = initLoggingHandler(exeName);
+  if (log.has_value()) {
+    /* Print to cerr here, since LoggingHandler may be uninitialized */
+    cerr << log.value().getErrorMessage() << endl;
+  }
 }
 
 TResult<TSessionID> JukeBox::generateSession(
