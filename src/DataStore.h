@@ -17,24 +17,23 @@
 #include "Track.h"
 #include "User.h"
 
-
 /**
  * @class   DataStore
  * @brief   Interface for storing Data such as Tracks, Users votes, etc
  */
 class DataStore {
  public:
-    virtual TResultOpt addUser(User user) = 0;
-    virtual TResult<User> removeUser(TSessionID ID) = 0;
-    virtual TResult<std::vector<User>> checkSessionExpirations() = 0;
-    virtual TResultOpt addTrack(Track track, QueueType q) = 0;
-    virtual TResult<Track> removeTrack(TTrackID ID, QueueType q) = 0;
-    virtual TResult<bool> hasTrack(TTrackID ID, QueueType q) = 0;
-    virtual TResultOpt voteTrack(TSessionID sID, TTrackID tID, TVote vote) = 0;
-    virtual TResult<Queue> getQueue(QueueType q) = 0;
-    virtual TResult<Track> getPlayingTrack() = 0;
-    virtual TResult<bool> hasUser(TSessionID) = 0;
-    virtual TResultOpt nextTrack() = 0;
+  virtual TResultOpt addUser(User user) = 0;
+  virtual TResult<User> removeUser(TSessionID ID) = 0;
+  virtual TResult<std::vector<User>> checkSessionExpirations() = 0;
+  virtual TResultOpt addTrack(Track track, QueueType q) = 0;
+  virtual TResult<Track> removeTrack(TTrackID ID, QueueType q) = 0;
+  virtual TResult<bool> hasTrack(TTrackID ID, QueueType q) = 0;
+  virtual TResultOpt voteTrack(TSessionID sID, TTrackID tID, TVote vote) = 0;
+  virtual TResult<Queue> getQueue(QueueType q) = 0;
+  virtual TResult<Track> getPlayingTrack() = 0;
+  virtual TResult<bool> hasUser(TSessionID) = 0;
+  virtual TResultOpt nextTrack() = 0;
 };
 
 #endif /* _DATASTORE_H_ */

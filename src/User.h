@@ -12,17 +12,16 @@
 
 #include "GlobalTypes.h"
 
-
 class User {
  public:
-    TSessionID SessionID;
-    std::time_t ExpirationDate;
-    std::string Name;
-    bool isAdmin;
-    std::vector<TTrackID> votes;
-    bool operator==(const User user){
-        return SessionID == user.SessionID;
-    }
+  TSessionID SessionID;
+  std::time_t ExpirationDate;
+  std::string Name;
+  bool isAdmin;
+  std::vector<TTrackID> votes;
+  bool operator==(const User user) {
+    return SessionID == user.SessionID;
+  }
 };
 
 #endif /* _USER_H_ */
