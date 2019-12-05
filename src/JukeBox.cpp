@@ -18,15 +18,18 @@
 
 using namespace std;
 
-void JukeBox::start(string exeName, string configFilePath) {
+bool JukeBox::start(string exeName, string configFilePath) {
   shared_ptr<ConfigHandler> conf = ConfigHandler::getInstance();
   TResultOpt ret = conf->setConfigFilePath(configFilePath);
   if (ret.has_value()) {
     /* Print to cerr here, since LoggingHandler is uninitialized */
     cerr << ret.value().getErrorMessage() << endl;
+    return false;
   }
 
   initLoggingHandler(exeName);
+  DLOG(INFO) << "Hello world from JukeBox main.cpp !";
+  return true;
 }
 
 TResult<TSessionID> JukeBox::generateSession(

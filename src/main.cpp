@@ -23,14 +23,16 @@ int main(int argc, char* argv[]) {
 
   JukeBox jukebox;
   string configFilePath = "../jukebox_config.ini";
-  jukebox.start(argv[0], configFilePath);
+  if (!jukebox.start(argv[0], configFilePath)) {
+    cerr << "ERROR: Exiting program due to fatal error in Jukebox.start()"
+         << endl;
+    return 1;
+  }
 
-  LOG(INFO) << "Hello world from JukeBox main.cpp !";
-
-  DLOG(INFO) << "Logging the first DEBUG message!";
-  LOG(INFO) << "Logging the first INFO message!";
-  LOG(WARNING) << "Logging the first WARNING message!";
-  LOG(ERROR) << "Logging the first ERROR message!";
+  DLOG(INFO) << "Logging a DEBUG message!";
+  LOG(INFO) << "Logging an INFO message!";
+  LOG(WARNING) << "Logging a WARNING message!";
+  LOG(ERROR) << "Logging an ERROR message!";
 
   return 0;
 }
