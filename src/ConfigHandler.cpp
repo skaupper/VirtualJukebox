@@ -36,6 +36,7 @@ TResultOpt ConfigHandler::setConfigFilePath(string const& filepath) {
     return Error(
         ErrorCode::FileNotFound,
         "ConfigHandler.getValueString: Couldn't load file '" + filepath + "'.");
+  mIsInitialized = true;
   return nullopt;
 }
 
@@ -43,6 +44,11 @@ TResultOpt ConfigHandler::setConfigFilePath(string const& filepath) {
  */
 TResult<string> ConfigHandler::getValueString(string const& section,
                                               string const& key) {
+  if (!mIsInitialized) {
+    return Error(ErrorCode::NotInitialized,
+                 "ConfigHandler.getValueString: ConfigHandler is not "
+                 "initialized. Call setConfigFilePath() first.");
+  }
   const char* val = mIni.GetValue(section.c_str(), key.c_str(), nullptr);
   if (!val) {
     return Error(ErrorCode::KeyNotFound,
@@ -63,6 +69,11 @@ TResult<string> ConfigHandler::getValueString(string const& section,
  */
 TResult<int> ConfigHandler::getValueInt(string const& section,
                                         string const& key) {
+  if (!mIsInitialized) {
+    return Error(ErrorCode::NotInitialized,
+                 "ConfigHandler.getValueString: ConfigHandler is not "
+                 "initialized. Call setConfigFilePath() first.");
+  }
   auto valObj = getValueString(section, key);
   if (holds_alternative<Error>(valObj))
     return get<Error>(valObj);
@@ -85,4 +96,8 @@ TResult<int> ConfigHandler::getValueInt(string const& section,
                      "." + key + "' must only consist of digits.");
   }
   return valInt;
+}
+
+bool ConfigHandler::isInitialized() {
+  return mIsInitialized;
 }

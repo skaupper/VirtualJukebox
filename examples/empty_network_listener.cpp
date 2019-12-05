@@ -132,6 +132,7 @@ class EmptyNetworkListener : public NetworkListener {
 
 int main(int argc, char *argv[]) {
   if (argc != 2) {
+    /* Print to cerr here, since LoggingHandler is uninitialized */
     cerr << "Usage: " << string(argv[0]) << " <path_to_config_file>" << endl;
     return 1;
   }

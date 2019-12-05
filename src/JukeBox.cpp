@@ -23,7 +23,8 @@ bool JukeBox::start(string exeName, string configFilePath) {
   TResultOpt ret = conf->setConfigFilePath(configFilePath);
   if (ret.has_value()) {
     /* Print to cerr here, since LoggingHandler is uninitialized */
-    cerr << ret.value().getErrorMessage() << endl;
+    cerr << "ERROR: " << ret.value().getErrorMessage() << endl;
+
     return false;
   }
 

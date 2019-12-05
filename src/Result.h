@@ -26,7 +26,8 @@ enum class ErrorCode {
   InvalidFormat,
   InvalidValue,
   KeyNotFound,
-  NotImplemented
+  NotImplemented,
+  NotInitialized
 };
 
 /**

@@ -24,7 +24,8 @@ static int getMinLogLevel() {
 
   auto ret = ConfigHandler::getInstance()->getValueString(section, key);
   if (holds_alternative<Error>(ret))
-    cerr << get<Error>(ret).getErrorMessage() << endl;
+    /* Print to cerr here, since LoggingHandler is uninitialized */
+    cerr << "ERROR: " << get<Error>(ret).getErrorMessage() << endl;
 
   string logLevelStr = get<string>(ret);
 
@@ -36,15 +37,20 @@ static int getMinLogLevel() {
     return google::ERROR;
   } else {
     /* Print to cerr here, since LoggingHandler is uninitialized */
-    cerr << "LoggingHandler.getMinLogLevel: Configuration value '" << section
-         << "." << key << "' is invalid. Using INFO as a default fallback."
-         << endl;
+    cerr << "ERROR: LoggingHandler.getMinLogLevel: Configuration value '"
+         << section << "." << key
+         << "' is invalid. Using INFO as a default fallback." << endl;
     return google::INFO;
   }
 }
 
 void initLoggingHandler(string const& exe) {
-  if (!isGlogInitialized) {
+  if (!ConfigHandler::getInstance()->isInitialized()) {
+    /* Print to cerr here, since LoggingHandler is uninitialized */
+    cerr << "ERROR: LoggingHandler.initLoggingHandler: "
+            "ConfigHandler is unitialized "
+         << endl;
+  } else if (!isGlogInitialized) {
     FLAGS_log_dir = "./";
     FLAGS_alsologtostderr = true;
     FLAGS_colorlogtostderr = true;

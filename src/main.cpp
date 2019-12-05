@@ -30,6 +30,7 @@ int main(int argc, char* argv[]) {
 
   JukeBox jukebox;
   if (!jukebox.start(argv[0], configFilePath)) {
+    /* Print to cerr here, since LoggingHandler is uninitialized */
     cerr << "ERROR: Exiting program due to fatal error in Jukebox.start()"
          << endl;
     return 1;
