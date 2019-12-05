@@ -69,7 +69,7 @@ class Device {
  private:
   std::string mId;        /**< the device id. may be empty */
   bool mIsActive;         /**< if this device is the currently active device */
-  bool mIsPrivateSession; /**< if this device is currently in a private sesseion
+  bool mIsPrivateSession; /**< if this device is currently in a private session
                            */
   bool mIsRestricted; /**< if true, no web api commands will be accepted by this
                         device */
