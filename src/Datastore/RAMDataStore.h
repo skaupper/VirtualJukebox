@@ -13,11 +13,11 @@
 #include <variant>
 #include <vector>
 
-#include "DataStore.h"
-#include "GlobalTypes.h"
-#include "Queue.h"
-#include "Result.h"
-#include "Tracks.h"
+#include "Datastore/DataStore.h"
+#include "Types/GlobalTypes.h"
+#include "Types/Queue.h"
+#include "Types/Result.h"
+#include "Types/Tracks.h"
 #include "User.h"
 
 class RAMDataStore : public DataStore {

@@ -4,13 +4,13 @@
  * @brief   Class RAMDataStore implementation
  * ---------------------------------------------------------------------------*/
 
-#include "RAMDataStore.h"
+#include "Datastore/RAMDataStore.h"
 
 #include <algorithm>
 #include <ctime>
 
-#include "GlobalTypes.h"
-#include "Result.h"
+#include "Types/GlobalTypes.h"
+#include "Types/Result.h"
 
 using namespace std;
 
@@ -113,7 +113,7 @@ TResult<BaseTrack> RAMDataStore::removeTrack(TTrackID ID, QueueType q) {
     return Error(ErrorCode::DoesntExist, "Track doesnt exist in this Queue");
   } else {
     // Track is there, delete it from vector
-    pQueue->tracks.emplace_back(track);
+    pQueue->tracks.erase(it,it);
   }
 }
 
@@ -166,10 +166,8 @@ TResultOpt RAMDataStore::voteTrack(TSessionID sID, TTrackID tID, TVote vote) {
       }
       else{
           // we want to remove it from upvoted tracks, so remove it from vector of upvoted tracks
-          //it->votes.
-          
+          it->votes.erase(it_track, it_track);
       }
-
     }
   }
 }
@@ -190,8 +188,11 @@ TResult<Queue> RAMDataStore::getQueue(QueueType q) {
 }
 
 TResult<BaseTrack> RAMDataStore::getPlayingTrack() {
+    // Shared Access to Song Queue
+    shared_lock<shared_mutex> MyLock(mQueueMutex, defer_lock);
+    MyLock.lock();
 
-
+    return mCurrentTrack;
 }
 
 TResult<bool> RAMDataStore::hasUser(TSessionID ID) {
@@ -214,6 +215,11 @@ TResultOpt RAMDataStore::nextTrack() {
   // Exclusive Access to Song Queue
   unique_lock<shared_mutex> MyLock(mQueueMutex, defer_lock);
   MyLock.lock();
+
+
+
+
+  
 }
 
 Queue *RAMDataStore::SelectQueue(QueueType q) {

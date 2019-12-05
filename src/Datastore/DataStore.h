@@ -11,10 +11,10 @@
 #include <variant>
 #include <vector>
 
-#include "GlobalTypes.h"
-#include "Queue.h"
-#include "Result.h"
-#include "Tracks.h"
+#include "Types/GlobalTypes.h"
+#include "Types/Queue.h"
+#include "Types/Result.h"
+#include "Types/Tracks.h"
 #include "User.h"
 
 /**

@@ -10,7 +10,7 @@
 #include <ctime>
 #include <vector>
 
-#include "GlobalTypes.h"
+#include "Types/GlobalTypes.h"
 
 class User {
  public:
