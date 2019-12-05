@@ -20,3 +20,9 @@ target_link_libraries(hello_libhttpserver ${EXAMPLE_APP_LIBRARIES})
 #
 add_executable(empty_network_listener empty_network_listener.cpp $<TARGET_OBJECTS:${EXAMPLE_APP_OBJECTS}>)
 target_link_libraries(empty_network_listener ${EXAMPLE_APP_LIBRARIES})
+
+#
+# simple_spotifyClientServer example
+#
+add_executable(simple_spotifyClientServer simple_spotifyClientServer.cpp $<TARGET_OBJECTS:${EXAMPLE_APP_OBJECTS}>)
+target_link_libraries(simple_spotifyClientServer ${EXAMPLE_APP_LIBRARIES})

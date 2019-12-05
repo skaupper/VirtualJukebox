@@ -67,7 +67,10 @@ set(APP_SOURCES         src/JukeBox.cpp
                         src/RestAPI.cpp
                         src/RestRequestHandler.cpp
                         src/RestEndpointHandlers.cpp
-                        src/Serializer.cpp)
+                        src/Serializer.cpp
+                        src/SpotifyApi/SpotifyAPITypes.cpp
+                        src/SpotifyApi/SpotifyAPI.cpp
+                        src/SpotifyApi/SpotifyAuthorization.cpp)
 
 set(APP_HEADER          src/JukeBox.h
                         src/Tracks.h
@@ -84,7 +87,10 @@ set(APP_HEADER          src/JukeBox.h
                         src/RestRequestHandler.h
                         src/RestEndpointHandlers.h
                         src/RequestInformation.h
-                        src/Serializer.h)
+                        src/Serializer.h
+                        src/SpotifyApi/SpotifyAPITypes.h
+                        src/SpotifyApi/SpotifyAPI.h
+                        src/SpotifyApi/SpotifyAuthorization.h)
 
 # Libraries and include directories of dependencies used by the application
 set(APP_LIBRARIES       ${LIBHTTPSERVER_LIBRARIES}
