@@ -95,7 +95,6 @@ bool Device::isRestricted() {
   return mIsRestricted;
 }
 
-
 SpotifyError::SpotifyError(nlohmann::json errorJson) {
   std::cout << "Error: " << errorJson.dump(4) << std::endl;
   for (auto& [key, value] : errorJson.items()) {

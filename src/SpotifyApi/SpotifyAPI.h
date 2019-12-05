@@ -43,9 +43,9 @@ class SpotifyAPI {
       std::string const &accessToken);
 
   TResult<Playback> getCurrentPlayback(std::string const &accessToken,
-                                       std::string const &market ="AT");
+                                       std::string const &market = "AT");
 
-private:
+ private:
   Error errorParser(SpotifyError const &error);
   std::string const cSpotifyAuthUrl = "https://accounts.spotify.com";
   std::string const cSpotifyAPIUrl = "https://api.spotify.com";

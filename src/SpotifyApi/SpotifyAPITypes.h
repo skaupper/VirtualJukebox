@@ -69,7 +69,7 @@ class Device {
  private:
   std::string mId;        /**< the device id. may be empty */
   bool mIsActive;         /**< if this device is the currently active device */
-  bool mIsPrivateSession; /**< if this device is currently in a private sesseion
+  bool mIsPrivateSession; /**< if this device is currently in a private session
                            */
   bool mIsRestricted; /**< if true, no web api commands will be accepted by this
                         device */
@@ -110,9 +110,8 @@ struct Track {
  * @brief contains infos about the actual playback
  */
 class Playback {
-public:
-
-private:
+ public:
+ private:
   Device device;           /**< device that is currently active */
   std::string repeatState; /**< current repeat state status ("off", "track",
                               "context") */
@@ -129,11 +128,12 @@ private:
  * @brief error type
  */
 class SpotifyError {
-public:
+ public:
   SpotifyError(nlohmann::json errorJson);
   int getStatus() const;
-  std::string const & getMessage() const;
-private:
+  std::string const &getMessage() const;
+
+ private:
   int mStatus;          /**< http status code */
   std::string mMessage; /**< a short description of the cause of the error */
 };

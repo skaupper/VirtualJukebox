@@ -78,7 +78,6 @@ TResult<std::vector<Device>> SpotifyAPI::getAvailableDevices(
     deviceListJson = nlohmann::json::parse(response.body);
 
     if (response.code == cHTTPOK) {
-
       std::cout << deviceListJson.dump(2) << std::endl;
 
       // check if devices exist
@@ -91,31 +90,27 @@ TResult<std::vector<Device>> SpotifyAPI::getAvailableDevices(
 
     } else {
       // check for error string
-      if(deviceListJson.find("error") != deviceListJson.end()){
+      if (deviceListJson.find("error") != deviceListJson.end()) {
         SpotifyError spotifyError(deviceListJson);
         return errorParser(spotifyError);
       }
     }
     // if we reach here spotify sent an unexpected message
     // return spotify Unexpected
-  }
-  catch(...){
+  } catch (...) {
     // parse exception
     // return spotify parse error
   }
-
-
 }
 
 TResult<Playback> SpotifyAPI::getCurrentPlayback(std::string const &accessToken,
-                                     std::string const &market) {
-
+                                                 std::string const &market) {
   auto client = std::make_unique<RestClient::Connection>(cSpotifyAPIUrl);
   RestClient::HeaderFields headers;
   headers.insert(
-          std::pair<std::string, std::string>("Accept", "application/json"));
+      std::pair<std::string, std::string>("Accept", "application/json"));
   headers.insert(
-          std::pair<std::string, std::string>("Content-Type", "application/json"));
+      std::pair<std::string, std::string>("Content-Type", "application/json"));
   headers.insert(std::pair<std::string, std::string>("Authorization",
                                                      "Bearer " + accessToken));
   client->SetHeaders(headers);
@@ -124,26 +119,24 @@ TResult<Playback> SpotifyAPI::getCurrentPlayback(std::string const &accessToken,
 
   nlohmann::json playbackJson;
 
-  try{
-    playbackJson=nlohmann::json::parse(response.body);
-    std::cout<<playbackJson.dump(4)<<std::endl;
-  }catch(...){
-
+  try {
+    playbackJson = nlohmann::json::parse(response.body);
+    std::cout << playbackJson.dump(4) << std::endl;
+  } catch (...) {
   }
 
-  return Error(ErrorCode::NotImplemented,"test");
+  return Error(ErrorCode::NotImplemented, "test");
 }
 
 Error SpotifyAPI::errorParser(SpotifyApi::SpotifyError const &error) {
-  if(error.getStatus() == cHTTPUnouthorized){
-    if(error.getMessage()=="Invalid access token"){
-      return Error(ErrorCode::AccessDenied,error.getMessage());
-    }else if(error.getMessage()=="The access token expired"){
-      return Error(ErrorCode::AccessDenied,error.getMessage());
+  if (error.getStatus() == cHTTPUnouthorized) {
+    if (error.getMessage() == "Invalid access token") {
+      return Error(ErrorCode::AccessDenied, error.getMessage());
+    } else if (error.getMessage() == "The access token expired") {
+      return Error(ErrorCode::AccessDenied, error.getMessage());
     }
-  }
-  else{
+  } else {
     // unhandled spotify error
-    return Error(ErrorCode::NotImplemented,error.getMessage());
+    return Error(ErrorCode::NotImplemented, error.getMessage());
   }
 }
