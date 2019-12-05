@@ -110,9 +110,8 @@ struct Track {
  * @brief contains infos about the actual playback
  */
 class Playback {
-public:
-
-private:
+ public:
+ private:
   Device device;           /**< device that is currently active */
   std::string repeatState; /**< current repeat state status ("off", "track",
                               "context") */
@@ -129,11 +128,12 @@ private:
  * @brief error type
  */
 class SpotifyError {
-public:
+ public:
   SpotifyError(nlohmann::json errorJson);
   int getStatus() const;
-  std::string const & getMessage() const;
-private:
+  std::string const &getMessage() const;
+
+ private:
   int mStatus;          /**< http status code */
   std::string mMessage; /**< a short description of the cause of the error */
 };
