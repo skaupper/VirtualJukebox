@@ -7,10 +7,10 @@
 #include <iostream>
 
 
-#include "ConfigHandler.h"
-#include "SpotifyApi/SpotifyAPI.h"
-#include "SpotifyApi/SpotifyAPITypes.h"
-#include "SpotifyApi/SpotifyAuthorization.h"
+#include "Utils/ConfigHandler.h"
+#include "Spotify/SpotifyAPI.h"
+#include "Spotify/SpotifyAPITypes.h"
+#include "Spotify/SpotifyAuthorization.h"
 
 using namespace std;
 

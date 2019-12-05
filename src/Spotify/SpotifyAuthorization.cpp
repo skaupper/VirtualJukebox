@@ -12,8 +12,8 @@
 
 #include "Types/Result.h"
 
-#include "ConfigHandler.h"
-#include "LoggingHandler.h"
+#include "Utils/ConfigHandler.h"
+#include "Utils/LoggingHandler.h"
 
 #include "httpserver.hpp"
 
