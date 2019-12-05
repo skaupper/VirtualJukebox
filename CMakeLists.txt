@@ -96,6 +96,7 @@ set(APP_HEADER          src/JukeBox.h
 set(APP_LIBRARIES       ${LIBHTTPSERVER_LIBRARIES}
                         ${LIBMICROHTTPD_LIBRARIES}
                         ${LIBRESTCLIENT_LIBRARIES}
+                        ${CMAKE_THREAD_LIBS_INIT}
                         ${GLOG_LIBRARY})
 set(APP_INCLUDE_DIRS    src/
                         lib/
