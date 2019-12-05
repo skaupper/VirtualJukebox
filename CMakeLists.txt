@@ -58,19 +58,19 @@ include(cmake/FindGlog.cmake)
 set(ENTRYPOINT_SOURCE   src/main.cpp)
 # All source file (excluding main) for the application
 set(APP_SOURCES         src/JukeBox.cpp
-                        src/Tracks.cpp
-                        src/Queue.cpp
-                        src/LoggingHandler.cpp
-                        src/ConfigHandler.cpp
-                        src/SpotifyBackend.cpp
-                        src/NetworkAPI.cpp
-                        src/RestAPI.cpp
-                        src/RestRequestHandler.cpp
-                        src/RestEndpointHandlers.cpp
-                        src/Serializer.cpp
-                        src/SpotifyApi/SpotifyAPITypes.cpp
-                        src/SpotifyApi/SpotifyAPI.cpp
-                        src/SpotifyApi/SpotifyAuthorization.cpp)
+                        src/Types/Tracks.cpp
+                        src/Types/Queue.cpp
+                        src/Utils/LoggingHandler.cpp
+                        src/Utils/ConfigHandler.cpp
+                        src/Utils/Serializer.cpp
+                        src/Spotify/SpotifyBackend.cpp
+                        src/Spotify/SpotifyApi/SpotifyAPITypes.cpp
+                        src/Spotify/SpotifyApi/SpotifyAPI.cpp
+                        src/Spotify/SpotifyApi/SpotifyAuthorization.cpp)
+                        src/Network/NetworkAPI.cpp
+                        src/Network/RestAPI.cpp
+                        src/Network/RestRequestHandler.cpp
+                        src/Network/RestEndpointHandlers.cpp
 
 set(APP_HEADER          src/JukeBox.h
                         src/Tracks.h
