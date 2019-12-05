@@ -46,7 +46,12 @@ int main(void) {
     auto playb = get<SpotifyApi::Playback>(ret);
     std::cout << "playing:" << playb.isPlaying() << endl
               << "progress_ms" << playb.getProgressMs() << endl
-              << "Device: " << playb.getDevice().getName() << endl;
+              << "Device: " << playb.getDevice().getName() << endl
+              << "Track Name:" << playb.getCurrentPlayingTrack().getName()
+              << endl
+              << "Artist Names"
+              << playb.getCurrentPlayingTrack().getArtists()[0].getName()
+              << endl;
   }
 
   return 0;

@@ -75,16 +75,16 @@ Device::Device(nlohmann::json const& deviceJson) {
 bool Device::isPrivateSession() {
   return mIsPrivateSession;
 }
-std::string const& Device::getName() {
+std::string const& Device::getName() const {
   return mName;
 }
-std::string const& Device::getType() {
+std::string const& Device::getType() const {
   return mType;
 }
 size_t Device::getVolume() {
   return mVolume;
 }
-std::string const& Device::getID() {
+std::string const& Device::getID() const {
   return mId;
 }
 bool Device::isActive() {
@@ -112,27 +112,27 @@ Playback::Playback(nlohmann::json playbackJson) {
     } else if (key == "currently_playing_type") {
       mCurrentPlayingType = value;
     } else if (key == "item") {
-      mTrack = Track(value["item"]);
+      mTrack = Track(value);
     }
   }
 }
 
-Device& Playback::getDevice() {
+Device const& Playback::getDevice() const {
   return mDevice;
 }
 bool Playback::isPlaying() {
   return mIsPlaying;
 }
-std::string const& Playback::getRepeatState() {
+std::string const& Playback::getRepeatState() const {
   return mRepeatState;
 }
 size_t Playback::getProgressMs() {
   return mProgressMs;
 }
-Track const& Playback::getCurrentPlayingTrack() {
+Track const& Playback::getCurrentPlayingTrack() const {
   return mTrack;
 }
-std::string const& Playback::getCurrentPlayingType() {
+std::string const& Playback::getCurrentPlayingType() const {
   return mCurrentPlayingType;
 }
 size_t Playback::getTimestamp() {
@@ -158,19 +158,19 @@ Artist::Artist(nlohmann::json artistJson) {
     }
   }
 }
-std::string Artist::getHref() {
+std::string const& Artist::getHref() const {
   return mHref;
 }
-std::string Artist::getID() {
+std::string const& Artist::getID() const {
   return mId;
 }
-std::string Artist::getName() {
+std::string const& Artist::getName() const {
   return mName;
 }
-std::string Artist::getType() {
+std::string const& Artist::getType() const {
   return mType;
 }
-std::string Artist::getUri() {
+std::string const& Artist::getUri() const {
   return mUri;
 }
 
@@ -199,28 +199,28 @@ Album::Album(nlohmann::json albumJson) {
   }
 }
 
-std::vector<Artist> const& Album::getArtists() {
+std::vector<Artist> const& Album::getArtists() const {
   return mArtists;
 }
-std::string const& Album::getAlbumType() {
+std::string const& Album::getAlbumType() const {
   return mAlbumType;
 }
-std::string const& Album::getHref() {
+std::string const& Album::getHref() const {
   return mHref;
 }
-std::string const& Album::getId() {
+std::string const& Album::getId() const {
   return mId;
 }
-std::string const& Album::getName() {
+std::string const& Album::getName() const {
   return mName;
 }
-std::string const& Album::getReleaseDate() {
+std::string const& Album::getReleaseDate() const {
   return mReleaseDate;
 }
-std::string const& Album::getType() {
+std::string const& Album::getType() const {
   return mType;
 }
-std::string const& Album::getUri() {
+std::string const& Album::getUri() const {
   return mUri;
 }
 
@@ -232,7 +232,7 @@ Track::Track(nlohmann::json trackJson) {
         mArtists.emplace_back(Artist(elem));
       }
     } else if (key == "album") {
-      mAlbum = Album(trackJson["album"]);
+      mAlbum = Album(value);
     } else if (key == "href") {
       mHref = value;
     } else if (key == "id") {
@@ -247,25 +247,25 @@ Track::Track(nlohmann::json trackJson) {
   }
 }
 
-std::vector<Artist> const& Track::getArtists() {
+std::vector<Artist> const& Track::getArtists() const {
   return mArtists;
 }
-Album const& Track::getAlbum() {
+Album const& Track::getAlbum() const {
   return mAlbum;
 }
 size_t Track::getDuration() {
   return mDurationMs;
 }
-std::string const& Track::getHref() {
+std::string const& Track::getHref() const {
   return mHref;
 }
-std::string const& Track::getId() {
+std::string const& Track::getId() const {
   return mId;
 }
-std::string const& Track::getName() {
+std::string const& Track::getName() const {
   return mName;
 }
-std::string const& Track::getUri() {
+std::string const& Track::getUri() const {
   return mUri;
 }
 

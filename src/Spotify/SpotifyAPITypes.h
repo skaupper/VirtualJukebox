@@ -58,12 +58,12 @@ class Device {
  public:
   Device() = default;
   Device(nlohmann::json const &deviceJson);
-  std::string const &getID();
+  std::string const &getID() const;
   bool isActive();
   bool isPrivateSession();
   bool isRestricted();
-  std::string const &getName();
-  std::string const &getType();
+  std::string const &getName() const;
+  std::string const &getType() const;
   size_t getVolume();
 
  private:
@@ -86,11 +86,11 @@ class Artist {
  public:
   Artist() = default;
   Artist(nlohmann::json artistJson);
-  std::string getHref();
-  std::string getID();
-  std::string getName();
-  std::string getType();
-  std::string getUri();
+  std::string const &getHref() const;
+  std::string const &getID() const;
+  std::string const &getName() const;
+  std::string const &getType() const;
+  std::string const &getUri() const;
 
  private:
   std::string mHref; /**< A link to the Web API endpoint providing full details
@@ -108,14 +108,14 @@ class Album {
  public:
   Album() = default;
   Album(nlohmann::json albumJson);
-  std::vector<Artist> const &getArtists();
-  std::string const &getAlbumType();
-  std::string const &getHref();
-  std::string const &getId();
-  std::string const &getName();
-  std::string const &getReleaseDate();
-  std::string const &getType();
-  std::string const &getUri();
+  std::vector<Artist> const &getArtists() const;
+  std::string const &getAlbumType() const;
+  std::string const &getHref() const;
+  std::string const &getId() const;
+  std::string const &getName() const;
+  std::string const &getReleaseDate() const;
+  std::string const &getType() const;
+  std::string const &getUri() const;
 
  private:
   std::string
@@ -138,13 +138,13 @@ class Track {
  public:
   Track() = default;
   Track(nlohmann::json trackJson);
-  std::vector<Artist> const &getArtists();
-  Album const &getAlbum();
+  std::vector<Artist> const &getArtists() const;
+  Album const &getAlbum() const;
   size_t getDuration();
-  std::string const &getHref();
-  std::string const &getId();
-  std::string const &getName();
-  std::string const &getUri();
+  std::string const &getHref() const;
+  std::string const &getId() const;
+  std::string const &getName() const;
+  std::string const &getUri() const;
 
  private:
   std::vector<Artist> mArtists; /**< the artists who performed the track */
@@ -165,14 +165,14 @@ class Playback {
   Playback() = default;
   Playback(nlohmann::json playbackJson);
 
-  Device &getDevice();
-  std::string const &getRepeatState();
+  Device const &getDevice() const;
+  std::string const &getRepeatState() const;
   bool getShuffleState();
   size_t getTimestamp();
   size_t getProgressMs();
   bool isPlaying();
-  std::string const &getCurrentPlayingType();
-  Track const &getCurrentPlayingTrack();
+  std::string const &getCurrentPlayingType() const;
+  Track const &getCurrentPlayingTrack() const;
 
  private:
   Device mDevice;           /**< device that is currently active */
