@@ -52,6 +52,7 @@ TResult<TSessionID> JukeBox::generateSession(optional<TPassword> const &pw,
     LOG(INFO) << "JukeBox.generateSession: User '" << name << "' is admin!";
     // user.isAdmin = true;
   }
+  // mDataStore.addUser(user);
 
   stringstream ss;
   ss << time(nullptr);

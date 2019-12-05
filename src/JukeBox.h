@@ -23,6 +23,12 @@
 
 class JukeBox : public NetworkListener {
  public:
+  /**
+   * @brief Initializes ConfigHandler and LoggingHandler.
+   * @param exeName Name of the currently running executable.
+   * @param configFilePath Path to *.ini config file, relative to executable.
+   * @return True on success, false otherwise.
+   */
   bool start(std::string exeName, std::string configFilePath);
 
   TResult<TSessionID> generateSession(
