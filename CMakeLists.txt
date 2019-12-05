@@ -111,7 +111,9 @@ set(APP_INCLUDE_DIRS    src/
 # All source files containing test cases
 set(TEST_SOURCES        test/Test_ConfigHandler.cpp
                         test/Test_DataStore.cpp
-                        test/Test_SpotifyAPI.cpp)
+                        test/Test_SpotifyAPI.cpp
+                        test/RestAPIFixture.cpp
+                        test/Test_RestAPI.cpp)
 
 # Libraries and include directories of dependencies used by the tests
 set(TEST_LIBRARIES      ${APP_LIBRARIES}
