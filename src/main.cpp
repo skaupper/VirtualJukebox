@@ -3,6 +3,7 @@
  * @file    main.cpp
  * @author  Team Server
  * @brief   Main program for project "Virtual JukeBox"
+ * @details Usage: ./executable [<filepath-to-config-file.ini>]
  */
 /*****************************************************************************/
 
@@ -19,10 +20,15 @@
 using namespace std;
 
 int main(int argc, char* argv[]) {
-  (void)argc;
+  string configFilePath = "../jukebox_config.ini";
+  if (argc > 1) {
+    configFilePath = argv[1];
+  } else {
+    cout << "INFO: No filename was specified for *.ini configuration file. "
+         << "Using '" << configFilePath << "' as a default fallback." << endl;
+  }
 
   JukeBox jukebox;
-  string configFilePath = "../jukebox_config.ini";
   if (!jukebox.start(argv[0], configFilePath)) {
     cerr << "ERROR: Exiting program due to fatal error in Jukebox.start()"
          << endl;

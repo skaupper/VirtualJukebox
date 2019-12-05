@@ -33,8 +33,9 @@ TResultOpt ConfigHandler::setConfigFilePath(string const& filepath) {
 
   SI_Error rc = mIni.LoadFile(mConfigFilePath.c_str());
   if (rc < 0)
-    return Error(ErrorCode::FileNotFound,
-                 "ConfigHandler.getValueString: Couldn't load file.");
+    return Error(
+        ErrorCode::FileNotFound,
+        "ConfigHandler.getValueString: Couldn't load file '" + filepath + "'.");
   return nullopt;
 }
 
