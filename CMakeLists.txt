@@ -66,31 +66,31 @@ set(APP_SOURCES         src/JukeBox.cpp
                         src/Spotify/SpotifyBackend.cpp
                         src/Spotify/SpotifyApi/SpotifyAPITypes.cpp
                         src/Spotify/SpotifyApi/SpotifyAPI.cpp
-                        src/Spotify/SpotifyApi/SpotifyAuthorization.cpp)
+                        src/Spotify/SpotifyApi/SpotifyAuthorization.cpp
                         src/Network/NetworkAPI.cpp
                         src/Network/RestAPI.cpp
                         src/Network/RestRequestHandler.cpp
-                        src/Network/RestEndpointHandlers.cpp
+                        src/Network/RestEndpointHandlers.cpp)
 
 set(APP_HEADER          src/JukeBox.h
-                        src/Tracks.h
-                        src/Queue.h
-                        src/LoggingHandler.h
-                        src/ConfigHandler.h
-                        src/NetworkListener.h
-                        src/Result.h
-                        src/GlobalTypes.h
                         src/MusicBackend.h
-                        src/SpotifyBackend.h
-                        src/NetworkAPI.h
-                        src/RestAPI.h
-                        src/RestRequestHandler.h
-                        src/RestEndpointHandlers.h
-                        src/RequestInformation.h
-                        src/Serializer.h
-                        src/SpotifyApi/SpotifyAPITypes.h
-                        src/SpotifyApi/SpotifyAPI.h
-                        src/SpotifyApi/SpotifyAuthorization.h)
+                        src/NetworkListener.h
+                        src/Types/Tracks.h
+                        src/Types/Queue.h
+                        src/Types/Result.h
+                        src/Types/GlobalTypes.h
+                        src/Utils/LoggingHandler.h
+                        src/Utils/ConfigHandler.h
+                        src/Utils/Serializer.h
+                        src/Spotify/SpotifyBackend.h
+                        src/Spotify/SpotifyApi/SpotifyAPITypes.h
+                        src/Spotify/SpotifyApi/SpotifyAPI.h
+                        src/Spotify/SpotifyApi/SpotifyAuthorization.h
+                        src/Network/NetworkAPI.h
+                        src/Network/RestAPI.h
+                        src/Network/RestRequestHandler.h
+                        src/Network/RestEndpointHandlers.h
+                        src/Network/RequestInformation.h)
 
 # Libraries and include directories of dependencies used by the application
 set(APP_LIBRARIES       ${LIBHTTPSERVER_LIBRARIES}
