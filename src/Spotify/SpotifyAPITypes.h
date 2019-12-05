@@ -85,7 +85,7 @@ class Device {
 class Artist {
  public:
   Artist() = default;
-  Artist(nlohmann::json artistJson);
+  Artist(nlohmann::json const &artistJson);
   std::string const &getHref() const;
   std::string const &getID() const;
   std::string const &getName() const;
@@ -107,7 +107,7 @@ class Artist {
 class Image {
  public:
   Image() = default;
-  Image(nlohmann::json imageJson);
+  Image(nlohmann::json const &imageJson);
   int getHeight();
   int getWidth();
   std::string const &getUrl() const;
@@ -124,7 +124,7 @@ class Image {
 class Album {
  public:
   Album() = default;
-  Album(nlohmann::json albumJson);
+  Album(nlohmann::json const &albumJson);
   std::vector<Artist> const &getArtists() const;
   std::vector<Image> const &getImages() const;
   std::string const &getAlbumType() const;
@@ -156,7 +156,7 @@ class Album {
 class Track {
  public:
   Track() = default;
-  Track(nlohmann::json trackJson);
+  Track(nlohmann::json const &trackJson);
   std::vector<Artist> const &getArtists() const;
   Album const &getAlbum() const;
   size_t getDuration();
@@ -182,7 +182,7 @@ class Track {
 class Playback {
  public:
   Playback() = default;
-  Playback(nlohmann::json playbackJson);
+  Playback(nlohmann::json const &playbackJson);
 
   Device const &getDevice() const;
   std::string const &getRepeatState() const;
@@ -206,12 +206,40 @@ class Playback {
   Track mTrack;                    /**< currently playing track */
 };
 
+class SpotifyPaging {
+ public:
+  SpotifyPaging() = default;
+  SpotifyPaging(nlohmann::json const &pagingJson);
+
+  std::vector<Track> const &getTracks();
+  std::vector<Artist> const &getArtists();
+  std::vector<Album> const &getAlbums();
+  std::string const &getHref();
+  int getLimit();
+  std::string const &getNext();
+  int getOffset();
+  std::string const &getPrevious();
+  int getTotal();
+
+ private:
+  std::vector<Track> mTracks;   /**< array of tracks */
+  std::vector<Artist> mArtists; /**< array of artists */
+  std::vector<Album> mAlbums;   /**< array of albums */
+  std::string mHref; /**< a link to the web api endpoint returning the full
+                        result of the request */
+  int mLimit;        /**< the maximum number of items in the response */
+  std::string mNext; /**< url to the next page of items (can be left empty) */
+  int mOffset;       /**< offset of the items returned (as set in the query) */
+  std::string mPrevious; /**< url to the previos page of items */
+  int mTotal;            /**< total number of items available */
+};
+
 /**
  * @brief error type
  */
 class SpotifyError {
  public:
-  SpotifyError(nlohmann::json errorJson);
+  SpotifyError(nlohmann::json const &errorJson);
   int getStatus() const;
   std::string const &getMessage() const;
 

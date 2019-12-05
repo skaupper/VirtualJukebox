@@ -94,7 +94,7 @@ bool Device::isRestricted() {
   return mIsRestricted;
 }
 
-Playback::Playback(nlohmann::json playbackJson) {
+Playback::Playback(nlohmann::json const& playbackJson) {
   std::cout << playbackJson.dump(4) << std::endl;
   for (auto& [key, value] : playbackJson.items()) {
     if (key == "device") {
@@ -142,7 +142,7 @@ bool Playback::getShuffleState() {
   return mShuffleState;
 }
 
-Artist::Artist(nlohmann::json artistJson) {
+Artist::Artist(nlohmann::json const& artistJson) {
   for (auto& [key, value] : artistJson.items()) {
     if (key == "href") {
       mHref = value;
@@ -173,7 +173,7 @@ std::string const& Artist::getUri() const {
   return mUri;
 }
 
-Image::Image(nlohmann::json imageJson) {
+Image::Image(nlohmann::json const& imageJson) {
   for (auto& [key, value] : imageJson.items()) {
     if (key == "height") {
       mHeight = value;
@@ -194,10 +194,10 @@ std::string const& Image::getUrl() const {
   return mUrl;
 }
 
-Album::Album(nlohmann::json albumJson) {
+Album::Album(nlohmann::json const& albumJson) {
   for (auto& [key, value] : albumJson.items()) {
     if (key == "artists") {
-      for (nlohmann::json& elem : value) {
+      for (auto& elem : value) {
         mArtists.emplace_back(Artist(elem));
       }
     } else if (key == "album_type") {
@@ -215,7 +215,7 @@ Album::Album(nlohmann::json albumJson) {
     } else if (key == "type") {
       mType = value;
     } else if (key == "images") {
-      for (nlohmann::json& elem : value) {
+      for (auto& elem : value) {
         mImages.emplace_back(Image(elem));
       }
     }
@@ -250,10 +250,10 @@ std::vector<Image> const& Album::getImages() const {
   return mImages;
 }
 
-Track::Track(nlohmann::json trackJson) {
+Track::Track(nlohmann::json const& trackJson) {
   for (auto& [key, value] : trackJson.items()) {
     if (key == "artists") {
-      for (nlohmann::json& elem : trackJson["artists"]) {
+      for (auto& elem : value) {
         mArtists.emplace_back(Artist(elem));
       }
     } else if (key == "album") {
@@ -294,7 +294,65 @@ std::string const& Track::getUri() const {
   return mUri;
 }
 
-SpotifyError::SpotifyError(nlohmann::json errorJson) {
+SpotifyPaging::SpotifyPaging(nlohmann::json const& pagingJson) {
+  for (auto& [key, value] : pagingJson.items()) {
+    if (key == "artists") {
+      for (auto& elem : value) {
+        mArtists.emplace_back(Artist(elem));
+      }
+    } else if (key == "albums") {
+      for (auto& elem : value) {
+        mAlbums.emplace_back(Album(elem));
+      }
+    } else if (key == "tracks") {
+      for (auto& elem : value) {
+        mTracks.emplace_back(Track(elem));
+      }
+    } else if (key == "href") {
+      mHref = value;
+    } else if (key == "limit") {
+      mLimit = value;
+    } else if (key == "next") {
+      mNext = value;
+    } else if (key == "offset") {
+      mOffset = value;
+    } else if (key == "previous") {
+      mPrevious = value;
+    } else if (key == "total") {
+      mTotal = value;
+    }
+  }
+}
+
+std::vector<Track> const& SpotifyPaging::getTracks() {
+  return mTracks;
+}
+std::vector<Artist> const& SpotifyPaging::getArtists() {
+  return mArtists;
+}
+std::vector<Album> const& SpotifyPaging::getAlbums() {
+  return mAlbums;
+}
+std::string const& SpotifyPaging::getHref() {
+  return mHref;
+}
+int SpotifyPaging::getLimit() {
+  return mLimit;
+}
+std::string const& SpotifyPaging::getNext() {
+  return mNext;
+}
+int SpotifyPaging::getOffset() {
+  return mOffset;
+}
+std::string const& SpotifyPaging::getPrevious() {
+  return mPrevious;
+}
+int SpotifyPaging::getTotal() {
+  return mTotal;
+}
+
+SpotifyError::SpotifyError(nlohmann::json const& errorJson) {
   std::cout << "Error: " << errorJson.dump(4) << std::endl;
   for (auto& [key, value] : errorJson.items()) {
     if (key == "status") {
