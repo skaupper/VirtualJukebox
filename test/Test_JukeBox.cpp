@@ -1,3 +1,12 @@
+/*****************************************************************************/
+/**
+ * @file    Test_ConfigHandler.cpp
+ * @author  Michael Wurm <wurm.michael95@gmail.com>
+ *          Team Server
+ * @brief   Test implementation for class JukeBox
+ */
+/*****************************************************************************/
+
 #include <gtest/gtest.h>
 
 #include <iostream>
@@ -31,19 +40,3 @@ TEST(JukeBox, generateSession) {
   string value = get<string>(ret);
   EXPECT_EQ(value, ss.str());
 }
-
-/* TEST(JukeBox, getValueInt_InvalidKeyFormat) {
-  string const section = "MainParams";
-  string const key = "wrongFormat";
-
-  shared_ptr<ConfigHandler> conf = ConfigHandler::getInstance();
-  auto setfile = conf->setConfigFilePath(configFilePath);
-  ASSERT_EQ(checkOptionalError(setfile), false);
-
-  TResult<int> ret = conf->getValueInt(section, key);
-
-  ASSERT_EQ(checkAlternativeError(ret), true);
-
-  EXPECT_EQ(get<Error>(ret).getErrorCode(), ErrorCode::InvalidFormat);
-}
- */

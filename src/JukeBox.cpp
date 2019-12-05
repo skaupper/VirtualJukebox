@@ -42,7 +42,7 @@ TResult<TSessionID> JukeBox::generateSession(optional<TPassword> const &pw,
   if (holds_alternative<Error>(adminPw))
     return get<Error>(adminPw);
 
-  string name = "";
+  string name = "(no nickname given)";
   if (nickname.has_value()) {
     name = nickname.value();
     // user.Name = name;
