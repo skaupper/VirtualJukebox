@@ -60,9 +60,16 @@ TResult<Token> SpotifyAPI::getAccessToken(GrantType grantType,
     Token token(tokenJson);
     return std::move(token);
   } else {
-    SpotifyError er(tokenJson);
-    return errorParser(er);
+    // check for error object
+    if (tokenJson.find("error") != tokenJson.end()) {
+      SpotifyError spotifyError(tokenJson["error"]);
+      return errorParser(spotifyError);
+    }
   }
+
+  // if we reach here spotify sent an unexpected message
+  return Error(ErrorCode::SpotifyAPIError,
+               "Spotify sent an unexpected message");
 }
 
 TResult<std::vector<Device>> SpotifyAPI::getAvailableDevices(
@@ -86,8 +93,6 @@ TResult<std::vector<Device>> SpotifyAPI::getAvailableDevices(
     deviceListJson = nlohmann::json::parse(response.body);
 
     if (response.code == cHTTPOK) {
-      std::cout << deviceListJson.dump(2) << std::endl;
-
       // check if devices exist
       if (deviceListJson.find("devices") != deviceListJson.end()) {
         for (nlohmann::json &elem : deviceListJson["devices"]) {
@@ -97,18 +102,19 @@ TResult<std::vector<Device>> SpotifyAPI::getAvailableDevices(
       }
 
     } else {
-      // check for error string
+      // check for error object
       if (deviceListJson.find("error") != deviceListJson.end()) {
-        SpotifyError spotifyError(deviceListJson);
+        SpotifyError spotifyError(deviceListJson["error"]);
         return errorParser(spotifyError);
       }
     }
-    // if we reach here or the exception gets thrown spotify sent an unexpected
-    // message
   } catch (...) {
     // parse exception
+    return Error(ErrorCode::SpotifyParseError,
+                 "[SpotifyAPI] received json couldn't be parsed");
   }
-  return Error(ErrorCode::SpotifyParseError,
+  // if we reach here spotify sent an unexpected message
+  return Error(ErrorCode::SpotifyAPIError,
                "Spotify sent an unexpected message");
 }
 
@@ -127,27 +133,48 @@ TResult<Playback> SpotifyAPI::getCurrentPlayback(std::string const &accessToken,
   auto response = client->get("/v1/me/player");
 
   nlohmann::json playbackJson;
-
+  if (response.code == cNoContent) {
+    LOG(INFO) << "[SotifyAPI] in getCurrentPlayback, no content received"
+              << std::endl;
+    return Playback();
+  }
   try {
     playbackJson = nlohmann::json::parse(response.body);
-    std::cout << playbackJson.dump(4) << std::endl;
-  } catch (...) {
-  }
 
-  return Error(ErrorCode::NotImplemented, "test");
+    if (response.code == cHTTPOK) {
+      return Playback(playbackJson);
+
+    } else {
+      // check for error object
+      if (playbackJson.find("error") != playbackJson.end()) {
+        SpotifyError spotifyError(playbackJson["error"]);
+        return errorParser(spotifyError);
+      }
+    }
+    // if we reach here or the exception gets thrown spotify sent an unexpected
+    // message
+  } catch (...) {
+    // parse exception
+    return Error(ErrorCode::SpotifyParseError,
+                 "[SpotifyAPI] received json couldn't be parsed");
+  }
+  // if we reach here spotify sent an unexpected message
+  return Error(ErrorCode::SpotifyAPIError,
+               "Spotify sent an unexpected message");
 }
 
 Error SpotifyAPI::errorParser(SpotifyApi::SpotifyError const &error) {
   if (error.getStatus() == cHTTPUnouthorized) {
-    if (error.getMessage() == "Invalid access token") {
+    if (error.getMessage().find("Invalid access token") != std::string::npos) {
       return Error(ErrorCode::AccessDenied, error.getMessage());
-    } else if (error.getMessage() == "The access token expired") {
+    } else if (error.getMessage().find("The access token expired") !=
+               std::string::npos) {
       return Error(ErrorCode::SessionExpired, error.getMessage());
     }
   } else {
     // unhandled spotify error
     LOG(ERROR) << "[SpotifyAPI]: Error " << error.getMessage()
-               << " Code: " << error.getStatus() << std::endl;
+               << " Status: " << error.getStatus() << std::endl;
     return Error(ErrorCode::SpotifyAPIError, error.getMessage());
   }
 }

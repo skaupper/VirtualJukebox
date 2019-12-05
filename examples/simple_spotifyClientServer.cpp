@@ -31,18 +31,22 @@ int main(void) {
   // }
 
   std::string accessToken(
-      "BQBoxQyiKxFjmzf78m4uhZSuN5h3yqykqxCn1KJkJ_OmKVWv1wCjKfWjKru54iFhO5iNWO_"
-      "U8EnTgMx9FnGm_0C6ZN1HjTTWuwiEUoMGMbVUpM-iu361Zk9rIIk5cKj0VE0ay6mvGo75Et-"
-      "MduQpYhm8FTexTLKxR0npMy691_Yh4V0pOWc0IX2Ae85ZVfPZJQ");
+      "BQAFMvFgnSfjXzOrQW9FSDa2kP3z_"
+      "E6n8JiX4bh4WNlkcEX788dMx5Ieh4jKFCBwaS6wq66g2gjmOPsOgfdwR9VYtmLGFtplXntOO"
+      "WYo8trzHTViLqvTAudo3G1FGHIiP60U46F3WbURNJbJA2RbH2R7jCeBpzvXUDob0lIcs_"
+      "UdRvM6nQu1dRC3kPk39dEJZw");
   SpotifyApi::SpotifyAPI api;
   api.getAvailableDevices(accessToken);
-  api.getCurrentPlayback(accessToken);
 
-  if (auto value = std::get_if<std::string>(&test)) {
-    std::cout << *value << std::endl;
+  TResult<SpotifyApi::Playback> ret;
+  ret = api.getCurrentPlayback(accessToken);
+  if (auto val = std::get_if<Error>(&ret)) {
+    cout << "errorMessage: " << val->getErrorMessage() << std::endl;
   } else {
-    auto err = std::get<Error>(test);
-    std::cout << err.getErrorMessage();
+    auto playb = get<SpotifyApi::Playback>(ret);
+    std::cout << "playing:" << playb.isPlaying() << endl
+              << "progress_ms" << playb.getProgressMs() << endl
+              << "Device: " << playb.getDevice().getName() << endl;
   }
 
   return 0;

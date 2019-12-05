@@ -54,6 +54,7 @@ class SpotifyAPI {
   int const cHTTPTimeout = 408;
   int const cHTTPUnouthorized = 401;
   int const cHTTPOK = 200;
+  int const cNoContent = 204;
 };
 
 }  // namespace SpotifyApi
