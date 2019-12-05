@@ -9,12 +9,9 @@
 #include <chrono>
 #include <memory>
 
-
 #include "Types/Result.h"
-
 #include "Utils/ConfigHandler.h"
 #include "Utils/LoggingHandler.h"
-
 #include "httpserver.hpp"
 
 using namespace SpotifyApi;
@@ -187,17 +184,14 @@ std::string SpotifyAuthorization::getFromQueryString(std::string const &query,
   return value;
 }
 
-
 std::string SpotifyAuthorization::stringUrlEncode(std::string const &str) {
-  std::map<char,std::string> const replaceMap = {
-          {' ', "%20"},
-          {'/', "%2F"},
-          {';',"%3B"}
-  };
-  std::string urlEncoded="";
-  for(auto &elem:str){
-    if(replaceMap.find(elem)!=replaceMap.end()){
-      
+  std::map<char, std::string> const replaceMap = {
+      {' ', "%20"}, {'/', "%2F"}, {';', "%3B"}};
+
+  std::string urlEncoded = "";
+  for (auto &elem : str) {
+    if (replaceMap.find(elem) != replaceMap.end()) {
+      urlEncoded.
     }
   }
 }

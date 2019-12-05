@@ -6,20 +6,16 @@
 
 #include <iostream>
 
-
-#include "Utils/ConfigHandler.h"
 #include "Spotify/SpotifyAPI.h"
 #include "Spotify/SpotifyAPITypes.h"
 #include "Spotify/SpotifyAuthorization.h"
+#include "Utils/ConfigHandler.h"
 
 using namespace std;
 
 int main(void) {
-
-
   //  SpotifyApi::SpotifyAuthorization auth;
   //  auth.startServer();
-
 
   // std::string
   // accessToken("BQBoxQyiKxFjmzf78m4uhZSuN5h3yqykqxCn1KJkJ_OmKVWv1wCjKfWjKru54iFhO5iNWO_"
@@ -36,12 +32,10 @@ int main(void) {
 
   if (auto value = std::get_if<std::string>(&test)) {
     std::cout << *value << std::endl;
-  }
-  else{
+  } else {
     auto err = std::get<Error>(test);
     std::cout << err.getErrorMessage();
   }
-
 
   return 0;
 }
