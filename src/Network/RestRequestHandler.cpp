@@ -14,8 +14,8 @@
 #include <iostream>
 #include <sstream>
 
-#include "Utils/LoggingHandler.h"
 #include "RestEndpointHandlers.h"
+#include "Utils/LoggingHandler.h"
 #include "json/json.hpp"
 
 using namespace std;

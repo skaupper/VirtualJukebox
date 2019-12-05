@@ -7,9 +7,9 @@
 #ifndef SPOTIFYAUTHORIZATION_H_INCLUDED
 #define SPOTIFYAUTHORIZATION_H_INCLUDED
 
-#include "Types/Result.h"
 #include "SpotifyAPI.h"
 #include "SpotifyAPITypes.h"
+#include "Types/Result.h"
 #include "httpserver.hpp"
 
 namespace SpotifyApi {
