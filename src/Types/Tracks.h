@@ -9,7 +9,7 @@
 #ifndef _TRACKS_H_
 #define _TRACKS_H_
 
-#include "GlobalTypes.h"
+#include "Types/GlobalTypes.h"
 
 class BaseTrack {
  public:

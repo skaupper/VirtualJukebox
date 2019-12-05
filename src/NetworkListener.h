@@ -13,9 +13,9 @@
 #include <variant>
 #include <vector>
 
-#include "GlobalTypes.h"
-#include "Queue.h"
-#include "Result.h"
+#include "Types/GlobalTypes.h"
+#include "Types/Queue.h"
+#include "Types/Result.h"
 
 /**
  * @brief Provides interface methods for all supported requests.

@@ -1,6 +1,6 @@
 /*****************************************************************************/
 /**
- * @file    ConfigHandler.h
+ * @file    Utils/ConfigHandler.h
  * @author  Michael Wurm <wurm.michael95@gmail.com>
  * @brief   Class ConfigHandler definition
  */
@@ -15,7 +15,7 @@
 #include <string>
 
 #include "../lib/SimpleIni/SimpleIni.h"
-#include "Result.h"
+#include "Types/Result.h"
 
 class ConfigHandler {
  public:

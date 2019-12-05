@@ -1,6 +1,6 @@
 /*****************************************************************************/
 /**
- * @file    GlobalTypes.h
+ * @file    "Types/GlobalTypes.h"
  * @author  Michael Wurm <wurm.michael95@gmail.com>
  * @brief   Defines types and constants that are used globally
  */

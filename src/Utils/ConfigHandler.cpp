@@ -6,7 +6,7 @@
  */
 /*****************************************************************************/
 
-#include "ConfigHandler.h"
+#include "Utils/ConfigHandler.h"
 
 #include <string>
 

@@ -6,9 +6,9 @@
 
 #include <iostream>
 
-#include "SpotifyApi/SpotifyAPI.h"
-#include "SpotifyApi/SpotifyAPITypes.h"
-#include "SpotifyApi/SpotifyAuthorization.h"
+#include "Spotify/SpotifyAPI.h"
+#include "Spotify/SpotifyAPITypes.h"
+#include "Spotify/SpotifyAuthorization.h"
 
 using namespace std;
 
