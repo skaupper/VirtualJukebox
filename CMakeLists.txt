@@ -64,9 +64,9 @@ set(APP_SOURCES         src/JukeBox.cpp
                         src/Utils/ConfigHandler.cpp
                         src/Utils/Serializer.cpp
                         src/Spotify/SpotifyBackend.cpp
-                        src/Spotify/SpotifyApi/SpotifyAPITypes.cpp
-                        src/Spotify/SpotifyApi/SpotifyAPI.cpp
-                        src/Spotify/SpotifyApi/SpotifyAuthorization.cpp
+                        src/Spotify/SpotifyAPITypes.cpp
+                        src/Spotify/SpotifyAPI.cpp
+                        src/Spotify/SpotifyAuthorization.cpp
                         src/Network/NetworkAPI.cpp
                         src/Network/RestAPI.cpp
                         src/Network/RestRequestHandler.cpp
@@ -83,9 +83,9 @@ set(APP_HEADER          src/JukeBox.h
                         src/Utils/ConfigHandler.h
                         src/Utils/Serializer.h
                         src/Spotify/SpotifyBackend.h
-                        src/Spotify/SpotifyApi/SpotifyAPITypes.h
-                        src/Spotify/SpotifyApi/SpotifyAPI.h
-                        src/Spotify/SpotifyApi/SpotifyAuthorization.h
+                        src/Spotify/SpotifyAPITypes.h
+                        src/Spotify/SpotifyAPI.h
+                        src/Spotify/SpotifyAuthorization.h
                         src/Network/NetworkAPI.h
                         src/Network/RestAPI.h
                         src/Network/RestRequestHandler.h
