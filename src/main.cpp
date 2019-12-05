@@ -20,13 +20,16 @@ using namespace std;
 
 int main(int argc, char* argv[]) {
   JukeBox jukebox;
-
-  initLogging(argv[0]);
-
-  LOG(INFO) << "Hello world from JukeBox main.cpp !";
-
   string configFilePath = "../jukebox_config.ini";
   jukebox.start(configFilePath);
+
+  auto ret = initLogging(argv[0]);
+  if (ret.has_value()) {
+    cerr << ret.value().getErrorMessage() << endl;
+    return 1;
+  }
+
+  LOG(INFO) << "Hello world from JukeBox main.cpp !";
 
   DLOG(INFO) << "Logging the first DEBUG message!";
   LOG(INFO) << "Logging the first INFO message!";
