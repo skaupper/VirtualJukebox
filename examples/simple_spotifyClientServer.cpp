@@ -6,15 +6,20 @@
 
 #include <iostream>
 
-#include "Spotify/SpotifyAPI.h"
-#include "Spotify/SpotifyAPITypes.h"
-#include "Spotify/SpotifyAuthorization.h"
+
+#include "ConfigHandler.h"
+#include "SpotifyApi/SpotifyAPI.h"
+#include "SpotifyApi/SpotifyAPITypes.h"
+#include "SpotifyApi/SpotifyAuthorization.h"
 
 using namespace std;
 
 int main(void) {
-  SpotifyApi::SpotifyAuthorization auth;
-  auth.startServer();
+
+
+  //  SpotifyApi::SpotifyAuthorization auth;
+  //  auth.startServer();
+
 
   // std::string
   // accessToken("BQBoxQyiKxFjmzf78m4uhZSuN5h3yqykqxCn1KJkJ_OmKVWv1wCjKfWjKru54iFhO5iNWO_"
@@ -23,6 +28,20 @@ int main(void) {
   // SpotifyApi::SpotifyAPI api;
   // api.getAvailableDevices(accessToken);
   // api.getCurrentPlayback(accessToken);
+
+  auto config = ConfigHandler::getInstance();
+  config->setConfigFilePath("../../jukebox_config.ini");
+
+  auto test = config->getValueString("Spotify", "scopes");
+
+  if (auto value = std::get_if<std::string>(&test)) {
+    std::cout << *value << std::endl;
+  }
+  else{
+    auto err = std::get<Error>(test);
+    std::cout << err.getErrorMessage();
+  }
+
 
   return 0;
 }

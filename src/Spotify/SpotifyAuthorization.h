@@ -16,7 +16,7 @@ namespace SpotifyApi {
 
 class SpotifyAuthorization : public httpserver::http_resource {
  public:
-  bool startServer(void);
+  TResultOpt startServer(void);
   std::string const &getRefreshToken(void);
   std::string const &getAccessToken(void);
   TResultOpt refreshAccessToken(void);
@@ -27,12 +27,10 @@ class SpotifyAuthorization : public httpserver::http_resource {
  private:
   Token mToken;
   __int64_t mTokenReceiveTime = 0;
-  std::string mClientID = "f589b31542ca45a98c076460a021e086";
-  std::string mScopes =
-      "user-read-private%20user-read-email%20app-remote-control%20user-modify-"
-      "playback-state";
+  std::string mClientID = "";
+  std::string mScopes = "";  // dont forget urlencode
   std::string mRedirectUri = "http%3A%2F%2Flocalhost%3A8080%2FspotifyCallback";
-  std::string mClientSecret = "0a82fbaa5fae43f0904776d6f695a7ad";
+  std::string mClientSecret = "";
 
   const std::shared_ptr<httpserver::http_response> render(
       httpserver::http_request const &request);
@@ -45,6 +43,7 @@ class SpotifyAuthorization : public httpserver::http_resource {
   std::string generateRandomString(size_t length);
   std::string getFromQueryString(std::string const &query,
                                  std::string const &key);
+  std::string stringUrlEncode(std::string const &str);
 };
 
 }  // namespace SpotifyApi

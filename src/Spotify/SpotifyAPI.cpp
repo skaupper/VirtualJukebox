@@ -48,12 +48,20 @@ TResult<Token> SpotifyAPI::getAccessToken(GrantType grantType,
 
   client->SetTimeout(cRequestTimeout);
   auto response = client->post("/api/token", body);
+  nlohmann::json tokenJson;
+  try {
+    tokenJson = nlohmann::json::parse(response.body);
+  } catch (...) {
+    return Error(ErrorCode::SpotifyParseError,
+                 "[SpotifyAPI] in get AccessToken Json received Parse Error");
+  }
 
   if (response.code == cHTTPOK) {
-    Token token(nlohmann::json::parse(response.body));
+    Token token(tokenJson);
     return std::move(token);
   } else {
-    return Error(ErrorCode::AccessDenied, "Access denied");
+    SpotifyError er(tokenJson);
+    return Error(ErrorCode::SpotifyAPIError, er.getMessage());
   }
 }
 
