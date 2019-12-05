@@ -75,10 +75,10 @@ TResultOpt RAMDataStore::addTrack(Track track, QueueType q) {
   }
 
   // check for existing Track
-  auto it = find(pQueue->Tracks.begin(), pQueue->Tracks.end(), track);
-  if (it == pQueue->Tracks.end()) {
+  auto it = find(pQueue->tracks.begin(), pQueue->tracks.end(), track);
+  if (it == pQueue->tracks.end()) {
     // Track is unique, insert it into vector
-    pQueue->Tracks.emplace_back(track);
+    pQueue->tracks.emplace_back(track);
   } else {
     return Error(ErrorCode::AlreadyExists, "Track already exists");
   }
@@ -98,12 +98,12 @@ TResult<Track> RAMDataStore::removeTrack(TTrackID ID, QueueType q) {
   // delete Track
   Track track;
   track.TrackID = ID;
-  auto it = find(pQueue->Tracks.begin(), pQueue->Tracks.end(), track);
-  if (it == pQueue->Tracks.end()) {
+  auto it = find(pQueue->tracks.begin(), pQueue->tracks.end(), track);
+  if (it == pQueue->tracks.end()) {
     return Error(ErrorCode::DoesntExist, "Track doesnt exist in this Queue");
   } else {
     // Track is there, delete it from vector
-    pQueue->Tracks.emplace_back(track);
+    pQueue->tracks.emplace_back(track);
   }
 }
 
@@ -121,8 +121,8 @@ TResult<bool> RAMDataStore::hasTrack(TTrackID ID, QueueType q) {
   // find Track
   Track track;
   track.TrackID = ID;
-  auto it = find(pQueue->Tracks.begin(), pQueue->Tracks.end(), track);
-  if (it == pQueue->Tracks.end()) {
+  auto it = find(pQueue->tracks.begin(), pQueue->tracks.end(), track);
+  if (it == pQueue->tracks.end()) {
     return false;
   } else {
     return true;
