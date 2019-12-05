@@ -12,10 +12,13 @@
  * `RestAPI` in the INI file.
  */
 
+#include <glog/logging.h>
+
 #include <iostream>
 
 #include "ConfigHandler.h"
 #include "DummyData.h"
+#include "LoggingHandler.h"
 #include "RestAPI.h"
 
 using namespace std;
@@ -24,30 +27,30 @@ class EmptyNetworkListener : public NetworkListener {
   TResult<TSessionID> generateSession(
       optional<TPassword> const &pw,
       optional<string> const &nickname) override {
-    cout << "generateSession" << endl;
+    LOG(INFO) << "generateSession";
     if (pw.has_value()) {
-      cout << "Password: " << pw.value() << endl;
+      LOG(INFO) << "Password: " << pw.value();
     } else {
-      cout << "No password" << endl;
+      LOG(INFO) << "No password";
     }
     if (nickname.has_value()) {
-      cout << "Nickname: " << nickname.value() << endl;
+      LOG(INFO) << "Nickname: " << nickname.value();
     } else {
-      cout << "No nickname" << endl;
+      LOG(INFO) << "No nickname";
     }
     return static_cast<TSessionID>("12345678");
   }
 
   TResult<vector<BaseTrack>> queryTracks(string const &searchPattern,
                                          size_t const nrOfEntries) override {
-    cout << "Pattern: " << searchPattern << endl;
-    cout << "Number of entries: " << nrOfEntries << endl;
+    LOG(INFO) << "Pattern: " << searchPattern;
+    LOG(INFO) << "Number of entries: " << nrOfEntries;
 
     return TRACK_LIST;
   }
 
   TResult<QueueStatus> getCurrentQueues(TSessionID const &sid) override {
-    cout << "Session ID: " << sid << endl;
+    LOG(INFO) << "Session ID: " << sid;
 
     QueueStatus status;
     status.normalQueue = NORMAL_QUEUE;
@@ -59,12 +62,12 @@ class EmptyNetworkListener : public NetworkListener {
   TResultOpt addTrackToQueue(TSessionID const &sid,
                              TTrackID const &trkid,
                              QueueType type) override {
-    cout << "Session ID: " << sid << endl;
-    cout << "Track ID: " << trkid << endl;
+    LOG(INFO) << "Session ID: " << sid;
+    LOG(INFO) << "Track ID: " << trkid;
     if (type == QueueType::Normal) {
-      cout << "Normal queue" << endl;
+      LOG(INFO) << "Normal queue";
     } else if (type == QueueType::Admin) {
-      cout << "Admin queue" << endl;
+      LOG(INFO) << "Admin queue";
     } else {
       return Error(ErrorCode::InvalidValue, "Unknown player action");
     }
@@ -74,37 +77,37 @@ class EmptyNetworkListener : public NetworkListener {
   TResultOpt voteTrack(TSessionID const &sid,
                        TTrackID const &trkid,
                        TVote vote) override {
-    cout << "Session ID: " << sid << endl;
-    cout << "Track ID: " << trkid << endl;
+    LOG(INFO) << "Session ID: " << sid;
+    LOG(INFO) << "Track ID: " << trkid;
     if (vote) {
-      cout << "Vote set" << endl;
+      LOG(INFO) << "Vote set";
     } else {
-      cout << "Vote revoked" << endl;
+      LOG(INFO) << "Vote revoked";
     }
     return nullopt;
   }
 
   TResultOpt controlPlayer(TSessionID const &sid,
                            PlayerAction action) override {
-    cout << "Session ID: " << sid << endl;
+    LOG(INFO) << "Session ID: " << sid;
     switch (action) {
       case PlayerAction::Play:
-        cout << "Play" << endl;
+        LOG(INFO) << "Play";
         break;
       case PlayerAction::Pause:
-        cout << "Pause" << endl;
+        LOG(INFO) << "Pause";
         break;
       case PlayerAction::Stop:
-        cout << "Stop" << endl;
+        LOG(INFO) << "Stop";
         break;
       case PlayerAction::Skip:
-        cout << "Skip" << endl;
+        LOG(INFO) << "Skip";
         break;
       case PlayerAction::VolumeDown:
-        cout << "VolumeDown" << endl;
+        LOG(INFO) << "VolumeDown";
         break;
       case PlayerAction::VolumeUp:
-        cout << "VolumeUp" << endl;
+        LOG(INFO) << "VolumeUp";
         break;
       default:
         return Error(ErrorCode::InvalidValue, "Unknown player action");
@@ -114,34 +117,36 @@ class EmptyNetworkListener : public NetworkListener {
 
   TResultOpt removeTrack(TSessionID const &sid,
                          TTrackID const &trkid) override {
-    cout << "Session ID: " << sid << endl;
-    cout << "Track ID: " << trkid << endl;
+    LOG(INFO) << "Session ID: " << sid;
+    LOG(INFO) << "Track ID: " << trkid;
     return nullopt;
   }
   TResultOpt moveTrack(TSessionID const &sid,
                        TTrackID const &trkid,
                        QueueType type) override {
-    cout << "Session ID: " << sid << endl;
-    cout << "Track ID: " << trkid << endl;
+    LOG(INFO) << "Session ID: " << sid;
+    LOG(INFO) << "Track ID: " << trkid;
     return nullopt;
   }
 };
 
 int main(int argc, char *argv[]) {
   if (argc != 2) {
-    cout << "Usage: " << argv[0] << " <path_to_config_file>" << endl;
-    return 0;
+    /* Print to cerr here, since LoggingHandler is uninitialized */
+    cerr << "Usage: " << string(argv[0]) << " <path_to_config_file>" << endl;
+    return 1;
   }
 
   EmptyNetworkListener listener;
   RestAPI api;
 
   ConfigHandler::getInstance()->setConfigFilePath(argv[1]);
+  initLoggingHandler(argv[0]);
 
   api.setListener(&listener);
   auto result = api.handleRequests();
   if (result.has_value()) {
-    cerr << result.value().getErrorMessage() << endl;
+    LOG(ERROR) << result.value().getErrorMessage();
   }
 
   return 0;

@@ -26,6 +26,7 @@ class ConfigHandler {
   TResult<std::string> getValueString(std::string const& section,
                                       std::string const& key);
   TResult<int> getValueInt(std::string const& section, std::string const& key);
+  bool isInitialized();
 
  private:
   ConfigHandler() = default;                                // hide default ctor
@@ -36,6 +37,7 @@ class ConfigHandler {
   std::string mConfigFilePath;
 
   CSimpleIniA mIni;
+  bool mIsInitialized = false;
 };
 
 #endif /* _CONFIGHANDLER_H_ */

@@ -3,8 +3,11 @@
  * @file    main.cpp
  * @author  Team Server
  * @brief   Main program for project "Virtual JukeBox"
+ * @details Usage: ./executable [<filepath-to-config-file.ini>]
  */
 /*****************************************************************************/
+
+#include <glog/logging.h>
 
 #include <iostream>
 #include <string>
@@ -16,17 +19,27 @@
 
 using namespace std;
 
-int main() {
-  JukeBox jukebox;
-  LoggingHandler log;
-
-  cout << "Hello world from JukeBox main.cpp !" << endl;
-
+int main(int argc, char* argv[]) {
   string configFilePath = "../jukebox_config.ini";
-  jukebox.start(configFilePath);
+  if (argc > 1) {
+    configFilePath = argv[1];
+  } else {
+    cout << "INFO: No filename was specified for *.ini configuration file. "
+         << "Using '" << configFilePath << "' as a default fallback." << endl;
+  }
 
-  log.logInfo("Logging the first info message!");
-  log.logError("Logging the first error message!");
+  JukeBox jukebox;
+  if (!jukebox.start(argv[0], configFilePath)) {
+    /* Print to cerr here, since LoggingHandler is uninitialized */
+    cerr << "ERROR: Exiting program due to fatal error in Jukebox.start()"
+         << endl;
+    return 1;
+  }
+
+  DLOG(INFO) << "Logging a DEBUG message!";
+  LOG(INFO) << "Logging an INFO message!";
+  LOG(WARNING) << "Logging a WARNING message!";
+  LOG(ERROR) << "Logging an ERROR message!";
 
   return 0;
 }

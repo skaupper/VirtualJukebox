@@ -19,8 +19,7 @@ TEST(ConfigHandler, getValueString_HappyCase) {
 
   TResult<string> ret = conf->getValueString(section, key);
 
-  bool error = holds_alternative<Error>(ret);
-  ASSERT_EQ(error, false);
+  ASSERT_EQ(checkAlternativeError(ret), false);
 
   string value = get<string>(ret);
   EXPECT_EQ(value, "192.168.0.101");
@@ -47,8 +46,7 @@ TEST(ConfigHandler, getValueInt_HappyCase) {
 
   TResult<int> ret = conf->getValueInt(section, key);
 
-  bool error = holds_alternative<Error>(ret);
-  ASSERT_EQ(error, false);
+  ASSERT_EQ(checkAlternativeError(ret), false);
 
   int value = get<int>(ret);
   EXPECT_EQ(value, 4711);
@@ -65,10 +63,9 @@ TEST(ConfigHandler, getValueInt_InvalidKeyFormat) {
 
   TResult<int> ret = conf->getValueInt(section, key);
 
-  bool error = holds_alternative<Error>(ret);
-  ASSERT_EQ(error, true);
+  ASSERT_EQ(checkAlternativeError(ret), true);
+
   EXPECT_EQ(get<Error>(ret).getErrorCode(), ErrorCode::InvalidFormat);
-  cout << "Error message is: " << get<Error>(ret).getErrorMessage() << endl;
 }
 
 TEST(ConfigHandler, getValueInt_KeyNotFound) {
@@ -82,10 +79,8 @@ TEST(ConfigHandler, getValueInt_KeyNotFound) {
 
   TResult<int> ret = conf->getValueInt(section, key);
 
-  bool error = holds_alternative<Error>(ret);
-  ASSERT_EQ(error, true);
+  ASSERT_EQ(checkAlternativeError(ret), true);
   EXPECT_EQ(get<Error>(ret).getErrorCode(), ErrorCode::KeyNotFound);
-  cout << "Error message is: " << get<Error>(ret).getErrorMessage() << endl;
 }
 
 TEST(ConfigHandler, getValueString_KeyNotFound) {
@@ -99,8 +94,6 @@ TEST(ConfigHandler, getValueString_KeyNotFound) {
 
   TResult<string> ret = conf->getValueString(section, key);
 
-  bool error = holds_alternative<Error>(ret);
-  ASSERT_EQ(error, true);
+  ASSERT_EQ(checkAlternativeError(ret), true);
   EXPECT_EQ(get<Error>(ret).getErrorCode(), ErrorCode::KeyNotFound);
-  cout << "Error message is: " << get<Error>(ret).getErrorMessage() << endl;
 }

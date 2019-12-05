@@ -8,10 +8,13 @@
 
 #include "RestRequestHandler.h"
 
+#include <glog/logging.h>
+
 #include <cassert>
 #include <iostream>
 #include <sstream>
 
+#include "LoggingHandler.h"
 #include "RestEndpointHandlers.h"
 #include "json/json.hpp"
 
@@ -95,10 +98,10 @@ shared_ptr<http_response> const RestRequestHandler::render(
     return NotFoundHandler(req);
   }
 
-  cout << "Path: " << req.get_path() << endl;
-  cout << "Method: " << req.get_method() << endl;
-  cout << "Body: " << req.get_content() << endl;
-  cout << "Query parameters: " << req.get_querystring() << endl;
+  LOG(INFO) << "Path: " << req.get_path();
+  LOG(INFO) << "Method: " << req.get_method();
+  LOG(INFO) << "Body: " << req.get_content();
+  LOG(INFO) << "Query parameters: " << req.get_querystring();
 
   // truncate the base path
   auto path = req.get_path().substr(API_BASE_PATH.size());

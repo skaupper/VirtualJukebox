@@ -7,7 +7,7 @@
 This project is developed as part of an university lecture regarding software projects.
 
 The main purpose of __VirtualJukebox__ is to provide a server application which manages a music playlist shared by
-multiple client. The clients are capable of adding tracks to the user playlist and voting on tracks to play next. The track
+multiple clients. The clients are capable of adding tracks to the user playlist and voting on tracks to play next. The track
 with the highest vote count is played next.
 Additionally, a client can authenticate as administrator who is then capable of adding tracks to the admin playlist
 whose tracks are always played before any track from the user playlist. Besides that, the administrator has some further
@@ -19,6 +19,8 @@ This repository contains the sources for the server as well as instructions on h
 ## Dependencies
 
 - CMake (minimum version 3.9)
+- Google Test
+- Google Log
 - Doxygen
 - clang-format-6.0
 - libcurl-dev
@@ -36,6 +38,8 @@ For these dependencies there are scripts provided which clone, build and install
 Note that these scripts require root privileges in order to install the library files and the corresponding headers
 to your system directories (the final step gets executed using `sudo`)!
 
+NOTE: Install dependencies in below listed order.
+
 Bundled dependencies are:
 
 - libhttpserver
@@ -44,10 +48,10 @@ Bundled dependencies are:
 ### Installation of dependencies on Ubuntu 18.04
 
 Since installing the dependencies is not always straight-forward, the following commands can be used to install all
-listed dependencies.
+listed dependencies, that are required to install manually.
 
 - `sudo apt-get install build-essential cmake doxygen clang-format-6.0`
-- `sudo apt-get install libmicrohttpd-dev libcurl4-gnutls-dev`
+- `sudo apt-get install libmicrohttpd-dev libcurl4-gnutls-dev libgoogle-glog-dev`
 - `sudo apt-get install automake libtool`
 - `./scripts/install_libhttpserver.sh`
 - `./scripts/install_restclient-cpp.sh`

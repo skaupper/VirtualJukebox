@@ -27,7 +27,7 @@
 
 class JukeBox : public NetworkListener {
  public:
-  void start(std::string configFilePath);
+  bool start(std::string exeName, std::string configFilePath);
 
   TResult<TSessionID> generateSession(
       std::optional<TPassword> const &pw,

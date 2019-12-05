@@ -33,8 +33,10 @@ TResultOpt ConfigHandler::setConfigFilePath(string const& filepath) {
 
   SI_Error rc = mIni.LoadFile(mConfigFilePath.c_str());
   if (rc < 0)
-    return Error(ErrorCode::FileNotFound,
-                 "ConfigHandler.getValueString: Couldn't load file.");
+    return Error(
+        ErrorCode::FileNotFound,
+        "ConfigHandler.getValueString: Couldn't load file '" + filepath + "'.");
+  mIsInitialized = true;
   return nullopt;
 }
 
@@ -42,6 +44,11 @@ TResultOpt ConfigHandler::setConfigFilePath(string const& filepath) {
  */
 TResult<string> ConfigHandler::getValueString(string const& section,
                                               string const& key) {
+  if (!mIsInitialized) {
+    return Error(ErrorCode::NotInitialized,
+                 "ConfigHandler.getValueString: ConfigHandler is not "
+                 "initialized. Call setConfigFilePath() first.");
+  }
   const char* val = mIni.GetValue(section.c_str(), key.c_str(), nullptr);
   if (!val) {
     return Error(ErrorCode::KeyNotFound,
@@ -62,6 +69,11 @@ TResult<string> ConfigHandler::getValueString(string const& section,
  */
 TResult<int> ConfigHandler::getValueInt(string const& section,
                                         string const& key) {
+  if (!mIsInitialized) {
+    return Error(ErrorCode::NotInitialized,
+                 "ConfigHandler.getValueString: ConfigHandler is not "
+                 "initialized. Call setConfigFilePath() first.");
+  }
   auto valObj = getValueString(section, key);
   if (holds_alternative<Error>(valObj))
     return get<Error>(valObj);
@@ -75,13 +87,17 @@ TResult<int> ConfigHandler::getValueInt(string const& section,
   } catch (invalid_argument const&) {
     return Error(ErrorCode::InvalidFormat,
                  "ConfigHandler.getValueInt: Configuration value '" + section +
-                     "." + key + " is not an integer.");
+                     "." + key + "' is not an integer.");
   }
 
   if (idx != valStr.size()) {
     return Error(ErrorCode::InvalidFormat,
                  "ConfigHandler.getValueInt: Configuration value '" + section +
-                     "." + key + " must only consist of digits.");
+                     "." + key + "' must only consist of digits.");
   }
   return valInt;
+}
+
+bool ConfigHandler::isInitialized() {
+  return mIsInitialized;
 }

@@ -45,6 +45,7 @@ include(cmake/GoogleTest.cmake)
 
 find_package(Doxygen)
 find_package(Threads)
+include(cmake/FindGlog.cmake)
 
 ################################################################################
 # Source files
@@ -57,7 +58,6 @@ find_package(Threads)
 set(ENTRYPOINT_SOURCE   src/main.cpp)
 # All source file (excluding main) for the application
 set(APP_SOURCES         src/JukeBox.cpp
-                        src/Result.cpp
                         src/Tracks.cpp
                         src/Queue.cpp
                         src/LoggingHandler.cpp
@@ -68,7 +68,6 @@ set(APP_SOURCES         src/JukeBox.cpp
                         src/RestRequestHandler.cpp
                         src/RestEndpointHandlers.cpp
                         src/Serializer.cpp)
-
 
 set(APP_HEADER          src/JukeBox.h
                         src/Tracks.h
@@ -90,15 +89,18 @@ set(APP_HEADER          src/JukeBox.h
 # Libraries and include directories of dependencies used by the application
 set(APP_LIBRARIES       ${LIBHTTPSERVER_LIBRARIES}
                         ${LIBMICROHTTPD_LIBRARIES}
-                        ${LIBRESTCLIENT_LIBRARIES})
+                        ${LIBRESTCLIENT_LIBRARIES}
+                        ${GLOG_LIBRARY})
 set(APP_INCLUDE_DIRS    src/
                         lib/
                         ${LIBHTTPSERVER_INCLUDE_DIRS}
                         ${LIBMICROHTTPD_INCLUDE_DIRS}
-                        ${LIBRESTCLIENT_INCLUDE_DIRS})
+                        ${LIBRESTCLIENT_INCLUDE_DIRS}
+                        ${GLOG_INCLUDE_DIRS})
 
 # All source files containing test cases
 set(TEST_SOURCES        test/Test_ConfigHandler.cpp)
+
 # Libraries and include directories of dependencies used by the tests
 set(TEST_LIBRARIES      ${APP_LIBRARIES}
                         ${CMAKE_THREAD_LIBS_INIT}
