@@ -48,7 +48,7 @@ TResult<User> RAMDataStore::removeUser(TSessionID ID) {
 }
 
 // remove expired sessions
-TResult<std::vector<User>> RAMDataStore::checkSessionExpirations() {
+TResultOpt RAMDataStore::checkSessionExpirations() {
   // Exclusive Access to User List
   unique_lock<shared_mutex> MyLock(mUserMutex, defer_lock);
   MyLock.lock();
@@ -61,9 +61,11 @@ TResult<std::vector<User>> RAMDataStore::checkSessionExpirations() {
   // actually remove all expired sessions
   mUsers.erase(remove_if(mUsers.begin(), mUsers.end(), checkExpired),
                mUsers.end());
+
+  return nullopt;
 }
 
-TResultOpt RAMDataStore::addTrack(Track track, QueueType q) {
+TResultOpt RAMDataStore::addTrack(BaseTrack track, QueueType q) {
   // Exclusive Access to Song Queue
   unique_lock<shared_mutex> MyLock(mQueueMutex, defer_lock);
   MyLock.lock();
@@ -75,16 +77,24 @@ TResultOpt RAMDataStore::addTrack(Track track, QueueType q) {
   }
 
   // check for existing Track
-  auto it = find(pQueue->tracks.begin(), pQueue->tracks.end(), track);
+  QueuedTrack qtr;
+  qtr.trackId = track.trackId;
+  auto it = find(pQueue->tracks.begin(), pQueue->tracks.end(), qtr);
   if (it == pQueue->tracks.end()) {
     // Track is unique, insert it into vector
-    pQueue->tracks.emplace_back(track);
+    qtr.title = track.title;
+    qtr.album = track.album;
+    qtr.artist = track.artist;
+    qtr.duration = track.duration;
+    qtr.iconUri = track.iconUri;
+    qtr.addedBy = track.addedBy;
+    pQueue->tracks.push_back(qtr);
   } else {
     return Error(ErrorCode::AlreadyExists, "Track already exists");
   }
 }
 
-TResult<Track> RAMDataStore::removeTrack(TTrackID ID, QueueType q) {
+TResult<BaseTrack> RAMDataStore::removeTrack(TTrackID ID, QueueType q) {
   // Exclusive Access to Song Queue
   unique_lock<shared_mutex> MyLock(mQueueMutex, defer_lock);
   MyLock.lock();
@@ -96,8 +106,8 @@ TResult<Track> RAMDataStore::removeTrack(TTrackID ID, QueueType q) {
   }
 
   // delete Track
-  Track track;
-  track.TrackID = ID;
+  QueuedTrack track;
+  track.trackId = ID;
   auto it = find(pQueue->tracks.begin(), pQueue->tracks.end(), track);
   if (it == pQueue->tracks.end()) {
     return Error(ErrorCode::DoesntExist, "Track doesnt exist in this Queue");
@@ -119,8 +129,8 @@ TResult<bool> RAMDataStore::hasTrack(TTrackID ID, QueueType q) {
   }
 
   // find Track
-  Track track;
-  track.TrackID = ID;
+  QueuedTrack track;
+  track.trackId = ID;
   auto it = find(pQueue->tracks.begin(), pQueue->tracks.end(), track);
   if (it == pQueue->tracks.end()) {
     return false;
@@ -140,15 +150,26 @@ TResultOpt RAMDataStore::voteTrack(TSessionID sID, TTrackID tID, TVote vote) {
   user.SessionID = sID;
   auto it = find(mUsers.begin(), mUsers.end(), user);
   if (it == mUsers.end()) {
+      // User not found
     return Error(ErrorCode::DoesntExist, "User doesnt exist");
   } else {
+      // User found, look for Track
     auto it_track = find(it->votes.begin(), it->votes.end(), tID);
     if (it_track == it->votes.end()) {
       // Track not found
       return Error(ErrorCode::DoesntExist, "Track doesnt exist");
     } else {
-      // Track found, upvote by adding it to the vector of upvoted tracks
-      it->votes.emplace_back(tID);
+      // Track found
+      if(vote){
+          // we want to upvote it, so upvote by adding it to the vector of upvoted tracks
+          it->votes.emplace_back(tID);
+      }
+      else{
+          // we want to remove it from upvoted tracks, so remove it from vector of upvoted tracks
+
+          
+      }
+
     }
   }
 }
@@ -168,7 +189,9 @@ TResult<Queue> RAMDataStore::getQueue(QueueType q) {
   return (const Queue)(*pQueue);
 }
 
-TResult<Track> RAMDataStore::getPlayingTrack() {
+TResult<BaseTrack> RAMDataStore::getPlayingTrack() {
+
+
 }
 
 TResult<bool> RAMDataStore::hasUser(TSessionID ID) {

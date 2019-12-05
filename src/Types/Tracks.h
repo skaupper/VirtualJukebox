@@ -20,6 +20,9 @@ class BaseTrack {
   unsigned duration;
   std::string iconUri;
   std::string addedBy;
+    bool operator==(const BaseTrack tr){
+        return trackId == tr.trackId;
+    }
 };
 
 struct QueuedTrack : public BaseTrack {

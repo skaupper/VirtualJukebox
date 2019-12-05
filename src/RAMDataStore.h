@@ -17,20 +17,20 @@
 #include "GlobalTypes.h"
 #include "Queue.h"
 #include "Result.h"
-#include "Track.h"
+#include "Tracks.h"
 #include "User.h"
 
 class RAMDataStore : public DataStore {
  public:
   TResultOpt addUser(User user);
   TResult<User> removeUser(TSessionID ID);
-  TResult<std::vector<User>> checkSessionExpirations();
-  TResultOpt addTrack(Track track, QueueType q);
-  TResult<Track> removeTrack(TTrackID ID, QueueType q);
+  TResultOpt checkSessionExpirations();
+  TResultOpt addTrack(BaseTrack track, QueueType q);
+  TResult<BaseTrack> removeTrack(TTrackID ID, QueueType q);
   TResult<bool> hasTrack(TTrackID ID, QueueType q);
   TResultOpt voteTrack(TSessionID sID, TTrackID tID, TVote vote);
   TResult<Queue> getQueue(QueueType q);
-  TResult<Track> getPlayingTrack();
+  TResult<BaseTrack> getPlayingTrack();
   TResult<bool> hasUser(TSessionID ID);
   TResultOpt nextTrack();
 
@@ -38,7 +38,7 @@ class RAMDataStore : public DataStore {
   Queue* SelectQueue(QueueType q);
   Queue mAdminQueue;
   Queue mNormalQueue;
-  Track mCurrentTrack;
+  BaseTrack mCurrentTrack;
   std::vector<User> mUsers;
   std::shared_mutex mUserMutex;
   std::shared_mutex mQueueMutex;
