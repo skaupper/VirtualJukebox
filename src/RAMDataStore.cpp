@@ -166,7 +166,7 @@ TResultOpt RAMDataStore::voteTrack(TSessionID sID, TTrackID tID, TVote vote) {
       }
       else{
           // we want to remove it from upvoted tracks, so remove it from vector of upvoted tracks
-
+          //it->votes.
           
       }
 
