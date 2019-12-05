@@ -44,14 +44,21 @@ int main(void) {
     cout << "errorMessage: " << val->getErrorMessage() << std::endl;
   } else {
     auto playb = get<SpotifyApi::Playback>(ret);
-    std::cout << "playing:" << playb.isPlaying() << endl
-              << "progress_ms" << playb.getProgressMs() << endl
-              << "Device: " << playb.getDevice().getName() << endl
-              << "Track Name:" << playb.getCurrentPlayingTrack().getName()
-              << endl
-              << "Artist Names"
-              << playb.getCurrentPlayingTrack().getArtists()[0].getName()
-              << endl;
+    std::cout
+        << "playing:" << playb.isPlaying() << endl
+        << "progress_ms" << playb.getProgressMs() << endl
+        << "Device: " << playb.getDevice().getName() << endl
+        << "Track Name:" << playb.getCurrentPlayingTrack().getName() << endl
+        << "Artist Names "
+        << playb.getCurrentPlayingTrack().getArtists()[0].getName() << endl
+        << "ArtistFromAlbum: "
+        << playb.getCurrentPlayingTrack().getAlbum().getArtists()[0].getName()
+        << endl
+        << "AlbumName: " << playb.getCurrentPlayingTrack().getAlbum().getName()
+        << endl
+        << "image url: "
+        << playb.getCurrentPlayingTrack().getAlbum().getImages()[0].getUrl()
+        << endl;
   }
 
   return 0;

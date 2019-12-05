@@ -143,7 +143,6 @@ bool Playback::getShuffleState() {
 }
 
 Artist::Artist(nlohmann::json artistJson) {
-  std::cout << artistJson.dump(4) << std::endl;
   for (auto& [key, value] : artistJson.items()) {
     if (key == "href") {
       mHref = value;
@@ -174,11 +173,31 @@ std::string const& Artist::getUri() const {
   return mUri;
 }
 
+Image::Image(nlohmann::json imageJson) {
+  for (auto& [key, value] : imageJson.items()) {
+    if (key == "height") {
+      mHeight = value;
+    } else if (key == "width") {
+      mWidth = value;
+    } else if (key == "url") {
+      mUrl = value;
+    }
+  }
+}
+int Image::getHeight() {
+  return mHeight;
+}
+int Image::getWidth() {
+  return mWidth;
+}
+std::string const& Image::getUrl() const {
+  return mUrl;
+}
+
 Album::Album(nlohmann::json albumJson) {
-  std::cout << albumJson.dump(4) << std::endl;
   for (auto& [key, value] : albumJson.items()) {
     if (key == "artists") {
-      for (nlohmann::json& elem : albumJson["artists"]) {
+      for (nlohmann::json& elem : value) {
         mArtists.emplace_back(Artist(elem));
       }
     } else if (key == "album_type") {
@@ -195,6 +214,10 @@ Album::Album(nlohmann::json albumJson) {
       mReleaseDate = value;
     } else if (key == "type") {
       mType = value;
+    } else if (key == "images") {
+      for (nlohmann::json& elem : value) {
+        mImages.emplace_back(Image(elem));
+      }
     }
   }
 }
@@ -223,9 +246,11 @@ std::string const& Album::getType() const {
 std::string const& Album::getUri() const {
   return mUri;
 }
+std::vector<Image> const& Album::getImages() const {
+  return mImages;
+}
 
 Track::Track(nlohmann::json trackJson) {
-  std::cout << trackJson.dump(4) << std::endl;
   for (auto& [key, value] : trackJson.items()) {
     if (key == "artists") {
       for (nlohmann::json& elem : trackJson["artists"]) {

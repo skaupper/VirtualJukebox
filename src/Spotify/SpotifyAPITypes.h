@@ -102,6 +102,23 @@ class Artist {
 };
 
 /**
+ * @brief Spotify Image Class
+ */
+class Image {
+ public:
+  Image() = default;
+  Image(nlohmann::json imageJson);
+  int getHeight();
+  int getWidth();
+  std::string const &getUrl() const;
+
+ private:
+  int mHeight;      /**< the image height in pixels, if unknown 0 */
+  int mWidth;       /**< the image width in pixels, if unknown 0 */
+  std::string mUrl; /**< the source url of the image */
+};
+
+/**
  * @brief simplified Spotify Album class
  */
 class Album {
@@ -109,6 +126,7 @@ class Album {
   Album() = default;
   Album(nlohmann::json albumJson);
   std::vector<Artist> const &getArtists() const;
+  std::vector<Image> const &getImages() const;
   std::string const &getAlbumType() const;
   std::string const &getHref() const;
   std::string const &getId() const;
@@ -129,6 +147,7 @@ class Album {
       mReleaseDate;  /**< release date ( can be 1981, 1981-12 or 1981-12-15) */
   std::string mType; /**< the object type, always "album" */
   std::string mUri;  /**< spotify uri for the album */
+  std::vector<Image> mImages; /**< array of cover arts in various sizes */
 };
 
 /**
