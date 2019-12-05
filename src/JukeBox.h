@@ -18,8 +18,6 @@
 #include "Queue.h"
 #include "Result.h"
 
-//#include "ConfigHandler.h"
-//#include "LoggingHandler.h"
 //#include "DataStore.h"
 //#include "MusicBackend.h"
 //#include "NetworkAPI.h"
@@ -48,8 +46,6 @@ class JukeBox : public NetworkListener {
   TResultOpt controlPlayer(TSessionID const &sid, PlayerAction action) override;
 
  private:
-  //  LoggingHandler mLog;
-  //  ConfigHandler mConfigHandler;
   //  DataStore mDataStore;
   //  NetworkAPI mNetwork;
   //  MusicBackend mMusicBackend;
