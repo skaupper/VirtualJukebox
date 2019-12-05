@@ -61,7 +61,7 @@ TResult<Token> SpotifyAPI::getAccessToken(GrantType grantType,
     return std::move(token);
   } else {
     SpotifyError er(tokenJson);
-    return Error(ErrorCode::SpotifyAPIError, er.getMessage());
+    return errorParser(er);
   }
 }
 
@@ -103,12 +103,13 @@ TResult<std::vector<Device>> SpotifyAPI::getAvailableDevices(
         return errorParser(spotifyError);
       }
     }
-    // if we reach here spotify sent an unexpected message
-    // return spotify Unexpected
+    // if we reach here or the exception gets thrown spotify sent an unexpected
+    // message
   } catch (...) {
     // parse exception
-    // return spotify parse error
   }
+  return Error(ErrorCode::SpotifyParseError,
+               "Spotify sent an unexpected message");
 }
 
 TResult<Playback> SpotifyAPI::getCurrentPlayback(std::string const &accessToken,
@@ -141,10 +142,12 @@ Error SpotifyAPI::errorParser(SpotifyApi::SpotifyError const &error) {
     if (error.getMessage() == "Invalid access token") {
       return Error(ErrorCode::AccessDenied, error.getMessage());
     } else if (error.getMessage() == "The access token expired") {
-      return Error(ErrorCode::AccessDenied, error.getMessage());
+      return Error(ErrorCode::SessionExpired, error.getMessage());
     }
   } else {
     // unhandled spotify error
-    return Error(ErrorCode::NotImplemented, error.getMessage());
+    LOG(ERROR) << "[SpotifyAPI]: Error " << error.getMessage()
+               << " Code: " << error.getStatus() << std::endl;
+    return Error(ErrorCode::SpotifyAPIError, error.getMessage());
   }
 }

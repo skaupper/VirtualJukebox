@@ -20,14 +20,15 @@ using namespace httpserver;
 TResultOpt SpotifyAuthorization::startServer(void) {
   VLOG(100) << "SpotifyAuthorization:: Start Server" << std::endl;
 
- // if(setupConfigParams() holds error return error
+  // if(setupConfigParams() holds error return error
   // setup urlencode in building sendstring..
   auto readConfigRet = setupConfigParams();
-  if(readConfigRet.has_value()){
+  if (readConfigRet.has_value()) {
     return readConfigRet;
   }
-  shutdownServer=false;
-  mServerThread = std::make_unique<std::thread>(&SpotifyAuthorization::startServerThread,this);
+  shutdownServer = false;
+  mServerThread = std::make_unique<std::thread>(
+      &SpotifyAuthorization::startServerThread, this);
 
   return std::nullopt;
 }
@@ -37,13 +38,13 @@ void SpotifyAuthorization::startServerThread() {
   ws.register_resource("/", this, true);
 
   ws.start(false);
-  while(!shutdownServer){
+  while (!shutdownServer) {
     usleep(100000);
   };
 }
 void SpotifyAuthorization::stopServer() {
-  shutdownServer=true;
-  if(mServerThread->joinable()){
+  shutdownServer = true;
+  if (mServerThread->joinable()) {
     mServerThread->join();
   }
 }
@@ -173,46 +174,48 @@ TResultOpt SpotifyAuthorization::setupConfigParams() {
   // get port
   auto port = configHandler->getValueInt(cSectionKey, cPortKey);
   if (std::holds_alternative<Error>(port)) {
-    LOG(ERROR) << "[SpotifyAuthorization] no config "<<cPortKey << " available"
-               << std::endl;
+    LOG(ERROR) << "[SpotifyAuthorization] no config " << cPortKey
+               << " available" << std::endl;
     return std::get<Error>(port);
   }
 
   // get redirect uri
-  auto redirectUri = configHandler->getValueString(cSectionKey, cRedirectUriKey);
+  auto redirectUri =
+      configHandler->getValueString(cSectionKey, cRedirectUriKey);
   if (std::holds_alternative<Error>(redirectUri)) {
-    LOG(ERROR) << "[SpotifyAuthorization] no config "<<cRedirectUriKey << " available"
-               << std::endl;
+    LOG(ERROR) << "[SpotifyAuthorization] no config " << cRedirectUriKey
+               << " available" << std::endl;
     return std::get<Error>(redirectUri);
   }
 
   // get client id
   auto clientId = configHandler->getValueString(cSectionKey, cClientIDKey);
   if (std::holds_alternative<Error>(clientId)) {
-    LOG(ERROR) << "[SpotifyAuthorization] no config "<<cClientIDKey << " available"
-               << std::endl;
+    LOG(ERROR) << "[SpotifyAuthorization] no config " << cClientIDKey
+               << " available" << std::endl;
     return std::get<Error>(clientId);
   }
 
-  //get client secret
-  auto clientSecret = configHandler->getValueString(cSectionKey, cClientSecretKey);
+  // get client secret
+  auto clientSecret =
+      configHandler->getValueString(cSectionKey, cClientSecretKey);
   if (std::holds_alternative<Error>(clientSecret)) {
-    LOG(ERROR) << "[SpotifyAuthorization] no config "<<cClientSecretKey << " available"
-               << std::endl;
+    LOG(ERROR) << "[SpotifyAuthorization] no config " << cClientSecretKey
+               << " available" << std::endl;
     return std::get<Error>(clientSecret);
   }
 
-  //get scopes
+  // get scopes
   auto scopes = configHandler->getValueString(cSectionKey, cScopesKey);
   if (std::holds_alternative<Error>(scopes)) {
-    LOG(ERROR) << "[SpotifyAuthorization] no config "<<cScopesKey << " available"
-               << std::endl;
+    LOG(ERROR) << "[SpotifyAuthorization] no config " << cScopesKey
+               << " available" << std::endl;
     return std::get<Error>(scopes);
   }
 
   // set members
   mScopes = std::get<std::string>(scopes);
-  mPort   = std::get<int>(port);
+  mPort = std::get<int>(port);
   mRedirectUri = std::get<std::string>(redirectUri);
   mClientID = std::get<std::string>(clientId);
   mClientSecret = std::get<std::string>(clientSecret);

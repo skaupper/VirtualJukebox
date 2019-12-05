@@ -9,11 +9,11 @@
 
 #include <mutex>
 #include <thread>
+
 #include "SpotifyAPI.h"
 #include "SpotifyAPITypes.h"
 #include "Types/Result.h"
 #include "httpserver.hpp"
-
 
 namespace SpotifyApi {
 
@@ -32,16 +32,16 @@ class SpotifyAuthorization : public httpserver::http_resource {
   Token mToken;
   __int64_t mTokenReceiveTime = 0;
   std::string mClientID = "";
-  std::string mScopes = "";  // dont forget urlencode
-  std::string mRedirectUri = "" ;// dont forget urlencode;
+  std::string mScopes = "";
+  std::string mRedirectUri = "";
   std::string mClientSecret = "";
   int mPort = 8080;
-  std::string const cSectionKey="Spotify";
-  std::string const cClientIDKey="clientID";
-  std::string const cClientSecretKey="clientSecret";
-  std::string const cPortKey="port";
-  std::string const cRedirectUriKey="redirectUri";
-  std::string const cScopesKey="scopes";
+  std::string const cSectionKey = "Spotify";
+  std::string const cClientIDKey = "clientID";
+  std::string const cClientSecretKey = "clientSecret";
+  std::string const cPortKey = "port";
+  std::string const cRedirectUriKey = "redirectUri";
+  std::string const cScopesKey = "scopes";
   std::unique_ptr<std::thread> mServerThread;
   bool shutdownServer = false;
 
