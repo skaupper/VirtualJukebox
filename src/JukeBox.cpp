@@ -8,8 +8,9 @@
 
 #include "JukeBox.h"
 
-#include <iostream>
+#include <ctime>
 #include <memory>
+#include <sstream>
 
 #include "Types/GlobalTypes.h"
 #include "Types/Result.h"
@@ -33,10 +34,28 @@ bool JukeBox::start(string exeName, string configFilePath) {
   return true;
 }
 
-TResult<TSessionID> JukeBox::generateSession(
-    optional<TPassword> const &pw, std::optional<std::string> const &nickname) {
-  return Error(ErrorCode::NotImplemented,
-               "generateSession is not implemented yet");
+TResult<TSessionID> JukeBox::generateSession(optional<TPassword> const &pw,
+                                             optional<string> const &nickname) {
+  // User user;
+  auto conf = ConfigHandler::getInstance();
+  auto adminPw = conf->getValueString("MainParams", "adminPassword");
+  if (holds_alternative<Error>(adminPw))
+    return get<Error>(adminPw);
+
+  string name = "";
+  if (nickname.has_value()) {
+    name = nickname.value();
+    // user.Name = name;
+  }
+
+  if (pw.has_value() && pw.value() == get<string>(adminPw)) {
+    LOG(INFO) << "JukeBox.generateSession: User '" << name << "' is admin!";
+    // user.isAdmin = true;
+  }
+
+  stringstream ss;
+  ss << time(nullptr);
+  return static_cast<TSessionID>(ss.str());
 }
 
 TResult<vector<BaseTrack>> JukeBox::queryTracks(string const &searchPattern,
