@@ -31,7 +31,7 @@ enum GrantType { AuthorizationCode, ClientCredentials, ImplicitGrant };
 class Token {
  public:
   Token() = default;
-  Token(const nlohmann::json &tokenJson);
+  Token(nlohmann::json const &tokenJson);
 
   std::string getAccessToken();
   std::string getRefreshToken();
@@ -54,17 +54,29 @@ class Token {
 /**
  * @brief Device Object
  */
-struct Device {
-  std::string id;        /**< the device id. may be empty */
-  bool isActive;         /**< if this device is the currently active device */
-  bool isPrivateSession; /**< if this device is currently in a private sesseion
-                          */
-  bool isRestricted; /**< if true, no web api commands will be accepted by this
+class Device {
+ public:
+  Device() = default;
+  Device(nlohmann::json const &deviceJson);
+  std::string const &getID();
+  bool isActive();
+  bool isPrivateSession();
+  bool isRestricted();
+  std::string const &getName();
+  std::string const &getType();
+  size_t getVolume();
+
+ private:
+  std::string mId;        /**< the device id. may be empty */
+  bool mIsActive;         /**< if this device is the currently active device */
+  bool mIsPrivateSession; /**< if this device is currently in a private sesseion
+                           */
+  bool mIsRestricted; /**< if true, no web api commands will be accepted by this
                         device */
-  std::string name;  /**< name of the device */
+  std::string mName;  /**< name of the device */
   std::string
-      type;      /**< type of the device (Computer, Smartphone, Speaker, ...) */
-  size_t volume; /**< current volume in percent */
+      mType; /**< type of the device (Computer, Smartphone, Speaker, ...) */
+  size_t mVolume; /**< current volume in percent */
 };
 
 /**
@@ -97,7 +109,10 @@ struct Track {
 /**
  * @brief contains infos about the actual playback
  */
-struct Playback {
+class Playback {
+public:
+
+private:
   Device device;           /**< device that is currently active */
   std::string repeatState; /**< current repeat state status ("off", "track",
                               "context") */
@@ -113,9 +128,14 @@ struct Playback {
 /**
  * @brief error type
  */
-struct SpotifyError {
-  int status;          /**< http status code */
-  std::string message; /**< a short description of the cause of the error */
+class SpotifyError {
+public:
+  SpotifyError(nlohmann::json errorJson);
+  int getStatus() const;
+  std::string const & getMessage() const;
+private:
+  int mStatus;          /**< http status code */
+  std::string mMessage; /**< a short description of the cause of the error */
 };
 
 }  // namespace SpotifyApi

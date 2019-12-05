@@ -15,9 +15,9 @@
 
 using namespace SpotifyApi;
 
-Token::Token(const nlohmann::json &tokenJson) {
+Token::Token(nlohmann::json const& tokenJson) {
   std::cout << "Token: " << tokenJson.dump(4) << std::endl;
-  for (auto &[key, value] : tokenJson.items()) {
+  for (auto& [key, value] : tokenJson.items()) {
     if (key == "access_token") {
       mAccesToken = value;
     } else if (key == "token_type") {
@@ -50,4 +50,66 @@ std::string Token::getScope() {
 
 std::string Token::getTokenType() {
   return mTokenType;
+}
+
+Device::Device(nlohmann::json const& deviceJson) {
+  std::cout << "Device: " << deviceJson.dump(4) << std::endl;
+  for (auto& [key, value] : deviceJson.items()) {
+    if (key == "id") {
+      mId = value;
+    } else if (key == "is_active") {
+      mIsActive = value;
+    } else if (key == "is_private_session") {
+      mIsPrivateSession = value;
+    } else if (key == "is_restricted") {
+      mIsRestricted = value;
+    } else if (key == "name") {
+      mName = value;
+    } else if (key == "type") {
+      mType = value;
+    } else if (key == "volume_percent") {
+      mVolume = value;
+    }
+  }
+}
+
+bool Device::isPrivateSession() {
+  return mIsPrivateSession;
+}
+std::string const& Device::getName() {
+  return mName;
+}
+std::string const& Device::getType() {
+  return mType;
+}
+size_t Device::getVolume() {
+  return mVolume;
+}
+std::string const& Device::getID() {
+  return mId;
+}
+bool Device::isActive() {
+  return mIsActive;
+}
+bool Device::isRestricted() {
+  return mIsRestricted;
+}
+
+
+SpotifyError::SpotifyError(nlohmann::json errorJson) {
+  std::cout << "Error: " << errorJson.dump(4) << std::endl;
+  for (auto& [key, value] : errorJson.items()) {
+    if (key == "status") {
+      mStatus = value;
+    } else if (key == "message") {
+      mMessage = value;
+    }
+  }
+}
+
+std::string const& SpotifyError::getMessage() const {
+  return mMessage;
+}
+int SpotifyError::getStatus() const {
+  return mStatus;
 }
