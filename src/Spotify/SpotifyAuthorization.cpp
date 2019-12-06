@@ -97,8 +97,9 @@ SpotifyAuthorization::loginHandler(httpserver::http_request const &request) {
   std::string redirectString("https://accounts.spotify.com/authorize");
   redirectString.append("?client_id=").append(mClientID);
   redirectString.append("&response_type=").append("code");
-  redirectString.append("&scope=").append(stringUrlEncode(mScopes));
-  redirectString.append("&redirect_uri=").append(stringUrlEncode(mRedirectUri));
+  redirectString.append("&scope=").append(SpotifyAPI::stringUrlEncode(mScopes));
+  redirectString.append("&redirect_uri=")
+      .append(SpotifyAPI::stringUrlEncode(mRedirectUri));
   redirectString.append("&state=").append(state);
 
   std::cout << redirectString << std::endl;
@@ -131,7 +132,7 @@ SpotifyAuthorization::callbackHandler(httpserver::http_request const &request) {
     SpotifyAPI spotify;
     auto ret = spotify.getAccessToken(AuthorizationCode,
                                       getFromQueryString(queryString, "code"),
-                                      stringUrlEncode(mRedirectUri),
+                                      SpotifyAPI::stringUrlEncode(mRedirectUri),
                                       mClientID,
                                       mClientSecret);
     if (auto error = std::get_if<Error>(&ret)) {
@@ -245,18 +246,4 @@ std::string SpotifyAuthorization::getFromQueryString(std::string const &query,
     }
   }
   return value;
-}
-
-std::string SpotifyAuthorization::stringUrlEncode(std::string const &str) {
-  std::map<char, std::string> const replaceMap = {
-      {' ', "%20"}, {'/', "%2F"}, {';', "%3B"}};
-
-  std::string urlEncoded = "";
-  for (auto &elem : str) {
-    if (replaceMap.find(elem) != replaceMap.end()) {
-      urlEncoded.append(replaceMap.at(elem));
-    }
-    urlEncoded.append(1, elem);
-  }
-  return std::move(urlEncoded);
 }

@@ -31,10 +31,7 @@ int main(void) {
   // }
 
   std::string accessToken(
-      "BQAFMvFgnSfjXzOrQW9FSDa2kP3z_"
-      "E6n8JiX4bh4WNlkcEX788dMx5Ieh4jKFCBwaS6wq66g2gjmOPsOgfdwR9VYtmLGFtplXntOO"
-      "WYo8trzHTViLqvTAudo3G1FGHIiP60U46F3WbURNJbJA2RbH2R7jCeBpzvXUDob0lIcs_"
-      "UdRvM6nQu1dRC3kPk39dEJZw");
+      "BQCM5WSJQ9fukHgk-_7cEQTtFrUOGmTJLZw5gmAfYrSjBMq_GodWRIXIMv0UEfFhFPG61Ma9wHILgXev8N1oljF4YykOfI1aMvz1kUZ6INk6zO3hkPNWp0pAxv7AeDu7e5b-KQxBUHodjKbNgueaKU1pN885KBP4di9Vlw7KLwpIJo34JvVGqnPsQ2hMhR8T6Q");
   SpotifyApi::SpotifyAPI api;
   api.getAvailableDevices(accessToken);
 
@@ -50,15 +47,23 @@ int main(void) {
         << "Device: " << playb.getDevice().getName() << endl
         << "Track Name:" << playb.getCurrentPlayingTrack().getName() << endl
         << "Artist Names "
-        << playb.getCurrentPlayingTrack().getArtists()[0].getName() << endl
+        //<< playb.getCurrentPlayingTrack().getArtists()[0].getName() << endl
         << "ArtistFromAlbum: "
-        << playb.getCurrentPlayingTrack().getAlbum().getArtists()[0].getName()
+        //<< playb.getCurrentPlayingTrack().getAlbum().getArtists()[0].getName()
         << endl
         << "AlbumName: " << playb.getCurrentPlayingTrack().getAlbum().getName()
         << endl
         << "image url: "
-        << playb.getCurrentPlayingTrack().getAlbum().getImages()[0].getUrl()
+        //<< playb.getCurrentPlayingTrack().getAlbum().getImages()[0].getUrl()
         << endl;
+  }
+  auto searRet = api.search(accessToken,"*park*",SpotifyApi::QueryType::track,2);
+  if (auto val = std::get_if<Error>(&searRet)) {
+    cout << "errorMessage: " << val->getErrorMessage() << std::endl;
+  } else {
+    auto paging = get<SpotifyApi::SpotifyPaging>(searRet);
+
+    cout<<"QuerySearch" << paging.getTracks()[0].getName()<<endl;
   }
 
   return 0;

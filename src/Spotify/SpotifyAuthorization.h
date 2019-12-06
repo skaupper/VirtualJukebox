@@ -58,7 +58,6 @@ class SpotifyAuthorization : public httpserver::http_resource {
   std::string generateRandomString(size_t length);
   std::string getFromQueryString(std::string const &query,
                                  std::string const &key);
-  std::string stringUrlEncode(std::string const &str);
 };
 
 }  // namespace SpotifyApi

@@ -163,6 +163,60 @@ TResult<Playback> SpotifyAPI::getCurrentPlayback(std::string const &accessToken,
                "Spotify sent an unexpected message");
 }
 
+TResult<SpotifyPaging> SpotifyAPI::search(std::string const &accessToken,
+                                          std::string const &queryKey,
+                                          SpotifyApi::QueryType type,
+                                          const int limit,
+                                          int const offset,
+                                          const std::string &market) {
+  auto client = std::make_unique<RestClient::Connection>(cSpotifyAPIUrl);
+  RestClient::HeaderFields headers;
+  headers.insert(
+      std::pair<std::string, std::string>("Accept", "application/json"));
+  headers.insert(
+      std::pair<std::string, std::string>("Content-Type", "application/json"));
+  headers.insert(std::pair<std::string, std::string>("Authorization",
+                                                     "Bearer " + accessToken));
+  client->SetHeaders(headers);
+
+  // build query
+  std::stringstream queryStream;
+  queryStream << "?q=" << stringUrlEncode(queryKey) << "&type="<<cQueryTypeMap.at(type)<<"&market="<<market<<"&limit="<<limit<<"&offset="<<offset;
+
+  client->SetTimeout(cRequestTimeout);
+  auto response = client->get("/v1/search"+queryStream.str());
+  std::cout<<"/v1/search"+queryStream.str()<<std::endl;
+//  std::cout<<response.body<<std::endl;
+  nlohmann::json pagingJson;
+  if (response.code == cNoContent) {
+    LOG(INFO) << "[SotifyAPI] in search, no content received" << std::endl;
+    return SpotifyPaging();
+  }
+  try {
+    pagingJson = nlohmann::json::parse(response.body);
+
+    if (response.code == cHTTPOK) {
+      return SpotifyPaging(pagingJson);
+
+    } else {
+      // check for error object
+      if (pagingJson.find("error") != pagingJson.end()) {
+        SpotifyError spotifyError(pagingJson["error"]);
+        return errorParser(spotifyError);
+      }
+    }
+    // if we reach here or the exception gets thrown spotify sent an unexpected
+    // message
+  } catch (...) {
+    // parse exception
+    return Error(ErrorCode::SpotifyParseError,
+                 "[SpotifyAPI] received json couldn't be parsed");
+  }
+  // if we reach here spotify sent an unexpected message
+  return Error(ErrorCode::SpotifyAPIError,
+               "Spotify sent an unexpected message");
+}
+
 Error SpotifyAPI::errorParser(SpotifyApi::SpotifyError const &error) {
   if (error.getStatus() == cHTTPUnouthorized) {
     if (error.getMessage().find("Invalid access token") != std::string::npos) {
@@ -177,4 +231,18 @@ Error SpotifyAPI::errorParser(SpotifyApi::SpotifyError const &error) {
                << " Status: " << error.getStatus() << std::endl;
     return Error(ErrorCode::SpotifyAPIError, error.getMessage());
   }
+}
+
+std::string SpotifyAPI::stringUrlEncode(std::string const &str) {
+  std::map<char, std::string> const replaceMap = {
+      {' ', "%20"}, {'/', "%2F"}, {';', "%3B"}};
+
+  std::string urlEncoded = "";
+  for (auto &elem : str) {
+    if (replaceMap.find(elem) != replaceMap.end()) {
+      urlEncoded.append(replaceMap.at(elem));
+    }
+    urlEncoded.append(1, elem);
+  }
+  return std::move(urlEncoded);
 }

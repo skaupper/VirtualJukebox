@@ -12,6 +12,8 @@
 
 namespace SpotifyApi {
 
+enum class QueryType { album, artist, playlist, track };
+
 /**
  * @brief handles the calls with the spotify web api
  */
@@ -44,12 +46,25 @@ class SpotifyAPI {
 
   TResult<Playback> getCurrentPlayback(std::string const &accessToken,
                                        std::string const &market = "AT");
+  TResult<SpotifyPaging> search(std::string const &accessToken,
+                                std::string const &queryKey,
+                                QueryType type,
+                                int const limit = 20,
+                                int const offset = 0,
+                                std::string const &market = "AT");
+
+  static std::string stringUrlEncode(std::string const &str);
 
  private:
   Error errorParser(SpotifyError const &error);
   std::string const cSpotifyAuthUrl = "https://accounts.spotify.com";
   std::string const cSpotifyAPIUrl = "https://api.spotify.com";
   size_t const cRequestTimeout = 5;
+  std::map<QueryType, std::string> const cQueryTypeMap = {
+      {QueryType::album, "album"},
+      {QueryType::track, "track"},
+      {QueryType::artist, "artist"},
+      {QueryType::playlist, "playlist"}};
 
   int const cHTTPTimeout = 408;
   int const cHTTPUnouthorized = 401;

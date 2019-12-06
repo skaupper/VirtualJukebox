@@ -295,31 +295,75 @@ std::string const& Track::getUri() const {
 }
 
 SpotifyPaging::SpotifyPaging(nlohmann::json const& pagingJson) {
-  for (auto& [key, value] : pagingJson.items()) {
-    if (key == "artists") {
-      for (auto& elem : value) {
-        mArtists.emplace_back(Artist(elem));
+  for (auto&[key, value] : pagingJson.items()) {
+    if (key == "tracks") {
+      for (auto&[key, value] : value.items()) {
+        if (key == "items") {
+          for (auto &elem : value) {
+            std::cout << "==========================================================="<<std::endl;
+            std::cout<<elem.dump(4)<<std::endl;
+            std::cout << "==========================================================="<<std::endl;
+            mTracks.emplace_back(Track(elem));
+          }
+        } else if (key == "href") {
+          mHref = value;
+        } else if (key == "limit") {
+          mLimit = value;
+        } else if (key == "next") {
+          if(!value.is_null()) {
+            mNext = value;
+          }
+        } else if (key == "offset") {
+          mOffset = value;
+        } else if (key == "previous") {
+          if(!value.is_null()) {
+            mPrevious = value;
+          }
+        } else if (key == "total") {
+          mTotal = value;
+        }
+      }
+
+    } else if (key == "artists") {
+      for (auto&[key, value] : pagingJson.items()) {
+        if (key == "items") {
+          for (auto &elem : value) {
+            mArtists.emplace_back(Artist(elem));
+          }
+        } else if (key == "href") {
+          mHref = value;
+        } else if (key == "limit") {
+          mLimit = value;
+        } else if (key == "next") {
+          mNext = value;
+        } else if (key == "offset") {
+          mOffset = value;
+        } else if (key == "previous") {
+          mPrevious = value;
+        } else if (key == "total") {
+          mTotal = value;
+        }
       }
     } else if (key == "albums") {
-      for (auto& elem : value) {
-        mAlbums.emplace_back(Album(elem));
+      for (auto&[key, value] : pagingJson.items()) {
+        if (key == "items") {
+          for (auto &elem : value) {
+            mAlbums.emplace_back(Album(elem));
+          }
+        } else if (key == "href") {
+          mHref = value;
+        } else if (key == "limit") {
+          mLimit = value;
+        } else if (key == "next") {
+          mNext = value;
+        } else if (key == "offset") {
+          mOffset = value;
+        } else if (key == "previous") {
+          mPrevious = value;
+        } else if (key == "total") {
+          mTotal = value;
+        }
       }
-    } else if (key == "tracks") {
-      for (auto& elem : value) {
-        mTracks.emplace_back(Track(elem));
-      }
-    } else if (key == "href") {
-      mHref = value;
-    } else if (key == "limit") {
-      mLimit = value;
-    } else if (key == "next") {
-      mNext = value;
-    } else if (key == "offset") {
-      mOffset = value;
-    } else if (key == "previous") {
-      mPrevious = value;
-    } else if (key == "total") {
-      mTotal = value;
     }
   }
 }
