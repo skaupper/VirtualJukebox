@@ -10,7 +10,6 @@
 
 #include <ctime>
 #include <memory>
-#include <sstream>
 
 #include "Types/GlobalTypes.h"
 #include "Types/Result.h"
@@ -54,9 +53,7 @@ TResult<TSessionID> JukeBox::generateSession(optional<TPassword> const &pw,
   }
   // mDataStore.addUser(user);
 
-  stringstream ss;
-  ss << time(nullptr);
-  return static_cast<TSessionID>(ss.str());
+  return static_cast<TSessionID>(to_string(time(nullptr)));
 }
 
 TResult<vector<BaseTrack>> JukeBox::queryTracks(string const &searchPattern,
