@@ -31,7 +31,10 @@ int main(void) {
   // }
 
   std::string accessToken(
-      "BQCM5WSJQ9fukHgk-_7cEQTtFrUOGmTJLZw5gmAfYrSjBMq_GodWRIXIMv0UEfFhFPG61Ma9wHILgXev8N1oljF4YykOfI1aMvz1kUZ6INk6zO3hkPNWp0pAxv7AeDu7e5b-KQxBUHodjKbNgueaKU1pN885KBP4di9Vlw7KLwpIJo34JvVGqnPsQ2hMhR8T6Q");
+      "BQCM5WSJQ9fukHgk-_7cEQTtFrUOGmTJLZw5gmAfYrSjBMq_"
+      "GodWRIXIMv0UEfFhFPG61Ma9wHILgXev8N1oljF4YykOfI1aMvz1kUZ6INk6zO3hkPNWp0pA"
+      "xv7AeDu7e5b-"
+      "KQxBUHodjKbNgueaKU1pN885KBP4di9Vlw7KLwpIJo34JvVGqnPsQ2hMhR8T6Q");
   SpotifyApi::SpotifyAPI api;
   api.getAvailableDevices(accessToken);
 
@@ -57,13 +60,14 @@ int main(void) {
         //<< playb.getCurrentPlayingTrack().getAlbum().getImages()[0].getUrl()
         << endl;
   }
-  auto searRet = api.search(accessToken,"*park*",SpotifyApi::QueryType::track,2);
+  auto searRet =
+      api.search(accessToken, "*park*", SpotifyApi::QueryType::track, 2);
   if (auto val = std::get_if<Error>(&searRet)) {
     cout << "errorMessage: " << val->getErrorMessage() << std::endl;
   } else {
     auto paging = get<SpotifyApi::SpotifyPaging>(searRet);
 
-    cout<<"QuerySearch" << paging.getTracks()[0].getName()<<endl;
+    cout << "QuerySearch" << paging.getTracks()[0].getName() << endl;
   }
 
   return 0;

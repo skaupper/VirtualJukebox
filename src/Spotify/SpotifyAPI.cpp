@@ -181,12 +181,14 @@ TResult<SpotifyPaging> SpotifyAPI::search(std::string const &accessToken,
 
   // build query
   std::stringstream queryStream;
-  queryStream << "?q=" << stringUrlEncode(queryKey) << "&type="<<cQueryTypeMap.at(type)<<"&market="<<market<<"&limit="<<limit<<"&offset="<<offset;
+  queryStream << "?q=" << stringUrlEncode(queryKey)
+              << "&type=" << cQueryTypeMap.at(type) << "&market=" << market
+              << "&limit=" << limit << "&offset=" << offset;
 
   client->SetTimeout(cRequestTimeout);
-  auto response = client->get("/v1/search"+queryStream.str());
-  std::cout<<"/v1/search"+queryStream.str()<<std::endl;
-//  std::cout<<response.body<<std::endl;
+  auto response = client->get("/v1/search" + queryStream.str());
+  std::cout << "/v1/search" + queryStream.str() << std::endl;
+  //  std::cout<<response.body<<std::endl;
   nlohmann::json pagingJson;
   if (response.code == cNoContent) {
     LOG(INFO) << "[SotifyAPI] in search, no content received" << std::endl;

@@ -176,9 +176,13 @@ std::string const& Artist::getUri() const {
 Image::Image(nlohmann::json const& imageJson) {
   for (auto& [key, value] : imageJson.items()) {
     if (key == "height") {
-      mHeight = value;
+      if (!value.is_null()) {
+        mHeight = value;
+      }
     } else if (key == "width") {
-      mWidth = value;
+      if (!value.is_null()) {
+        mWidth = value;
+      }
     } else if (key == "url") {
       mUrl = value;
     }
@@ -295,14 +299,11 @@ std::string const& Track::getUri() const {
 }
 
 SpotifyPaging::SpotifyPaging(nlohmann::json const& pagingJson) {
-  for (auto&[key, value] : pagingJson.items()) {
+  for (auto& [key, value] : pagingJson.items()) {
     if (key == "tracks") {
-      for (auto&[key, value] : value.items()) {
+      for (auto& [key, value] : value.items()) {
         if (key == "items") {
-          for (auto &elem : value) {
-            std::cout << "==========================================================="<<std::endl;
-            std::cout<<elem.dump(4)<<std::endl;
-            std::cout << "==========================================================="<<std::endl;
+          for (auto& elem : value) {
             mTracks.emplace_back(Track(elem));
           }
         } else if (key == "href") {
@@ -310,13 +311,13 @@ SpotifyPaging::SpotifyPaging(nlohmann::json const& pagingJson) {
         } else if (key == "limit") {
           mLimit = value;
         } else if (key == "next") {
-          if(!value.is_null()) {
+          if (!value.is_null()) {
             mNext = value;
           }
         } else if (key == "offset") {
           mOffset = value;
         } else if (key == "previous") {
-          if(!value.is_null()) {
+          if (!value.is_null()) {
             mPrevious = value;
           }
         } else if (key == "total") {
@@ -325,9 +326,9 @@ SpotifyPaging::SpotifyPaging(nlohmann::json const& pagingJson) {
       }
 
     } else if (key == "artists") {
-      for (auto&[key, value] : pagingJson.items()) {
+      for (auto& [key, value] : pagingJson.items()) {
         if (key == "items") {
-          for (auto &elem : value) {
+          for (auto& elem : value) {
             mArtists.emplace_back(Artist(elem));
           }
         } else if (key == "href") {
@@ -335,19 +336,23 @@ SpotifyPaging::SpotifyPaging(nlohmann::json const& pagingJson) {
         } else if (key == "limit") {
           mLimit = value;
         } else if (key == "next") {
-          mNext = value;
+          if (!value.is_null()) {
+            mNext = value;
+          }
         } else if (key == "offset") {
           mOffset = value;
         } else if (key == "previous") {
-          mPrevious = value;
+          if (!value.is_null()) {
+            mPrevious = value;
+          }
         } else if (key == "total") {
           mTotal = value;
         }
       }
     } else if (key == "albums") {
-      for (auto&[key, value] : pagingJson.items()) {
+      for (auto& [key, value] : pagingJson.items()) {
         if (key == "items") {
-          for (auto &elem : value) {
+          for (auto& elem : value) {
             mAlbums.emplace_back(Album(elem));
           }
         } else if (key == "href") {
@@ -355,11 +360,15 @@ SpotifyPaging::SpotifyPaging(nlohmann::json const& pagingJson) {
         } else if (key == "limit") {
           mLimit = value;
         } else if (key == "next") {
-          mNext = value;
+          if (!value.is_null()) {
+            mNext = value;
+          }
         } else if (key == "offset") {
           mOffset = value;
         } else if (key == "previous") {
-          mPrevious = value;
+          if (!value.is_null()) {
+            mPrevious = value;
+          }
         } else if (key == "total") {
           mTotal = value;
         }
