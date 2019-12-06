@@ -13,6 +13,7 @@
 #include "Utils/LoggingHandler.h"
 
 using namespace std;
+using namespace SpotifyApi;
 
 int main(void) {
   auto config = ConfigHandler::getInstance();
@@ -21,17 +22,23 @@ int main(void) {
 
   auto test = config->getValueString("Spotify", "scopes");
 
-  SpotifyApi::SpotifyAuthorization auth;
-  auth.startServer();
-
-  while (1)
-    ;
+  // SpotifyApi::SpotifyAuthorization auth;
+  // auth.startServer();
 
   std::string accessToken(
       "BQDhrADt4mVznUhLMYMUeUjVKUQtgnsBJPic2AtzQq4IXjCmxXbcCT9XF7xckBwglyY-"
       "zGRz0uw6018WwSFlYp0FM41XWKJT3CaK1U79DnS8en6nauwrh4OQQWzcWXanCxh7H0m-"
       "Azcs3ITV3gW71r3hFSUX7G4oiThR2lcFPJ8lsrsSEclaqcWgrtijQdUHBA");
+
+  // remove refresh token before commit!!
+  std::string refreshToken("");
+
   SpotifyApi::SpotifyAPI api;
+  auto resClientID = config->getValueString("Spotify", "clientID");
+  auto resClientSecret = config->getValueString("Spotify", "clientSecret");
+  auto resRefresh = api.refreshAccessToken(
+      refreshToken, get<string>(resClientID), get<string>(resClientSecret));
+  accessToken = get<Token>(resRefresh).getAccessToken();
   api.getAvailableDevices(accessToken);
 
   TResult<SpotifyApi::Playback> ret;

@@ -413,6 +413,12 @@ SpotifyError::SpotifyError(nlohmann::json const& errorJson) {
     } else if (key == "message") {
       mMessage = value;
     }
+    if (key == "error") {
+      // special error message from token endpoint
+      mStatus = 401;
+    } else if (key == "error_description") {
+      mMessage = value;
+    }
   }
 }
 

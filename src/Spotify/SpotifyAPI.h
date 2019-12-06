@@ -34,7 +34,9 @@ class SpotifyAPI {
                                 std::string clientID,
                                 std::string clientSecret);
 
-  TResult<Token> refreshAccessToken(std::string const &refreshToken);
+  TResult<Token> refreshAccessToken(std::string const &refreshToken,
+                                    std::string const &clientID,
+                                    std::string const &clientSecret);
 
   /**
    * @brief returns vector of available spotify devices
@@ -65,6 +67,7 @@ class SpotifyAPI {
       int positionMs = 0);
 
   static std::string stringUrlEncode(std::string const &str);
+  static std::string stringBase64Encode(std::string const &str);
 
  private:
   Error errorParser(SpotifyError const &error);

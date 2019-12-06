@@ -62,7 +62,58 @@ TResult<Token> SpotifyAPI::getAccessToken(GrantType grantType,
   } else {
     // check for error object
     if (tokenJson.find("error") != tokenJson.end()) {
-      SpotifyError spotifyError(tokenJson["error"]);
+      SpotifyError spotifyError(tokenJson);
+      return errorParser(spotifyError);
+    }
+  }
+
+  // if we reach here spotify sent an unexpected message
+  return Error(ErrorCode::SpotifyAPIError,
+               "Spotify sent an unexpected message");
+}
+
+TResult<Token> SpotifyAPI::refreshAccessToken(std::string const &refreshToken,
+                                              std::string const &clientID,
+                                              std::string const &clientSecret) {
+  auto client = std::make_unique<RestClient::Connection>(cSpotifyAuthUrl);
+
+  // build body
+
+  std::string body;
+  body.append("grant_type=")
+      .append("refresh_token")
+      .append("&refresh_token=")
+      .append(refreshToken);
+
+  // build header
+  RestClient::HeaderFields headers;
+  headers.insert(
+      std::pair<std::string, std::string>("Accept", "application/json"));
+  headers.insert(std::pair<std::string, std::string>(
+      "Content-Type", "application/x-www-form-urlencoded"));
+  headers.insert(std::pair<std::string, std::string>(
+      "Authorization",
+      "Basic " + (stringBase64Encode(clientID + ":" + clientSecret))));
+  client->SetHeaders(headers);
+
+  client->SetTimeout(cRequestTimeout);
+  auto response = client->post("/api/token", body);
+  nlohmann::json tokenJson;
+  try {
+    tokenJson = nlohmann::json::parse(response.body);
+  } catch (...) {
+    return Error(
+        ErrorCode::SpotifyParseError,
+        "[SpotifyAPI] in refreshAccessToken Json received Parse Error");
+  }
+
+  if (response.code == cHTTPOK) {
+    Token token(tokenJson);
+    return std::move(token);
+  } else {
+    // check for error object
+    if (tokenJson.find("error") != tokenJson.end()) {
+      SpotifyError spotifyError(tokenJson);
       return errorParser(spotifyError);
     }
   }
@@ -382,6 +433,8 @@ Error SpotifyAPI::errorParser(SpotifyApi::SpotifyError const &error) {
     } else if (error.getMessage().find("The access token expired") !=
                std::string::npos) {
       return Error(ErrorCode::SessionExpired, error.getMessage());
+    } else {
+      return Error(ErrorCode::AccessDenied, error.getMessage());
     }
   } else if (error.getStatus() == cHTTPNotFound) {
     return Error(ErrorCode::SpotifyNotFound, error.getMessage());
@@ -408,4 +461,42 @@ std::string SpotifyAPI::stringUrlEncode(std::string const &str) {
     }
   }
   return std::move(urlEncoded);
+}
+
+std::string SpotifyAPI::stringBase64Encode(std::string const &str) {
+  static const char sEncodingTable[] = {
+      'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+      'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+      'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+      'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+      '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/'};
+
+  size_t in_len = str.size();
+  size_t out_len = 4 * ((in_len + 2) / 3);
+  std::string ret(out_len, '\0');
+  size_t i;
+  char *p = const_cast<char *>(ret.c_str());
+
+  for (i = 0; i < in_len - 2; i += 3) {
+    *p++ = sEncodingTable[(str[i] >> 2) & 0x3F];
+    *p++ =
+        sEncodingTable[((str[i] & 0x3) << 4) | ((int)(str[i + 1] & 0xF0) >> 4)];
+    *p++ = sEncodingTable[((str[i + 1] & 0xF) << 2) |
+                          ((int)(str[i + 2] & 0xC0) >> 6)];
+    *p++ = sEncodingTable[str[i + 2] & 0x3F];
+  }
+  if (i < in_len) {
+    *p++ = sEncodingTable[(str[i] >> 2) & 0x3F];
+    if (i == (in_len - 1)) {
+      *p++ = sEncodingTable[((str[i] & 0x3) << 4)];
+      *p++ = '=';
+    } else {
+      *p++ = sEncodingTable[((str[i] & 0x3) << 4) |
+                            ((int)(str[i + 1] & 0xF0) >> 4)];
+      *p++ = sEncodingTable[((str[i + 1] & 0xF) << 2)];
+    }
+    *p++ = '=';
+  }
+
+  return ret;
 }
