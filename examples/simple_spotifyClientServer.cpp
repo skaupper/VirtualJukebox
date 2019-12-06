@@ -31,7 +31,9 @@ int main(void) {
   // }
 
   std::string accessToken(
-      "BQDecD1tigDxy5OFUpR28hImVaXOFhG1LDuLaw9sPKs8kKFGcNfAxCciICGiIHkK5R5gaSdAg08PmIK-Be7cjCFOJcwAPrKhQwcppGobQB_FwbwKcUySaXpT0-EdIEUpZ6kPaCkhs128RCJHVtU5Okucpe8UkJa3xEhA08IWp5AStvPquXARb8VhaxucHbKHAw");
+      "BQDhrADt4mVznUhLMYMUeUjVKUQtgnsBJPic2AtzQq4IXjCmxXbcCT9XF7xckBwglyY-"
+      "zGRz0uw6018WwSFlYp0FM41XWKJT3CaK1U79DnS8en6nauwrh4OQQWzcWXanCxh7H0m-"
+      "Azcs3ITV3gW71r3hFSUX7G4oiThR2lcFPJ8lsrsSEclaqcWgrtijQdUHBA");
   SpotifyApi::SpotifyAPI api;
   api.getAvailableDevices(accessToken);
 
@@ -57,6 +59,7 @@ int main(void) {
         //<< playb.getCurrentPlayingTrack().getAlbum().getImages()[0].getUrl()
         << endl;
   }
+  std::string testContextUri;
   auto searRet =
       api.search(accessToken, "*park*", SpotifyApi::QueryType::track, 2);
   if (auto val = std::get_if<Error>(&searRet)) {
@@ -65,10 +68,14 @@ int main(void) {
     auto paging = get<SpotifyApi::SpotifyPaging>(searRet);
 
     cout << "QuerySearch" << paging.getTracks()[0].getName() << endl;
+    testContextUri = paging.getTracks()[0].getUri();
+    std::cout << "uri: " << testContextUri << endl;
   }
 
-  api.setVolume(accessToken,100);
-  api.pause(accessToken);
+  api.setVolume(accessToken, 100);
+  //  api.pause(accessToken);
+  vector<string> x{testContextUri};
+  api.play(accessToken, x);
 
   return 0;
 }

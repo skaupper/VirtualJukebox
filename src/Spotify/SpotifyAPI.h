@@ -53,8 +53,16 @@ class SpotifyAPI {
                                 int const offset = 0,
                                 std::string const &market = "AT");
 
-  TResultOpt setVolume(std::string const &accessToken,int volume,Device const &device = Device());
-  TResultOpt pause(std::string const &accessToken, Device const &device = Device());
+  TResultOpt setVolume(std::string const &accessToken,
+                       int volume,
+                       Device const &device = Device());
+  TResultOpt pause(std::string const &accessToken,
+                   Device const &device = Device());
+  TResultOpt play(
+      std::string const &accessToken,
+      std::vector<std::string> const &uris = std::vector<std::string>(),
+      Device const &device = Device(),
+      int positionMs = 0);
 
   static std::string stringUrlEncode(std::string const &str);
 

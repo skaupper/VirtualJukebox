@@ -219,32 +219,34 @@ TResult<SpotifyPaging> SpotifyAPI::search(std::string const &accessToken,
                "Spotify sent an unexpected message");
 }
 
-TResultOpt SpotifyAPI::setVolume(std::string const &accessToken,int volume, const SpotifyApi::Device &device) {
+TResultOpt SpotifyAPI::setVolume(std::string const &accessToken,
+                                 int volume,
+                                 const SpotifyApi::Device &device) {
   auto client = std::make_unique<RestClient::Connection>(cSpotifyAPIUrl);
   RestClient::HeaderFields headers;
   headers.insert(
-          std::pair<std::string, std::string>("Accept", "application/json"));
+      std::pair<std::string, std::string>("Accept", "application/json"));
   headers.insert(
-          std::pair<std::string, std::string>("Content-Type", "application/json"));
+      std::pair<std::string, std::string>("Content-Type", "application/json"));
   headers.insert(std::pair<std::string, std::string>("Authorization",
                                                      "Bearer " + accessToken));
   client->SetHeaders(headers);
 
   // set upper and lower bounds
-  volume = volume>100?100:volume;
-  volume = volume<0?0:volume;
+  volume = volume > 100 ? 100 : volume;
+  volume = volume < 0 ? 0 : volume;
 
   // build query
   std::stringstream queryStream;
   queryStream << "?volume_percent=" << (volume);
-  if(device.getID()!=""){
-    queryStream<<"&device_id="<<device.getID();
+  if (device.getID() != "") {
+    queryStream << "&device_id=" << device.getID();
   }
 
   client->SetTimeout(cRequestTimeout);
-  auto response = client->put("/v1/me/player/volume" + queryStream.str(),"");
+  auto response = client->put("/v1/me/player/volume" + queryStream.str(), "");
 
-  if(response.code==cNoContent){
+  if (response.code == cNoContent) {
     return std::nullopt;
   }
 
@@ -270,27 +272,28 @@ TResultOpt SpotifyAPI::setVolume(std::string const &accessToken,int volume, cons
                "Spotify sent an unexpected message");
 }
 
-TResultOpt SpotifyAPI::pause(std::string const &accessToken, const SpotifyApi::Device &device) {
+TResultOpt SpotifyAPI::pause(std::string const &accessToken,
+                             const SpotifyApi::Device &device) {
   auto client = std::make_unique<RestClient::Connection>(cSpotifyAPIUrl);
   RestClient::HeaderFields headers;
   headers.insert(
-          std::pair<std::string, std::string>("Accept", "application/json"));
+      std::pair<std::string, std::string>("Accept", "application/json"));
   headers.insert(
-          std::pair<std::string, std::string>("Content-Type", "application/json"));
+      std::pair<std::string, std::string>("Content-Type", "application/json"));
   headers.insert(std::pair<std::string, std::string>("Authorization",
                                                      "Bearer " + accessToken));
   client->SetHeaders(headers);
 
   // build query
   std::stringstream queryStream;
-  if(device.getID()!=""){
-    queryStream<<"?device_id="<<device.getID();
+  if (device.getID() != "") {
+    queryStream << "?device_id=" << device.getID();
   }
 
   client->SetTimeout(cRequestTimeout);
-  auto response = client->put("/v1/me/player/pause" + queryStream.str(),"");
+  auto response = client->put("/v1/me/player/pause" + queryStream.str(), "");
 
-  if(response.code==cNoContent){
+  if (response.code == cNoContent) {
     return std::nullopt;
   }
 
@@ -316,7 +319,61 @@ TResultOpt SpotifyAPI::pause(std::string const &accessToken, const SpotifyApi::D
                "Spotify sent an unexpected message");
 }
 
+TResultOpt SpotifyAPI::play(std::string const &accessToken,
+                            std::vector<std::string> const &uris,
+                            const SpotifyApi::Device &device,
+                            int positionMs) {
+  auto client = std::make_unique<RestClient::Connection>(cSpotifyAPIUrl);
+  RestClient::HeaderFields headers;
+  headers.insert(
+      std::pair<std::string, std::string>("Accept", "application/json"));
+  headers.insert(
+      std::pair<std::string, std::string>("Content-Type", "application/json"));
+  headers.insert(std::pair<std::string, std::string>("Authorization",
+                                                     "Bearer " + accessToken));
+  client->SetHeaders(headers);
 
+  // build query
+  std::stringstream queryStream;
+  if (device.getID() != "") {
+    queryStream << "?device_id=" << device.getID();
+  }
+
+  // build body
+  nlohmann::json body = {{"position_ms", positionMs}};
+  if (!uris.empty()) {
+    body["uris"] = uris;
+  }
+
+  client->SetTimeout(cRequestTimeout);
+  auto response =
+      client->put("/v1/me/player/play" + queryStream.str(), body.dump());
+
+  if (response.code == cNoContent) {
+    return std::nullopt;
+  }
+
+  nlohmann::json errJson;
+  try {
+    errJson = nlohmann::json::parse(response.body);
+
+    // check for error object
+    if (errJson.find("error") != errJson.end()) {
+      SpotifyError spotifyError(errJson["error"]);
+      return errorParser(spotifyError);
+    }
+
+    // if we reach here or the exception gets thrown spotify sent an unexpected
+    // message
+  } catch (...) {
+    // parse exception
+    return Error(ErrorCode::SpotifyParseError,
+                 "[SpotifyAPI] received json couldn't be parsed");
+  }
+  // if we reach here spotify sent an unexpected message
+  return Error(ErrorCode::SpotifyAPIError,
+               "Spotify sent an unexpected message");
+}
 
 Error SpotifyAPI::errorParser(SpotifyApi::SpotifyError const &error) {
   if (error.getStatus() == cHTTPUnouthorized) {
@@ -328,8 +385,8 @@ Error SpotifyAPI::errorParser(SpotifyApi::SpotifyError const &error) {
     }
   } else if (error.getStatus() == cHTTPNotFound) {
     return Error(ErrorCode::SpotifyNotFound, error.getMessage());
-  } else if (error.getStatus()== cHTTPForbidden){
-    return Error(ErrorCode::SpotifyForbidden,error.getMessage());
+  } else if (error.getStatus() == cHTTPForbidden) {
+    return Error(ErrorCode::SpotifyForbidden, error.getMessage());
   } else {
     // unhandled spotify error
     LOG(ERROR) << "[SpotifyAPI]: Error " << error.getMessage()
