@@ -140,7 +140,7 @@ class NetworkListener {
    * @param sid The session ID of the user. Used to authenticate as admin.
    * @param trkid The track to be moved. Has to be queried using `queryMusic`
    * beforehand.
-   * @param type Determines to which queue the track should be moved.
+   * @param type Determines which queue the track should be moved to.
    * @return Returns an `Error` if something went wrong.
    *
    * @note To move a track from and to any queue, the user must have been
