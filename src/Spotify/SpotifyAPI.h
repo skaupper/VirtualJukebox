@@ -7,8 +7,8 @@
 #ifndef SPOTIFYAPI_H_INCLUDED
 #define SPOTIFYAPI_H_INCLUDED
 
-#include "SpotifyAPITypes.h"
 #include "Types/Result.h"
+#include "SpotifyAPITypes.h"
 
 namespace SpotifyApi {
 

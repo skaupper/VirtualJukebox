@@ -27,6 +27,7 @@ TResultOpt RAMDataStore::addUser(User user) {
   } else {
     return Error(ErrorCode::AlreadyExists, "User already exists");
   }
+  return nullopt;
 }
 
 // doesnt remove votes taken by this user
@@ -42,8 +43,11 @@ TResult<User> RAMDataStore::removeUser(TSessionID ID) {
   if (it == mUsers.end()) {
     return Error(ErrorCode::DoesntExist, "User doesnt exist");
   } else {
+      // copy user for return type
+      user = *it;
     // delete User
     mUsers.erase(it);
+    return user;
   }
 }
 
@@ -89,6 +93,7 @@ TResultOpt RAMDataStore::addTrack(BaseTrack track, QueueType q) {
     qtr.iconUri = track.iconUri;
     qtr.addedBy = track.addedBy;
     pQueue->tracks.push_back(qtr);
+    return nullopt;
   } else {
     return Error(ErrorCode::AlreadyExists, "Track already exists");
   }
@@ -112,8 +117,10 @@ TResult<BaseTrack> RAMDataStore::removeTrack(TTrackID ID, QueueType q) {
   if (it == pQueue->tracks.end()) {
     return Error(ErrorCode::DoesntExist, "Track doesnt exist in this Queue");
   } else {
+      track = *it;
     // Track is there, delete it from vector
     pQueue->tracks.erase(it,it);
+    return track;
   }
 }
 
@@ -152,24 +159,55 @@ TResultOpt RAMDataStore::voteTrack(TSessionID sID, TTrackID tID, TVote vote) {
   if (it == mUsers.end()) {
       // User not found
     return Error(ErrorCode::DoesntExist, "User doesnt exist");
-  } else {
-      // User found, look for Track
-    auto it_track = find(it->votes.begin(), it->votes.end(), tID);
-    if (it_track == it->votes.end()) {
-      // Track not found
-      return Error(ErrorCode::DoesntExist, "Track doesnt exist");
-    } else {
-      // Track found
-      if(vote){
-          // we want to upvote it, so upvote by adding it to the vector of upvoted tracks
-          it->votes.emplace_back(tID);
-      }
-      else{
-          // we want to remove it from upvoted tracks, so remove it from vector of upvoted tracks
-          it->votes.erase(it_track, it_track);
-      }
-    }
   }
+
+  // User found, look for Track in vote vector
+  auto it_track = find(it->votes.begin(), it->votes.end(), tID);
+  if (it_track == it->votes.end()) {
+    // Track not found in vote vector
+    return Error(ErrorCode::DoesntExist, "Track doesnt exist");
+  }
+
+  // find track in Queues
+  QueuedTrack track;
+  track.trackId = tID;
+  QueuedTrack *pAdminTrack = 0;
+  QueuedTrack *pNormalTrack = 0;
+  auto it_admin = find(mAdminQueue.tracks.begin(), mAdminQueue.tracks.end(), track);
+  if (it_admin == mAdminQueue.tracks.end()) {
+      pAdminTrack = &(*it_admin);
+  }
+  auto it_normal = find(mNormalQueue.tracks.begin(), mNormalQueue.tracks.end(), track);
+  if (it_normal == mNormalQueue.tracks.end()) {
+      pAdminTrack = &(*it_admin);
+  }
+
+  // Track found in vote vector
+  if(vote){
+      // we want to upvote it, so upvote by adding it to the vector of upvoted tracks
+      it->votes.emplace_back(tID);
+      // increment its upvote counter
+      if(pAdminTrack != nullptr){
+          pNormalTrack->votes++;
+      }
+      if(pNormalTrack != nullptr){
+          pNormalTrack->votes++;
+      }
+  }
+  else{
+      // we want to remove it from upvoted tracks, so remove it from vector of upvoted tracks
+      it->votes.erase(it_track, it_track);
+      // decrement its upvote counter
+      if(pAdminTrack != nullptr){
+          pNormalTrack->votes++;
+      }
+      if(pNormalTrack != nullptr){
+          pNormalTrack->votes++;
+      }
+  }
+  // sort Normal Queue
+  sort(mNormalQueue.tracks.begin(), mNormalQueue.tracks.end());
+  return nullopt;
 }
 
 TResult<Queue> RAMDataStore::getQueue(QueueType q) {
@@ -187,7 +225,7 @@ TResult<Queue> RAMDataStore::getQueue(QueueType q) {
   return (const Queue)(*pQueue);
 }
 
-TResult<BaseTrack> RAMDataStore::getPlayingTrack() {
+TResult<PlaybackTrack> RAMDataStore::getPlayingTrack() {
     // Shared Access to Song Queue
     shared_lock<shared_mutex> MyLock(mQueueMutex, defer_lock);
     MyLock.lock();
@@ -216,10 +254,43 @@ TResultOpt RAMDataStore::nextTrack() {
   unique_lock<shared_mutex> MyLock(mQueueMutex, defer_lock);
   MyLock.lock();
 
+    QueuedTrack tr;
 
+  // If there are songs in the Admin Queue, play the first of those and move it to the user queue
+  if(mAdminQueue.tracks.size()){
+    tr = mAdminQueue.tracks[0];
 
+    // move track from Admin Queue to user Queue if it doesnt already exist there and delete it from Admin Queue.
+    auto it = find(mNormalQueue.tracks.begin(), mNormalQueue.tracks.end(), tr);
+    if (it == mNormalQueue.tracks.end()) {
+        tr.LastPlayedxSongsAgo = 0;
+        mNormalQueue.tracks.push_back(tr);
+    }
+    else{
+        it->LastPlayedxSongsAgo = 0;
+    }
+    mAdminQueue.tracks.erase(mAdminQueue.tracks.begin());
+  } else{
+      // no songs in the admin queue, use the first one from the user queue
+      tr = mNormalQueue.tracks[0];
+      tr.LastPlayedxSongsAgo = 0;
+  }
 
-  
+  // sort Normal Queue
+  sort(mNormalQueue.tracks.begin(), mNormalQueue.tracks.end());
+
+   // Set Current Track
+   mCurrentTrack.trackId = tr.trackId;
+   mCurrentTrack.title = tr.title;
+   mCurrentTrack.album = tr.album;
+   mCurrentTrack.artist = tr.artist;
+   mCurrentTrack.duration = tr.duration;
+   mCurrentTrack.iconUri = tr.iconUri;
+   mCurrentTrack.addedBy = tr.addedBy;
+   mCurrentTrack.progressMs = 0;
+   mCurrentTrack.isPlaying = true;
+
+    return nullopt;
 }
 
 Queue *RAMDataStore::SelectQueue(QueueType q) {

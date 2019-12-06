@@ -12,10 +12,10 @@
 #include <iostream>
 #include <string>
 
-#include "JukeBox.h"
-#include "Types/Result.h"
 #include "Utils/ConfigHandler.h"
+#include "JukeBox.h"
 #include "Utils/LoggingHandler.h"
+#include "Types/Result.h"
 
 using namespace std;
 

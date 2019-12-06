@@ -31,7 +31,7 @@ class DataStore {
   virtual TResult<bool> hasTrack(TTrackID ID, QueueType q) = 0;
   virtual TResultOpt voteTrack(TSessionID sID, TTrackID tID, TVote vote) = 0;
   virtual TResult<Queue> getQueue(QueueType q) = 0;
-  virtual TResult<BaseTrack> getPlayingTrack() = 0;
+  virtual TResult<PlaybackTrack> getPlayingTrack() = 0;
   virtual TResult<bool> hasUser(TSessionID) = 0;
   virtual TResultOpt nextTrack() = 0;
 };

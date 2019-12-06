@@ -10,8 +10,8 @@
 
 #include <sstream>
 
-#include "RestRequestHandler.h"
 #include "Utils/ConfigHandler.h"
+#include "RestRequestHandler.h"
 
 using namespace std;
 using namespace httpserver;

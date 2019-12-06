@@ -30,7 +30,7 @@ class RAMDataStore : public DataStore {
   TResult<bool> hasTrack(TTrackID ID, QueueType q);
   TResultOpt voteTrack(TSessionID sID, TTrackID tID, TVote vote);
   TResult<Queue> getQueue(QueueType q);
-  TResult<BaseTrack> getPlayingTrack();
+  TResult<PlaybackTrack> getPlayingTrack();
   TResult<bool> hasUser(TSessionID ID);
   TResultOpt nextTrack();
 
@@ -38,7 +38,7 @@ class RAMDataStore : public DataStore {
   Queue* SelectQueue(QueueType q);
   Queue mAdminQueue;
   Queue mNormalQueue;
-  BaseTrack mCurrentTrack;
+  PlaybackTrack mCurrentTrack;
   std::vector<User> mUsers;
   std::shared_mutex mUserMutex;
   std::shared_mutex mQueueMutex;

@@ -13,7 +13,6 @@
 #include <variant>
 #include <vector>
 
-#include "Network/NetworkAPI.h"
 #include "NetworkListener.h"
 #include "Types/GlobalTypes.h"
 #include "Types/Queue.h"
@@ -21,6 +20,7 @@
 
 //#include "DataStore.h"
 //#include "MusicBackend.h"
+#include "Network/NetworkAPI.h"
 //#include "User.h"
 
 class JukeBox : public NetworkListener {
