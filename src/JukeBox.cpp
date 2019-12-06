@@ -165,19 +165,21 @@ TResultOpt JukeBox::controlPlayer(TSessionID const &sid, PlayerAction action) {
   //                 << "' is not priviledged to control the player.";
   //    return Error(ErrorCode::AccessDenied, "User is not an admin.");
   //  }
+  TResultOpt ret;
+  TResult<size_t> volume;
   switch (action) {
     case PlayerAction::Play:
-      auto ret = mMusicBackend->play();
+      ret = mMusicBackend->play();
       if (ret.has_value())
         return ret.value();
       break;
     case PlayerAction::Pause:
-      auto ret = mMusicBackend->pause();
+      ret = mMusicBackend->pause();
       if (ret.has_value())
         return ret.value();
       break;
     case PlayerAction::Stop:
-      auto ret = mMusicBackend->pause();  // TODO: there is no 'stop' function?
+      ret = mMusicBackend->pause();  // TODO: there is no 'stop' function?
       if (ret.has_value())
         return ret.value();
       break;
@@ -186,25 +188,25 @@ TResultOpt JukeBox::controlPlayer(TSessionID const &sid, PlayerAction action) {
       // if (next.has_value())
       //  return next.value();
 
-      // auto ret = mMusicBackend->setPlayback(next);
+      // ret = mMusicBackend->setPlayback(next);
       // if (ret.has_value())
       //  return ret.value();
       break;
     case PlayerAction::VolumeUp:
-      auto volume = mMusicBackend->getVolume();
+      volume = mMusicBackend->getVolume();
       if (holds_alternative<Error>(volume))
         return get<Error>(volume);
 
-      auto ret = mMusicBackend->setVolume(get<int>(volume) + volChangePercent);
+      ret = mMusicBackend->setVolume(get<size_t>(volume) + volChangePercent);
       if (ret.has_value())
         return ret.value();
       break;
     case PlayerAction::VolumeDown:
-      auto volume = mMusicBackend->getVolume();
+      volume = mMusicBackend->getVolume();
       if (holds_alternative<Error>(volume))
         return get<Error>(volume);
 
-      auto ret = mMusicBackend->setVolume(get<int>(volume) + volChangePercent);
+      ret = mMusicBackend->setVolume(get<size_t>(volume) + volChangePercent);
       if (ret.has_value())
         return ret.value();
       break;
