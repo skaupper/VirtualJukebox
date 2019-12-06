@@ -69,7 +69,8 @@ class EmptyNetworkListener : public NetworkListener {
     } else if (type == QueueType::Admin) {
       LOG(INFO) << "Admin queue";
     } else {
-      return Error(ErrorCode::InvalidValue, "Unknown player action");
+      LOG(ERROR) << "Unknown queue type";
+      return Error(ErrorCode::InvalidValue, "Unknown queue type");
     }
     return nullopt;
   }
@@ -110,6 +111,7 @@ class EmptyNetworkListener : public NetworkListener {
         LOG(INFO) << "VolumeUp";
         break;
       default:
+        LOG(ERROR) << "Unknown player action";
         return Error(ErrorCode::InvalidValue, "Unknown player action");
     }
     return nullopt;
