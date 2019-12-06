@@ -3,8 +3,8 @@
 #include <iostream>
 #include <memory>
 
+#include "Network/RestAPI.h"
 #include "NetworkListenerHelper.h"
-#include "RestAPI.h"
 #include "RestAPIFixture.h"
 #include "json/json.hpp"
 #include "restclient-cpp/restclient.h"

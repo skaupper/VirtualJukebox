@@ -14,7 +14,7 @@
 #include <thread>
 
 #include "MockNetworkListener.h"
-#include "RestAPI.h"
+#include "Network/RestAPI.h"
 #include "restclient-cpp/restclient.h"
 
 class RestAPIFixture : public ::testing::Test {
