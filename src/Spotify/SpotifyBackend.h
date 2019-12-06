@@ -10,12 +10,15 @@
 #define _SPOTIFYBACKEND_H_
 
 #include "MusicBackend.h"
+#include "SpotifyAPI.h"
+#include "SpotifyAuthorization.h"
 #include "Types/GlobalTypes.h"
 #include "Types/Queue.h"
 #include "Types/Result.h"
 
 class SpotifyBackend : public MusicBackend {
  public:
+  virtual ~SpotifyBackend();
   virtual TResultOpt initBackend(void) override;
   virtual TResult<std::vector<BaseTrack>> queryTracks(
       std::string const &pattern, size_t const num) override;
@@ -25,6 +28,10 @@ class SpotifyBackend : public MusicBackend {
   virtual TResultOpt play() override;
   virtual TResult<size_t> getVolume(void) override;
   virtual TResultOpt setVolume(size_t const percent) override;
+
+ private:
+  SpotifyApi::SpotifyAPI mSpotifyAPI;
+  SpotifyApi::SpotifyAuthorization mSpotifyAuth;
 };
 
 #endif /* _SPOTIFYBACKEND_H_ */
