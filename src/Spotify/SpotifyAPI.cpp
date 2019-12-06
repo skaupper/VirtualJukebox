@@ -134,7 +134,7 @@ TResult<Playback> SpotifyAPI::getCurrentPlayback(std::string const &accessToken,
 
   nlohmann::json playbackJson;
   if (response.code == cNoContent) {
-    LOG(INFO) << "[SotifyAPI] in getCurrentPlayback, no content received"
+    LOG(INFO) << "[SpotifyAPI] in getCurrentPlayback, no content received"
               << std::endl;
     return Playback();
   }
@@ -397,14 +397,15 @@ Error SpotifyAPI::errorParser(SpotifyApi::SpotifyError const &error) {
 
 std::string SpotifyAPI::stringUrlEncode(std::string const &str) {
   std::map<char, std::string> const replaceMap = {
-      {' ', "%20"}, {'/', "%2F"}, {';', "%3B"}};
+      {' ', "%20"}, {'/', "%2F"}, {';', "%3B"}, {':', "%3A"}};
 
   std::string urlEncoded = "";
   for (auto &elem : str) {
     if (replaceMap.find(elem) != replaceMap.end()) {
       urlEncoded.append(replaceMap.at(elem));
+    } else {
+      urlEncoded.append(1, elem);
     }
-    urlEncoded.append(1, elem);
   }
   return std::move(urlEncoded);
 }

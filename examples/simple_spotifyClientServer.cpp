@@ -21,14 +21,11 @@ int main(void) {
 
   auto test = config->getValueString("Spotify", "scopes");
 
-  // SpotifyApi::SpotifyAuthorization auth;
-  // auto ret = auth.startServer();
-  //  if(ret){
-  //   cout << ret.value().getErrorMessage()<<endl;
-  // }
-  // else{
-  //    while(1);
-  // }
+  SpotifyApi::SpotifyAuthorization auth;
+  auth.startServer();
+
+  while (1)
+    ;
 
   std::string accessToken(
       "BQDhrADt4mVznUhLMYMUeUjVKUQtgnsBJPic2AtzQq4IXjCmxXbcCT9XF7xckBwglyY-"
