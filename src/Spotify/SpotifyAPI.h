@@ -53,6 +53,9 @@ class SpotifyAPI {
                                 int const offset = 0,
                                 std::string const &market = "AT");
 
+  TResultOpt setVolume(std::string const &accessToken,int volume,Device const &device = Device());
+  TResultOpt pause(std::string const &accessToken, Device const &device = Device());
+
   static std::string stringUrlEncode(std::string const &str);
 
  private:
@@ -69,6 +72,8 @@ class SpotifyAPI {
   int const cHTTPTimeout = 408;
   int const cHTTPUnouthorized = 401;
   int const cHTTPOK = 200;
+  int const cHTTPNotFound = 404;
+  int const cHTTPForbidden = 403;
   int const cNoContent = 204;
 };
 

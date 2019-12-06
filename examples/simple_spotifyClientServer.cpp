@@ -31,10 +31,7 @@ int main(void) {
   // }
 
   std::string accessToken(
-      "BQCM5WSJQ9fukHgk-_7cEQTtFrUOGmTJLZw5gmAfYrSjBMq_"
-      "GodWRIXIMv0UEfFhFPG61Ma9wHILgXev8N1oljF4YykOfI1aMvz1kUZ6INk6zO3hkPNWp0pA"
-      "xv7AeDu7e5b-"
-      "KQxBUHodjKbNgueaKU1pN885KBP4di9Vlw7KLwpIJo34JvVGqnPsQ2hMhR8T6Q");
+      "BQDecD1tigDxy5OFUpR28hImVaXOFhG1LDuLaw9sPKs8kKFGcNfAxCciICGiIHkK5R5gaSdAg08PmIK-Be7cjCFOJcwAPrKhQwcppGobQB_FwbwKcUySaXpT0-EdIEUpZ6kPaCkhs128RCJHVtU5Okucpe8UkJa3xEhA08IWp5AStvPquXARb8VhaxucHbKHAw");
   SpotifyApi::SpotifyAPI api;
   api.getAvailableDevices(accessToken);
 
@@ -69,6 +66,9 @@ int main(void) {
 
     cout << "QuerySearch" << paging.getTracks()[0].getName() << endl;
   }
+
+  api.setVolume(accessToken,100);
+  api.pause(accessToken);
 
   return 0;
 }
