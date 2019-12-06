@@ -61,7 +61,11 @@ TResult<TSessionID> JukeBox::generateSession(optional<TPassword> const &pw,
 
 TResult<vector<BaseTrack>> JukeBox::queryTracks(string const &searchPattern,
                                                 size_t const nrOfEntries) {
-  return Error(ErrorCode::NotImplemented, "queryTracks is not implemented yet");
+  auto tracks = mMusicBackend->queryTracks(searchPattern, nrOfEntries);
+  if (holds_alternative<Error>(tracks))
+    return get<Error>(tracks);
+
+  return tracks;
 }
 
 TResult<QueueStatus> JukeBox::getCurrentQueues(TSessionID const &) {
@@ -216,7 +220,4 @@ TResultOpt JukeBox::controlPlayer(TSessionID const &sid, PlayerAction action) {
                    "JukeBox.controlPlayer: Unhandled PlayerAction");
       break;
   }
-
-  return Error(ErrorCode::NotImplemented,
-               "controlPlayer is not implemented yet");
 }
