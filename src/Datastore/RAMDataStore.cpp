@@ -43,8 +43,8 @@ TResult<User> RAMDataStore::removeUser(TSessionID ID) {
   if (it == mUsers.end()) {
     return Error(ErrorCode::DoesntExist, "User doesnt exist");
   } else {
-      // copy user for return type
-      user = *it;
+    // copy user for return type
+    user = *it;
     // delete User
     mUsers.erase(it);
     return user;
@@ -94,7 +94,9 @@ TResultOpt RAMDataStore::addTrack(BaseTrack track, QueueType q) {
     qtr.addedBy = track.addedBy;
     qtr.votes = 0;
     qtr.insertedAt = time(nullptr);
-    qtr.LastPlayedxSongsAgo = 1; // set to one so that votes of songs count immediately after insertion. See nextTrack and VoteTrack and Tracks operator<
+    qtr.LastPlayedxSongsAgo =
+        1;  // set to one so that votes of songs count immediately after
+            // insertion. See nextTrack and VoteTrack and Tracks operator<
     pQueue->tracks.push_back(qtr);
     return nullopt;
   } else {
@@ -120,9 +122,9 @@ TResult<BaseTrack> RAMDataStore::removeTrack(TTrackID ID, QueueType q) {
   if (it == pQueue->tracks.end()) {
     return Error(ErrorCode::DoesntExist, "Track doesnt exist in this Queue");
   } else {
-      track = *it;
+    track = *it;
     // Track is there, delete it from vector
-    pQueue->tracks.erase(it,it);
+    pQueue->tracks.erase(it, it);
     return track;
   }
 }
@@ -160,62 +162,64 @@ TResultOpt RAMDataStore::voteTrack(TSessionID sID, TTrackID tID, TVote vote) {
   user.SessionID = sID;
   auto it = find(mUsers.begin(), mUsers.end(), user);
   if (it == mUsers.end()) {
-      // User not found
+    // User not found
     return Error(ErrorCode::DoesntExist, "User doesnt exist");
   }
 
-    // find track in Queues
-    QueuedTrack track;
-    track.trackId = tID;
-    QueuedTrack *pAdminTrack = 0;
-    QueuedTrack *pNormalTrack = 0;
-    auto it_admin = find(mAdminQueue.tracks.begin(), mAdminQueue.tracks.end(), track);
-    if (it_admin != mAdminQueue.tracks.end()) {
-        pAdminTrack = &(*it_admin);
-    }
-    auto it_normal = find(mNormalQueue.tracks.begin(), mNormalQueue.tracks.end(), track);
-    if (it_normal != mNormalQueue.tracks.end()) {
-        pNormalTrack = &(*it_normal);
-    }
-
+  // find track in Queues
+  QueuedTrack track;
+  track.trackId = tID;
+  QueuedTrack *pAdminTrack = 0;
+  QueuedTrack *pNormalTrack = 0;
+  auto it_admin =
+      find(mAdminQueue.tracks.begin(), mAdminQueue.tracks.end(), track);
+  if (it_admin != mAdminQueue.tracks.end()) {
+    pAdminTrack = &(*it_admin);
+  }
+  auto it_normal =
+      find(mNormalQueue.tracks.begin(), mNormalQueue.tracks.end(), track);
+  if (it_normal != mNormalQueue.tracks.end()) {
+    pNormalTrack = &(*it_normal);
+  }
 
   // User found, look for Track in vote vector
   auto it_track = find(it->votes.begin(), it->votes.end(), tID);
   if (it_track != it->votes.end()) {
     // Track already found in vote vector
-    if(vote){
-        // track already in vote vector and we want to upvote it: this is a duplicate, do nothing
-    }
-    else{
-        // Track already in vote vector and we want to remove the upvote:
-        // we want to remove it from upvoted tracks, so remove it from vector of upvoted tracks and update vote counter in track
-        it->votes.erase(it_track);
-        // decrement its upvote counter
-        if(pAdminTrack != nullptr){
-            pAdminTrack->votes--;
-        }
-        if(pNormalTrack != nullptr){
-            pNormalTrack->votes--;
-        }
-    }
-  } else{
-      // Track not in vote vector
-      if(vote){
-          // Track not in vote vector and we want to upvote it: add to vector and update counter
-          it->votes.emplace_back(tID);
-          // increment its upvote counter
-          if(pAdminTrack != nullptr){
-              pAdminTrack->votes++;
-          }
-          if(pNormalTrack != nullptr){
-              pNormalTrack->votes++;
-          }
+    if (vote) {
+      // track already in vote vector and we want to upvote it: this is a
+      // duplicate, do nothing
+    } else {
+      // Track already in vote vector and we want to remove the upvote:
+      // we want to remove it from upvoted tracks, so remove it from vector of
+      // upvoted tracks and update vote counter in track
+      it->votes.erase(it_track);
+      // decrement its upvote counter
+      if (pAdminTrack != nullptr) {
+        pAdminTrack->votes--;
       }
-      else{
-        // track not in vote vector and we want to remove upvote: cant remove nonexistent upvote, so do nothing
+      if (pNormalTrack != nullptr) {
+        pNormalTrack->votes--;
       }
+    }
+  } else {
+    // Track not in vote vector
+    if (vote) {
+      // Track not in vote vector and we want to upvote it: add to vector and
+      // update counter
+      it->votes.emplace_back(tID);
+      // increment its upvote counter
+      if (pAdminTrack != nullptr) {
+        pAdminTrack->votes++;
+      }
+      if (pNormalTrack != nullptr) {
+        pNormalTrack->votes++;
+      }
+    } else {
+      // track not in vote vector and we want to remove upvote: cant remove
+      // nonexistent upvote, so do nothing
+    }
   }
-
 
   // sort Normal Queue
   sort(mNormalQueue.tracks.begin(), mNormalQueue.tracks.end());
@@ -238,11 +242,11 @@ TResult<Queue> RAMDataStore::getQueue(QueueType q) {
 }
 
 TResult<PlaybackTrack> RAMDataStore::getPlayingTrack() {
-    // Shared Access to Song Queue
-    shared_lock<shared_mutex> MyLock(mQueueMutex, defer_lock);
-    MyLock.lock();
+  // Shared Access to Song Queue
+  shared_lock<shared_mutex> MyLock(mQueueMutex, defer_lock);
+  MyLock.lock();
 
-    return mCurrentTrack;
+  return mCurrentTrack;
 }
 
 TResult<bool> RAMDataStore::hasUser(TSessionID ID) {
@@ -269,57 +273,57 @@ TResultOpt RAMDataStore::nextTrack() {
   // Increment LastPlayed counter for all songs
 
   // doesnt work with auto for some reason
-//  for(auto elem : mAdminQueue.tracks){
-//      elem.LastPlayedxSongsAgo += 1;
-//  }
-//    for(auto elem : mNormalQueue.tracks){
-//        elem.LastPlayedxSongsAgo += 1;
-//    }
-    for (int i = 0; i < mAdminQueue.tracks.size(); ++i) {
-        mAdminQueue.tracks[i].LastPlayedxSongsAgo += 1;
-    }
-    for (int i = 0; i < mNormalQueue.tracks.size(); ++i) {
-        mNormalQueue.tracks[i].LastPlayedxSongsAgo += 1;
-    }
+  //  for(auto elem : mAdminQueue.tracks){
+  //      elem.LastPlayedxSongsAgo += 1;
+  //  }
+  //    for(auto elem : mNormalQueue.tracks){
+  //        elem.LastPlayedxSongsAgo += 1;
+  //    }
+  for (int i = 0; i < mAdminQueue.tracks.size(); ++i) {
+    mAdminQueue.tracks[i].LastPlayedxSongsAgo += 1;
+  }
+  for (int i = 0; i < mNormalQueue.tracks.size(); ++i) {
+    mNormalQueue.tracks[i].LastPlayedxSongsAgo += 1;
+  }
 
+  QueuedTrack tr;
 
-    QueuedTrack tr;
-
-  // If there are songs in the Admin Queue, play the first of those and move it to the user queue
-  if(mAdminQueue.tracks.size()){
+  // If there are songs in the Admin Queue, play the first of those and move it
+  // to the user queue
+  if (mAdminQueue.tracks.size()) {
     tr = mAdminQueue.tracks[0];
 
-    // move track from Admin Queue to user Queue if it doesnt already exist there and delete it from Admin Queue.
+    // move track from Admin Queue to user Queue if it doesnt already exist
+    // there and delete it from Admin Queue.
     auto it = find(mNormalQueue.tracks.begin(), mNormalQueue.tracks.end(), tr);
     if (it == mNormalQueue.tracks.end()) {
-        tr.LastPlayedxSongsAgo = 0;
-        mNormalQueue.tracks.push_back(tr);
-    }
-    else{
-        it->LastPlayedxSongsAgo = 0;
+      tr.LastPlayedxSongsAgo = 0;
+      mNormalQueue.tracks.push_back(tr);
+    } else {
+      it->LastPlayedxSongsAgo = 0;
     }
     mAdminQueue.tracks.erase(mAdminQueue.tracks.begin());
-  } else{
-      // no songs in the admin queue, use the first one from the user queue
-      tr = mNormalQueue.tracks[0];
-      mNormalQueue.tracks[0].LastPlayedxSongsAgo = 0;
+  } else {
+    // no songs in the admin queue, use the first one from the user queue
+    tr = mNormalQueue.tracks[0];
+    mNormalQueue.tracks[0].LastPlayedxSongsAgo = 0;
   }
 
   // sort Normal Queue
   sort(mNormalQueue.tracks.begin(), mNormalQueue.tracks.end());
 
-   // Set Current Track
-   mCurrentTrack.trackId = tr.trackId;
-   mCurrentTrack.title = tr.title;
-   mCurrentTrack.album = tr.album;
-   mCurrentTrack.artist = tr.artist;
-   mCurrentTrack.duration = tr.duration;
-   mCurrentTrack.iconUri = tr.iconUri;
-   mCurrentTrack.addedBy = tr.addedBy;
-   mCurrentTrack.progressMs = 0;
-   mCurrentTrack.isPlaying = true;
+  // Set Current Track
+  mCurrentTrack.trackId = tr.trackId;
+  mCurrentTrack.title = tr.title;
+  mCurrentTrack.album = tr.album;
+  mCurrentTrack.artist = tr.artist;
+  mCurrentTrack.duration = tr.duration;
+  mCurrentTrack.iconUri = tr.iconUri;
+  mCurrentTrack.addedBy = tr.addedBy;
+  mCurrentTrack.progressMs = 0;
+  mCurrentTrack.isPlaying = true;
 
-    return nullopt;
+  return nullopt;
 }
 
 Queue *RAMDataStore::SelectQueue(QueueType q) {

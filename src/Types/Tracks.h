@@ -20,9 +20,9 @@ class BaseTrack {
   unsigned duration;
   std::string iconUri;
   std::string addedBy;
-    bool operator==(const BaseTrack tr){
-        return trackId == tr.trackId;
-    }
+  bool operator==(const BaseTrack tr) {
+    return trackId == tr.trackId;
+  }
 };
 
 struct QueuedTrack : public BaseTrack {
@@ -30,9 +30,12 @@ struct QueuedTrack : public BaseTrack {
   TVote currentVote;
   uint64_t insertedAt;
   int LastPlayedxSongsAgo;
-    bool operator<(const QueuedTrack tr){
-        return ((votes+1)*(LastPlayedxSongsAgo)) > ((tr.votes+1)*(tr.LastPlayedxSongsAgo)); // +1 to prevent multiplication by 0 (not upvoted tracks never get played)
-    }
+  bool operator<(const QueuedTrack tr) {
+    return ((votes + 1) * (LastPlayedxSongsAgo)) >
+           ((tr.votes + 1) *
+            (tr.LastPlayedxSongsAgo));  // +1 to prevent multiplication by 0
+                                        // (not upvoted tracks never get played)
+  }
 };
 
 struct PlaybackTrack : public BaseTrack {
