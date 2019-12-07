@@ -19,6 +19,7 @@ namespace SpotifyApi {
 
 class SpotifyAuthorization : public httpserver::http_resource {
  public:
+  ~SpotifyAuthorization();
   TResultOpt startServer(void);
   void stopServer(void);
   std::string const &getRefreshToken(void);

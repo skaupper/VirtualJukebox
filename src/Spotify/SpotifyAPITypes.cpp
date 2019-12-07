@@ -32,7 +32,7 @@ Token::Token(nlohmann::json const& tokenJson) {
   }
 }
 
-std::string Token::getAccessToken() {
+std::string const& Token::getAccessToken() {
   return mAccesToken;
 }
 
@@ -40,15 +40,15 @@ size_t Token::getExpiresIn() {
   return mExpiresIn;
 }
 
-std::string Token::getRefreshToken() {
+std::string const& Token::getRefreshToken() {
   return mRefreshToken;
 }
 
-std::string Token::getScope() {
+std::string const& Token::getScope() {
   return mScope;
 }
 
-std::string Token::getTokenType() {
+std::string const& Token::getTokenType() {
   return mTokenType;
 }
 

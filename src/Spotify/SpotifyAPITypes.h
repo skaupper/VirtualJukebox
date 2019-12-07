@@ -33,10 +33,10 @@ class Token {
   Token() = default;
   Token(nlohmann::json const &tokenJson);
 
-  std::string getAccessToken();
-  std::string getRefreshToken();
-  std::string getTokenType();
-  std::string getScope();
+  std::string const &getAccessToken();
+  std::string const &getRefreshToken();
+  std::string const &getTokenType();
+  std::string const &getScope();
   size_t getExpiresIn();
 
  private:

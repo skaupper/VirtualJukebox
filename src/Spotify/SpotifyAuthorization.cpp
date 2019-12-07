@@ -17,6 +17,10 @@
 using namespace SpotifyApi;
 using namespace httpserver;
 
+SpotifyAuthorization::~SpotifyAuthorization() {
+  stopServer();
+}
+
 TResultOpt SpotifyAuthorization::startServer(void) {
   VLOG(100) << "SpotifyAuthorization:: Start Server" << std::endl;
 
@@ -43,8 +47,8 @@ void SpotifyAuthorization::startServerThread() {
   };
 }
 void SpotifyAuthorization::stopServer() {
-  shutdownServer = true;
-  if (mServerThread->joinable()) {
+  if (!shutdownServer) {
+    shutdownServer = true;
     mServerThread->join();
   }
 }

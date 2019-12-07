@@ -242,7 +242,7 @@ TResult<SpotifyPaging> SpotifyAPI::search(std::string const &accessToken,
   //  std::cout<<response.body<<std::endl;
   nlohmann::json pagingJson;
   if (response.code == cNoContent) {
-    LOG(INFO) << "[SotifyAPI] in search, no content received" << std::endl;
+    LOG(INFO) << "[SpotifyAPI] in search, no content received" << std::endl;
     return SpotifyPaging();
   }
   try {
