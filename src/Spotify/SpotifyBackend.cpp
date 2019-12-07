@@ -32,10 +32,10 @@ TResult<std::vector<BaseTrack>> SpotifyBackend::queryTracks(
 
   auto searchRes = mSpotifyAPI.search(token, pattern, QueryType::track, num);
   if (auto res = std::get_if<Error>(&searchRes)) {
-    LOG(ERROR) << res->getMessage() << std::endl;
-    return res;
+    LOG(ERROR) << res->getErrorMessage() << std::endl;
+    return *res;
   }
-  auto page = std::get<SpotifyPage>(searchRes);
+  auto page = std::get<SpotifyPaging>(searchRes);
   std::vector<BaseTrack> tracks;
 
   for (auto const &elem : page.getTracks()) {
@@ -49,8 +49,9 @@ TResult<std::vector<BaseTrack>> SpotifyBackend::queryTracks(
     track.trackId = elem.getUri();
 
     if (!elem.getAlbum().getImages().empty()) {
-      track.iconUri =
-          elem.getAlbum().getImages()[0];  // on first place is the biggest one
+      track.iconUri = elem.getAlbum()
+                          .getImages()[0]
+                          .getUrl();  // on first place is the biggest one
     }
 
     for (auto &artist : elem.getArtists()) {
@@ -97,9 +98,9 @@ TResultOpt SpotifyBackend::setPlayback(BaseTrack const &track) {
 
   auto playRes =
       mSpotifyAPI.play(token, std::vector<std::string>{track.trackId}, device);
-  if (auto value = std::get_if<Error>(&playRes)) {
-    LOG(ERROR) << value->getErrorMessage() << std::endl;
-    return *value;
+  if (playRes.has_value()) {
+    LOG(ERROR) << playRes.value().getErrorMessage() << std::endl;
+    return playRes.value();
   }
 
   return std::nullopt;
@@ -126,10 +127,10 @@ TResult<PlaybackTrack> SpotifyBackend::getCurrentPlayback(void) {
   playbackTrack.progressMs = playback.getProgressMs();
 
   if (!playback.getCurrentPlayingTrack().getAlbum().getImages().empty()) {
-    playbackTrack.iconUri =
-        playback.getCurrentPlayingTrack()
-            .getAlbum()
-            .getImages()[0];  // on first place is the biggest one
+    playbackTrack.iconUri = playback.getCurrentPlayingTrack()
+                                .getAlbum()
+                                .getImages()[0]
+                                .getUrl();  // on first place is the biggest one
   }
 
   for (auto &artist : playback.getCurrentPlayingTrack().getArtists()) {
@@ -145,9 +146,9 @@ TResultOpt SpotifyBackend::pause() {
   std::string token = mSpotifyAuth.getAccessToken();
   auto ret = mSpotifyAPI.pause(token);
 
-  if (auto value = std::get_if<Error>(&ret)) {
-    LOG(ERROR) << value->getErrorMessage() << std::endl;
-    return *value;
+  if (ret.has_value()) {
+    LOG(ERROR) << ret.value().getErrorMessage() << std::endl;
+    return ret.value();
   }
 
   return std::nullopt;
@@ -157,9 +158,9 @@ TResultOpt SpotifyBackend::play() {
   std::string token = mSpotifyAuth.getAccessToken();
   auto ret = mSpotifyAPI.play(token);
 
-  if (auto value = std::get_if<Error>(&ret)) {
-    LOG(ERROR) << value->getErrorMessage() << std::endl;
-    return *value;
+  if (ret.has_value()) {
+    LOG(ERROR) << ret.value().getErrorMessage() << std::endl;
+    return ret.value();
   }
 
   return std::nullopt;
@@ -174,7 +175,6 @@ TResult<size_t> SpotifyBackend::getVolume() {
     return *value;
   }
   auto playback = std::get<Playback>(playbackRes);
-
   return playback.getDevice().getVolume();
 }
 
@@ -209,9 +209,9 @@ TResultOpt SpotifyBackend::setVolume(size_t const percent) {
   }
 
   auto ret = mSpotifyAPI.setVolume(token, percent, device);
-  if (auto value = std::get_if<Error>(&ret)) {
-    LOG(ERROR) << value->getErrorMessage() << std::endl;
-    return *value;
+  if (ret.has_value()) {
+    LOG(ERROR) << ret.value().getErrorMessage() << std::endl;
+    return ret.value();
   }
 
   return std::nullopt;
