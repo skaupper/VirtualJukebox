@@ -32,6 +32,10 @@ Token::Token(nlohmann::json const& tokenJson) {
   }
 }
 
+void Token::setRefreshToken(std::string const& token) {
+  mRefreshToken = token;
+}
+
 std::string const& Token::getAccessToken() const {
   return mAccesToken;
 }

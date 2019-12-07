@@ -60,11 +60,46 @@ std::string const &SpotifyAuthorization::getAccessToken(void) {
   return mToken.getAccessToken();
 }
 TResultOpt SpotifyAuthorization::refreshAccessToken(void) {
-  return Error(ErrorCode::AccessDenied, "Test");
+  // check if refresh token is available
+  if (mToken.getRefreshToken().empty()) {
+    return Error(ErrorCode::InvalidValue, "No refresh token available");
+  }
+
+  // to be sure only one thread does the refreshment
+  std::unique_lock mLock(mMutex);
+  // now check if token is really expired, or other thread refreshed it
+  int64_t now = std::chrono::duration_cast<std::chrono::seconds>(
+                    std::chrono::system_clock::now().time_since_epoch())
+                    .count();
+  if (now < getExpiresAt()) {
+    // token isnt expired yet
+    return std::nullopt;
+  }
+
+  SpotifyAPI api;
+  auto ret = api.refreshAccessToken(
+      mToken.getRefreshToken(), mClientID, mClientSecret);
+
+  if (auto error = std::get_if<Error>(&ret)) {
+    LOG(ERROR) << "[SpotifyAuthorization] in refreshAccessToken: "
+               << error->getErrorMessage() << std::endl;
+    return *error;
+  }
+
+  auto token = std::get<Token>(ret);
+  // set refresh token, because in refresh access token no new refresh token
+  // gets returned
+  token.setRefreshToken(mToken.getRefreshToken());
+  mTokenReceiveTime = std::chrono::duration_cast<std::chrono::seconds>(
+                          std::chrono::system_clock::now().time_since_epoch())
+                          .count();
+  mToken = token;
+  return std::nullopt;
 }
 
 __int64_t SpotifyAuthorization::getExpiresAt(void) {
-  return mTokenReceiveTime + mToken.getExpiresIn();
+  return mTokenReceiveTime + mToken.getExpiresIn() -
+         10;  // reduce by 10 to be sure (networktime delays,...)
 }
 
 void SpotifyAuthorization::setScopes(std::string const &scopes) {

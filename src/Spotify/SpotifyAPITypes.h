@@ -32,7 +32,7 @@ class Token {
  public:
   Token() = default;
   Token(nlohmann::json const &tokenJson);
-
+  void setRefreshToken(std::string const &token);
   std::string const &getAccessToken() const;
   std::string const &getRefreshToken() const;
   std::string const &getTokenType() const;
