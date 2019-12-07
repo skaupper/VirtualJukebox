@@ -17,6 +17,9 @@
 
 namespace SpotifyApi {
 
+/**
+ *
+ */
 class SpotifyAuthorization : public httpserver::http_resource {
  public:
   ~SpotifyAuthorization();
