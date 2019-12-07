@@ -429,12 +429,12 @@ TResultOpt SpotifyAPI::play(std::string const &accessToken,
 Error SpotifyAPI::errorParser(SpotifyApi::SpotifyError const &error) {
   if (error.getStatus() == cHTTPUnouthorized) {
     if (error.getMessage().find("Invalid access token") != std::string::npos) {
-      return Error(ErrorCode::AccessDenied, error.getMessage());
+      return Error(ErrorCode::SpotifyAccessDenied, error.getMessage());
     } else if (error.getMessage().find("The access token expired") !=
                std::string::npos) {
-      return Error(ErrorCode::SessionExpired, error.getMessage());
+      return Error(ErrorCode::SpotifyAccessExpired, error.getMessage());
     } else {
-      return Error(ErrorCode::AccessDenied, error.getMessage());
+      return Error(ErrorCode::SpotifyAccessDenied, error.getMessage());
     }
   } else if (error.getStatus() == cHTTPNotFound) {
     return Error(ErrorCode::SpotifyNotFound, error.getMessage());
@@ -442,7 +442,7 @@ Error SpotifyAPI::errorParser(SpotifyApi::SpotifyError const &error) {
     return Error(ErrorCode::SpotifyForbidden, error.getMessage());
   } else {
     // unhandled spotify error
-    LOG(ERROR) << "[SpotifyAPI]: Error " << error.getMessage()
+    LOG(ERROR) << "[SpotifyAPI]: Unhandled Spotify Error " << error.getMessage()
                << " Status: " << error.getStatus() << std::endl;
     return Error(ErrorCode::SpotifyAPIError, error.getMessage());
   }

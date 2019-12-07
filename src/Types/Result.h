@@ -29,6 +29,8 @@ enum class ErrorCode {
   NotImplemented,
   NotInitialized,
   SpotifyNotFound,
+  SpotifyAccessDenied,
+  SpotifyAccessExpired,
   SpotifyForbidden,
   SpotifyParseError,
   SpotifyAPIError,
