@@ -31,9 +31,7 @@ struct QueuedTrack : public BaseTrack {
   uint64_t insertedAt;
   int LastPlayedxSongsAgo;
     bool operator<(const QueuedTrack tr){
-        int lvotes = votes < 0 ? 1 : votes;
-        int rvotes = tr.votes < 0 ? 1 : tr.votes;
-        return (lvotes*LastPlayedxSongsAgo) > (rvotes*tr.LastPlayedxSongsAgo);
+        return ((votes+1)*(LastPlayedxSongsAgo)) > ((tr.votes+1)*(tr.LastPlayedxSongsAgo)); // +1 to prevent multiplication by 0 (not upvoted tracks never get played)
     }
 };
 
