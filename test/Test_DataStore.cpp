@@ -2,6 +2,9 @@
 
 #include <iostream>
 #include <memory>
+#include <ctime>
+#include <thread>
+#include <chrono>
 
 #include "../src/Types/Result.h"
 #include "../src/Utils/ConfigHandler.h"
@@ -188,4 +191,101 @@ TEST(DataStoreTest, GetQueue_2Each){
     ASSERT_EQ(q.tracks[1].duration, tr2.duration);
     ASSERT_EQ(q.tracks[1].iconUri, tr2.iconUri);
     ASSERT_EQ(q.tracks[1].addedBy, tr2.addedBy);
+}
+
+TEST(DataStoreTest, UserAddHas){
+    RAMDataStore ds;
+    User usr1;
+    usr1.SessionID = "kasdags";
+    usr1.isAdmin = false;
+    usr1.ExpirationDate = 0xFFFFFFFFFF;
+    usr1.Name = "Hans";
+    User usr2;
+    usr2.SessionID = "asdgdsgfg";
+    usr2.isAdmin = true;
+    usr2.ExpirationDate = 0xFFFFFFFFFFA;
+    usr2.Name = "admin";
+
+    // user not present
+    auto res = ds.hasUser(usr1.SessionID);
+    ASSERT_EQ(checkAlternativeError(res), false);
+    ASSERT_EQ(get<bool>(res), false);
+
+    // add 2 users and check for both of them
+    ds.addUser(usr1);
+    ds.addUser(usr2);
+    res = ds.hasUser(usr1.SessionID);
+    ASSERT_EQ(checkAlternativeError(res), false);
+    ASSERT_EQ(get<bool>(res), true);
+    res = ds.hasUser(usr2.SessionID);
+    ASSERT_EQ(checkAlternativeError(res), false);
+    ASSERT_EQ(get<bool>(res), true);
+
+    // remove 1 user and check for both
+    ds.removeUser(usr1.SessionID);
+    res = ds.hasUser(usr1.SessionID);
+    ASSERT_EQ(checkAlternativeError(res), false);
+    ASSERT_EQ(get<bool>(res), false);
+    res = ds.hasUser(usr2.SessionID);
+    ASSERT_EQ(checkAlternativeError(res), false);
+    ASSERT_EQ(get<bool>(res), true);
+
+    // remove other user and check
+    ds.removeUser(usr2.SessionID);
+    res = ds.hasUser(usr1.SessionID);
+    ASSERT_EQ(checkAlternativeError(res), false);
+    ASSERT_EQ(get<bool>(res), false);
+    res = ds.hasUser(usr2.SessionID);
+    ASSERT_EQ(checkAlternativeError(res), false);
+    ASSERT_EQ(get<bool>(res), false);
+}
+
+
+TEST(DataStoreTest, UserTimeout){
+    RAMDataStore ds;
+    User usr1;
+    usr1.SessionID = "kasdags";
+    usr1.isAdmin = false;
+    usr1.ExpirationDate = time(nullptr) + 2;
+    usr1.Name = "Hans";
+    User usr2;
+    usr2.SessionID = "asdgdsgfg";
+    usr2.isAdmin = true;
+    usr2.ExpirationDate = time(nullptr) + 4;
+    usr2.Name = "admin";
+
+    // user not present
+    auto res = ds.hasUser(usr1.SessionID);
+    ASSERT_EQ(checkAlternativeError(res), false);
+    ASSERT_EQ(get<bool>(res), false);
+
+    // add 2 users and check for both of them
+    ds.addUser(usr1);
+    ds.addUser(usr2);
+    res = ds.hasUser(usr1.SessionID);
+    ASSERT_EQ(checkAlternativeError(res), false);
+    ASSERT_EQ(get<bool>(res), true);
+    res = ds.hasUser(usr2.SessionID);
+    ASSERT_EQ(checkAlternativeError(res), false);
+    ASSERT_EQ(get<bool>(res), true);
+
+    // sleep 3 seconds, first user should timeout then
+    this_thread::sleep_for (chrono::seconds(3));
+    ds.checkSessionExpirations();
+    res = ds.hasUser(usr1.SessionID);
+    ASSERT_EQ(checkAlternativeError(res), false);
+    ASSERT_EQ(get<bool>(res), false);
+    res = ds.hasUser(usr2.SessionID);
+    ASSERT_EQ(checkAlternativeError(res), false);
+    ASSERT_EQ(get<bool>(res), true);
+
+    // sleep another 3 seconds, second user should timeout then
+    this_thread::sleep_for (chrono::seconds(3));
+    ds.checkSessionExpirations();
+    res = ds.hasUser(usr1.SessionID);
+    ASSERT_EQ(checkAlternativeError(res), false);
+    ASSERT_EQ(get<bool>(res), false);
+    res = ds.hasUser(usr2.SessionID);
+    ASSERT_EQ(checkAlternativeError(res), false);
+    ASSERT_EQ(get<bool>(res), false);
 }
