@@ -18,18 +18,60 @@
 namespace SpotifyApi {
 
 /**
- *
+ * @brief handles the 3 parties user authentication
  */
 class SpotifyAuthorization : public httpserver::http_resource {
  public:
   ~SpotifyAuthorization();
+  /**
+   * @brief starts the server, on which the user can connect
+   * @return if failed Error object gets returned and no server has been
+   * created..
+   */
   TResultOpt startServer(void);
+
+  /**
+   * @brief stops the server
+   */
   void stopServer(void);
+
+  /**
+   * @brief returns refresh token
+   * @return refresh token string
+   */
   std::string const &getRefreshToken(void);
+
+  /**
+   * @brief returns access token
+   * @return refresh access string
+   */
   std::string const &getAccessToken(void);
+
+  /**
+   * @brief refreshes the access token (!! not implemented yet!!)
+   * @return on failer Error object
+   */
   TResultOpt refreshAccessToken(void);
+
+  /**
+   * @brief returns when the token expires
+   * @return time when the token expires (in epoch format and seconds)
+   */
   __int64_t getExpiresAt(void);
+
+  /**
+   * @brief sets the scopes to ask on the permission
+   * @param scopes scopes
+   * @details see
+   * https://developer.spotify.com/documentation/general/guides/scopes/ for
+   * valid scopes
+   */
   void setScopes(std::string const &scopes);
+
+  /**
+   * @brief return scopes
+   * @return scopes
+   */
   std::string getScopes(void);
 
  private:
