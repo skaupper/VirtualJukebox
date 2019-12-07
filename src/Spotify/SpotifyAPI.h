@@ -12,19 +12,24 @@
 
 namespace SpotifyApi {
 
+enum class QueryType { album, artist, playlist, track };
+
 /**
  * @brief handles the calls with the spotify web api
  */
 class SpotifyAPI {
  public:
   /**
-   * @brief posts data to web api to get a Token
+   * @brief requests a Token (access token and refresh token) from the spotify
+   * web api
    * @param grantType which authorization type to use
-   * @param code authentification code
+   * @param code authentification code (received from Spotify Authorization)
    * @param redirectUri redirection url (only for comparing)
    * @param clientID    clientID (from spotify developers dashboard)
    * @param clientSecret clientSecret (from spotify developers dashboard)
-   * @return Token class
+   * @details this function fetches a token from the spotify web api. until now,
+   * only the GrantType AuthorizationCode is implemented.
+   * @return if succeeded, the function returns a valid Token, otherwise a Error
    */
   TResult<Token> getAccessToken(GrantType grantType,
                                 std::string const &code,
@@ -32,28 +37,139 @@ class SpotifyAPI {
                                 std::string clientID,
                                 std::string clientSecret);
 
-  TResult<Token> refreshAccessToken(std::string const &refreshToken);
+  /**
+   * @brief requests with the refresh token a new access token
+   * @param refreshToken the refresh token gathered from getAccessToken(..)
+   * @param clientID    clientID (from spotify developers dashboard)
+   * @param clientSecret clientSecret (from spotify developers dashboard)
+   * @details this function fetches a new token from the spotify web api.
+   * Caution it only fetches a access token, not a new refresh token (because it
+   * doesn't need to be updated) so the refresh token value from the return will
+   * be empty!!
+   * @return if succeeded, the function returns a valid Token, otherwise a Error
+   */
+  TResult<Token> refreshAccessToken(std::string const &refreshToken,
+                                    std::string const &clientID,
+                                    std::string const &clientSecret);
 
   /**
    * @brief returns vector of available spotify devices
-   * @param accessToken
-   * @return
+   * @param accessToken valid access token to use the spotify api
+   * @return if succeeded vector of Devices, otherwise Error
    */
   TResult<std::vector<Device>> getAvailableDevices(
       std::string const &accessToken);
 
+  /**
+   * @brief gets the current playback status of the current active device from
+   * spotify
+   * @param accessToken valid access token
+   * @param market specifies, that only tracks get returned which are valid in
+   * the given market (not implemented)
+   * @details a playback is the actual status of the player, if its playing,
+   * wich device, which track and so on..
+   * @return  if succeeded Playback object, else Error
+   */
   TResult<Playback> getCurrentPlayback(std::string const &accessToken,
                                        std::string const &market = "AT");
 
+  /**
+   * @brief searches for tracks,artists,albums or playlists with the given query
+   * @param accessToken valid access token
+   * @param queryKey the search string
+   * @param type specifies if it gets searched for tracks, artists, albums, or
+   * playlists
+   * @param limit sets the limit of maximum number returned tracks,..
+   * @param offset number offset
+   * @param market only return tracks,.. which are valid in the given market
+   * @details the queryKey can also contain 2 wildcards. for further details on
+   * the query string see
+   * https://developer.spotify.com/documentation/web-api/reference/search/search/
+   * @return if succeeded SpotifyPaging object else Error
+   */
+  TResult<SpotifyPaging> search(std::string const &accessToken,
+                                std::string const &queryKey,
+                                QueryType type,
+                                int const limit = 20,
+                                int const offset = 0,
+                                std::string const &market = "AT");
+
+  /**
+   * @brief sets a volume
+   * @param accessToken valid access token
+   * @param volume volume in percent (0-100)
+   * @param device select on which device to set the volume (if not given, the
+   * current active device will be used)
+   * @return on failure a Error object gets returned
+   */
+  TResultOpt setVolume(std::string const &accessToken,
+                       int volume,
+                       Device const &device = Device());
+
+  /**
+   * @brief pauses the acutal track
+   * @param accessToken valid access token
+   * @param device select on which device to pause (if not given, the current
+   * active device will be used)
+   * @return on failure a Error object gets returned
+   */
+  TResultOpt pause(std::string const &accessToken,
+                   Device const &device = Device());
+
+  /**
+   * @brief plays new songs, or resume the actual song
+   * @param accessToken valid access token
+   * @param uris a vector of spotify uris (ids) which will be queued and played
+   * @param device select on which device to play (if not given, the current
+   * active device will be used)
+   * @param positionMs set the start position in ms of the new track
+   * @details if uris and devices are left empty, the actual song gets resumed,
+   * and if the positionMs is greater than the duration of the song, the next
+   * song will be played
+   * @return on failure a Error object gets returned
+   */
+  TResultOpt play(
+      std::string const &accessToken,
+      std::vector<std::string> const &uris = std::vector<std::string>(),
+      Device const &device = Device(),
+      int positionMs = 0);
+
+  /**
+   * @brief encodes the given string with http special characters
+   * @param str string to encode
+   * @return encoded string
+   */
+  static std::string stringUrlEncode(std::string const &str);
+
+  /**
+   * @brief encodes the given string with base64
+   * @param str string to encode
+   * @return encoded string
+   */
+  static std::string stringBase64Encode(std::string const &str);
+
  private:
+  /**
+   * @brief parses the spotify error into an Error object
+   * @param error spotify error
+   * @return Error
+   */
   Error errorParser(SpotifyError const &error);
   std::string const cSpotifyAuthUrl = "https://accounts.spotify.com";
   std::string const cSpotifyAPIUrl = "https://api.spotify.com";
   size_t const cRequestTimeout = 5;
+  std::map<QueryType, std::string> const cQueryTypeMap = {
+      {QueryType::album, "album"},
+      {QueryType::track, "track"},
+      {QueryType::artist, "artist"},
+      {QueryType::playlist, "playlist"}};
 
   int const cHTTPTimeout = 408;
   int const cHTTPUnouthorized = 401;
   int const cHTTPOK = 200;
+  int const cHTTPNotFound = 404;
+  int const cHTTPForbidden = 403;
+  int const cNoContent = 204;
 };
 
 }  // namespace SpotifyApi

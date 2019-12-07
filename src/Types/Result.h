@@ -27,7 +27,11 @@ enum class ErrorCode {
   InvalidValue,
   KeyNotFound,
   NotImplemented,
-  NotInitialized
+  NotInitialized,
+  SpotifyNotFound,
+  SpotifyForbidden,
+  SpotifyParseError,
+  SpotifyAPIError
 };
 
 /**

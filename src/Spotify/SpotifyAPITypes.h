@@ -33,10 +33,10 @@ class Token {
   Token() = default;
   Token(nlohmann::json const &tokenJson);
 
-  std::string getAccessToken();
-  std::string getRefreshToken();
-  std::string getTokenType();
-  std::string getScope();
+  std::string const &getAccessToken();
+  std::string const &getRefreshToken();
+  std::string const &getTokenType();
+  std::string const &getScope();
   size_t getExpiresIn();
 
  private:
@@ -58,12 +58,12 @@ class Device {
  public:
   Device() = default;
   Device(nlohmann::json const &deviceJson);
-  std::string const &getID();
+  std::string const &getID() const;
   bool isActive();
   bool isPrivateSession();
   bool isRestricted();
-  std::string const &getName();
-  std::string const &getType();
+  std::string const &getName() const;
+  std::string const &getType() const;
   size_t getVolume();
 
  private:
@@ -82,28 +82,98 @@ class Device {
 /**
  * @brief simplified artist object
  */
-struct Artist {
-  std::string href; /**< A link to the Web API endpoint providing full details
+class Artist {
+ public:
+  Artist() = default;
+  Artist(nlohmann::json const &artistJson);
+  std::string const &getHref() const;
+  std::string const &getID() const;
+  std::string const &getName() const;
+  std::string const &getType() const;
+  std::string const &getUri() const;
+
+ private:
+  std::string mHref; /**< A link to the Web API endpoint providing full details
                        of the artist */
-  std::string id;   /**< the Spotify ID for the artist */
-  std::string name; /**< the name of the artist */
-  std::string type; /**< object type (always "artist") */
-  std::string uri;  /**< Spotify URI for the artist */
+  std::string mId;   /**< the Spotify ID for the artist */
+  std::string mName; /**< the name of the artist */
+  std::string mType; /**< object type (always "artist") */
+  std::string mUri;  /**< Spotify URI for the artist */
+};
+
+/**
+ * @brief Spotify Image Class
+ */
+class Image {
+ public:
+  Image() = default;
+  Image(nlohmann::json const &imageJson);
+  int getHeight();
+  int getWidth();
+  std::string const &getUrl() const;
+
+ private:
+  int mHeight;      /**< the image height in pixels, if unknown 0 */
+  int mWidth;       /**< the image width in pixels, if unknown 0 */
+  std::string mUrl; /**< the source url of the image */
+};
+
+/**
+ * @brief simplified Spotify Album class
+ */
+class Album {
+ public:
+  Album() = default;
+  Album(nlohmann::json const &albumJson);
+  std::vector<Artist> const &getArtists() const;
+  std::vector<Image> const &getImages() const;
+  std::string const &getAlbumType() const;
+  std::string const &getHref() const;
+  std::string const &getId() const;
+  std::string const &getName() const;
+  std::string const &getReleaseDate() const;
+  std::string const &getType() const;
+  std::string const &getUri() const;
+
+ private:
+  std::string
+      mAlbumType; /**< type of album (can contain album, single, compilation) */
+  std::vector<Artist> mArtists; /**< array of simplified artists */
+  std::string mHref; /**< a link to the wep api endpoint providing full details
+                        of the album */
+  std::string mId;   /**< Spotify ID for the album */
+  std::string mName; /**< name of the album (can be an empty string) */
+  std::string
+      mReleaseDate;  /**< release date ( can be 1981, 1981-12 or 1981-12-15) */
+  std::string mType; /**< the object type, always "album" */
+  std::string mUri;  /**< spotify uri for the album */
+  std::vector<Image> mImages; /**< array of cover arts in various sizes */
 };
 
 /**
  * @brief simplified track object
  */
-struct Track {
-  std::vector<Artist> artists; /**< the artists who performed the track */
-  std::vector<std::string> availableMarkets; /**< a list of countries in which
-                                                the track can be played */
-  size_t durationMs; /**< the track length in milliseconds */
-  std::string href;  /**< a link to the wep api endpoint providing full details
+class Track {
+ public:
+  Track() = default;
+  Track(nlohmann::json const &trackJson);
+  std::vector<Artist> const &getArtists() const;
+  Album const &getAlbum() const;
+  size_t getDuration();
+  std::string const &getHref() const;
+  std::string const &getId() const;
+  std::string const &getName() const;
+  std::string const &getUri() const;
+
+ private:
+  std::vector<Artist> mArtists; /**< the artists who performed the track */
+  Album mAlbum;
+  size_t mDurationMs; /**< the track length in milliseconds */
+  std::string mHref;  /**< a link to the wep api endpoint providing full details
                         of the track */
-  std::string id;    /**< Spotify ID for the track */
-  std::string name;  /**< name of the track */
-  std::string uri;   /**< spotify URI for the track */
+  std::string mId;    /**< Spotify ID for the track */
+  std::string mName;  /**< name of the track */
+  std::string mUri;   /**< spotify URI for the track */
 };
 
 /**
@@ -111,17 +181,57 @@ struct Track {
  */
 class Playback {
  public:
+  Playback() = default;
+  Playback(nlohmann::json const &playbackJson);
+
+  Device const &getDevice() const;
+  std::string const &getRepeatState() const;
+  bool getShuffleState();
+  size_t getTimestamp();
+  size_t getProgressMs();
+  bool isPlaying();
+  std::string const &getCurrentPlayingType() const;
+  Track const &getCurrentPlayingTrack() const;
+
  private:
-  Device device;           /**< device that is currently active */
-  std::string repeatState; /**< current repeat state status ("off", "track",
+  Device mDevice;           /**< device that is currently active */
+  std::string mRepeatState; /**< current repeat state status ("off", "track",
                               "context") */
-  bool shuffleState;       /**< if shuffle is on or off */
-  size_t timestamp;  /**< unix millisecond timestamp when data was fetched */
-  size_t progressMs; /**< progress into the currently playing track */
-  bool isPlaying;    /**< if something is currently playing */
-  std::string currentPlayingType; /**< current playing type, can be "track",
+  bool mShuffleState;       /**< if shuffle is on or off */
+  size_t mTimestamp;  /**< unix millisecond timestamp when data was fetched */
+  size_t mProgressMs; /**< progress into the currently playing track */
+  bool mIsPlaying;    /**< if something is currently playing */
+  std::string mCurrentPlayingType; /**< current playing type, can be "track",
                                      "episode", "ad", "unknown" */
-  Track item;                     /**< currently playing track */
+  Track mTrack;                    /**< currently playing track */
+};
+
+class SpotifyPaging {
+ public:
+  SpotifyPaging() = default;
+  SpotifyPaging(nlohmann::json const &pagingJson);
+
+  std::vector<Track> const &getTracks();
+  std::vector<Artist> const &getArtists();
+  std::vector<Album> const &getAlbums();
+  std::string const &getHref();
+  int getLimit();
+  std::string const &getNext();
+  int getOffset();
+  std::string const &getPrevious();
+  int getTotal();
+
+ private:
+  std::vector<Track> mTracks;   /**< array of tracks */
+  std::vector<Artist> mArtists; /**< array of artists */
+  std::vector<Album> mAlbums;   /**< array of albums */
+  std::string mHref; /**< a link to the web api endpoint returning the full
+                        result of the request */
+  int mLimit;        /**< the maximum number of items in the response */
+  std::string mNext; /**< url to the next page of items (can be left empty) */
+  int mOffset;       /**< offset of the items returned (as set in the query) */
+  std::string mPrevious; /**< url to the previos page of items */
+  int mTotal;            /**< total number of items available */
 };
 
 /**
@@ -129,7 +239,7 @@ class Playback {
  */
 class SpotifyError {
  public:
-  SpotifyError(nlohmann::json errorJson);
+  SpotifyError(nlohmann::json const &errorJson);
   int getStatus() const;
   std::string const &getMessage() const;
 

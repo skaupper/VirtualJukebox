@@ -7,6 +7,9 @@
 #ifndef SPOTIFYAUTHORIZATION_H_INCLUDED
 #define SPOTIFYAUTHORIZATION_H_INCLUDED
 
+#include <mutex>
+#include <thread>
+
 #include "SpotifyAPI.h"
 #include "SpotifyAPITypes.h"
 #include "Types/Result.h"
@@ -14,25 +17,79 @@
 
 namespace SpotifyApi {
 
+/**
+ * @brief handles the 3 parties user authentication
+ */
 class SpotifyAuthorization : public httpserver::http_resource {
  public:
-  bool startServer(void);
+  ~SpotifyAuthorization();
+  /**
+   * @brief starts the server, on which the user can connect
+   * @return if failed Error object gets returned and no server has been
+   * created..
+   */
+  TResultOpt startServer(void);
+
+  /**
+   * @brief stops the server
+   */
+  void stopServer(void);
+
+  /**
+   * @brief returns refresh token
+   * @return refresh token string
+   */
   std::string const &getRefreshToken(void);
+
+  /**
+   * @brief returns access token
+   * @return refresh access string
+   */
   std::string const &getAccessToken(void);
+
+  /**
+   * @brief refreshes the access token (!! not implemented yet!!)
+   * @return on failer Error object
+   */
   TResultOpt refreshAccessToken(void);
+
+  /**
+   * @brief returns when the token expires
+   * @return time when the token expires (in epoch format and seconds)
+   */
   __int64_t getExpiresAt(void);
+
+  /**
+   * @brief sets the scopes to ask on the permission
+   * @param scopes scopes
+   * @details see
+   * https://developer.spotify.com/documentation/general/guides/scopes/ for
+   * valid scopes
+   */
   void setScopes(std::string const &scopes);
+
+  /**
+   * @brief return scopes
+   * @return scopes
+   */
   std::string getScopes(void);
 
  private:
   Token mToken;
   __int64_t mTokenReceiveTime = 0;
-  std::string mClientID = "f589b31542ca45a98c076460a021e086";
-  std::string mScopes =
-      "user-read-private%20user-read-email%20app-remote-control%20user-modify-"
-      "playback-state";
-  std::string mRedirectUri = "http%3A%2F%2Flocalhost%3A8080%2FspotifyCallback";
-  std::string mClientSecret = "0a82fbaa5fae43f0904776d6f695a7ad";
+  std::string mClientID = "";
+  std::string mScopes = "";
+  std::string mRedirectUri = "";
+  std::string mClientSecret = "";
+  int mPort = 8080;
+  std::string const cSectionKey = "Spotify";
+  std::string const cClientIDKey = "clientID";
+  std::string const cClientSecretKey = "clientSecret";
+  std::string const cPortKey = "port";
+  std::string const cRedirectUriKey = "redirectUri";
+  std::string const cScopesKey = "scopes";
+  std::unique_ptr<std::thread> mServerThread;
+  bool shutdownServer = false;
 
   const std::shared_ptr<httpserver::http_response> render(
       httpserver::http_request const &request);
@@ -42,6 +99,8 @@ class SpotifyAuthorization : public httpserver::http_resource {
   const std::shared_ptr<httpserver::http_response> callbackHandler(
       httpserver::http_request const &request);
 
+  void startServerThread();
+  TResultOpt setupConfigParams();
   std::string generateRandomString(size_t length);
   std::string getFromQueryString(std::string const &query,
                                  std::string const &key);
