@@ -18,7 +18,6 @@
 
 class MusicBackend {
  public:
-  virtual ~MusicBackend() = 0;
   virtual TResultOpt initBackend(void) = 0;
   virtual TResult<std::vector<BaseTrack>> queryTracks(
       std::string const &pattern, size_t const num) = 0;
