@@ -32,23 +32,23 @@ Token::Token(nlohmann::json const& tokenJson) {
   }
 }
 
-std::string const& Token::getAccessToken() {
+std::string const& Token::getAccessToken() const {
   return mAccesToken;
 }
 
-size_t Token::getExpiresIn() {
+size_t Token::getExpiresIn() const {
   return mExpiresIn;
 }
 
-std::string const& Token::getRefreshToken() {
+std::string const& Token::getRefreshToken() const {
   return mRefreshToken;
 }
 
-std::string const& Token::getScope() {
+std::string const& Token::getScope() const {
   return mScope;
 }
 
-std::string const& Token::getTokenType() {
+std::string const& Token::getTokenType() const {
   return mTokenType;
 }
 
@@ -72,7 +72,7 @@ Device::Device(nlohmann::json const& deviceJson) {
   }
 }
 
-bool Device::isPrivateSession() {
+bool Device::isPrivateSession() const {
   return mIsPrivateSession;
 }
 std::string const& Device::getName() const {
@@ -81,16 +81,16 @@ std::string const& Device::getName() const {
 std::string const& Device::getType() const {
   return mType;
 }
-size_t Device::getVolume() {
+size_t Device::getVolume() const {
   return mVolume;
 }
 std::string const& Device::getID() const {
   return mId;
 }
-bool Device::isActive() {
+bool Device::isActive() const {
   return mIsActive;
 }
-bool Device::isRestricted() {
+bool Device::isRestricted() const {
   return mIsRestricted;
 }
 
@@ -120,13 +120,13 @@ Playback::Playback(nlohmann::json const& playbackJson) {
 Device const& Playback::getDevice() const {
   return mDevice;
 }
-bool Playback::isPlaying() {
+bool Playback::isPlaying() const {
   return mIsPlaying;
 }
 std::string const& Playback::getRepeatState() const {
   return mRepeatState;
 }
-size_t Playback::getProgressMs() {
+size_t Playback::getProgressMs() const {
   return mProgressMs;
 }
 Track const& Playback::getCurrentPlayingTrack() const {
@@ -135,10 +135,10 @@ Track const& Playback::getCurrentPlayingTrack() const {
 std::string const& Playback::getCurrentPlayingType() const {
   return mCurrentPlayingType;
 }
-size_t Playback::getTimestamp() {
+size_t Playback::getTimestamp() const {
   return mTimestamp;
 }
-bool Playback::getShuffleState() {
+bool Playback::getShuffleState() const {
   return mShuffleState;
 }
 
@@ -282,7 +282,7 @@ std::vector<Artist> const& Track::getArtists() const {
 Album const& Track::getAlbum() const {
   return mAlbum;
 }
-size_t Track::getDuration() {
+size_t Track::getDuration() const {
   return mDurationMs;
 }
 std::string const& Track::getHref() const {
@@ -377,31 +377,31 @@ SpotifyPaging::SpotifyPaging(nlohmann::json const& pagingJson) {
   }
 }
 
-std::vector<Track> const& SpotifyPaging::getTracks() {
+std::vector<Track> const& SpotifyPaging::getTracks() const {
   return mTracks;
 }
-std::vector<Artist> const& SpotifyPaging::getArtists() {
+std::vector<Artist> const& SpotifyPaging::getArtists() const {
   return mArtists;
 }
-std::vector<Album> const& SpotifyPaging::getAlbums() {
+std::vector<Album> const& SpotifyPaging::getAlbums() const {
   return mAlbums;
 }
-std::string const& SpotifyPaging::getHref() {
+std::string const& SpotifyPaging::getHref() const {
   return mHref;
 }
-int SpotifyPaging::getLimit() {
+int SpotifyPaging::getLimit() const {
   return mLimit;
 }
-std::string const& SpotifyPaging::getNext() {
+std::string const& SpotifyPaging::getNext() const {
   return mNext;
 }
-int SpotifyPaging::getOffset() {
+int SpotifyPaging::getOffset() const {
   return mOffset;
 }
-std::string const& SpotifyPaging::getPrevious() {
+std::string const& SpotifyPaging::getPrevious() const {
   return mPrevious;
 }
-int SpotifyPaging::getTotal() {
+int SpotifyPaging::getTotal() const {
   return mTotal;
 }
 
