@@ -30,6 +30,7 @@ class SpotifyBackend : public MusicBackend {
   virtual TResultOpt setVolume(size_t const percent) override;
 
  private:
+  TResultOpt errorHandler(Error const &error);
   SpotifyApi::SpotifyAPI mSpotifyAPI;
   SpotifyApi::SpotifyAuthorization mSpotifyAuth;
 };

@@ -15,6 +15,44 @@
 
 using namespace SpotifyApi;
 
+#define SPOTIFYCALL_WITH_REFRESH(returnValue, functionCall, tokenString) \
+  returnValue = functionCall;                                            \
+  if (auto error = std::get_if<Error>(&returnValue)) {                   \
+    auto ret = errorHandler(*error);                                     \
+    if (ret.has_value()) {                                               \
+      LOG(ERROR) << error->getErrorMessage() << std::endl;               \
+      return *error;                                                     \
+    } else {                                                             \
+      tokenString = mSpotifyAuth.getAccessToken();                       \
+      returnValue = functionCall;                                        \
+                                                                         \
+      if (auto err = std::get_if<Error>(&returnValue)) {                 \
+        LOG(ERROR) << error->getErrorMessage() << std::endl;             \
+                                                                         \
+        return *err;                                                     \
+      }                                                                  \
+    }                                                                    \
+  }
+
+#define SPOTIFYCALL_WITH_REFRESH_OPT(returnValue, functionCall, tokenString) \
+  returnValue = functionCall;                                                \
+  if (returnValue.has_value()) {                                             \
+    auto ret = errorHandler(returnValue.value());                            \
+    if (ret.has_value()) {                                                   \
+      LOG(ERROR) << ret.value().getErrorMessage() << std::endl;              \
+      return ret.value();                                                    \
+    } else {                                                                 \
+      tokenString = mSpotifyAuth.getAccessToken();                           \
+      returnValue = functionCall;                                            \
+                                                                             \
+      if (returnValue.has_value()) {                                         \
+        LOG(ERROR) << returnValue.value().getErrorMessage() << std::endl;    \
+                                                                             \
+        return returnValue.value();                                          \
+      }                                                                      \
+    }                                                                        \
+  }
+
 SpotifyBackend::~SpotifyBackend() {
   mSpotifyAuth.stopServer();
 }
@@ -30,12 +68,11 @@ TResult<std::vector<BaseTrack>> SpotifyBackend::queryTracks(
     std::string const &pattern, size_t const num) {
   std::string token = mSpotifyAuth.getAccessToken();
 
-  auto searchRes = mSpotifyAPI.search(token, pattern, QueryType::track, num);
-  if (auto res = std::get_if<Error>(&searchRes)) {
-    LOG(ERROR) << res->getErrorMessage() << std::endl;
-    return *res;
-  }
-  auto page = std::get<SpotifyPaging>(searchRes);
+  TResult<SpotifyPaging> retVal;
+  SPOTIFYCALL_WITH_REFRESH(
+      retVal, mSpotifyAPI.search(token, pattern, QueryType::track, num), token);
+
+  auto page = std::get<SpotifyPaging>(retVal);
   std::vector<BaseTrack> tracks;
 
   for (auto const &elem : page.getTracks()) {
@@ -70,10 +107,10 @@ TResultOpt SpotifyBackend::setPlayback(BaseTrack const &track) {
   std::string token = mSpotifyAuth.getAccessToken();
 
   // check if playing devices are available
-  auto devicesRet = mSpotifyAPI.getAvailableDevices(token);
-  if (auto value = std::get_if<Error>(&devicesRet)) {
-    return *value;
-  }
+  TResult<std::vector<Device>> devicesRet;
+  SPOTIFYCALL_WITH_REFRESH(
+      devicesRet, mSpotifyAPI.getAvailableDevices(token), token);
+
   auto devices = std::get<std::vector<Device>>(devicesRet);
   if (devices.empty()) {
     return Error(ErrorCode::KeyNotFound,
@@ -96,12 +133,11 @@ TResultOpt SpotifyBackend::setPlayback(BaseTrack const &track) {
     }
   }
 
-  auto playRes =
-      mSpotifyAPI.play(token, std::vector<std::string>{track.trackId}, device);
-  if (playRes.has_value()) {
-    LOG(ERROR) << playRes.value().getErrorMessage() << std::endl;
-    return playRes.value();
-  }
+  TResultOpt playRes;
+  SPOTIFYCALL_WITH_REFRESH_OPT(
+      playRes,
+      mSpotifyAPI.play(token, std::vector<std::string>{track.trackId}, device),
+      token);
 
   return std::nullopt;
 }
@@ -109,11 +145,9 @@ TResultOpt SpotifyBackend::setPlayback(BaseTrack const &track) {
 TResult<PlaybackTrack> SpotifyBackend::getCurrentPlayback(void) {
   std::string token = mSpotifyAuth.getAccessToken();
 
-  auto playbackRes = mSpotifyAPI.getCurrentPlayback(token);
-  if (auto value = std::get_if<Error>(&playbackRes)) {
-    LOG(ERROR) << value->getErrorMessage() << std::endl;
-    return *value;
-  }
+  TResult<Playback> playbackRes;
+  SPOTIFYCALL_WITH_REFRESH(
+      playbackRes, mSpotifyAPI.getCurrentPlayback(token), token);
   auto playback = std::get<Playback>(playbackRes);
 
   PlaybackTrack playbackTrack;
@@ -144,24 +178,16 @@ TResult<PlaybackTrack> SpotifyBackend::getCurrentPlayback(void) {
 
 TResultOpt SpotifyBackend::pause() {
   std::string token = mSpotifyAuth.getAccessToken();
-  auto ret = mSpotifyAPI.pause(token);
-
-  if (ret.has_value()) {
-    LOG(ERROR) << ret.value().getErrorMessage() << std::endl;
-    return ret.value();
-  }
+  TResultOpt pauseRes;
+  SPOTIFYCALL_WITH_REFRESH_OPT(pauseRes, mSpotifyAPI.pause(token), token);
 
   return std::nullopt;
 }
 
 TResultOpt SpotifyBackend::play() {
   std::string token = mSpotifyAuth.getAccessToken();
-  auto ret = mSpotifyAPI.play(token);
-
-  if (ret.has_value()) {
-    LOG(ERROR) << ret.value().getErrorMessage() << std::endl;
-    return ret.value();
-  }
+  TResultOpt playRes;
+  SPOTIFYCALL_WITH_REFRESH_OPT(playRes, mSpotifyAPI.play(token), token);
 
   return std::nullopt;
 }
@@ -169,11 +195,10 @@ TResultOpt SpotifyBackend::play() {
 TResult<size_t> SpotifyBackend::getVolume() {
   std::string token = mSpotifyAuth.getAccessToken();
 
-  auto playbackRes = mSpotifyAPI.getCurrentPlayback(token);
-  if (auto value = std::get_if<Error>(&playbackRes)) {
-    LOG(ERROR) << value->getErrorMessage() << std::endl;
-    return *value;
-  }
+  TResult<Playback> playbackRes;
+  SPOTIFYCALL_WITH_REFRESH(
+      playbackRes, mSpotifyAPI.getCurrentPlayback(token), token);
+
   auto playback = std::get<Playback>(playbackRes);
   return playback.getDevice().getVolume();
 }
@@ -182,10 +207,10 @@ TResultOpt SpotifyBackend::setVolume(size_t const percent) {
   std::string token = mSpotifyAuth.getAccessToken();
 
   // check if playing devices are available
-  auto devicesRet = mSpotifyAPI.getAvailableDevices(token);
-  if (auto value = std::get_if<Error>(&devicesRet)) {
-    return *value;
-  }
+  TResult<std::vector<Device>> devicesRet;
+  SPOTIFYCALL_WITH_REFRESH(
+      devicesRet, mSpotifyAPI.getAvailableDevices(token), token);
+
   auto devices = std::get<std::vector<Device>>(devicesRet);
   if (devices.empty()) {
     return Error(ErrorCode::KeyNotFound,
@@ -208,11 +233,24 @@ TResultOpt SpotifyBackend::setVolume(size_t const percent) {
     }
   }
 
-  auto ret = mSpotifyAPI.setVolume(token, percent, device);
-  if (ret.has_value()) {
-    LOG(ERROR) << ret.value().getErrorMessage() << std::endl;
-    return ret.value();
-  }
+  TResultOpt volRes;
+  SPOTIFYCALL_WITH_REFRESH_OPT(
+      volRes, mSpotifyAPI.setVolume(token, percent, device), token);
 
   return std::nullopt;
+}
+
+TResultOpt SpotifyBackend::errorHandler(Error const &error) {
+  if (error.getErrorCode() == ErrorCode::SpotifyAccessExpired) {
+    // refresh access token if expired
+    auto ret = mSpotifyAuth.refreshAccessToken();
+    if (ret.has_value()) {
+      return ret.value();
+    } else {
+      return std::nullopt;  // if went well, return nothing
+    }
+  }
+
+  // return error
+  return error;
 }
