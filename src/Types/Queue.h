@@ -9,6 +9,7 @@
 #ifndef _QUEUE_H_
 #define _QUEUE_H_
 
+#include <optional>
 #include <vector>
 
 #include "Tracks.h"
@@ -20,7 +21,8 @@ struct Queue {
 struct QueueStatus {
   Queue normalQueue;
   Queue adminQueue;
-  PlaybackTrack currentTrack;
+
+  std::optional<PlaybackTrack> currentTrack;
 };
 
 #endif /* _QUEUE_H_ */

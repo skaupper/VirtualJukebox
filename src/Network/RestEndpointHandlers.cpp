@@ -227,9 +227,12 @@ shared_ptr<http_response> const getCurrentQueuesHandler(
   // construct the response
   auto queueStatus = get<QueueStatus>(result);
 
-  json playbackTrack = Serializer::serialize(queueStatus.currentTrack);
+  json playbackTrack;
   json normalQueue;
   json adminQueue;
+  if (queueStatus.currentTrack.has_value()) {
+    playbackTrack = Serializer::serialize(queueStatus.currentTrack.value());
+  }
   for (auto &&track : queueStatus.normalQueue.tracks) {
     normalQueue.push_back(Serializer::serialize(track));
   }
