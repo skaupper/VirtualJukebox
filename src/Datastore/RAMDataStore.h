@@ -18,27 +18,27 @@
 #include "Types/Queue.h"
 #include "Types/Result.h"
 #include "Types/Tracks.h"
-#include "User.h"
+#include "Types/User.h"
 
 class RAMDataStore : public DataStore {
  public:
-  TResultOpt addUser(User user);
-  TResult<User> removeUser(TSessionID ID);
+  TResultOpt addUser(User const &user);
+  TResult<User> removeUser(TSessionID const &ID);
   TResultOpt checkSessionExpirations();
-  TResultOpt addTrack(BaseTrack track, QueueType q);
-  TResult<BaseTrack> removeTrack(TTrackID ID, QueueType q);
-  TResult<bool> hasTrack(TTrackID ID, QueueType q);
-  TResultOpt voteTrack(TSessionID sID, TTrackID tID, TVote vote);
+  TResultOpt addTrack(BaseTrack const &track, QueueType q);
+  TResult<BaseTrack> removeTrack(TTrackID const &ID, QueueType q);
+  TResult<bool> hasTrack(TTrackID const &ID, QueueType q);
+  TResultOpt voteTrack(TSessionID const &sID, TTrackID const &tID, TVote vote);
   TResult<Queue> getQueue(QueueType q);
-  TResult<PlaybackTrack> getPlayingTrack();
-  TResult<bool> hasUser(TSessionID ID);
+  TResult<QueuedTrack> getPlayingTrack();
+  TResult<bool> hasUser(TSessionID const &ID);
   TResultOpt nextTrack();
 
  private:
   Queue* SelectQueue(QueueType q);
   Queue mAdminQueue;
   Queue mNormalQueue;
-  PlaybackTrack mCurrentTrack;
+  QueuedTrack mCurrentTrack;
   std::vector<User> mUsers;
   std::shared_mutex mUserMutex;
   std::shared_mutex mQueueMutex;

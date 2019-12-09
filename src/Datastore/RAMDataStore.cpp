@@ -14,7 +14,7 @@
 
 using namespace std;
 
-TResultOpt RAMDataStore::addUser(User user) {
+TResultOpt RAMDataStore::addUser(User const &user) {
   // Exclusive Access to User List
   unique_lock<shared_mutex> MyLock(mUserMutex, defer_lock);
   MyLock.lock();
@@ -31,7 +31,7 @@ TResultOpt RAMDataStore::addUser(User user) {
 }
 
 // doesnt remove votes taken by this user
-TResult<User> RAMDataStore::removeUser(TSessionID ID) {
+TResult<User> RAMDataStore::removeUser(TSessionID const &ID) {
   // Exclusive Access to User List
   unique_lock<shared_mutex> MyLock(mUserMutex, defer_lock);
   MyLock.lock();
@@ -69,7 +69,7 @@ TResultOpt RAMDataStore::checkSessionExpirations() {
   return nullopt;
 }
 
-TResultOpt RAMDataStore::addTrack(BaseTrack track, QueueType q) {
+TResultOpt RAMDataStore::addTrack(BaseTrack const &track, QueueType q) {
   // Exclusive Access to Song Queue
   unique_lock<shared_mutex> MyLock(mQueueMutex, defer_lock);
   MyLock.lock();
@@ -104,7 +104,7 @@ TResultOpt RAMDataStore::addTrack(BaseTrack track, QueueType q) {
   }
 }
 
-TResult<BaseTrack> RAMDataStore::removeTrack(TTrackID ID, QueueType q) {
+TResult<BaseTrack> RAMDataStore::removeTrack(TTrackID const &ID, QueueType q) {
   // Exclusive Access to Song Queue
   unique_lock<shared_mutex> MyLock(mQueueMutex, defer_lock);
   MyLock.lock();
@@ -124,12 +124,12 @@ TResult<BaseTrack> RAMDataStore::removeTrack(TTrackID ID, QueueType q) {
   } else {
     track = *it;
     // Track is there, delete it from vector
-    pQueue->tracks.erase(it, it);
+    pQueue->tracks.erase(it);
     return track;
   }
 }
 
-TResult<bool> RAMDataStore::hasTrack(TTrackID ID, QueueType q) {
+TResult<bool> RAMDataStore::hasTrack(TTrackID const &ID, QueueType q) {
   // Shared Access to Song Queue
   shared_lock<shared_mutex> MyLock(mQueueMutex, defer_lock);
   MyLock.lock();
@@ -151,11 +151,11 @@ TResult<bool> RAMDataStore::hasTrack(TTrackID ID, QueueType q) {
   }
 }
 
-TResultOpt RAMDataStore::voteTrack(TSessionID sID, TTrackID tID, TVote vote) {
+TResultOpt RAMDataStore::voteTrack(TSessionID const &sID, TTrackID const &tID, TVote vote) {
   // Exclusive Access to Song Queue and User
   unique_lock<shared_mutex> MyLockQueue(mQueueMutex, defer_lock);
   unique_lock<shared_mutex> MyLockUser(mUserMutex, defer_lock);
-  scoped_lock(MyLockQueue, MyLockUser);
+  scoped_lock Lock(MyLockQueue, MyLockUser);
 
   // find user
   User user;
@@ -241,7 +241,7 @@ TResult<Queue> RAMDataStore::getQueue(QueueType q) {
   return (const Queue)(*pQueue);
 }
 
-TResult<PlaybackTrack> RAMDataStore::getPlayingTrack() {
+TResult<QueuedTrack> RAMDataStore::getPlayingTrack() {
   // Shared Access to Song Queue
   shared_lock<shared_mutex> MyLock(mQueueMutex, defer_lock);
   MyLock.lock();
@@ -249,7 +249,7 @@ TResult<PlaybackTrack> RAMDataStore::getPlayingTrack() {
   return mCurrentTrack;
 }
 
-TResult<bool> RAMDataStore::hasUser(TSessionID ID) {
+TResult<bool> RAMDataStore::hasUser(TSessionID const &ID) {
   // Shared Access to User List
   shared_lock<shared_mutex> MyLock(mUserMutex, defer_lock);
   MyLock.lock();
@@ -271,14 +271,6 @@ TResultOpt RAMDataStore::nextTrack() {
   MyLock.lock();
 
   // Increment LastPlayed counter for all songs
-
-  // doesnt work with auto for some reason
-  //  for(auto elem : mAdminQueue.tracks){
-  //      elem.LastPlayedxSongsAgo += 1;
-  //  }
-  //    for(auto elem : mNormalQueue.tracks){
-  //        elem.LastPlayedxSongsAgo += 1;
-  //    }
   for (int i = 0; i < mAdminQueue.tracks.size(); ++i) {
     mAdminQueue.tracks[i].LastPlayedxSongsAgo += 1;
   }
@@ -313,15 +305,7 @@ TResultOpt RAMDataStore::nextTrack() {
   sort(mNormalQueue.tracks.begin(), mNormalQueue.tracks.end());
 
   // Set Current Track
-  mCurrentTrack.trackId = tr.trackId;
-  mCurrentTrack.title = tr.title;
-  mCurrentTrack.album = tr.album;
-  mCurrentTrack.artist = tr.artist;
-  mCurrentTrack.duration = tr.duration;
-  mCurrentTrack.iconUri = tr.iconUri;
-  mCurrentTrack.addedBy = tr.addedBy;
-  mCurrentTrack.progressMs = 0;
-  mCurrentTrack.isPlaying = true;
+  mCurrentTrack = tr;
 
   return nullopt;
 }

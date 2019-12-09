@@ -469,7 +469,7 @@ TEST(DataStoreTest, votetest) {
   ds.nextTrack();
   auto restr = ds.getPlayingTrack();
   ASSERT_EQ(checkAlternativeError(restr), false);
-  PlaybackTrack tr = get<PlaybackTrack>(restr);
+  QueuedTrack tr = get<QueuedTrack>(restr);
   ASSERT_EQ(tr.trackId, tr1.trackId);
   ASSERT_EQ(tr.title, tr1.title);
   ASSERT_EQ(tr.album, tr1.album);
@@ -482,7 +482,7 @@ TEST(DataStoreTest, votetest) {
   ds.nextTrack();
   restr = ds.getPlayingTrack();
   ASSERT_EQ(checkAlternativeError(restr), false);
-  tr = get<PlaybackTrack>(restr);
+  tr = get<QueuedTrack>(restr);
   ASSERT_EQ(tr.trackId, tr2.trackId);
   ASSERT_EQ(tr.title, tr2.title);
   ASSERT_EQ(tr.album, tr2.album);
@@ -495,7 +495,7 @@ TEST(DataStoreTest, votetest) {
   ds.nextTrack();
   restr = ds.getPlayingTrack();
   ASSERT_EQ(checkAlternativeError(restr), false);
-  tr = get<PlaybackTrack>(restr);
+  tr = get<QueuedTrack>(restr);
   ASSERT_EQ(tr.trackId, tr1.trackId);
   ASSERT_EQ(tr.title, tr1.title);
   ASSERT_EQ(tr.album, tr1.album);
@@ -508,7 +508,7 @@ TEST(DataStoreTest, votetest) {
   ds.nextTrack();
   restr = ds.getPlayingTrack();
   ASSERT_EQ(checkAlternativeError(restr), false);
-  tr = get<PlaybackTrack>(restr);
+  tr = get<QueuedTrack>(restr);
   ASSERT_EQ(tr.trackId, tr2.trackId);
   ASSERT_EQ(tr.title, tr2.title);
   ASSERT_EQ(tr.album, tr2.album);
@@ -521,7 +521,7 @@ TEST(DataStoreTest, votetest) {
   ds.nextTrack();
   restr = ds.getPlayingTrack();
   ASSERT_EQ(checkAlternativeError(restr), false);
-  tr = get<PlaybackTrack>(restr);
+  tr = get<QueuedTrack>(restr);
   ASSERT_EQ(tr.trackId, tr1.trackId);
   ASSERT_EQ(tr.title, tr1.title);
   ASSERT_EQ(tr.album, tr1.album);
