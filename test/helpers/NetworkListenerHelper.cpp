@@ -8,11 +8,11 @@
 using namespace std;
 using json = nlohmann::json;
 
-void testGoodGenerateSession(RestAPIFixture *fixture,
-                             TSessionID const &sid,
-                             optional<TPassword> const &expPw,
-                             optional<string> const &expNickname,
-                             size_t count) {
+void testGenerateSession(RestAPIFixture *fixture,
+                         TSessionID const &sid,
+                         optional<TPassword> const &expPw,
+                         optional<string> const &expNickname,
+                         size_t count) {
   optional<TPassword> pw;
   optional<string> nickname;
 
@@ -43,10 +43,10 @@ void testGoodGenerateSession(RestAPIFixture *fixture,
   ASSERT_EQ(nickname, expNickname);
 }
 
-void testGoodQueryTracks(RestAPIFixture *fixture,
-                         string const &expPattern,
-                         int expMaxEntries,
-                         size_t count) {
+void testQueryTracks(RestAPIFixture *fixture,
+                     string const &expPattern,
+                     int expMaxEntries,
+                     size_t count) {
   string pattern;
   int maxEntries;
 
@@ -78,12 +78,12 @@ void testGoodQueryTracks(RestAPIFixture *fixture,
   ASSERT_EQ(maxEntries, expMaxEntries);
 }
 
-void testGoodGetCurrentQueues(RestAPIFixture *fixture,
-                              TSessionID const &expSid,
-                              int normalNr,
-                              int adminNr,
-                              bool playbackTrack,
-                              size_t count) {
+void testGetCurrentQueues(RestAPIFixture *fixture,
+                          TSessionID const &expSid,
+                          int normalNr,
+                          int adminNr,
+                          bool playbackTrack,
+                          size_t count) {
   TSessionID sid;
 
   auto expQueueStatus =
@@ -121,4 +121,104 @@ void testGoodGetCurrentQueues(RestAPIFixture *fixture,
   ASSERT_FALSE(fixture->listener.hasParametersGetCurrentQueues());
 
   ASSERT_EQ(sid, expSid);
+}
+
+void testAddTrackToQueue(RestAPIFixture *fixture,
+                         TSessionID const &expSid,
+                         TTrackID const &expTrkid,
+                         QueueType expQueueType,
+                         int count) {
+  TSessionID sid;
+  TTrackID trkid;
+  QueueType queueType;
+
+  json requestBody{
+      {"session_id", expSid},  //
+      {"track_id", expTrkid}   //
+  };
+
+  string type = "";
+  if (expQueueType == QueueType::Admin) {
+    type = "admin";
+  } else if (expQueueType == QueueType::Normal) {
+    type = "normal";
+  }
+  requestBody["queue_type"] = type;
+
+  // do request
+  auto resp = fixture->post("/addTrackToQueue", requestBody.dump()).value();
+
+  // check response
+  ASSERT_EQ(resp.code, 200);
+  ASSERT_EQ(json::parse(resp.body), json{});
+  ASSERT_EQ(fixture->listener.getCountAddTrackToQueue(), count);
+
+  ASSERT_TRUE(fixture->listener.hasParametersAddTrackToQueue());
+  fixture->listener.getLastParametersAddTrackToQueue(sid, trkid, queueType);
+  ASSERT_FALSE(fixture->listener.hasParametersAddTrackToQueue());
+
+  ASSERT_EQ(sid, expSid);
+  ASSERT_EQ(trkid, expTrkid);
+  ASSERT_EQ(queueType, expQueueType);
+}
+
+void testVoteTrack(RestAPIFixture *fixture,
+                   TSessionID const &expSid,
+                   TTrackID const &expTrkid,
+                   TVote vote,
+                   int count) {
+  // TODO
+}
+
+void testControlPlayer(RestAPIFixture *fixture,
+                       TSessionID const &expSid,
+                       PlayerAction action,
+                       int count) {
+  // TODO
+}
+
+void testMoveTrack(RestAPIFixture *fixture,
+                   TSessionID const &expSid,
+                   TTrackID const &expTrkid,
+                   QueueType expQueueType,
+                   int count) {
+  TSessionID sid;
+  TTrackID trkid;
+  QueueType queueType;
+
+  json requestBody{
+      {"session_id", expSid},  //
+      {"track_id", expTrkid}   //
+  };
+
+  string type = "";
+  if (expQueueType == QueueType::Admin) {
+    type = "admin";
+  } else if (expQueueType == QueueType::Normal) {
+    type = "normal";
+  }
+  requestBody["queue_type"] = type;
+
+  // do request
+  auto resp = fixture->put("/moveTrack", requestBody.dump()).value();
+
+  // check response
+  ASSERT_EQ(resp.code, 200);
+  ASSERT_EQ(json::parse(resp.body), json{});
+  ASSERT_EQ(fixture->listener.getCountMoveTrack(), count);
+
+  ASSERT_TRUE(fixture->listener.hasParametersMoveTrack());
+  fixture->listener.getLastParametersMoveTrack(sid, trkid, queueType);
+  ASSERT_FALSE(fixture->listener.hasParametersMoveTrack());
+
+  ASSERT_EQ(sid, expSid);
+  ASSERT_EQ(trkid, expTrkid);
+  ASSERT_EQ(queueType, expQueueType);
+}
+
+void testRemoveTrack(RestAPIFixture *fixture,
+                     TSessionID const &expSid,
+                     TTrackID const &expTrkid,
+                     int count) {
+  // TODO
 }

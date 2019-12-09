@@ -47,7 +47,12 @@ static optional<string> getRequestUrl(
 
   if (queryParameters.has_value()) {
     url << "?";
+    bool first = true;
     for (auto &&kv : queryParameters.value()) {
+      if (!first) {
+        url << "&";
+      }
+      first = false;
       url << kv.first << "=" << kv.second;
     }
   }
@@ -64,25 +69,20 @@ optional<RestClient::Response> RestAPIFixture::post(string const &endpoint,
   return RestClient::post(url.value(), "application/json", body);
 }
 
-optional<RestClient::Response> RestAPIFixture::get(
-    string const &endpoint, map<string, string> const &queryParameters) {
+optional<RestClient::Response> RestAPIFixture::put(string const &endpoint,
+                                                   string const &body) {
   auto url = getRequestUrl(endpoint);
   if (!url.has_value()) {
     return nullopt;
   }
+  return RestClient::put(url.value(), "application/json", body);
+}
 
-  bool first = true;
-  stringstream urlWithParams;
-  urlWithParams << url.value();
-  for (auto &&kv : queryParameters) {
-    if (first) {
-      urlWithParams << "?";
-      first = false;
-    } else {
-      urlWithParams << "&";
-    }
-    urlWithParams << kv.first << "=" << kv.second;
+optional<RestClient::Response> RestAPIFixture::get(
+    string const &endpoint, map<string, string> const &queryParameters) {
+  auto url = getRequestUrl(endpoint, queryParameters);
+  if (!url.has_value()) {
+    return nullopt;
   }
-
-  return RestClient::get(urlWithParams.str());
+  return RestClient::get(url.value());
 }

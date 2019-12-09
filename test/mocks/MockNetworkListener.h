@@ -77,7 +77,36 @@ class MockNetworkListener : public NetworkListener {
   size_t getCountGetCurrentQueues();
   void setResponseGetCurrentQueues(QueueStatus const &queueStatus);
 
-  // TODO ...
+  // addTrackToQueue
+  bool hasParametersAddTrackToQueue();
+  void getLastParametersAddTrackToQueue(TSessionID &sid,
+                                        TTrackID &trkid,
+                                        QueueType &queueType);
+  size_t getCountAddTrackToQueue();
+
+  // voteTrack
+  bool hasParametersVoteTrack();
+  void getLastParametersVoteTrack(TSessionID &sid,
+                                  TTrackID &trkid,
+                                  TVote &vote);
+  size_t getCountVoteTrack();
+
+  // controlPlayer
+  bool hasParametersControlPlayer();
+  void getLastParametersControlPlayer(TSessionID &sid, PlayerAction &action);
+  size_t getCountControlPlayer();
+
+  // moveTrack
+  bool hasParametersMoveTrack();
+  void getLastParametersMoveTrack(TSessionID &sid,
+                                  TTrackID &trkid,
+                                  QueueType &queueType);
+  size_t getCountMoveTrack();
+
+  // removeTrack
+  bool hasParametersRemoveTrack();
+  void getLastParametersRemoveTrack(TSessionID &sid, TTrackID &trkid);
+  size_t getCountRemoveTrack();
 
   //
   // Store the parameter sets, responses and call counts for each request.
@@ -107,28 +136,23 @@ class MockNetworkListener : public NetworkListener {
   std::optional<std::tuple<TSessionID, TTrackID, QueueType>>
       mAddTrackToQueueParameters;
   size_t mAddTrackToQueueCount;
-  TResultOpt mAddTrackToQueueResponse;
 
   // voteTrack
   std::optional<std::tuple<TSessionID, TTrackID, TVote>> mVoteTrackParameters;
   size_t mVoteTrackCount;
-  TResultOpt mVoteTrackResponse;
 
   // controlPlayer
   std::optional<std::tuple<TSessionID, PlayerAction>> mControlPlayerParameters;
   size_t mControlPlayerCount;
-  TResultOpt mControlPlayerResponse;
 
   // removeTrack
   std::optional<std::tuple<TSessionID, TTrackID>> mRemoveTrackParameters;
   size_t mRemoveTrackCount;
-  TResultOpt mRemoveTrackResponse;
 
   // moveTrack
   std::optional<std::tuple<TSessionID, TTrackID, QueueType>>
       mMoveTrackParameters;
   size_t mMoveTrackCount;
-  TResultOpt mMoveTrackResponse;
 };
 
 #endif /* _MOCK_NETWORK_LISTENER_H_ */

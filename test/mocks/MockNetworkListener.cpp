@@ -45,7 +45,7 @@ TResultOpt MockNetworkListener::addTrackToQueue(TSessionID const &sid,
                                                 QueueType type) {
   mAddTrackToQueueParameters = tuple{sid, trkid, type};
   mAddTrackToQueueCount++;
-  return mAddTrackToQueueResponse;
+  return {};
 }
 
 TResultOpt MockNetworkListener::voteTrack(TSessionID const &sid,
@@ -53,21 +53,21 @@ TResultOpt MockNetworkListener::voteTrack(TSessionID const &sid,
                                           TVote vote) {
   mVoteTrackParameters = tuple{sid, trkid, vote};
   mVoteTrackCount++;
-  return mVoteTrackResponse;
+  return {};
 }
 
 TResultOpt MockNetworkListener::controlPlayer(TSessionID const &sid,
                                               PlayerAction action) {
   mControlPlayerParameters = tuple{sid, action};
   mControlPlayerCount++;
-  return mControlPlayerResponse;
+  return {};
 }
 
 TResultOpt MockNetworkListener::removeTrack(TSessionID const &sid,
                                             TTrackID const &trkid) {
   mRemoveTrackParameters = tuple{sid, trkid};
   mRemoveTrackCount++;
-  return mRemoveTrackResponse;
+  return {};
 }
 
 TResultOpt MockNetworkListener::moveTrack(TSessionID const &sid,
@@ -75,7 +75,7 @@ TResultOpt MockNetworkListener::moveTrack(TSessionID const &sid,
                                           QueueType type) {
   mMoveTrackParameters = tuple{sid, trkid, type};
   mMoveTrackCount++;
-  return mMoveTrackResponse;
+  return {};
 }
 
 //
@@ -84,10 +84,7 @@ TResultOpt MockNetworkListener::moveTrack(TSessionID const &sid,
 
 // generateSession
 bool MockNetworkListener::hasParametersGenerateSession() {
-  if (!mGenerateSessionParameters.has_value()) {
-    return false;
-  }
-  return true;
+  return mGenerateSessionParameters.has_value();
 }
 
 void MockNetworkListener::getLastParametersGenerateSession(
@@ -105,10 +102,7 @@ void MockNetworkListener::setResponseGenerateSession(TSessionID const &resp) {
 
 // queryTracks
 bool MockNetworkListener::hasParametersQueryTracks() {
-  if (!mQueryTracksParameters.has_value()) {
-    return false;
-  }
-  return true;
+  return mQueryTracksParameters.has_value();
 }
 
 void MockNetworkListener::getLastParametersQueryTracks(string &pattern,
@@ -127,10 +121,7 @@ void MockNetworkListener::setResponseQueryTracks(
 
 // getCurrentQueues
 bool MockNetworkListener::hasParametersGetCurrentQueues() {
-  if (!mGetCurrentQueuesParameters.has_value()) {
-    return false;
-  }
-  return true;
+  return mGetCurrentQueuesParameters.has_value();
 }
 
 void MockNetworkListener::getLastParametersGetCurrentQueues(TSessionID &sid) {
@@ -144,4 +135,81 @@ size_t MockNetworkListener::getCountGetCurrentQueues() {
 void MockNetworkListener::setResponseGetCurrentQueues(
     QueueStatus const &queueStatus) {
   mGetCurrentQueuesResponse = queueStatus;
+}
+
+// addTrackToQueue
+bool MockNetworkListener::hasParametersAddTrackToQueue() {
+  return mAddTrackToQueueParameters.has_value();
+}
+
+void MockNetworkListener::getLastParametersAddTrackToQueue(
+    TSessionID &sid, TTrackID &trkid, QueueType &queueType) {
+  tie(sid, trkid, queueType) = mAddTrackToQueueParameters.value();
+  mAddTrackToQueueParameters = nullopt;
+}
+
+size_t MockNetworkListener::getCountAddTrackToQueue() {
+  return mAddTrackToQueueCount;
+}
+
+// voteTrack
+bool MockNetworkListener::hasParametersVoteTrack() {
+  return mVoteTrackParameters.has_value();
+}
+
+void MockNetworkListener::getLastParametersVoteTrack(TSessionID &sid,
+                                                     TTrackID &trkid,
+                                                     TVote &vote) {
+  tie(sid, trkid, vote) = mVoteTrackParameters.value();
+  mVoteTrackParameters = nullopt;
+}
+
+size_t MockNetworkListener::getCountVoteTrack() {
+  return mVoteTrackCount;
+}
+
+// controlPlayer
+bool MockNetworkListener::hasParametersControlPlayer() {
+  return mControlPlayerParameters.has_value();
+}
+
+void MockNetworkListener::getLastParametersControlPlayer(TSessionID &sid,
+                                                         PlayerAction &action) {
+  tie(sid, action) = mControlPlayerParameters.value();
+  mControlPlayerParameters = nullopt;
+}
+
+size_t MockNetworkListener::getCountControlPlayer() {
+  return mControlPlayerCount;
+}
+
+// moveTrack
+bool MockNetworkListener::hasParametersMoveTrack() {
+  return mMoveTrackParameters.has_value();
+}
+
+void MockNetworkListener::getLastParametersMoveTrack(TSessionID &sid,
+                                                     TTrackID &trkid,
+                                                     QueueType &queueType) {
+  tie(sid, trkid, queueType) = mMoveTrackParameters.value();
+  mMoveTrackParameters = nullopt;
+}
+
+size_t MockNetworkListener::getCountMoveTrack() {
+  return mMoveTrackCount;
+}
+
+// removeTrack
+bool MockNetworkListener::hasParametersRemoveTrack() {
+  return mRemoveTrackParameters.has_value();
+}
+
+void MockNetworkListener::getLastParametersRemoveTrack(TSessionID &sid,
+                                                       TTrackID &trkid) {
+  tie(sid, trkid) = mRemoveTrackParameters.value();
+  mRemoveTrackParameters = nullopt;
+}
+
+size_t MockNetworkListener::getCountRemoveTrack() {
+  return mRemoveTrackCount;
 }

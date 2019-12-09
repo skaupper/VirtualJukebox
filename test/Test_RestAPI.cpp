@@ -40,25 +40,25 @@ TEST_F(RestAPIFixture, generateSession_goodCases) {
   sid = "test1";
   expPw = nullopt;
   expNickname = nullopt;
-  testGoodGenerateSession(this, sid, expPw, expNickname, 1);
+  testGenerateSession(this, sid, expPw, expNickname, 1);
 
   // Password set
   sid = "1234";
   expPw = "123 password 123";
   expNickname = nullopt;
-  testGoodGenerateSession(this, sid, expPw, expNickname, 2);
+  testGenerateSession(this, sid, expPw, expNickname, 2);
 
   // Nickname set
   sid = "1+987";
   expPw = nullopt;
   expNickname = "nicky1";
-  testGoodGenerateSession(this, sid, expPw, expNickname, 3);
+  testGenerateSession(this, sid, expPw, expNickname, 3);
 
   // Password+Nickname set (special characters)
   sid = "\"ß@§$%&/()=?`´";
   expPw = ".-!§@\"'";
   expNickname = "@€¶ŧ←↓→øþ";
-  testGoodGenerateSession(this, sid, expPw, expNickname, 4);
+  testGenerateSession(this, sid, expPw, expNickname, 4);
 }
 
 TEST_F(RestAPIFixture, generateSession_badCases) {
@@ -124,29 +124,32 @@ TEST_F(RestAPIFixture, queryTracks) {
   // No entries
   pattern = "123";
   maxEntries = 0;
-  testGoodQueryTracks(this, pattern, maxEntries, 1);
+  testQueryTracks(this, pattern, maxEntries, 1);
 
   // A single entry
   pattern = "311";
   maxEntries = 1;
-  testGoodQueryTracks(this, pattern, maxEntries, 2);
+  testQueryTracks(this, pattern, maxEntries, 2);
 
   // Empty pattern
   pattern = "";
   maxEntries = 10;
-  testGoodQueryTracks(this, pattern, maxEntries, 3);
+  testQueryTracks(this, pattern, maxEntries, 3);
 
   // Normal case
   pattern = "test";
   maxEntries = 10;
-  testGoodQueryTracks(this, pattern, maxEntries, 4);
+  testQueryTracks(this, pattern, maxEntries, 4);
 
   // Many entries
   pattern = "pattern!\"@€¶ŧ←§%$§%";
   maxEntries = 100;
-  testGoodQueryTracks(this, pattern, maxEntries, 5);
+  testQueryTracks(this, pattern, maxEntries, 5);
 }
 
+//
+// getCurrentQueues
+//
 TEST_F(RestAPIFixture, getCurrentQueues) {
   ASSERT_FALSE(listener.hasParametersGetCurrentQueues());
   ASSERT_EQ(listener.getCountGetCurrentQueues(), 0);
@@ -161,40 +164,136 @@ TEST_F(RestAPIFixture, getCurrentQueues) {
   normalNr = 0;
   adminNr = 0;
   playbackTrack = false;
-  testGoodGetCurrentQueues(this, sid, normalNr, adminNr, playbackTrack, 1);
+  testGetCurrentQueues(this, sid, normalNr, adminNr, playbackTrack, 1);
 
   // Single entry in normal queue
   sid = "1234";
   normalNr = 1;
   adminNr = 0;
   playbackTrack = false;
-  testGoodGetCurrentQueues(this, sid, normalNr, adminNr, playbackTrack, 2);
+  testGetCurrentQueues(this, sid, normalNr, adminNr, playbackTrack, 2);
 
   // Single entry in admin queue
   sid = "aöskdlfaöslkjdföaslkjdf!\"@€¶ŧ←§%$§%";
   normalNr = 0;
   adminNr = 1;
   playbackTrack = false;
-  testGoodGetCurrentQueues(this, sid, normalNr, adminNr, playbackTrack, 3);
+  testGetCurrentQueues(this, sid, normalNr, adminNr, playbackTrack, 3);
 
   // Playback track only
   sid = "asdf";
   normalNr = 0;
   adminNr = 0;
   playbackTrack = true;
-  testGoodGetCurrentQueues(this, sid, normalNr, adminNr, playbackTrack, 4);
+  testGetCurrentQueues(this, sid, normalNr, adminNr, playbackTrack, 4);
 
   // Small queues
   sid = "test 133564 =(=)$%§'*Ü`´";
   normalNr = 5;
   adminNr = 10;
   playbackTrack = true;
-  testGoodGetCurrentQueues(this, sid, normalNr, adminNr, playbackTrack, 5);
+  testGetCurrentQueues(this, sid, normalNr, adminNr, playbackTrack, 5);
 
   // Big queues
   sid = "test33564 =(=)$%§'*Ü`´";
   normalNr = 100;
   adminNr = 8;
   playbackTrack = false;
-  testGoodGetCurrentQueues(this, sid, normalNr, adminNr, playbackTrack, 6);
+  testGetCurrentQueues(this, sid, normalNr, adminNr, playbackTrack, 6);
+}
+
+//
+// addTrackToQueue
+//
+TEST_F(RestAPIFixture, addTrackToQueue) {
+  ASSERT_FALSE(listener.hasParametersAddTrackToQueue());
+  ASSERT_EQ(listener.getCountAddTrackToQueue(), 0);
+
+  TSessionID sid;
+  TTrackID trkid;
+  QueueType queueType;
+
+  // Empty IDs, normal queue
+  sid = "";
+  trkid = "";
+  queueType = QueueType::Normal;
+  testAddTrackToQueue(this, sid, trkid, queueType, 1);
+
+  // Empty IDs, admin queue
+  sid = "";
+  trkid = "";
+  queueType = QueueType::Admin;
+  testAddTrackToQueue(this, sid, trkid, queueType, 2);
+
+  // Empty Track ID
+  sid = "asdf";
+  trkid = "";
+  queueType = QueueType::Normal;
+  testAddTrackToQueue(this, sid, trkid, queueType, 3);
+
+  // Empty session ID
+  sid = "";
+  trkid = "testtrack1";
+  queueType = QueueType::Admin;
+  testAddTrackToQueue(this, sid, trkid, queueType, 4);
+
+  // Empty IDs, normal queue
+  sid = "TESTSESSION!§$%/&%&()=??\\";
+  trkid = "1234567@ł€¶ŧ¶ł¶þø↓←";
+  queueType = QueueType::Normal;
+  testAddTrackToQueue(this, sid, trkid, queueType, 5);
+}
+
+//
+// voteTrack
+//
+TEST_F(RestAPIFixture, voteTrack) {
+  ASSERT_FALSE(listener.hasParametersVoteTrack());
+  ASSERT_EQ(listener.getCountVoteTrack(), 0);
+
+  TSessionID sid;
+  TTrackID trkid;
+  TVote vote;
+
+  // TODO
+}
+
+//
+// controlPlayer
+//
+TEST_F(RestAPIFixture, controlPlayer) {
+  ASSERT_FALSE(listener.hasParametersControlPlayer());
+  ASSERT_EQ(listener.getCountControlPlayer(), 0);
+
+  TSessionID sid;
+  PlayerAction playerAction;
+
+  // TODO
+}
+
+//
+// moveTrack
+//
+TEST_F(RestAPIFixture, moveTrack) {
+  ASSERT_FALSE(listener.hasParametersMoveTrack());
+  ASSERT_EQ(listener.getCountMoveTrack(), 0);
+
+  TSessionID sid;
+  TTrackID trkid;
+  QueueType queueType;
+
+  // TODO
+}
+
+//
+// removeTrack
+//
+TEST_F(RestAPIFixture, removeTrack) {
+  ASSERT_FALSE(listener.hasParametersRemoveTrack());
+  ASSERT_EQ(listener.getCountRemoveTrack(), 0);
+
+  TSessionID sid;
+  TTrackID trkid;
+
+  // TODO
 }
