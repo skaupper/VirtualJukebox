@@ -102,3 +102,46 @@ size_t MockNetworkListener::getCountGenerateSession() {
 void MockNetworkListener::setResponseGenerateSession(TSessionID const &resp) {
   mGenerateSessionResponse = resp;
 }
+
+// queryTracks
+bool MockNetworkListener::hasParametersQueryTracks() {
+  if (!mQueryTracksParameters.has_value()) {
+    return false;
+  }
+  return true;
+}
+
+void MockNetworkListener::getLastParametersQueryTracks(string &pattern,
+                                                       int &maxEntries) {
+  tie(pattern, maxEntries) = mQueryTracksParameters.value();
+  mQueryTracksParameters = nullopt;
+}
+
+size_t MockNetworkListener::getCountQueryTracks() {
+  return mQueryTracksCount;
+}
+void MockNetworkListener::setResponseQueryTracks(
+    vector<BaseTrack> const &tracks) {
+  mQueryTracksResponse = tracks;
+}
+
+// getCurrentQueues
+bool MockNetworkListener::hasParametersGetCurrentQueues() {
+  if (!mGetCurrentQueuesParameters.has_value()) {
+    return false;
+  }
+  return true;
+}
+
+void MockNetworkListener::getLastParametersGetCurrentQueues(TSessionID &sid) {
+  sid = mGetCurrentQueuesParameters.value();
+  mGetCurrentQueuesParameters = nullopt;
+}
+
+size_t MockNetworkListener::getCountGetCurrentQueues() {
+  return mGetCurrentQueuesCount;
+}
+void MockNetworkListener::setResponseGetCurrentQueues(
+    QueueStatus const &queueStatus) {
+  mGetCurrentQueuesResponse = queueStatus;
+}

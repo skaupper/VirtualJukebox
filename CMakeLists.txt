@@ -116,7 +116,8 @@ set(TEST_SOURCES        test/Test_ConfigHandler.cpp
                         test/Test_RestAPI.cpp
                         test/fixtures/RestAPIFixture.cpp
                         test/mocks/MockNetworkListener.cpp
-                        test/helpers/NetworkListenerHelper.cpp)
+                        test/helpers/NetworkListenerHelper.cpp
+                        test/helpers/TrackGenerator.cpp)
 
 set(TEST_HEADER         test/fixtures/RestAPIFixture.h
                         test/mocks/MockNetworkListener.h

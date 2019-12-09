@@ -7,7 +7,7 @@
 #include "Utils/ConfigHandler.h"
 
 using namespace std;
-using namespace std::literals::chrono_literals;
+using namespace literals::chrono_literals;
 
 void RestAPIFixture::SetUp() {
   static string const configFilePath = "../test/test_config.ini";
@@ -18,7 +18,7 @@ void RestAPIFixture::SetUp() {
   serverThread = thread{[this]() { api.handleRequests(); }};
 
   // let the server start properly before firing requests
-  this_thread::sleep_for(1ms);
+  this_thread::sleep_for(10ms);
 }
 
 void RestAPIFixture::TearDown() {
@@ -62,4 +62,27 @@ optional<RestClient::Response> RestAPIFixture::post(string const &endpoint,
     return nullopt;
   }
   return RestClient::post(url.value(), "application/json", body);
+}
+
+optional<RestClient::Response> RestAPIFixture::get(
+    string const &endpoint, map<string, string> const &queryParameters) {
+  auto url = getRequestUrl(endpoint);
+  if (!url.has_value()) {
+    return nullopt;
+  }
+
+  bool first = true;
+  stringstream urlWithParams;
+  urlWithParams << url.value();
+  for (auto &&kv : queryParameters) {
+    if (first) {
+      urlWithParams << "?";
+      first = false;
+    } else {
+      urlWithParams << "&";
+    }
+    urlWithParams << kv.first << "=" << kv.second;
+  }
+
+  return RestClient::get(urlWithParams.str());
 }

@@ -15,13 +15,19 @@
 
 #include "MockNetworkListener.h"
 #include "Network/RestAPI.h"
+#include "TrackGenerator.h"
 #include "restclient-cpp/restclient.h"
 
 class RestAPIFixture : public ::testing::Test {
  public:
   std::optional<RestClient::Response> post(std::string const &endpoint,
                                            std::string const &body);
+  std::optional<RestClient::Response> get(
+      std::string const &endpoint,
+      std::map<std::string, std::string> const &queryParameters);
+
   MockNetworkListener listener;
+  TrackGenerator gen;
 
  protected:
   void SetUp() override;

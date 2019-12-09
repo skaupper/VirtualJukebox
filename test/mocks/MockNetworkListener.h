@@ -65,6 +65,18 @@ class MockNetworkListener : public NetworkListener {
   size_t getCountGenerateSession();
   void setResponseGenerateSession(TSessionID const &);
 
+  // queryTracks
+  bool hasParametersQueryTracks();
+  void getLastParametersQueryTracks(std::string &pattern, int &maxEntries);
+  size_t getCountQueryTracks();
+  void setResponseQueryTracks(std::vector<BaseTrack> const &tracks);
+
+  // getCurrentQueues
+  bool hasParametersGetCurrentQueues();
+  void getLastParametersGetCurrentQueues(TSessionID &sid);
+  size_t getCountGetCurrentQueues();
+  void setResponseGetCurrentQueues(QueueStatus const &queueStatus);
+
   // TODO ...
 
   //

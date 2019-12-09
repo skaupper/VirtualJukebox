@@ -6,6 +6,7 @@
 #include "Network/RestAPI.h"
 #include "NetworkListenerHelper.h"
 #include "RestAPIFixture.h"
+#include "Utils/Serializer.h"
 #include "json/json.hpp"
 #include "restclient-cpp/restclient.h"
 
@@ -24,6 +25,9 @@ using json = nlohmann::json;
  * - A method to set the response data for the next calls.
  */
 
+//
+// generateSession
+//
 TEST_F(RestAPIFixture, generateSession_goodCases) {
   ASSERT_FALSE(listener.hasParametersGenerateSession());
   ASSERT_EQ(listener.getCountGenerateSession(), 0);
@@ -36,25 +40,25 @@ TEST_F(RestAPIFixture, generateSession_goodCases) {
   sid = "test1";
   expPw = nullopt;
   expNickname = nullopt;
-  testGoodGenerateSession(this, listener, sid, expPw, expNickname, 1);
+  testGoodGenerateSession(this, sid, expPw, expNickname, 1);
 
   // Password set
   sid = "1234";
   expPw = "123 password 123";
   expNickname = nullopt;
-  testGoodGenerateSession(this, listener, sid, expPw, expNickname, 2);
+  testGoodGenerateSession(this, sid, expPw, expNickname, 2);
 
   // Nickname set
   sid = "1+987";
   expPw = nullopt;
   expNickname = "nicky1";
-  testGoodGenerateSession(this, listener, sid, expPw, expNickname, 3);
+  testGoodGenerateSession(this, sid, expPw, expNickname, 3);
 
   // Password+Nickname set (special characters)
   sid = "\"ß@§$%&/()=?`´";
   expPw = ".-!§@\"'";
   expNickname = "@€¶ŧ←↓→øþ";
-  testGoodGenerateSession(this, listener, sid, expPw, expNickname, 4);
+  testGoodGenerateSession(this, sid, expPw, expNickname, 4);
 }
 
 TEST_F(RestAPIFixture, generateSession_badCases) {
@@ -105,4 +109,92 @@ TEST_F(RestAPIFixture, generateSession_badCases) {
   listener.getLastParametersGenerateSession(pw, nickname);
   ASSERT_FALSE(pw.has_value());
   ASSERT_FALSE(nickname.has_value());
+}
+
+//
+// queryTracks
+//
+TEST_F(RestAPIFixture, queryTracks) {
+  ASSERT_FALSE(listener.hasParametersQueryTracks());
+  ASSERT_EQ(listener.getCountQueryTracks(), 0);
+
+  string pattern;
+  int maxEntries;
+
+  // No entries
+  pattern = "123";
+  maxEntries = 0;
+  testGoodQueryTracks(this, pattern, maxEntries, 1);
+
+  // A single entry
+  pattern = "311";
+  maxEntries = 1;
+  testGoodQueryTracks(this, pattern, maxEntries, 2);
+
+  // Empty pattern
+  pattern = "";
+  maxEntries = 10;
+  testGoodQueryTracks(this, pattern, maxEntries, 3);
+
+  // Normal case
+  pattern = "test";
+  maxEntries = 10;
+  testGoodQueryTracks(this, pattern, maxEntries, 4);
+
+  // Many entries
+  pattern = "pattern!\"@€¶ŧ←§%$§%";
+  maxEntries = 100;
+  testGoodQueryTracks(this, pattern, maxEntries, 5);
+}
+
+TEST_F(RestAPIFixture, getCurrentQueues) {
+  ASSERT_FALSE(listener.hasParametersGetCurrentQueues());
+  ASSERT_EQ(listener.getCountGetCurrentQueues(), 0);
+
+  string sid;
+  int normalNr;
+  int adminNr;
+  bool playbackTrack;
+
+  // Empty queues
+  sid = "";
+  normalNr = 0;
+  adminNr = 0;
+  playbackTrack = false;
+  testGoodGetCurrentQueues(this, sid, normalNr, adminNr, playbackTrack, 1);
+
+  // Single entry in normal queue
+  sid = "1234";
+  normalNr = 1;
+  adminNr = 0;
+  playbackTrack = false;
+  testGoodGetCurrentQueues(this, sid, normalNr, adminNr, playbackTrack, 2);
+
+  // Single entry in admin queue
+  sid = "aöskdlfaöslkjdföaslkjdf!\"@€¶ŧ←§%$§%";
+  normalNr = 0;
+  adminNr = 1;
+  playbackTrack = false;
+  testGoodGetCurrentQueues(this, sid, normalNr, adminNr, playbackTrack, 3);
+
+  // Playback track only
+  sid = "asdf";
+  normalNr = 0;
+  adminNr = 0;
+  playbackTrack = true;
+  testGoodGetCurrentQueues(this, sid, normalNr, adminNr, playbackTrack, 4);
+
+  // Small queues
+  sid = "test 133564 =(=)$%§'*Ü`´";
+  normalNr = 5;
+  adminNr = 10;
+  playbackTrack = true;
+  testGoodGetCurrentQueues(this, sid, normalNr, adminNr, playbackTrack, 5);
+
+  // Big queues
+  sid = "test33564 =(=)$%§'*Ü`´";
+  normalNr = 100;
+  adminNr = 8;
+  playbackTrack = false;
+  testGoodGetCurrentQueues(this, sid, normalNr, adminNr, playbackTrack, 6);
 }
