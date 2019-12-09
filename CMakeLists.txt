@@ -60,6 +60,7 @@ set(ENTRYPOINT_SOURCE   src/main.cpp)
 set(APP_SOURCES         src/JukeBox.cpp
                         src/Types/Tracks.cpp
                         src/Types/Queue.cpp
+                        src/Types/Result.cpp
                         src/Utils/LoggingHandler.cpp
                         src/Utils/ConfigHandler.cpp
                         src/Utils/Serializer.cpp
