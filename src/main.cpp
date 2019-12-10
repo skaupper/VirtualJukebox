@@ -28,15 +28,6 @@ int main(int argc, char* argv[]) {
          << "Using '" << configFilePath << "' as a default fallback." << endl;
   }
 
-
-
-
-  // This is a linting error here  :)
-
-
-
-
-
   JukeBox jukebox;
   if (!jukebox.start(argv[0], configFilePath)) {
     /* Print to cerr here, since LoggingHandler is uninitialized */
