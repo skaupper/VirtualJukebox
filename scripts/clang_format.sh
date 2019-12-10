@@ -34,7 +34,7 @@ if [ $RETURN -ne 0 ]; then
   echo -e "\\n${RED}FORMATTING TEST FAILED\\n"
   echo "Apply the following diff for correct formatting:"
   echo "###########################################################################"
-  git diff | cat
+  git diff
   echo "###########################################################################"
 else
   GREEN='\033[0;32m'
