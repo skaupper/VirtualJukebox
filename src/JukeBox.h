@@ -13,13 +13,13 @@
 #include <variant>
 #include <vector>
 
+#include "Datastore/DataStore.h"
 #include "MusicBackend.h"
 #include "Network/NetworkAPI.h"
 #include "NetworkListener.h"
 #include "Types/GlobalTypes.h"
 #include "Types/Queue.h"
 #include "Types/Result.h"
-//#include "DataStore.h"
 
 class JukeBox : public NetworkListener {
  public:
@@ -56,7 +56,7 @@ class JukeBox : public NetworkListener {
   TResultOpt controlPlayer(TSessionID const &sid, PlayerAction action) override;
 
  private:
-  //  DataStore mDataStore;
+  DataStore *mDataStore;
   NetworkAPI *mNetwork;         // TODO: need to free the pointers somewhere ?
   MusicBackend *mMusicBackend;  // TODO: need to free the pointers somewhere ?
 };

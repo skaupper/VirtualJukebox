@@ -13,6 +13,7 @@
 
 #include "Types/GlobalTypes.h"
 #include "Types/Result.h"
+#include "Types/User.h"
 #include "Utils/ConfigHandler.h"
 #include "Utils/LoggingHandler.h"
 
@@ -35,7 +36,7 @@ bool JukeBox::start(string exeName, string configFilePath) {
 
 TResult<TSessionID> JukeBox::generateSession(optional<TPassword> const &pw,
                                              optional<string> const &nickname) {
-  // User user;
+  User user;
   auto conf = ConfigHandler::getInstance();
   auto adminPw = conf->getValueString("MainParams", "adminPassword");
   if (holds_alternative<Error>(adminPw))
@@ -44,14 +45,14 @@ TResult<TSessionID> JukeBox::generateSession(optional<TPassword> const &pw,
   string name = "(no nickname given)";
   if (nickname.has_value()) {
     name = nickname.value();
-    // user.Name = name;
+    user.Name = name;
   }
 
   if (pw.has_value() && pw.value() == get<string>(adminPw)) {
     LOG(INFO) << "JukeBox.generateSession: User '" << name << "' is admin!";
-    // user.isAdmin = true;
+    user.isAdmin = true;
   }
-  // mDataStore.addUser(user);
+  mDataStore->addUser(user);
 
   return static_cast<TSessionID>(to_string(time(nullptr)));
 }
@@ -67,18 +68,23 @@ TResult<vector<BaseTrack>> JukeBox::queryTracks(string const &searchPattern,
 
 TResult<QueueStatus> JukeBox::getCurrentQueues(TSessionID const &) {
   QueueStatus qs;
-  //  qs.adminQueue = mDataStore.getQueue(QueueType::Admin);
-  //  if (holds_alternative<Error>(qs.adminQueue))
-  //    return get<Error>(qs.adminQueue);
-  //
-  //  qs.normalQueue = mDataStore.getQueue(QueueType::Normal);
-  //  if (holds_alternative<Error>(qs.normalQueue))
-  //    return get<Error>(qs.normalQueue);
-  //
-  //  qs.currentTrack = mDataStore.getPlayingTrack();
-  //  if (holds_alternative<Error>(qs.currentTrack))
-  //    return get<Error>(qs.currentTrack);
-  //
+
+  auto ret = mDataStore->getQueue(QueueType::Admin);
+  if (holds_alternative<Error>(ret))
+    return get<Error>(ret);
+  qs.adminQueue = get<Queue>(ret);
+
+  ret = mDataStore->getQueue(QueueType::Normal);
+  if (holds_alternative<Error>(ret))
+    return get<Error>(ret);
+  qs.normalQueue = get<Queue>(ret);
+
+  auto track = mDataStore->getPlayingTrack();
+  if (holds_alternative<Error>(track))
+    return get<Error>(track);
+  // TODO: How can i assign a QueuedTrack on a PlaybackTrack?
+  // qs.currentTrack = get<QueuedTrack>(track);
+
   return qs;
 }
 
@@ -88,7 +94,7 @@ TResultOpt JukeBox::addTrackToQueue(TSessionID const &sid,
   /* TODO:
    * where does this function get the actual Track object/information from?
    */
-  // auto ret = mDataStore.addTrack(TRACK ???, type);
+  // auto ret = mDataStore->addTrack(TRACK ???, type);
   // if (ret.has_value())
   //   return ret.value();
 
@@ -99,15 +105,15 @@ TResultOpt JukeBox::addTrackToQueue(TSessionID const &sid,
 TResultOpt JukeBox::voteTrack(TSessionID const &sid,
                               TTrackID const &trkid,
                               TVote vote) {
-  //  auto ret = mDataStore.voteTrack(sid, trkid, vote);
-  //  if (ret.has_value())
-  //    return ret.value();
+  auto ret = mDataStore->voteTrack(sid, trkid, vote);
+  if (ret.has_value())
+    return ret.value();
 
   return Error(ErrorCode::NotImplemented, "voteTrack is not implemented yet");
 }
 
 TResultOpt JukeBox::removeTrack(TSessionID const &sid, TTrackID const &trkid) {
-  //  auto user = mDataStore.getUser(sid);
+  //  auto user = mDataStore->getUser(sid);
   //  if (holds_alternative<Error>(user))
   //    return get<Error>(user);
   //
@@ -118,7 +124,7 @@ TResultOpt JukeBox::removeTrack(TSessionID const &sid, TTrackID const &trkid) {
   //    return Error(ErrorCode::AccessDenied, "User is not an admin.");
   //  }
 
-  //  auto ret = mDataStore.removeTrack(trkid);
+  //  auto ret = mDataStore->removeTrack(trkid);
   //  if (ret.has_value())
   //    return ret.value();
   return Error(ErrorCode::NotImplemented, "removeTrack is not implemented yet");
@@ -127,7 +133,7 @@ TResultOpt JukeBox::removeTrack(TSessionID const &sid, TTrackID const &trkid) {
 TResultOpt JukeBox::moveTrack(TSessionID const &sid,
                               TTrackID const &trkid,
                               QueueType type) {
-  //  auto user = mDataStore.getUser(sid);
+  //  auto user = mDataStore->getUser(sid);
   //  if (holds_alternative<Error>(user))
   //    return get<Error>(user);
   //
@@ -148,7 +154,7 @@ TResultOpt JukeBox::moveTrack(TSessionID const &sid,
    *   - add it to other queue with DataStore.addTrack
    *
    * like:
-   *  mDataStore.addTrack(mDataStore.removeTrack(trkid));
+   *  mDataStore->addTrack(mDataStore->removeTrack(trkid));
    */
 
   return Error(ErrorCode::NotImplemented, "moveTrack is not implemented yet");
@@ -156,7 +162,7 @@ TResultOpt JukeBox::moveTrack(TSessionID const &sid,
 
 TResultOpt JukeBox::controlPlayer(TSessionID const &sid, PlayerAction action) {
   int const volChangePercent = 10;
-  //  auto user = mDataStore.getUser(sid);
+  //  auto user = mDataStore->getUser(sid);
   //  if (holds_alternative<Error>(user))
   //    return get<Error>(user);
   //
@@ -166,8 +172,11 @@ TResultOpt JukeBox::controlPlayer(TSessionID const &sid, PlayerAction action) {
   //                 << "' is not priviledged to control the player.";
   //    return Error(ErrorCode::AccessDenied, "User is not an admin.");
   //  }
+
   TResultOpt ret;
   TResult<size_t> volume;
+  TResult<QueuedTrack> playingTrk;
+
   switch (action) {
     case PlayerAction::Play:
       ret = mMusicBackend->play();
@@ -185,13 +194,14 @@ TResultOpt JukeBox::controlPlayer(TSessionID const &sid, PlayerAction action) {
         return ret.value();
       break;
     case PlayerAction::Skip:
-      // auto next = mDataStore.nextTrack();
-      // if (next.has_value())
-      //  return next.value();
+      ret = mDataStore->nextTrack();
+      if (ret.has_value())
+        return ret.value();
+      playingTrk = mDataStore->getPlayingTrack();
 
-      // ret = mMusicBackend->setPlayback(next);
-      // if (ret.has_value())
-      //  return ret.value();
+      ret = mMusicBackend->setPlayback(get<QueuedTrack>(playingTrk));
+      if (ret.has_value())
+        return ret.value();
       break;
     case PlayerAction::VolumeUp:
       volume = mMusicBackend->getVolume();
@@ -217,4 +227,5 @@ TResultOpt JukeBox::controlPlayer(TSessionID const &sid, PlayerAction action) {
                    "JukeBox.controlPlayer: Unhandled PlayerAction");
       break;
   }
+  return nullopt;
 }
