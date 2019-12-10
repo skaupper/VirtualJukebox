@@ -11,6 +11,9 @@
 #include <ctime>
 #include <memory>
 
+#include "Datastore/RAMDataStore.h"
+#include "Network/RestAPI.h"
+#include "Spotify/SpotifyBackend.h"
 #include "Types/GlobalTypes.h"
 #include "Types/Result.h"
 #include "Types/User.h"
@@ -18,6 +21,21 @@
 #include "Utils/LoggingHandler.h"
 
 using namespace std;
+
+JukeBox::JukeBox() {
+  mDataStore = new RAMDataStore();
+  mNetwork = new RestAPI();
+  mMusicBackend = new SpotifyBackend();
+}
+
+JukeBox::~JukeBox() {
+  delete mDataStore;
+  mDataStore = nullptr;
+  delete mNetwork;
+  mNetwork = nullptr;
+  delete mMusicBackend;
+  mMusicBackend = nullptr;
+}
 
 bool JukeBox::start(string exeName, string configFilePath) {
   auto conf = ConfigHandler::getInstance();

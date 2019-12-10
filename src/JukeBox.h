@@ -23,11 +23,8 @@
 
 class JukeBox : public NetworkListener {
  public:
-  /* TODO:
-   * --> implement Ctor and Dtor for init/free of member pointers!!!
-   * (right now they are simply un-initialized .. haha)
-   *
-   */
+  JukeBox();
+  ~JukeBox();
 
   /**
    * @brief Initializes ConfigHandler and LoggingHandler.
