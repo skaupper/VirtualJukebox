@@ -70,7 +70,8 @@ set(APP_SOURCES         src/JukeBox.cpp
                         src/Network/NetworkAPI.cpp
                         src/Network/RestAPI.cpp
                         src/Network/RestRequestHandler.cpp
-                        src/Network/RestEndpointHandlers.cpp)
+                        src/Network/RestEndpointHandlers.cpp
+                        src/Datastore/RAMDataStore.cpp)
 
 set(APP_HEADER          src/JukeBox.h
                         src/MusicBackend.h
@@ -90,7 +91,9 @@ set(APP_HEADER          src/JukeBox.h
                         src/Network/RestAPI.h
                         src/Network/RestRequestHandler.h
                         src/Network/RestEndpointHandlers.h
-                        src/Network/RequestInformation.h)
+                        src/Network/RequestInformation.h
+                        src/Datastore/DataStore.h
+                        src/Datastore/RAMDataStore.h)
 
 # Libraries and include directories of dependencies used by the application
 set(APP_LIBRARIES       ${LIBHTTPSERVER_LIBRARIES}
@@ -106,7 +109,8 @@ set(APP_INCLUDE_DIRS    src/
                         ${GLOG_INCLUDE_DIRS})
 
 # All source files containing test cases
-set(TEST_SOURCES        test/Test_ConfigHandler.cpp)
+set(TEST_SOURCES        test/Test_ConfigHandler.cpp
+                        test/Test_DataStore.cpp)
 
 # Libraries and include directories of dependencies used by the tests
 set(TEST_LIBRARIES      ${APP_LIBRARIES}
