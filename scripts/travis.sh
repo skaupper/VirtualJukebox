@@ -23,3 +23,8 @@ if [ "$JOB_ENV" == "valgrind" ]; then
   echo "### Running valgrind on test executable."
   valgrind ./testVirtualJukebox
 fi
+
+if [ "$JOB_ENV" == "linting" ]; then
+  echo "### Checking source code linting."
+  ./scripts/clang_format.sh
+fi
