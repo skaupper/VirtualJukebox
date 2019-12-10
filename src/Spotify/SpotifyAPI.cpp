@@ -426,14 +426,15 @@ TResultOpt SpotifyAPI::play(std::string const &accessToken,
                "Spotify sent an unexpected message");
 }
 
-TResult<Track> SpotifyAPI::getTrack(std::string const &accessToken, std::string const &spotifyID,
+TResult<Track> SpotifyAPI::getTrack(std::string const &accessToken,
+                                    std::string const &spotifyID,
                                     const std::string &market) {
   auto client = std::make_unique<RestClient::Connection>(cSpotifyAPIUrl);
   RestClient::HeaderFields headers;
   headers.insert(
-          std::pair<std::string, std::string>("Accept", "application/json"));
+      std::pair<std::string, std::string>("Accept", "application/json"));
   headers.insert(
-          std::pair<std::string, std::string>("Content-Type", "application/json"));
+      std::pair<std::string, std::string>("Content-Type", "application/json"));
   headers.insert(std::pair<std::string, std::string>("Authorization",
                                                      "Bearer " + accessToken));
   client->SetHeaders(headers);

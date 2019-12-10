@@ -17,16 +17,16 @@
 #include "Types/Result.h"
 
 /**
- * @brief spotify music backend class which handles api calls and starts the authentication process
+ * @brief spotify music backend class which handles api calls and starts the
+ * authentication process
  * @details all methods are capable of refreshing the token, if it gets expired
  */
 class SpotifyBackend : public MusicBackend {
  public:
-
-
   /**
    * @brief initalizes the backend
-   * @details this function must be called to start the authorization server which is responsible for accessing the "access token"
+   * @details this function must be called to start the authorization server
+   * which is responsible for accessing the "access token"
    * @return none
    */
   virtual TResultOpt initBackend(void) override;
@@ -42,17 +42,20 @@ class SpotifyBackend : public MusicBackend {
 
   /**
    * @brief set the given track as playback (means the track gets played)
-   * @details the method checks first if there are any spotify players (webplayer, smartphone,...), if not
-   * KeyNotFound Error gets returned. Next step is to check if in the config.ini is a playingDevice is given. if yes,
-   * and this playing device is found, this device gets selected for the playback, else the actual selected (spotify select)
-   * playing device gets used
+   * @details the method checks first if there are any spotify players
+   * (webplayer, smartphone,...), if not KeyNotFound Error gets returned. Next
+   * step is to check if in the config.ini is a playingDevice is given. if yes,
+   * and this playing device is found, this device gets selected for the
+   * playback, else the actual selected (spotify select) playing device gets
+   * used
    * @param track track to play
    * @return std::nullopt on succeed, otherwise Error
    */
   virtual TResultOpt setPlayback(BaseTrack const &track) override;
 
   /**
-   * @brief returns the current playback of the active device as a playback track
+   * @brief returns the current playback of the active device as a playback
+   * track
    * @return actual playback track on success, otherwise Error
    */
   virtual TResult<PlaybackTrack> getCurrentPlayback(void) override;
@@ -77,7 +80,8 @@ class SpotifyBackend : public MusicBackend {
 
   /**
    * @brief sets a new volume
-   * @details if a device is given in the ini file, this device gets selected, if not found, the actual active device
+   * @details if a device is given in the ini file, this device gets selected,
+   * if not found, the actual active device
    * @param percent volume in percent
    * @return on failure Error
    */
@@ -89,7 +93,7 @@ class SpotifyBackend : public MusicBackend {
    * @param trackID track id returned for example from queryTracks
    * @return new BaseTrack object on success, otherwise Error
    */
-  virtual TResult<BaseTrack> createBaseTrack(TTrackID const & trackID);
+  virtual TResult<BaseTrack> createBaseTrack(TTrackID const &trackID);
 
  private:
   TResultOpt errorHandler(Error const &error);

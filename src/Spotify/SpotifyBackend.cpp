@@ -53,7 +53,6 @@ using namespace SpotifyApi;
     }                                                                        \
   }
 
-
 TResultOpt SpotifyBackend::initBackend() {
   // start server for authentication
   auto startServerRet = mSpotifyAuth.startServer();
@@ -240,16 +239,16 @@ TResultOpt SpotifyBackend::setVolume(size_t const percent) {
 TResult<BaseTrack> SpotifyBackend::createBaseTrack(TTrackID const &trackID) {
   std::string token = mSpotifyAuth.getAccessToken();
 
-  //remove spotify uri header (spotify:track: )
+  // remove spotify uri header (spotify:track: )
   auto pos = trackID.rfind(":");
   std::string trackNameId;
-  if(pos != std::string::npos){
-    trackNameId = trackID.substr(pos+1);
+  if (pos != std::string::npos) {
+    trackNameId = trackID.substr(pos + 1);
   }
 
   TResult<Track> trackRes;
   SPOTIFYCALL_WITH_REFRESH(
-          trackRes, mSpotifyAPI.getTrack(token,trackNameId), token);
+      trackRes, mSpotifyAPI.getTrack(token, trackNameId), token);
 
   auto track = std::get<Track>(trackRes);
   BaseTrack baseTrack;
@@ -263,8 +262,8 @@ TResult<BaseTrack> SpotifyBackend::createBaseTrack(TTrackID const &trackID) {
 
   if (!track.getAlbum().getImages().empty()) {
     baseTrack.iconUri = track.getAlbum()
-            .getImages()[0]
-            .getUrl();  // on first place is the biggest one
+                            .getImages()[0]
+                            .getUrl();  // on first place is the biggest one
   }
 
   for (auto &artist : track.getArtists()) {
@@ -272,7 +271,6 @@ TResult<BaseTrack> SpotifyBackend::createBaseTrack(TTrackID const &trackID) {
   }
   return baseTrack;
 }
-
 
 TResultOpt SpotifyBackend::errorHandler(Error const &error) {
   if (error.getErrorCode() == ErrorCode::SpotifyAccessExpired) {
