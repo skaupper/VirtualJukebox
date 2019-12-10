@@ -54,8 +54,8 @@ class JukeBox : public NetworkListener {
 
  private:
   DataStore *mDataStore;
-  NetworkAPI *mNetwork;         // TODO: need to free the pointers somewhere ?
-  MusicBackend *mMusicBackend;  // TODO: need to free the pointers somewhere ?
+  NetworkAPI *mNetwork;
+  MusicBackend *mMusicBackend;
 };
 
 #endif /* _JUKEBOX_H_ */

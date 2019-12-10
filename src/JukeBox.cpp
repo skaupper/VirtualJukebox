@@ -14,8 +14,6 @@
 #include "Datastore/RAMDataStore.h"
 #include "Network/RestAPI.h"
 #include "Spotify/SpotifyBackend.h"
-#include "Types/GlobalTypes.h"
-#include "Types/Result.h"
 #include "Types/User.h"
 #include "Utils/ConfigHandler.h"
 #include "Utils/LoggingHandler.h"
