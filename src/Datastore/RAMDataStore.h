@@ -35,7 +35,7 @@ class RAMDataStore : public DataStore {
   TResultOpt nextTrack();
 
  private:
-  Queue* SelectQueue(QueueType q);
+  Queue *SelectQueue(QueueType q);
   Queue mAdminQueue;
   Queue mNormalQueue;
   QueuedTrack mCurrentTrack;

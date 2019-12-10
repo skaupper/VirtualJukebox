@@ -151,7 +151,9 @@ TResult<bool> RAMDataStore::hasTrack(TTrackID const &ID, QueueType q) {
   }
 }
 
-TResultOpt RAMDataStore::voteTrack(TSessionID const &sID, TTrackID const &tID, TVote vote) {
+TResultOpt RAMDataStore::voteTrack(TSessionID const &sID,
+                                   TTrackID const &tID,
+                                   TVote vote) {
   // Exclusive Access to Song Queue and User
   unique_lock<shared_mutex> MyLockQueue(mQueueMutex, defer_lock);
   unique_lock<shared_mutex> MyLockUser(mUserMutex, defer_lock);

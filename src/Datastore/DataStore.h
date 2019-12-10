@@ -30,7 +30,9 @@ class DataStore {
   virtual TResultOpt addTrack(BaseTrack const &track, QueueType q) = 0;
   virtual TResult<BaseTrack> removeTrack(TTrackID const &ID, QueueType q) = 0;
   virtual TResult<bool> hasTrack(TTrackID const &ID, QueueType q) = 0;
-  virtual TResultOpt voteTrack(TSessionID const &sID, TTrackID const &tID, TVote vote) = 0;
+  virtual TResultOpt voteTrack(TSessionID const &sID,
+                               TTrackID const &tID,
+                               TVote vote) = 0;
   virtual TResult<Queue> getQueue(QueueType q) = 0;
   // undefined behaviour before first call to nextTrack
   virtual TResult<QueuedTrack> getPlayingTrack() = 0;
