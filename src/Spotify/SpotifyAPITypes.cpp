@@ -16,7 +16,6 @@
 using namespace SpotifyApi;
 
 Token::Token(nlohmann::json const& tokenJson) {
-  std::cout << "Token: " << tokenJson.dump(4) << std::endl;
   for (auto& [key, value] : tokenJson.items()) {
     if (key == "access_token") {
       mAccesToken = value;
@@ -99,7 +98,6 @@ bool Device::isRestricted() const {
 }
 
 Playback::Playback(nlohmann::json const& playbackJson) {
-  std::cout << playbackJson.dump(4) << std::endl;
   for (auto& [key, value] : playbackJson.items()) {
     if (key == "device") {
       mDevice = Device(value);

@@ -177,6 +177,7 @@ class SpotifyAPI {
       {QueryType::playlist, "playlist"}};
 
   int const cHTTPTimeout = 408;
+  int const cHTTPBadRequest = 400;
   int const cHTTPUnouthorized = 401;
   int const cHTTPOK = 200;
   int const cHTTPNotFound = 404;

@@ -58,7 +58,7 @@ TResult<Token> SpotifyAPI::getAccessToken(GrantType grantType,
 
   if (response.code == cHTTPOK) {
     Token token(tokenJson);
-    return std::move(token);
+    return token;
   } else {
     // check for error object
     if (tokenJson.find("error") != tokenJson.end()) {
@@ -109,7 +109,7 @@ TResult<Token> SpotifyAPI::refreshAccessToken(std::string const &refreshToken,
 
   if (response.code == cHTTPOK) {
     Token token(tokenJson);
-    return std::move(token);
+    return token;
   } else {
     // check for error object
     if (tokenJson.find("error") != tokenJson.end()) {
@@ -149,7 +149,7 @@ TResult<std::vector<Device>> SpotifyAPI::getAvailableDevices(
         for (nlohmann::json &elem : deviceListJson["devices"]) {
           devices.emplace_back(Device(elem));
         }
-        return std::move(devices);
+        return devices;
       }
 
     } else {
@@ -238,8 +238,7 @@ TResult<SpotifyPaging> SpotifyAPI::search(std::string const &accessToken,
 
   client->SetTimeout(cRequestTimeout);
   auto response = client->get("/v1/search" + queryStream.str());
-  std::cout << "/v1/search" + queryStream.str() << std::endl;
-  //  std::cout<<response.body<<std::endl;
+
   nlohmann::json pagingJson;
   if (response.code == cNoContent) {
     LOG(INFO) << "[SpotifyAPI] in search, no content received" << std::endl;
@@ -486,6 +485,8 @@ Error SpotifyAPI::errorParser(SpotifyApi::SpotifyError const &error) {
     return Error(ErrorCode::SpotifyNotFound, error.getMessage());
   } else if (error.getStatus() == cHTTPForbidden) {
     return Error(ErrorCode::SpotifyForbidden, error.getMessage());
+  } else if (error.getStatus() == cHTTPBadRequest) {
+    return Error(ErrorCode::SpotifyBadRequest, error.getMessage());
   } else {
     // unhandled spotify error
     LOG(ERROR) << "[SpotifyAPI]: Unhandled Spotify Error " << error.getMessage()
@@ -506,7 +507,7 @@ std::string SpotifyAPI::stringUrlEncode(std::string const &str) {
       urlEncoded.append(1, elem);
     }
   }
-  return std::move(urlEncoded);
+  return urlEncoded;
 }
 
 std::string SpotifyAPI::stringBase64Encode(std::string const &str) {

@@ -96,7 +96,7 @@ TResult<std::vector<BaseTrack>> SpotifyBackend::queryTracks(
     tracks.emplace_back(track);
   }
 
-  return std::move(tracks);
+  return tracks;
 }
 
 TResultOpt SpotifyBackend::setPlayback(BaseTrack const &track) {
