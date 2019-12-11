@@ -29,9 +29,12 @@ enum class ErrorCode {
   NotImplemented,
   NotInitialized,
   SpotifyNotFound,
+  SpotifyAccessDenied,
+  SpotifyAccessExpired,
   SpotifyForbidden,
   SpotifyParseError,
   SpotifyAPIError,
+  SpotifyBadRequest,
   AlreadyExists,
   DoesntExist
 };
@@ -82,7 +85,7 @@ using TResultOpt = std::optional<Error>;
  *         If so, it prints the containing error message.
  * @return true if parameter contains error type, false otherwise
  */
-static bool checkOptionalError(TResultOpt& ret) {
+static inline bool checkOptionalError(TResultOpt& ret) {
   if (ret.has_value()) {
     LOG(ERROR) << "Error message is: " << ret.value().getErrorMessage();
     return true;

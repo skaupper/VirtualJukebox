@@ -58,7 +58,7 @@ TResult<Token> SpotifyAPI::getAccessToken(GrantType grantType,
 
   if (response.code == cHTTPOK) {
     Token token(tokenJson);
-    return std::move(token);
+    return token;
   } else {
     // check for error object
     if (tokenJson.find("error") != tokenJson.end()) {
@@ -109,7 +109,7 @@ TResult<Token> SpotifyAPI::refreshAccessToken(std::string const &refreshToken,
 
   if (response.code == cHTTPOK) {
     Token token(tokenJson);
-    return std::move(token);
+    return token;
   } else {
     // check for error object
     if (tokenJson.find("error") != tokenJson.end()) {
@@ -149,7 +149,7 @@ TResult<std::vector<Device>> SpotifyAPI::getAvailableDevices(
         for (nlohmann::json &elem : deviceListJson["devices"]) {
           devices.emplace_back(Device(elem));
         }
-        return std::move(devices);
+        return devices;
       }
 
     } else {
@@ -171,6 +171,7 @@ TResult<std::vector<Device>> SpotifyAPI::getAvailableDevices(
 
 TResult<Playback> SpotifyAPI::getCurrentPlayback(std::string const &accessToken,
                                                  std::string const &market) {
+  (void)market;
   auto client = std::make_unique<RestClient::Connection>(cSpotifyAPIUrl);
   RestClient::HeaderFields headers;
   headers.insert(
@@ -238,8 +239,7 @@ TResult<SpotifyPaging> SpotifyAPI::search(std::string const &accessToken,
 
   client->SetTimeout(cRequestTimeout);
   auto response = client->get("/v1/search" + queryStream.str());
-  std::cout << "/v1/search" + queryStream.str() << std::endl;
-  //  std::cout<<response.body<<std::endl;
+
   nlohmann::json pagingJson;
   if (response.code == cNoContent) {
     LOG(INFO) << "[SpotifyAPI] in search, no content received" << std::endl;
@@ -426,23 +426,72 @@ TResultOpt SpotifyAPI::play(std::string const &accessToken,
                "Spotify sent an unexpected message");
 }
 
+TResult<Track> SpotifyAPI::getTrack(std::string const &accessToken,
+                                    std::string const &spotifyID,
+                                    const std::string &market) {
+  (void)market;
+  auto client = std::make_unique<RestClient::Connection>(cSpotifyAPIUrl);
+  RestClient::HeaderFields headers;
+  headers.insert(
+      std::pair<std::string, std::string>("Accept", "application/json"));
+  headers.insert(
+      std::pair<std::string, std::string>("Content-Type", "application/json"));
+  headers.insert(std::pair<std::string, std::string>("Authorization",
+                                                     "Bearer " + accessToken));
+  client->SetHeaders(headers);
+
+  client->SetTimeout(cRequestTimeout);
+  auto response = client->get("/v1/tracks/" + spotifyID);
+
+  nlohmann::json trackJson;
+  if (response.code == cNoContent) {
+    LOG(INFO) << "[SpotifyAPI] in search, no content received" << std::endl;
+    return Track();
+  }
+  try {
+    trackJson = nlohmann::json::parse(response.body);
+
+    if (response.code == cHTTPOK) {
+      return Track(trackJson);
+
+    } else {
+      // check for error object
+      if (trackJson.find("error") != trackJson.end()) {
+        SpotifyError spotifyError(trackJson["error"]);
+        return errorParser(spotifyError);
+      }
+    }
+    // if we reach here or the exception gets thrown spotify sent an unexpected
+    // message
+  } catch (...) {
+    // parse exception
+    return Error(ErrorCode::SpotifyParseError,
+                 "[SpotifyAPI] received json couldn't be parsed");
+  }
+  // if we reach here spotify sent an unexpected message
+  return Error(ErrorCode::SpotifyAPIError,
+               "Spotify sent an unexpected message");
+}
+
 Error SpotifyAPI::errorParser(SpotifyApi::SpotifyError const &error) {
   if (error.getStatus() == cHTTPUnouthorized) {
     if (error.getMessage().find("Invalid access token") != std::string::npos) {
-      return Error(ErrorCode::AccessDenied, error.getMessage());
+      return Error(ErrorCode::SpotifyAccessDenied, error.getMessage());
     } else if (error.getMessage().find("The access token expired") !=
                std::string::npos) {
-      return Error(ErrorCode::SessionExpired, error.getMessage());
+      return Error(ErrorCode::SpotifyAccessExpired, error.getMessage());
     } else {
-      return Error(ErrorCode::AccessDenied, error.getMessage());
+      return Error(ErrorCode::SpotifyAccessDenied, error.getMessage());
     }
   } else if (error.getStatus() == cHTTPNotFound) {
     return Error(ErrorCode::SpotifyNotFound, error.getMessage());
   } else if (error.getStatus() == cHTTPForbidden) {
     return Error(ErrorCode::SpotifyForbidden, error.getMessage());
+  } else if (error.getStatus() == cHTTPBadRequest) {
+    return Error(ErrorCode::SpotifyBadRequest, error.getMessage());
   } else {
     // unhandled spotify error
-    LOG(ERROR) << "[SpotifyAPI]: Error " << error.getMessage()
+    LOG(ERROR) << "[SpotifyAPI]: Unhandled Spotify Error " << error.getMessage()
                << " Status: " << error.getStatus() << std::endl;
     return Error(ErrorCode::SpotifyAPIError, error.getMessage());
   }
@@ -460,7 +509,7 @@ std::string SpotifyAPI::stringUrlEncode(std::string const &str) {
       urlEncoded.append(1, elem);
     }
   }
-  return std::move(urlEncoded);
+  return urlEncoded;
 }
 
 std::string SpotifyAPI::stringBase64Encode(std::string const &str) {

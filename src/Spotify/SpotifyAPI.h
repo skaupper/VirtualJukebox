@@ -135,6 +135,18 @@ class SpotifyAPI {
       int positionMs = 0);
 
   /**
+   * @brief searches for the given track id and returns a simplified track
+   * object
+   * @param accessToken valid access token
+   * @param spotifyID spotify id of the song (without "spotify:track:" string)
+   * @param market only return tracks, which are valid in the given market
+   * @return if succeeded Track Object, otherwise Error
+   */
+  TResult<Track> getTrack(std::string const &accessToken,
+                          std::string const &spotifyID,
+                          std::string const &market = "AT");
+
+  /**
    * @brief encodes the given string with http special characters
    * @param str string to encode
    * @return encoded string
@@ -165,6 +177,7 @@ class SpotifyAPI {
       {QueryType::playlist, "playlist"}};
 
   int const cHTTPTimeout = 408;
+  int const cHTTPBadRequest = 400;
   int const cHTTPUnouthorized = 401;
   int const cHTTPOK = 200;
   int const cHTTPNotFound = 404;

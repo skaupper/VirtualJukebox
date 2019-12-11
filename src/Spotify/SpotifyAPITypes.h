@@ -32,12 +32,12 @@ class Token {
  public:
   Token() = default;
   Token(nlohmann::json const &tokenJson);
-
-  std::string const &getAccessToken();
-  std::string const &getRefreshToken();
-  std::string const &getTokenType();
-  std::string const &getScope();
-  size_t getExpiresIn();
+  void setRefreshToken(std::string const &token);
+  std::string const &getAccessToken() const;
+  std::string const &getRefreshToken() const;
+  std::string const &getTokenType() const;
+  std::string const &getScope() const;
+  size_t getExpiresIn() const;
 
  private:
   std::string
@@ -59,12 +59,12 @@ class Device {
   Device() = default;
   Device(nlohmann::json const &deviceJson);
   std::string const &getID() const;
-  bool isActive();
-  bool isPrivateSession();
-  bool isRestricted();
+  bool isActive() const;
+  bool isPrivateSession() const;
+  bool isRestricted() const;
   std::string const &getName() const;
   std::string const &getType() const;
-  size_t getVolume();
+  size_t getVolume() const;
 
  private:
   std::string mId;        /**< the device id. may be empty */
@@ -159,7 +159,7 @@ class Track {
   Track(nlohmann::json const &trackJson);
   std::vector<Artist> const &getArtists() const;
   Album const &getAlbum() const;
-  size_t getDuration();
+  size_t getDuration() const;
   std::string const &getHref() const;
   std::string const &getId() const;
   std::string const &getName() const;
@@ -186,10 +186,10 @@ class Playback {
 
   Device const &getDevice() const;
   std::string const &getRepeatState() const;
-  bool getShuffleState();
-  size_t getTimestamp();
-  size_t getProgressMs();
-  bool isPlaying();
+  bool getShuffleState() const;
+  size_t getTimestamp() const;
+  size_t getProgressMs() const;
+  bool isPlaying() const;
   std::string const &getCurrentPlayingType() const;
   Track const &getCurrentPlayingTrack() const;
 
@@ -211,15 +211,15 @@ class SpotifyPaging {
   SpotifyPaging() = default;
   SpotifyPaging(nlohmann::json const &pagingJson);
 
-  std::vector<Track> const &getTracks();
-  std::vector<Artist> const &getArtists();
-  std::vector<Album> const &getAlbums();
-  std::string const &getHref();
-  int getLimit();
-  std::string const &getNext();
-  int getOffset();
-  std::string const &getPrevious();
-  int getTotal();
+  std::vector<Track> const &getTracks() const;
+  std::vector<Artist> const &getArtists() const;
+  std::vector<Album> const &getAlbums() const;
+  std::string const &getHref() const;
+  int getLimit() const;
+  std::string const &getNext() const;
+  int getOffset() const;
+  std::string const &getPrevious() const;
+  int getTotal() const;
 
  private:
   std::vector<Track> mTracks;   /**< array of tracks */
