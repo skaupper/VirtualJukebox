@@ -124,8 +124,7 @@ TResultOpt RAMDataStore::addTrack(BaseTrack const &track, QueueType q) {
 
 TResult<BaseTrack> RAMDataStore::removeTrack(TTrackID const &ID, QueueType q) {
   // Exclusive Access to Song Queue
-  unique_lock<shared_mutex> MyLock(mQueueMutex, defer_lock);
-  MyLock.lock();
+  unique_lock<shared_mutex> MyLock(mQueueMutex);
 
   Queue *pQueue = SelectQueue(q);
   QueuedTrack track;
@@ -174,7 +173,7 @@ TResultOpt RAMDataStore::voteTrack(TSessionID const &sID,
   // Exclusive Access to Song Queue and User
   unique_lock<shared_mutex> MyLockQueue(mQueueMutex, defer_lock);
   unique_lock<shared_mutex> MyLockUser(mUserMutex, defer_lock);
-  scoped_lock Lock(MyLockQueue, MyLockUser);
+  lock(MyLockQueue, MyLockUser);
 
   // find user
   User user;
