@@ -169,9 +169,9 @@ TResultOpt JukeBox::removeTrack(TSessionID const &sid, TTrackID const &trkid) {
     return Error(ErrorCode::AccessDenied, "User is not an admin.");
   }
 
-  // auto ret = mDataStore->removeTrack(trkid);
-  // if (ret.has_value())
-  //   return ret.value();
+  auto ret = mDataStore->removeTrack(trkid);
+  if (holds_alternative<Error>(ret))
+    return get<Error>(ret);
 
   return nullopt;
 }

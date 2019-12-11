@@ -27,7 +27,7 @@ class RAMDataStore : public DataStore {
   TResult<User> removeUser(TSessionID const &ID);
   TResultOpt checkSessionExpirations();
   TResultOpt addTrack(BaseTrack const &track, QueueType q);
-  TResult<BaseTrack> removeTrack(TTrackID const &ID, QueueType q);
+  TResult<BaseTrack> removeTrack(TTrackID const &ID);
   TResult<bool> hasTrack(TTrackID const &ID, QueueType q);
   TResultOpt voteTrack(TSessionID const &sID, TTrackID const &tID, TVote vote);
   TResult<Queue> getQueue(QueueType q);
