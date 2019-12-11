@@ -179,16 +179,17 @@ TResultOpt JukeBox::removeTrack(TSessionID const &sid, TTrackID const &trkid) {
 TResultOpt JukeBox::moveTrack(TSessionID const &sid,
                               TTrackID const &trkid,
                               QueueType type) {
-  //  auto user = mDataStore->getUser(sid);
-  //  if (holds_alternative<Error>(user))
-  //    return get<Error>(user);
-  //
-  //  if (!user.isAdmin) {
-  //    LOG(WARNING) << "JukeBox.moveTrack: User with session ID '" << sid
-  //                 << "' and nickname '" << user.name
-  //                 << "' is not priviledged to move a track.";
-  //    return Error(ErrorCode::AccessDenied, "User is not an admin.");
-  //  }
+  auto retUser = mDataStore->getUser(sid);
+  if (holds_alternative<Error>(retUser))
+    return get<Error>(retUser);
+
+  User user = get<User>(retUser);
+  if (!user.isAdmin) {
+    LOG(WARNING) << "JukeBox.moveTrack: User with session ID '" << sid
+                 << "' and nickname '" << user.Name
+                 << "' is not priviledged to move a track.";
+    return Error(ErrorCode::AccessDenied, "User is not an admin.");
+  }
 
   /* TODO: how to implement this?
    *  can't use MusicBackend.queryMusic() for that, since it might
