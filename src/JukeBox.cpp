@@ -43,7 +43,6 @@ bool JukeBox::start(string const &exeName, string const &configFilePath) {
   if (ret.has_value()) {
     /* Print to cerr here, since LoggingHandler is uninitialized */
     cerr << "ERROR: " << ret.value().getErrorMessage() << endl;
-
     return false;
   }
 

@@ -24,8 +24,6 @@ string const exeName = "./testVirtualJukebox";
 
 TEST(JukeBox, generateSession) {
   JukeBox jb;
-  bool start = jb.start(exeName, configFilePath);
-  ASSERT_EQ(start, true);
 
   string const pw = "awesome4711password";
   string const nickname = "theNickname";
