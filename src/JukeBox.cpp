@@ -17,6 +17,7 @@
 #include "Types/User.h"
 #include "Utils/ConfigHandler.h"
 #include "Utils/LoggingHandler.h"
+#include "Utils/TrackScheduler.h"
 
 using namespace std;
 
@@ -56,6 +57,9 @@ bool JukeBox::start(string const &exeName, string const &configFilePath) {
 
   // TODO: check for available devices here? only works if initBackend blocks
   // until an access token has been acquired
+
+  TrackScheduler scheduler(mDataStore, mMusicBackend);
+  scheduler.start();
 
   mNetwork->handleRequests();
 
