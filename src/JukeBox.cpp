@@ -98,11 +98,39 @@ TResult<QueueStatus> JukeBox::getCurrentQueues(TSessionID const &) {
     return get<Error>(ret);
   qs.normalQueue = get<Queue>(ret);
 
-  auto track = mDataStore->getPlayingTrack();
-  if (holds_alternative<Error>(track))
-    return get<Error>(track);
-  // TODO: How can i assign a QueuedTrack on a PlaybackTrack?
-  // qs.currentTrack = get<QueuedTrack>(track);
+  /* Construct current PlaybackTrack through combining of information
+   * in DataStore and Spotify */
+  auto trackStore = mDataStore->getPlayingTrack();
+  if (holds_alternative<Error>(trackStore))
+    return get<Error>(trackStore);
+
+  QueuedTrack tmp = get<QueuedTrack>(trackStore);
+  PlaybackTrack pbt;
+  pbt.addedBy = tmp.addedBy;
+  pbt.album = tmp.album;
+  pbt.artist = tmp.artist;
+  pbt.duration = tmp.duration;
+  pbt.iconUri = tmp.iconUri;
+  pbt.title = tmp.title;
+  pbt.trackId = tmp.trackId;
+
+  auto trackSpotify = mMusicBackend->getCurrentPlayback();
+  if (holds_alternative<Error>(trackSpotify))
+    return get<Error>(trackSpotify);
+
+  PlaybackTrack pbtSpotify = get<PlaybackTrack>(trackSpotify);
+  pbt.progressMs = pbtSpotify.progressMs;
+  pbt.isPlaying = pbtSpotify.isPlaying;
+
+  if (!(pbt == pbtSpotify)) {
+    string msg =
+        "Jukebox.getCurrentQueues: Inconsistency between current playback "
+        "track in Spotify and DataStore";
+    LOG(WARNING) << msg;
+    return Error(ErrorCode::InvalidValue, msg);
+  }
+
+  qs.currentTrack = pbt;
 
   return qs;
 }
