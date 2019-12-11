@@ -22,10 +22,10 @@ TrackScheduler::TrackScheduler(DataStore* const datastore,
 }
 
 TrackScheduler::~TrackScheduler() {
-  // TODO: stop thread
+  mThread.join();
 
   /* Memory needs to be freed by the creator of this object.
-   * De-initializing the pointers for safety reasons.
+   * Just de-initializing the pointers here for safety reasons.
    * TODO: Discuss if that makes sense :)
    */
   mDataStore = nullptr;
