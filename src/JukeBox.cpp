@@ -299,23 +299,26 @@ TResultOpt JukeBox::controlPlayer(TSessionID const &sid, PlayerAction action) {
       break;
     case PlayerAction::Skip:
       ret = mDataStore->nextTrack();
+      if (ret.has_value())
+        return ret.value();
+
       playingTrk = mDataStore->getPlayingTrack();
       if (holds_alternative<Error>(playingTrk))
-        ret = get<Error>(playingTrk);
+        return get<Error>(playingTrk);
 
       ret = mMusicBackend->setPlayback(get<QueuedTrack>(playingTrk));
       break;
     case PlayerAction::VolumeUp:
       volume = mMusicBackend->getVolume();
       if (holds_alternative<Error>(volume))
-        ret = get<Error>(volume);
+        return get<Error>(volume);
 
       ret = mMusicBackend->setVolume(get<size_t>(volume) + volChangePercent);
       break;
     case PlayerAction::VolumeDown:
       volume = mMusicBackend->getVolume();
       if (holds_alternative<Error>(volume))
-        ret = get<Error>(volume);
+        return get<Error>(volume);
 
       ret = mMusicBackend->setVolume(get<size_t>(volume) + volChangePercent);
       break;
