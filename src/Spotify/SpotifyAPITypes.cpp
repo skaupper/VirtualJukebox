@@ -408,7 +408,7 @@ int SpotifyPaging::getTotal() const {
 }
 
 SpotifyError::SpotifyError(nlohmann::json const& errorJson) {
-  std::cout << "Error: " << errorJson.dump(4) << std::endl;
+  // std::cout << "Error: " << errorJson.dump(4) << std::endl;
   for (auto& [key, value] : errorJson.items()) {
     if (key == "status") {
       mStatus = value;

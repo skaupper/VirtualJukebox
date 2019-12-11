@@ -25,9 +25,9 @@ class SpotifyAPITest : public ::testing::Test {
     if (auto value = get_if<Error>(&testRet)) {
       value = value;
       // if we get an error here, the access token is not valid or returned some
-      // other error
-      cout << "CAUTION: Access Token is not valid, Tests get aborted.." << endl;
-      exit(-1);
+      // other error, so we skip the test to ensure that the tests are not
+      // failing
+      GTEST_SKIP_(" no valid access token given");
     }
   }
   virtual void TearDown() {

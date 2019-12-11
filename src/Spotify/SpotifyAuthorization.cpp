@@ -127,6 +127,7 @@ const std::shared_ptr<httpserver::http_response> SpotifyAuthorization::render(
 
 const std::shared_ptr<httpserver::http_response>
 SpotifyAuthorization::loginHandler(httpserver::http_request const &request) {
+  (void)request;
   auto response = std::make_shared<http_response>(
       string_response("", http::http_utils::http_found));
 

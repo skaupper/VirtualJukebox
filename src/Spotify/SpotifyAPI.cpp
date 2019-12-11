@@ -171,6 +171,7 @@ TResult<std::vector<Device>> SpotifyAPI::getAvailableDevices(
 
 TResult<Playback> SpotifyAPI::getCurrentPlayback(std::string const &accessToken,
                                                  std::string const &market) {
+  (void)market;
   auto client = std::make_unique<RestClient::Connection>(cSpotifyAPIUrl);
   RestClient::HeaderFields headers;
   headers.insert(
@@ -428,6 +429,7 @@ TResultOpt SpotifyAPI::play(std::string const &accessToken,
 TResult<Track> SpotifyAPI::getTrack(std::string const &accessToken,
                                     std::string const &spotifyID,
                                     const std::string &market) {
+  (void)market;
   auto client = std::make_unique<RestClient::Connection>(cSpotifyAPIUrl);
   RestClient::HeaderFields headers;
   headers.insert(
