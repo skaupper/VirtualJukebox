@@ -16,8 +16,7 @@ using namespace std;
 
 TResultOpt RAMDataStore::addUser(User const &user) {
   // Exclusive Access to User List
-  unique_lock<shared_mutex> MyLock(mUserMutex, defer_lock);
-  MyLock.lock();
+  unique_lock<shared_mutex> MyLock(mUserMutex);
 
   // check for existing user
   auto it = find(mUsers.begin(), mUsers.end(), user);
@@ -32,8 +31,7 @@ TResultOpt RAMDataStore::addUser(User const &user) {
 
 TResult<User> RAMDataStore::getUser(TSessionID const &ID) {
   // Exclusive Access to User List
-  unique_lock<shared_mutex> MyLock(mUserMutex, defer_lock);
-  MyLock.lock();
+  unique_lock<shared_mutex> MyLock(mUserMutex);
 
   // find user
   User user;
@@ -51,8 +49,7 @@ TResult<User> RAMDataStore::getUser(TSessionID const &ID) {
 // doesn't remove votes taken by this user
 TResult<User> RAMDataStore::removeUser(TSessionID const &ID) {
   // Exclusive Access to User List
-  unique_lock<shared_mutex> MyLock(mUserMutex, defer_lock);
-  MyLock.lock();
+  unique_lock<shared_mutex> MyLock(mUserMutex);
 
   // find user
   User user;
@@ -72,8 +69,7 @@ TResult<User> RAMDataStore::removeUser(TSessionID const &ID) {
 // remove expired sessions
 TResultOpt RAMDataStore::checkSessionExpirations() {
   // Exclusive Access to User List
-  unique_lock<shared_mutex> MyLock(mUserMutex, defer_lock);
-  MyLock.lock();
+  unique_lock<shared_mutex> MyLock(mUserMutex);
 
   time_t now = time(nullptr);
   // custom predicate
@@ -89,8 +85,7 @@ TResultOpt RAMDataStore::checkSessionExpirations() {
 
 TResultOpt RAMDataStore::addTrack(BaseTrack const &track, QueueType q) {
   // Exclusive Access to Song Queue
-  unique_lock<shared_mutex> MyLock(mQueueMutex, defer_lock);
-  MyLock.lock();
+  unique_lock<shared_mutex> MyLock(mQueueMutex);
 
   // select Queue
   Queue *pQueue = SelectQueue(q);
@@ -147,8 +142,7 @@ TResult<BaseTrack> RAMDataStore::removeTrack(TTrackID const &ID, QueueType q) {
 
 TResult<bool> RAMDataStore::hasTrack(TTrackID const &ID, QueueType q) {
   // Shared Access to Song Queue
-  shared_lock<shared_mutex> MyLock(mQueueMutex, defer_lock);
-  MyLock.lock();
+  shared_lock<shared_mutex> MyLock(mQueueMutex);
 
   // select Queue
   Queue *pQueue = SelectQueue(q);
@@ -246,8 +240,7 @@ TResultOpt RAMDataStore::voteTrack(TSessionID const &sID,
 
 TResult<Queue> RAMDataStore::getQueue(QueueType q) {
   // Shared Access to Song Queue
-  shared_lock<shared_mutex> MyLock(mQueueMutex, defer_lock);
-  MyLock.lock();
+  shared_lock<shared_mutex> MyLock(mQueueMutex);
 
   // select Queue
   Queue *pQueue = SelectQueue(q);
@@ -261,16 +254,14 @@ TResult<Queue> RAMDataStore::getQueue(QueueType q) {
 
 TResult<QueuedTrack> RAMDataStore::getPlayingTrack() {
   // Shared Access to Song Queue
-  shared_lock<shared_mutex> MyLock(mQueueMutex, defer_lock);
-  MyLock.lock();
+  shared_lock<shared_mutex> MyLock(mQueueMutex);
 
   return mCurrentTrack;
 }
 
 TResult<bool> RAMDataStore::hasUser(TSessionID const &ID) {
   // Shared Access to User List
-  shared_lock<shared_mutex> MyLock(mUserMutex, defer_lock);
-  MyLock.lock();
+  shared_lock<shared_mutex> MyLock(mUserMutex);
 
   // find user
   User user;
@@ -285,8 +276,7 @@ TResult<bool> RAMDataStore::hasUser(TSessionID const &ID) {
 
 TResultOpt RAMDataStore::nextTrack() {
   // Exclusive Access to Song Queue
-  unique_lock<shared_mutex> MyLock(mQueueMutex, defer_lock);
-  MyLock.lock();
+  unique_lock<shared_mutex> MyLock(mQueueMutex);
 
   // Increment LastPlayed counter for all songs
   for (size_t i = 0; i < mAdminQueue.tracks.size(); ++i) {
