@@ -110,15 +110,24 @@ TResult<QueueStatus> JukeBox::getCurrentQueues(TSessionID const &) {
 TResultOpt JukeBox::addTrackToQueue(TSessionID const &sid,
                                     TTrackID const &trkid,
                                     QueueType type) {
-  /* TODO:
-   * where does this function get the actual Track object/information from?
-   */
-  // auto ret = mDataStore->addTrack(TRACK ???, type);
-  // if (ret.has_value())
-  //   return ret.value();
+  //  User user = mDataStore->getUser(sid);
+  //  if (type == QueueType::Admin && !user.isAdmin) {
+  //    LOG(WARNING) << "JukeBox.addTrackToQueue: User with session ID '" << sid
+  //                 << "' and nickname '" << user.name
+  //                 << "' is not priviledged to add a track to the admin
+  //                 queue.";
+  //    return Error(ErrorCode::AccessDenied, "User is not an admin.");
+  //  }
 
-  return Error(ErrorCode::NotImplemented,
-               "addTrackToQueue is not implemented yet");
+  auto track = mMusicBackend->queryTracks(trkid, 1);
+  if (holds_alternative<Error>(track))
+    return get<Error>(track);
+
+  auto ret = mDataStore->addTrack(get<BaseTrack>(track), type);
+  if (ret.has_value())
+    return ret.value();
+
+  return nullopt;
 }
 
 TResultOpt JukeBox::voteTrack(TSessionID const &sid,
