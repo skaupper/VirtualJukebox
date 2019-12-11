@@ -15,7 +15,6 @@
 
 #include "Datastore/DataStore.h"
 #include "MusicBackend.h"
-#include "Types/GlobalTypes.h"
 #include "Types/Result.h"
 
 class TrackScheduler {
@@ -32,7 +31,8 @@ class TrackScheduler {
   bool start();
 
  private:
-  TResultOpt doSchedule();
+  bool doSchedule();
+  TResult<bool> checkCurrentTrackConsistency();
 
   DataStore* mDataStore;
   MusicBackend* mMusicBackend;

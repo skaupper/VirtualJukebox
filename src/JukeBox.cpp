@@ -310,7 +310,7 @@ TResultOpt JukeBox::controlPlayer(TSessionID const &sid, PlayerAction action) {
 
   TResultOpt ret = nullopt;
   TResult<size_t> volume;
-  TResult<QueuedTrack> playingTrk;
+  TResult<QueuedTrack> nextTrk;
 
   switch (action) {
     case PlayerAction::Play:
@@ -328,11 +328,11 @@ TResultOpt JukeBox::controlPlayer(TSessionID const &sid, PlayerAction action) {
       if (ret.has_value())
         return ret.value();
 
-      playingTrk = mDataStore->getPlayingTrack();
-      if (holds_alternative<Error>(playingTrk))
-        return get<Error>(playingTrk);
+      nextTrk = mDataStore->getPlayingTrack();
+      if (holds_alternative<Error>(nextTrk))
+        return get<Error>(nextTrk);
 
-      ret = mMusicBackend->setPlayback(get<QueuedTrack>(playingTrk));
+      ret = mMusicBackend->setPlayback(get<QueuedTrack>(nextTrk));
       break;
     case PlayerAction::VolumeUp:
       volume = mMusicBackend->getVolume();
