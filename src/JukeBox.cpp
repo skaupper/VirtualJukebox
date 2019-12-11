@@ -265,59 +265,47 @@ TResultOpt JukeBox::controlPlayer(TSessionID const &sid, PlayerAction action) {
     return Error(ErrorCode::AccessDenied, "User is not an admin.");
   }
 
-  TResultOpt ret;
+  TResultOpt ret = nullopt;
   TResult<size_t> volume;
   TResult<QueuedTrack> playingTrk;
 
   switch (action) {
     case PlayerAction::Play:
       ret = mMusicBackend->play();
-      if (ret.has_value())
-        return ret.value();
       break;
     case PlayerAction::Pause:
       ret = mMusicBackend->pause();
-      if (ret.has_value())
-        return ret.value();
       break;
     case PlayerAction::Stop:
-      ret = mMusicBackend->pause();  // TODO: there is no 'stop' function?
-      if (ret.has_value())
-        return ret.value();
+      ret = mMusicBackend->pause();
       break;
     case PlayerAction::Skip:
       ret = mDataStore->nextTrack();
-      if (ret.has_value())
-        return ret.value();
       playingTrk = mDataStore->getPlayingTrack();
+      if (holds_alternative<Error>(playingTrk))
+        ret = get<Error>(playingTrk);
 
       ret = mMusicBackend->setPlayback(get<QueuedTrack>(playingTrk));
-      if (ret.has_value())
-        return ret.value();
       break;
     case PlayerAction::VolumeUp:
       volume = mMusicBackend->getVolume();
       if (holds_alternative<Error>(volume))
-        return get<Error>(volume);
+        ret = get<Error>(volume);
 
       ret = mMusicBackend->setVolume(get<size_t>(volume) + volChangePercent);
-      if (ret.has_value())
-        return ret.value();
       break;
     case PlayerAction::VolumeDown:
       volume = mMusicBackend->getVolume();
       if (holds_alternative<Error>(volume))
-        return get<Error>(volume);
+        ret = get<Error>(volume);
 
       ret = mMusicBackend->setVolume(get<size_t>(volume) + volChangePercent);
-      if (ret.has_value())
-        return ret.value();
       break;
 
     default:
-      return Error(ErrorCode::NotImplemented,
-                   "JukeBox.controlPlayer: Unhandled PlayerAction");
+      ret = Error(ErrorCode::NotImplemented,
+                  "JukeBox.controlPlayer: Unhandled PlayerAction");
       break;
   }
-  return nullopt;
+  return ret;
 }
