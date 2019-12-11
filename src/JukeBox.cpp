@@ -114,15 +114,17 @@ TResultOpt JukeBox::addTrackToQueue(TSessionID const &sid,
    *       just by handing in a TrackID.
    *       Needs discussion/clarification.
    */
+  auto retUser = mDataStore->getUser(sid);
+  if (holds_alternative<Error>(retUser))
+    return get<Error>(retUser);
+  User user = get<User>(retUser);
 
-  //  User user = mDataStore->getUser(sid);
-  //  if (type == QueueType::Admin && !user.isAdmin) {
-  //    LOG(WARNING) << "JukeBox.addTrackToQueue: User with session ID '" << sid
-  //                 << "' and nickname '" << user.name
-  //                 << "' is not priviledged to add a track to the admin
-  //                 queue.";
-  //    return Error(ErrorCode::AccessDenied, "User is not an admin.");
-  //  }
+  if (type == QueueType::Admin && !user.isAdmin) {
+    LOG(WARNING) << "JukeBox.addTrackToQueue: User with session ID '" << sid
+                 << "' and nickname '" << user.Name
+                 << "' is not priviledged to add a track to the admin queue.";
+    return Error(ErrorCode::AccessDenied, "User is not an admin.");
+  }
 
   auto query = mMusicBackend->queryTracks(trkid, 1);
   if (holds_alternative<Error>(query))
@@ -160,8 +162,8 @@ TResultOpt JukeBox::removeTrack(TSessionID const &sid, TTrackID const &trkid) {
   auto retUser = mDataStore->getUser(sid);
   if (holds_alternative<Error>(retUser))
     return get<Error>(retUser);
-
   User user = get<User>(retUser);
+
   if (!user.isAdmin) {
     LOG(WARNING) << "JukeBox.removeTrack: User with session ID '" << sid
                  << "' and nickname '" << user.Name
@@ -218,8 +220,8 @@ TResultOpt JukeBox::moveTrack(TSessionID const &sid,
   auto retUser = mDataStore->getUser(sid);
   if (holds_alternative<Error>(retUser))
     return get<Error>(retUser);
-
   User user = get<User>(retUser);
+
   if (!user.isAdmin) {
     LOG(WARNING) << "JukeBox.moveTrack: User with session ID '" << sid
                  << "' and nickname '" << user.Name
@@ -266,8 +268,8 @@ TResultOpt JukeBox::controlPlayer(TSessionID const &sid, PlayerAction action) {
   auto retUser = mDataStore->getUser(sid);
   if (holds_alternative<Error>(retUser))
     return get<Error>(retUser);
-
   User user = get<User>(retUser);
+
   if (!user.isAdmin) {
     LOG(WARNING) << "JukeBox.controlPlayer: User with session ID '" << sid
                  << "' and nickname '" << user.Name
