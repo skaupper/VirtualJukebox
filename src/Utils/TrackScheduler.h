@@ -23,15 +23,23 @@ class TrackScheduler {
   ~TrackScheduler();
 
   /**
-   * @brief Initializes ConfigHandler and LoggingHandler.
-   * @param exeName Name of the currently running executable.
-   * @param configFilePath Path to *.ini config file, relative to executable.
-   * @return True on success, false otherwise.
+   * @brief Starts the scheduler thread.
    */
-  bool start();
+  void start();
 
  private:
+  /**
+   * @brief Schedules one track after another.
+   * @details The next track is set to play, when the currently playing track
+   * reaches its' end. The thread only wakes up shortly before a tracks' end.
+   * The function also performs a consistency check between the DataStore and
+   * Spotify.
+   * @return True on success, false otherwise.
+   * Errors are printed within the function.
+   */
   bool doSchedule();
+
+  void threadFunc();
 
   DataStore* mDataStore;
   MusicBackend* mMusicBackend;

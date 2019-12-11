@@ -33,18 +33,23 @@ TrackScheduler::~TrackScheduler() {
   mMusicBackend = nullptr;
 }
 
-bool TrackScheduler::start() {
-  mThread = thread(&TrackScheduler::doSchedule, this);
-  return true;
+void TrackScheduler::start() {
+  mThread = thread(&TrackScheduler::threadFunc, this);
 }
 
-bool TrackScheduler::doSchedule() {
+void TrackScheduler::threadFunc() {
   unsigned counter = 0;
   while (counter < 10) {
     LOG(INFO) << "Hello World Scheduler [" << counter++ << "]";
     this_thread::sleep_for(chrono::milliseconds(100));
   }
 
+  while (1) {
+    doSchedule();
+  }
+}
+
+bool TrackScheduler::doSchedule() {
   if (mDataStore == nullptr || mMusicBackend == nullptr) {
     LOG(ERROR) << "TaskScheduler.doSchedule: nullptr";
     return false;
