@@ -85,11 +85,11 @@ bool TrackScheduler::doSchedule() {
 
     /* Check playback progress and sleep.
      * Wakeup with a margin to the end of the track, so be able to set
-     * the next track in time.
+     * the next track in time. SleepTime determines the polling interval.
      *
      * Timing scheme:
-     * |-----------------------------------|----sleepTime-----|---margin----|
-     * 0                                progress duration
+     * |--------------------------------|----sleepTime-----|---margin----|
+     * 0                             progress                         duration
      */
     const unsigned setNewTrackMarginMs = 1000;
     const unsigned sleepTimeMs = 500;
