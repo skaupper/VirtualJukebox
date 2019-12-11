@@ -54,7 +54,7 @@ listed dependencies, that are required to install manually.
 - `sudo apt-get install libmicrohttpd-dev libcurl4-gnutls-dev libgoogle-glog-dev`
 - `sudo apt-get install automake libtool`
 - `./scripts/install_libhttpserver.sh`
-- `./scripts/install_restclient-cpp.sh`
+- `./scripts/install_librestclient-cpp.sh`
 
 ## Installation
 

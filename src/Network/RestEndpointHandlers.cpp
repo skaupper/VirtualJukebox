@@ -35,6 +35,8 @@ static shared_ptr<http_response> const mapErrorToResponse(Error const &err) {
   static const map<ErrorCode, int> ERROR_TO_HTTP_STATUS = {
       {ErrorCode::AccessDenied, 403},  //
       {ErrorCode::InvalidFormat, 422}  //
+
+      // TODO: add more error codes if they get fixed
   };
 
   int statusCode;
@@ -227,9 +229,12 @@ shared_ptr<http_response> const getCurrentQueuesHandler(
   // construct the response
   auto queueStatus = get<QueueStatus>(result);
 
-  json playbackTrack = Serializer::serialize(queueStatus.currentTrack);
+  json playbackTrack;
   json normalQueue;
   json adminQueue;
+  if (queueStatus.currentTrack.has_value()) {
+    playbackTrack = Serializer::serialize(queueStatus.currentTrack.value());
+  }
   for (auto &&track : queueStatus.normalQueue.tracks) {
     normalQueue.push_back(Serializer::serialize(track));
   }
@@ -430,6 +435,10 @@ shared_ptr<http_response> const moveTracksHandler(
 shared_ptr<http_response> const removeTrackHandler(
     NetworkListener *listener, RequestInformation const &infos) {
   assert(listener);
+
+  // TODO: this endpoint should use query parameters since the DELETE method
+  // does not support a body
+
   auto parseResult = parseJsonString(infos.body);
   if (holds_alternative<Error>(parseResult)) {
     return mapErrorToResponse(get<Error>(parseResult));
