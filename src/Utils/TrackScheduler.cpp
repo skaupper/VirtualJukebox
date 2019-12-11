@@ -53,6 +53,9 @@ bool TrackScheduler::doSchedule() {
 }
 
 TResult<bool> TrackScheduler::checkCurrentTrackConsistency() {
+  if (mDataStore == nullptr || mMusicBackend == nullptr)
+    return Error(ErrorCode::InvalidValue, "nullptr");
+
   /* Get current track from DataStore */
   auto retStore = mDataStore->getPlayingTrack();
   if (holds_alternative<Error>(retStore))

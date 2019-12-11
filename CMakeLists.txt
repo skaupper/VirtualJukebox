@@ -112,6 +112,7 @@ set(APP_INCLUDE_DIRS    src/
 
 # All source files containing test cases
 set(TEST_SOURCES        test/Test_ConfigHandler.cpp
+                        test/Test_TrackScheduler.cpp
                         test/Test_DataStore.cpp
                         test/Test_SpotifyAPI.cpp
                         test/Test_RestAPI.cpp
@@ -119,7 +120,6 @@ set(TEST_SOURCES        test/Test_ConfigHandler.cpp
                         test/mocks/MockNetworkListener.cpp
                         test/helpers/NetworkListenerHelper.cpp
                         test/helpers/TrackGenerator.cpp
-                        test/Test_TrackScheduler.cpp
                         test/Test_JukeBox.cpp)
 
 set(TEST_HEADER         test/fixtures/RestAPIFixture.h

@@ -35,7 +35,7 @@ struct QueuedTrack : public BaseTrack {
 };
 
 struct PlaybackTrack : public BaseTrack {
-  int progressMs;
+  unsigned progressMs;
   bool isPlaying;
 };
 
