@@ -114,7 +114,7 @@ TEST_F(RestAPIFixture, generateSession_badCases) {
 //
 // queryTracks
 //
-TEST_F(RestAPIFixture, queryTracks) {
+TEST_F(RestAPIFixture, queryTracks_goodCases) {
   ASSERT_FALSE(listener.hasParametersQueryTracks());
   ASSERT_EQ(listener.getCountQueryTracks(), 0);
 
@@ -150,7 +150,7 @@ TEST_F(RestAPIFixture, queryTracks) {
 //
 // getCurrentQueues
 //
-TEST_F(RestAPIFixture, getCurrentQueues) {
+TEST_F(RestAPIFixture, getCurrentQueues_goodCases) {
   ASSERT_FALSE(listener.hasParametersGetCurrentQueues());
   ASSERT_EQ(listener.getCountGetCurrentQueues(), 0);
 
@@ -205,7 +205,7 @@ TEST_F(RestAPIFixture, getCurrentQueues) {
 //
 // addTrackToQueue
 //
-TEST_F(RestAPIFixture, addTrackToQueue) {
+TEST_F(RestAPIFixture, addTrackToQueue_goodCases) {
   ASSERT_FALSE(listener.hasParametersAddTrackToQueue());
   ASSERT_EQ(listener.getCountAddTrackToQueue(), 0);
 
@@ -247,7 +247,7 @@ TEST_F(RestAPIFixture, addTrackToQueue) {
 //
 // voteTrack
 //
-TEST_F(RestAPIFixture, voteTrack) {
+TEST_F(RestAPIFixture, voteTrack_goodCases) {
   ASSERT_FALSE(listener.hasParametersVoteTrack());
   ASSERT_EQ(listener.getCountVoteTrack(), 0);
 
@@ -283,7 +283,7 @@ TEST_F(RestAPIFixture, voteTrack) {
 //
 // controlPlayer
 //
-TEST_F(RestAPIFixture, controlPlayer) {
+TEST_F(RestAPIFixture, controlPlayer_goodCases) {
   ASSERT_FALSE(listener.hasParametersControlPlayer());
   ASSERT_EQ(listener.getCountControlPlayer(), 0);
 
@@ -324,7 +324,7 @@ TEST_F(RestAPIFixture, controlPlayer) {
 //
 // moveTrack
 //
-TEST_F(RestAPIFixture, moveTrack) {
+TEST_F(RestAPIFixture, moveTrack_goodCases) {
   ASSERT_FALSE(listener.hasParametersMoveTrack());
   ASSERT_EQ(listener.getCountMoveTrack(), 0);
 
@@ -360,7 +360,7 @@ TEST_F(RestAPIFixture, moveTrack) {
 //
 // removeTrack
 //
-TEST_F(RestAPIFixture, DISABLED_removeTrack) {
+TEST_F(RestAPIFixture, DISABLED_removeTrack_goodCases) {
   ASSERT_FALSE(listener.hasParametersRemoveTrack());
   ASSERT_EQ(listener.getCountRemoveTrack(), 0);
 

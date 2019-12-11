@@ -136,6 +136,8 @@ shared_ptr<http_response> const RestRequestHandler::decodeAndDispatch(
           {{"/removeTrack", "DELETE"}, removeTrackHandler}          //
       };
 
+  // TODO: the Method Not Allowed handler wont ever be called
+
   auto handlerIt = AVAILABLE_ENDPOINTS.find({infos.path, infos.method});
   if (handlerIt != AVAILABLE_ENDPOINTS.cend()) {
     return handlerIt->second(listener, infos);
