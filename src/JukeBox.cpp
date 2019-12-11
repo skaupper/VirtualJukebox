@@ -162,18 +162,13 @@ TResultOpt JukeBox::addTrackToQueue(TSessionID const &sid,
     return get<Error>(query);
   }
 
-  auto ret = mDataStore->addTrack(get<BaseTrack>(query), type);
-  if (ret.has_value())
-    return ret.value();
-
-  return nullopt;
+  return mDataStore->addTrack(get<BaseTrack>(query), type);
 }
 
 TResultOpt JukeBox::voteTrack(TSessionID const &sid,
                               TTrackID const &trkid,
                               TVote vote) {
-  auto ret = mDataStore->voteTrack(sid, trkid, vote);
-  return ret;
+  return mDataStore->voteTrack(sid, trkid, vote);
 }
 
 TResultOpt JukeBox::removeTrack(TSessionID const &sid, TTrackID const &trkid) {
@@ -274,11 +269,7 @@ TResultOpt JukeBox::moveTrack(TSessionID const &sid,
     return get<Error>(retTrack);
 
   /* Add to target queue */
-  auto res = mDataStore->addTrack(get<BaseTrack>(retTrack), toQueue);
-  if (res.has_value())
-    return res.value();
-
-  return nullopt;
+  return mDataStore->addTrack(get<BaseTrack>(retTrack), toQueue);
 }
 
 TResultOpt JukeBox::controlPlayer(TSessionID const &sid, PlayerAction action) {
