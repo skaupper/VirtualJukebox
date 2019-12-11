@@ -52,6 +52,7 @@ bool JukeBox::start(string exeName, string configFilePath) {
 
 TResult<TSessionID> JukeBox::generateSession(optional<TPassword> const &pw,
                                              optional<string> const &nickname) {
+  static int userID = 0;
   User user;
   auto conf = ConfigHandler::getInstance();
   auto adminPw = conf->getValueString("MainParams", "adminPassword");
@@ -68,9 +69,15 @@ TResult<TSessionID> JukeBox::generateSession(optional<TPassword> const &pw,
     LOG(INFO) << "JukeBox.generateSession: User '" << name << "' is admin!";
     user.isAdmin = true;
   }
+
+  /* Generate a unique ID, consisting of a counter and the number of seconds
+   * since 1970 */
+  user.SessionID = "ID" + userID + to_string(time(nullptr));
+  userID++;
+
   mDataStore->addUser(user);
 
-  return static_cast<TSessionID>(to_string(time(nullptr)));
+  return static_cast<TSessionID>(user.SessionID);
 }
 
 TResult<vector<BaseTrack>> JukeBox::queryTracks(string const &searchPattern,
