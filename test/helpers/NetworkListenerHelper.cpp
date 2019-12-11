@@ -150,7 +150,7 @@ void testAddTrackToQueue(RestAPIFixture *fixture,
 
   // check response
   ASSERT_EQ(resp.code, 200);
-  ASSERT_EQ(json::parse(resp.body), json{});
+  ASSERT_EQ(json::parse(resp.body), json::object());
   ASSERT_EQ(fixture->listener.getCountAddTrackToQueue(), count);
 
   ASSERT_TRUE(fixture->listener.hasParametersAddTrackToQueue());
@@ -182,7 +182,7 @@ void testVoteTrack(RestAPIFixture *fixture,
 
   // check response
   ASSERT_EQ(resp.code, 200);
-  ASSERT_EQ(json::parse(resp.body), json{});
+  ASSERT_EQ(json::parse(resp.body), json::object());
   ASSERT_EQ(fixture->listener.getCountVoteTrack(), count);
 
   ASSERT_TRUE(fixture->listener.hasParametersVoteTrack());
@@ -226,7 +226,7 @@ void testControlPlayer(RestAPIFixture *fixture,
 
   // check response
   ASSERT_EQ(resp.code, 200);
-  ASSERT_EQ(json::parse(resp.body), json{});
+  ASSERT_EQ(json::parse(resp.body), json::object());
   ASSERT_EQ(fixture->listener.getCountControlPlayer(), count);
 
   ASSERT_TRUE(fixture->listener.hasParametersControlPlayer());
@@ -264,7 +264,7 @@ void testMoveTrack(RestAPIFixture *fixture,
 
   // check response
   ASSERT_EQ(resp.code, 200);
-  ASSERT_EQ(json::parse(resp.body), json{});
+  ASSERT_EQ(json::parse(resp.body), json::object());
   ASSERT_EQ(fixture->listener.getCountMoveTrack(), count);
 
   ASSERT_TRUE(fixture->listener.hasParametersMoveTrack());

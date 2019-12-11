@@ -292,7 +292,7 @@ shared_ptr<http_response> const addTrackToQueueHandler(
   }
 
   // construct the response
-  json responseBody = {};
+  json responseBody = json::object();
   return make_shared<string_response>(responseBody.dump());
 }
 
@@ -326,7 +326,7 @@ shared_ptr<http_response> const voteTrackHandler(
   }
 
   // construct the response
-  json responseBody = {};
+  json responseBody = json::object();
   return make_shared<string_response>(responseBody.dump());
 }
 
@@ -378,7 +378,7 @@ shared_ptr<http_response> const controlPlayerHandler(
   }
 
   // construct the response
-  json responseBody = {};
+  json responseBody = json::object();
   return make_shared<string_response>(responseBody.dump());
 }
 
@@ -424,7 +424,7 @@ shared_ptr<http_response> const moveTracksHandler(
   }
 
   // construct the response
-  json responseBody = {};
+  json responseBody = json::object();
   return make_shared<string_response>(responseBody.dump());
 }
 
@@ -459,6 +459,6 @@ shared_ptr<http_response> const removeTrackHandler(
   }
 
   // construct the response
-  json responseBody = {};
+  json responseBody = json::object();
   return make_shared<string_response>(responseBody.dump());
 }
