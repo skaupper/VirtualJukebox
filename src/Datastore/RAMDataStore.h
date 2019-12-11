@@ -23,6 +23,7 @@
 class RAMDataStore : public DataStore {
  public:
   TResultOpt addUser(User const &user);
+  TResultOpt<User> addUser(User const &user);
   TResult<User> removeUser(TSessionID const &ID);
   TResultOpt checkSessionExpirations();
   TResultOpt addTrack(BaseTrack const &track, QueueType q);

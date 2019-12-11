@@ -30,6 +30,24 @@ TResultOpt RAMDataStore::addUser(User const &user) {
   return nullopt;
 }
 
+TResult<User> RAMDataStore::getUser(TSessionID const &ID) {
+  // Exclusive Access to User List
+  unique_lock<shared_mutex> MyLock(mUserMutex, defer_lock);
+  MyLock.lock();
+
+  // find user
+  User user;
+  user.SessionID = ID;
+  auto it = find(mUsers.begin(), mUsers.end(), user);
+  if (it == mUsers.end()) {
+    return Error(ErrorCode::DoesntExist, "User doesnt exist");
+  } else {
+    // copy user for return type
+    user = *it;
+    return user;
+  }
+}
+
 // doesnt remove votes taken by this user
 TResult<User> RAMDataStore::removeUser(TSessionID const &ID) {
   // Exclusive Access to User List
