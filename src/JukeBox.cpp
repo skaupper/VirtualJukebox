@@ -168,10 +168,7 @@ TResultOpt JukeBox::voteTrack(TSessionID const &sid,
                               TTrackID const &trkid,
                               TVote vote) {
   auto ret = mDataStore->voteTrack(sid, trkid, vote);
-  if (ret.has_value())
-    return ret.value();
-
-  return Error(ErrorCode::NotImplemented, "voteTrack is not implemented yet");
+  return ret;
 }
 
 TResultOpt JukeBox::removeTrack(TSessionID const &sid, TTrackID const &trkid) {
