@@ -35,7 +35,7 @@ JukeBox::~JukeBox() {
   mMusicBackend = nullptr;
 }
 
-bool JukeBox::start(string exeName, string configFilePath) {
+bool JukeBox::start(string const &exeName, string const &configFilePath) {
   auto conf = ConfigHandler::getInstance();
   auto ret = conf->setConfigFilePath(configFilePath);
   if (ret.has_value()) {

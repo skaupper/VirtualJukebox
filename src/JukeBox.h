@@ -32,7 +32,7 @@ class JukeBox : public NetworkListener {
    * @param configFilePath Path to *.ini config file, relative to executable.
    * @return True on success, false otherwise.
    */
-  bool start(std::string exeName, std::string configFilePath);
+  bool start(std::string const &exeName, std::string const &configFilePath);
 
   TResult<TSessionID> generateSession(
       std::optional<TPassword> const &pw,
