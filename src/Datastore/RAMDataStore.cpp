@@ -40,7 +40,7 @@ TResult<User> RAMDataStore::getUser(TSessionID const &ID) {
   user.SessionID = ID;
   auto it = find(mUsers.begin(), mUsers.end(), user);
   if (it == mUsers.end()) {
-    return Error(ErrorCode::DoesntExist, "User doesnt exist");
+    return Error(ErrorCode::DoesntExist, "User doesn't exist");
   } else {
     // copy user for return type
     user = *it;
@@ -48,7 +48,7 @@ TResult<User> RAMDataStore::getUser(TSessionID const &ID) {
   }
 }
 
-// doesnt remove votes taken by this user
+// doesn't remove votes taken by this user
 TResult<User> RAMDataStore::removeUser(TSessionID const &ID) {
   // Exclusive Access to User List
   unique_lock<shared_mutex> MyLock(mUserMutex, defer_lock);
@@ -59,7 +59,7 @@ TResult<User> RAMDataStore::removeUser(TSessionID const &ID) {
   user.SessionID = ID;
   auto it = find(mUsers.begin(), mUsers.end(), user);
   if (it == mUsers.end()) {
-    return Error(ErrorCode::DoesntExist, "User doesnt exist");
+    return Error(ErrorCode::DoesntExist, "User doesn't exist");
   } else {
     // copy user for return type
     user = *it;
@@ -138,7 +138,7 @@ TResult<BaseTrack> RAMDataStore::removeTrack(TTrackID const &ID, QueueType q) {
   track.trackId = ID;
   auto it = find(pQueue->tracks.begin(), pQueue->tracks.end(), track);
   if (it == pQueue->tracks.end()) {
-    return Error(ErrorCode::DoesntExist, "Track doesnt exist in this Queue");
+    return Error(ErrorCode::DoesntExist, "Track doesn't exist in this Queue");
   } else {
     track = *it;
     // Track is there, delete it from vector
@@ -183,7 +183,7 @@ TResultOpt RAMDataStore::voteTrack(TSessionID const &sID,
   auto it = find(mUsers.begin(), mUsers.end(), user);
   if (it == mUsers.end()) {
     // User not found
-    return Error(ErrorCode::DoesntExist, "User doesnt exist");
+    return Error(ErrorCode::DoesntExist, "User doesn't exist");
   }
 
   // find track in Queues
@@ -305,7 +305,7 @@ TResultOpt RAMDataStore::nextTrack() {
   if (mAdminQueue.tracks.size()) {
     tr = mAdminQueue.tracks[0];
 
-    // move track from Admin Queue to user Queue if it doesnt already exist
+    // move track from Admin Queue to user Queue if it doesn't already exist
     // there and delete it from Admin Queue.
     auto it = find(mNormalQueue.tracks.begin(), mNormalQueue.tracks.end(), tr);
     if (it == mNormalQueue.tracks.end()) {
