@@ -8,6 +8,8 @@
 
 #include "TrackScheduler.h"
 
+using namespace std;
+
 TrackScheduler::TrackScheduler(DataStore* const datastore,
                                MusicBackend* const musicbackend) {
   mDataStore = datastore;
@@ -26,6 +28,15 @@ TrackScheduler::~TrackScheduler() {
 }
 
 bool TrackScheduler::start() {
-  // TODO: start thread
+  mThread = thread(&TrackScheduler::doSchedule, this);
   return true;
+}
+
+TResultOpt TrackScheduler::doSchedule() {
+  static unsigned counter = 0;
+  while (counter < 10) {
+    LOG(INFO) << "Hello World Scheduler [" << counter++ << "]";
+    this_thread::sleep_for(chrono::seconds(1));
+  }
+  return nullopt;
 }

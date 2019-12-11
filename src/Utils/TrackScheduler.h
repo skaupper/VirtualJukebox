@@ -9,9 +9,9 @@
 #ifndef _TRACKSCHEDULER_H_
 #define _TRACKSCHEDULER_H_
 
+#include <memory>
 #include <string>
 #include <thread>
-#include <variant>
 
 #include "Datastore/DataStore.h"
 #include "MusicBackend.h"
@@ -32,11 +32,12 @@ class TrackScheduler {
   bool start();
 
  private:
-  // TODO write threadMainfunc()
+  TResultOpt doSchedule();
 
   DataStore* mDataStore;
   MusicBackend* mMusicBackend;
-  // TODO create thread object
+
+  std::thread mThread;
 };
 
 #endif /* _TRACKSCHEDULER_H_ */
