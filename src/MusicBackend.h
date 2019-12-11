@@ -2,7 +2,7 @@
 /**
  * @file    MusicBackend.h
  * @author  Stefan Jahn <stefan.jahn332@gmail.com>
- * @brief   Interface for MusicBackends
+ * @brief   Interface for MusicBackend
  */
 /*****************************************************************************/
 
@@ -29,6 +29,7 @@ class MusicBackend {
   virtual TResultOpt play() = 0;
   virtual TResult<size_t> getVolume(void) = 0;
   virtual TResultOpt setVolume(size_t const percent) = 0;
+  virtual TResult<BaseTrack> createBaseTrack(TTrackID const &trackID) = 0;
 };
 
 #endif /* _MUSICBACKEND_H_ */

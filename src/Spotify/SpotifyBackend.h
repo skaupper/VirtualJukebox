@@ -93,7 +93,7 @@ class SpotifyBackend : public MusicBackend {
    * @param trackID track id returned for example from queryTracks
    * @return new BaseTrack object on success, otherwise Error
    */
-  virtual TResult<BaseTrack> createBaseTrack(TTrackID const &trackID);
+  virtual TResult<BaseTrack> createBaseTrack(TTrackID const &trackID) override;
 
  private:
   TResultOpt errorHandler(Error const &error);

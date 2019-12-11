@@ -110,10 +110,6 @@ TResult<QueueStatus> JukeBox::getCurrentQueues(TSessionID const &) {
 TResultOpt JukeBox::addTrackToQueue(TSessionID const &sid,
                                     TTrackID const &trkid,
                                     QueueType type) {
-  /* TODO: Still not sure, where the actual Track object should come from,
-   *       just by handing in a TrackID.
-   *       Needs discussion/clarification.
-   */
   auto retUser = mDataStore->getUser(sid);
   if (holds_alternative<Error>(retUser))
     return get<Error>(retUser);
@@ -126,22 +122,14 @@ TResultOpt JukeBox::addTrackToQueue(TSessionID const &sid,
     return Error(ErrorCode::AccessDenied, "User is not an admin.");
   }
 
-  auto query = mMusicBackend->queryTracks(trkid, 1);
-  if (holds_alternative<Error>(query))
+  auto query = mMusicBackend->createBaseTrack(trkid);
+  if (holds_alternative<Error>(query)) {
+    LOG(WARNING) << "JukeBox.addTrackToQueue: Could not add track for TrackID '"
+                 << trkid << "'.";
     return get<Error>(query);
-
-  auto vect = get<vector<BaseTrack>>(query);
-  if (vect.size() == 0) {
-    LOG(WARNING)
-        << "JukeBox.addTrackToQueue: Could not find any tracks for TrackID '"
-        << trkid << "'.";
-    return Error(ErrorCode::SpotifyNotFound, "Could not add track to queue.");
   }
 
-  /* Since we only query a single track, take the first element in the vector */
-  BaseTrack track = vect.front();
-
-  auto ret = mDataStore->addTrack(track, type);
+  auto ret = mDataStore->addTrack(get<BaseTrack>(query), type);
   if (ret.has_value())
     return ret.value();
 
