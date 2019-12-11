@@ -60,10 +60,9 @@ TResult<TSessionID> JukeBox::generateSession(optional<TPassword> const &pw,
     return get<Error>(adminPw);
 
   string name = "(no nickname given)";
-  if (nickname.has_value()) {
+  if (nickname.has_value())
     name = nickname.value();
-    user.Name = name;
-  }
+  user.Name = name;
 
   if (pw.has_value() && pw.value() == get<string>(adminPw)) {
     LOG(INFO) << "JukeBox.generateSession: User '" << name << "' is admin!";
@@ -83,9 +82,6 @@ TResult<TSessionID> JukeBox::generateSession(optional<TPassword> const &pw,
 TResult<vector<BaseTrack>> JukeBox::queryTracks(string const &searchPattern,
                                                 size_t const nrOfEntries) {
   auto tracks = mMusicBackend->queryTracks(searchPattern, nrOfEntries);
-  if (holds_alternative<Error>(tracks))
-    return get<Error>(tracks);
-
   return tracks;
 }
 

@@ -21,7 +21,7 @@ if [ "$JOB_ENV" == "valgrind" ]; then
   make
 
   echo "### Running valgrind on test executable."
-  valgrind ./testVirtualJukebox
+  valgrind --leak-check=full --show-leak-kinds=all ./testVirtualJukebox
 fi
 
 if [ "$JOB_ENV" == "linting" ]; then
