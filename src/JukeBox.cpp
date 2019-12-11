@@ -72,7 +72,7 @@ TResult<TSessionID> JukeBox::generateSession(optional<TPassword> const &pw,
 
   /* Generate a unique ID, consisting of a counter and the number of seconds
    * since 1970 */
-  user.SessionID = "ID" + userID + to_string(time(nullptr));
+  user.SessionID = "ID" + to_string(userID) + to_string(time(nullptr));
   userID++;
 
   mDataStore->addUser(user);

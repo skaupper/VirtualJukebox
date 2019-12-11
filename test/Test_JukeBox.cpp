@@ -36,5 +36,6 @@ TEST(JukeBox, generateSession) {
    * so that the session ID generation happens within the same
    * second as the check here. */
   string value = get<string>(ret);
-  EXPECT_EQ(value, to_string(time(nullptr)));
+  string expected = "ID0" + to_string(time(nullptr));
+  EXPECT_EQ(value, expected);
 }
