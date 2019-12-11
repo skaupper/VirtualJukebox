@@ -24,6 +24,7 @@
 class DataStore {
  public:
   virtual TResultOpt addUser(User const &user) = 0;
+  virtual TResult<User> getUser(TSessionID const &ID) = 0;
   // does not remove votes taken by this user
   virtual TResult<User> removeUser(TSessionID const &ID) = 0;
   virtual TResultOpt checkSessionExpirations() = 0;
