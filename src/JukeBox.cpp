@@ -157,21 +157,23 @@ TResultOpt JukeBox::voteTrack(TSessionID const &sid,
 }
 
 TResultOpt JukeBox::removeTrack(TSessionID const &sid, TTrackID const &trkid) {
-  //  auto user = mDataStore->getUser(sid);
-  //  if (holds_alternative<Error>(user))
-  //    return get<Error>(user);
-  //
-  //  if (!user.isAdmin) {
-  //    LOG(WARNING) << "JukeBox.removeTrack: User with session ID '" << sid
-  //                 << "' and nickname '" << user.name
-  //                 << "' is not priviledged to remove a track.";
-  //    return Error(ErrorCode::AccessDenied, "User is not an admin.");
-  //  }
+  auto retUser = mDataStore->getUser(sid);
+  if (holds_alternative<Error>(retUser))
+    return get<Error>(retUser);
 
-  //  auto ret = mDataStore->removeTrack(trkid);
-  //  if (ret.has_value())
-  //    return ret.value();
-  return Error(ErrorCode::NotImplemented, "removeTrack is not implemented yet");
+  User user = get<User>(retUser);
+  if (!user.isAdmin) {
+    LOG(WARNING) << "JukeBox.removeTrack: User with session ID '" << sid
+                 << "' and nickname '" << user.Name
+                 << "' is not priviledged to remove a track.";
+    return Error(ErrorCode::AccessDenied, "User is not an admin.");
+  }
+
+  // auto ret = mDataStore->removeTrack(trkid);
+  // if (ret.has_value())
+  //   return ret.value();
+
+  return nullopt;
 }
 
 TResultOpt JukeBox::moveTrack(TSessionID const &sid,
