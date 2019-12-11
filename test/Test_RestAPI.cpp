@@ -70,6 +70,12 @@ TEST_F(RestAPIFixture, generateSession_badCases) {
   optional<string> nickname;
   RestClient::Response resp;
 
+  // Wrong method
+  resp = this->put("/generateSession", "empty").value();
+  ASSERT_EQ(resp.code, 404);
+  ASSERT_EQ(listener.getCountGenerateSession(), 0);
+  ASSERT_FALSE(listener.hasParametersGenerateSession());
+
   // No JSON body
   resp = this->post("/generateSession", "password=1234").value();
   ASSERT_EQ(resp.code, 422);
