@@ -12,6 +12,11 @@ using namespace std;
 
 TrackScheduler::TrackScheduler(DataStore* const datastore,
                                MusicBackend* const musicbackend) {
+  if (datastore == nullptr)
+    LOG(ERROR) << "TrackScheduler Ctor: datastore is nullptr!";
+  if (musicbackend == nullptr)
+    LOG(ERROR) << "TrackScheduler Ctor: datastore is nullptr!";
+
   mDataStore = datastore;
   mMusicBackend = musicbackend;
 }

@@ -119,6 +119,7 @@ set(TEST_SOURCES        test/Test_ConfigHandler.cpp
                         test/mocks/MockNetworkListener.cpp
                         test/helpers/NetworkListenerHelper.cpp
                         test/helpers/TrackGenerator.cpp
+                        test/Test_TrackScheduler.cpp
                         test/Test_JukeBox.cpp)
 
 set(TEST_HEADER         test/fixtures/RestAPIFixture.h
