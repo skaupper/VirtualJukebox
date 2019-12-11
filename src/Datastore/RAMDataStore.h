@@ -22,13 +22,7 @@
 
 /*
  * TODO:
- * (1) Overload DataStore.removeTrack function.
- *     DataStore.removeTrack(TTrackID const &ID, QueueType q);
- *        --> removes the given Track from the given queue
- *     DataStore.removeTrack(TTrackID const &ID);
- *        --> removes the given Track, from any queue (performs a search, like
- *            in Jukebox.removeTrack)
- * (2) Avoid having the same track in both queues
+ * (1) Avoid having the same track in both queues
  *     --> a single track can only exist once
  */
 

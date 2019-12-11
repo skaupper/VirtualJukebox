@@ -24,6 +24,8 @@ JukeBox::JukeBox() {
   mDataStore = new RAMDataStore();
   mNetwork = new RestAPI();
   mMusicBackend = new SpotifyBackend();
+
+  mNetwork->setListener(this);
 }
 
 JukeBox::~JukeBox() {
@@ -47,6 +49,9 @@ bool JukeBox::start(string const &exeName, string const &configFilePath) {
 
   initLoggingHandler(exeName);
   DLOG(INFO) << "Hello world from JukeBox main.cpp !";
+
+  mNetwork->handleRequests();
+
   return true;
 }
 
@@ -302,6 +307,7 @@ TResultOpt JukeBox::controlPlayer(TSessionID const &sid, PlayerAction action) {
       ret = mMusicBackend->pause();
       break;
     case PlayerAction::Stop:
+      /* TODO: Implement an actual stop functionality? */
       ret = mMusicBackend->pause();
       break;
     case PlayerAction::Skip:
