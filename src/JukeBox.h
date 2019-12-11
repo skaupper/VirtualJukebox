@@ -49,7 +49,7 @@ class JukeBox : public NetworkListener {
   TResultOpt removeTrack(TSessionID const &sid, TTrackID const &trkid) override;
   TResultOpt moveTrack(TSessionID const &sid,
                        TTrackID const &trkid,
-                       QueueType type) override;
+                       QueueType toQueue) override;
   TResultOpt controlPlayer(TSessionID const &sid, PlayerAction action) override;
 
  private:

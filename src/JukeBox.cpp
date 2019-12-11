@@ -169,16 +169,52 @@ TResultOpt JukeBox::removeTrack(TSessionID const &sid, TTrackID const &trkid) {
     return Error(ErrorCode::AccessDenied, "User is not an admin.");
   }
 
-  auto ret = mDataStore->removeTrack(trkid);
-  if (holds_alternative<Error>(ret))
-    return get<Error>(ret);
+  /* Check, if TrackID exists in any queue */
+  /* Admin queue */
+  auto retQueue = mDataStore->getQueue(QueueType::Admin);
+  if (holds_alternative<Error>(retQueue))
+    return get<Error>(retQueue);
+  Queue queue = get<Queue>(retQueue);
+  bool trackFoundAdmin =
+      get<bool>(mDataStore->hasTrack(trkid, QueueType::Admin));
+
+  /* Normal queue */
+  retQueue = mDataStore->getQueue(QueueType::Normal);
+  if (holds_alternative<Error>(retQueue))
+    return get<Error>(retQueue);
+  queue = get<Queue>(retQueue);
+  bool trackFoundNormal =
+      get<bool>(mDataStore->hasTrack(trkid, QueueType::Normal));
+
+  if (!trackFoundAdmin && !trackFoundNormal) {
+    LOG(WARNING) << "Jukebox.moveTrack: TrackID '" << trkid
+                 << "' could not be found.";
+    return Error(ErrorCode::DoesntExist, "Track not found.");
+  }
+  if (trackFoundAdmin && trackFoundNormal) {
+    /* TODO: This situation needs to be avoided in function DataStore.addTrack!
+     */
+    LOG(ERROR) << "Jukebox.moveTrack: TrackID '" << trkid
+               << "' was found in both queues.";
+    return Error(ErrorCode::InvalidFormat, "Track found in both queues.");
+  }
+
+  QueueType q;
+  if (trackFoundAdmin)
+    q = QueueType::Admin;
+  if (trackFoundNormal)
+    q = QueueType::Normal;
+
+  auto retTrack = mDataStore->removeTrack(trkid, q);
+  if (holds_alternative<Error>(retTrack))
+    return get<Error>(retTrack);
 
   return nullopt;
 }
 
 TResultOpt JukeBox::moveTrack(TSessionID const &sid,
                               TTrackID const &trkid,
-                              QueueType type) {
+                              QueueType toQueue) {
   auto retUser = mDataStore->getUser(sid);
   if (holds_alternative<Error>(retUser))
     return get<Error>(retUser);
@@ -191,20 +227,38 @@ TResultOpt JukeBox::moveTrack(TSessionID const &sid,
     return Error(ErrorCode::AccessDenied, "User is not an admin.");
   }
 
-  /* TODO: how to implement this?
-   *  can't use MusicBackend.queryMusic() for that, since it might
-   *  return multiple/no results?
-   *
-   * logical way for me would be:
-   *   - remove track by calling DataStore.removeTrack
-   *   - above function returns the deleted object
-   *   - add it to other queue with DataStore.addTrack
-   *
-   * like:
-   *  mDataStore->addTrack(mDataStore->removeTrack(trkid));
-   */
+  /* Moving a track to another queue means deleting it
+   * in the respective other */
+  QueueType fromQueue;
+  if (toQueue == QueueType::Admin)
+    fromQueue = QueueType::Normal;
+  if (toQueue == QueueType::Normal)
+    fromQueue = QueueType::Admin;
 
-  return Error(ErrorCode::NotImplemented, "moveTrack is not implemented yet");
+  /* Query the source queue for the track that is to be deleted */
+  auto retQueue = mDataStore->getQueue(fromQueue);
+  if (holds_alternative<Error>(retQueue))
+    return get<Error>(retQueue);
+  Queue queue = get<Queue>(retQueue);
+  bool trackFound = get<bool>(mDataStore->hasTrack(trkid, fromQueue));
+
+  if (!trackFound) {
+    LOG(WARNING) << "Jukebox.moveTrack: TrackID '" << trkid
+                 << "' could not be found.";
+    return Error(ErrorCode::DoesntExist, "Track not found.");
+  }
+
+  /* Remove from source queue */
+  auto retTrack = mDataStore->removeTrack(trkid, fromQueue);
+  if (holds_alternative<Error>(retTrack))
+    return get<Error>(retTrack);
+
+  /* Add to target queue */
+  auto res = mDataStore->addTrack(get<BaseTrack>(retTrack), toQueue);
+  if (res.has_value())
+    return res.value();
+
+  return nullopt;
 }
 
 TResultOpt JukeBox::controlPlayer(TSessionID const &sid, PlayerAction action) {

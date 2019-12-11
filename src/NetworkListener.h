@@ -140,7 +140,7 @@ class NetworkListener {
    * @param sid The session ID of the user. Used to authenticate as admin.
    * @param trkid The track to be moved. Has to be queried using `queryMusic`
    * beforehand.
-   * @param type Determines which queue the track should be moved to.
+   * @param toQueue Determines which queue the track should be moved to.
    * @return Returns an `Error` if something went wrong.
    *
    * @note To move a track from and to any queue, the user must have been
@@ -148,7 +148,7 @@ class NetworkListener {
    */
   virtual TResultOpt moveTrack(TSessionID const &sid,
                                TTrackID const &trkid,
-                               QueueType type) = 0;
+                               QueueType toQueue) = 0;
 };
 
 #endif /* _NETWORKLISTENER_H_ */

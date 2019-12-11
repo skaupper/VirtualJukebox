@@ -29,7 +29,7 @@ class DataStore {
   virtual TResult<User> removeUser(TSessionID const &ID) = 0;
   virtual TResultOpt checkSessionExpirations() = 0;
   virtual TResultOpt addTrack(BaseTrack const &track, QueueType q) = 0;
-  virtual TResult<BaseTrack> removeTrack(TTrackID const &ID) = 0;
+  virtual TResult<BaseTrack> removeTrack(TTrackID const &ID, QueueType q) = 0;
   virtual TResult<bool> hasTrack(TTrackID const &ID, QueueType q) = 0;
   virtual TResultOpt voteTrack(TSessionID const &sID,
                                TTrackID const &tID,

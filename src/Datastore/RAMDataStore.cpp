@@ -122,63 +122,27 @@ TResultOpt RAMDataStore::addTrack(BaseTrack const &track, QueueType q) {
   }
 }
 
-TResult<BaseTrack> RAMDataStore::removeTrack(TTrackID const &ID) {
+TResult<BaseTrack> RAMDataStore::removeTrack(TTrackID const &ID, QueueType q) {
   // Exclusive Access to Song Queue
   unique_lock<shared_mutex> MyLock(mQueueMutex, defer_lock);
   MyLock.lock();
 
-  /* Check, if TrackID exists in any queue */
-  bool trackFoundAdmin = get<bool>(hasTrack(ID, QueueType::Admin));
-  bool trackFoundNormal = get<bool>(hasTrack(ID, QueueType::Normal));
-
-  if (!trackFoundAdmin && !trackFoundNormal) {
-    LOG(WARNING) << "RAMDataStore.removeTrack: TrackID '" << ID
-                 << "' could not be found.";
-    return Error(ErrorCode::DoesntExist, "Track not found.");
-  }
-  if (trackFoundAdmin && trackFoundNormal) {
-    LOG(ERROR) << "RAMDataStore.removeTrack: TrackID '" << ID
-               << "' was found in both queues.";
-    return Error(ErrorCode::InvalidFormat, "Track found in both queues.");
-  }
-
-  /* Remove track from Admin queue */
-  Queue *pQueue = nullptr;
+  Queue *pQueue = SelectQueue(q);
   QueuedTrack track;
-  if (trackFoundAdmin) {
-    pQueue = SelectQueue(QueueType::Admin);
-    if (pQueue == nullptr)
-      return Error(ErrorCode::InvalidValue, "Invalid Parameter in SelectQueue");
+  if (pQueue == nullptr)
+    return Error(ErrorCode::InvalidValue, "Invalid Parameter in SelectQueue");
 
-    // Deep copy track, then remove it
-    track.trackId = ID;
-    auto it = find(pQueue->tracks.begin(), pQueue->tracks.end(), track);
-    if (it == pQueue->tracks.end()) {
-      return Error(ErrorCode::DoesntExist, "Track doesn't exist in this Queue");
-    } else {
-      track = *it;
-      // Found track, remove it from vector
-      pQueue->tracks.erase(it);
-    }
+  // Deep copy track, then remove it
+  track.trackId = ID;
+  auto it = find(pQueue->tracks.begin(), pQueue->tracks.end(), track);
+  if (it == pQueue->tracks.end()) {
+    return Error(ErrorCode::DoesntExist, "Track doesn't exist in this Queue");
+  } else {
+    track = *it;
+    // Found track, remove it from vector
+    pQueue->tracks.erase(it);
   }
 
-  /* Remove track from Normal queue */
-  if (trackFoundNormal) {
-    pQueue = SelectQueue(QueueType::Normal);
-    if (pQueue == nullptr)
-      return Error(ErrorCode::InvalidValue, "Invalid Parameter in SelectQueue");
-
-    // Deep copy track, then remove it
-    track.trackId = ID;
-    auto it = find(pQueue->tracks.begin(), pQueue->tracks.end(), track);
-    if (it == pQueue->tracks.end()) {
-      return Error(ErrorCode::DoesntExist, "Track doesn't exist in this Queue");
-    } else {
-      track = *it;
-      // Found track, remove it from vector
-      pQueue->tracks.erase(it);
-    }
-  }
   return track;
 }
 

@@ -20,6 +20,18 @@
 #include "Types/Tracks.h"
 #include "Types/User.h"
 
+/*
+ * TODO:
+ * (1) Overload DataStore.removeTrack function.
+ *     DataStore.removeTrack(TTrackID const &ID, QueueType q);
+ *        --> removes the given Track from the given queue
+ *     DataStore.removeTrack(TTrackID const &ID);
+ *        --> removes the given Track, from any queue (performs a search, like
+ *            in Jukebox.removeTrack)
+ * (2) Avoid having the same track in both queues
+ *     --> a single track can only exist once
+ */
+
 class RAMDataStore : public DataStore {
  public:
   TResultOpt addUser(User const &user);
@@ -27,7 +39,7 @@ class RAMDataStore : public DataStore {
   TResult<User> removeUser(TSessionID const &ID);
   TResultOpt checkSessionExpirations();
   TResultOpt addTrack(BaseTrack const &track, QueueType q);
-  TResult<BaseTrack> removeTrack(TTrackID const &ID);
+  TResult<BaseTrack> removeTrack(TTrackID const &ID, QueueType q);
   TResult<bool> hasTrack(TTrackID const &ID, QueueType q);
   TResultOpt voteTrack(TSessionID const &sID, TTrackID const &tID, TVote vote);
   TResult<Queue> getQueue(QueueType q);
