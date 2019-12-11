@@ -291,10 +291,10 @@ TResultOpt RAMDataStore::nextTrack() {
   MyLock.lock();
 
   // Increment LastPlayed counter for all songs
-  for (int i = 0; i < mAdminQueue.tracks.size(); ++i) {
+  for (size_t i = 0; i < mAdminQueue.tracks.size(); ++i) {
     mAdminQueue.tracks[i].LastPlayedxSongsAgo += 1;
   }
-  for (int i = 0; i < mNormalQueue.tracks.size(); ++i) {
+  for (size_t i = 0; i < mNormalQueue.tracks.size(); ++i) {
     mNormalQueue.tracks[i].LastPlayedxSongsAgo += 1;
   }
 
