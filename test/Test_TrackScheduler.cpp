@@ -18,5 +18,5 @@ using namespace std;
 
 TEST(TestScheduler, start) {
   TrackScheduler scheduler(nullptr, nullptr);
-  // scheduler.start();
+  scheduler.start();
 }

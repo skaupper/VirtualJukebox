@@ -24,7 +24,8 @@ TrackScheduler::TrackScheduler(DataStore* const datastore,
 }
 
 TrackScheduler::~TrackScheduler() {
-  mThread.join();
+  if (mThread.joinable())
+    mThread.join();
 
   /* Memory needs to be freed by the creator of this object.
    * Just de-initializing the pointers here for safety reasons.
@@ -45,7 +46,11 @@ void TrackScheduler::threadFunc() {
   }
 
   while (1) {
-    doSchedule();
+    if (!doSchedule()) {
+      LOG(ERROR)
+          << "TrackScheduler::threadFunc: doSchedule returned with an error";
+      break;
+    }
   }
 }
 
