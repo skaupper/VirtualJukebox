@@ -21,6 +21,7 @@
 class TrackScheduler {
  public:
   TrackScheduler(DataStore* const datastore, MusicBackend* const musicbackend);
+  ~TrackScheduler();
 
   /**
    * @brief Initializes ConfigHandler and LoggingHandler.
@@ -31,8 +32,11 @@ class TrackScheduler {
   bool start();
 
  private:
+  // TODO write threadMainfunc()
+
   DataStore* mDataStore;
   MusicBackend* mMusicBackend;
+  // TODO create thread object
 };
 
 #endif /* _TRACKSCHEDULER_H_ */

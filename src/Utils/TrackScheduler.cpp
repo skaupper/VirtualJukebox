@@ -14,6 +14,18 @@ TrackScheduler::TrackScheduler(DataStore* const datastore,
   mMusicBackend = musicbackend;
 }
 
+TrackScheduler::~TrackScheduler() {
+  // TODO: stop thread
+
+  /* Memory needs to be freed by the creator of this object.
+   * De-initializing the pointers for safety reasons.
+   * TODO: Discuss if that makes sense :)
+   */
+  mDataStore = nullptr;
+  mMusicBackend = nullptr;
+}
+
 bool TrackScheduler::start() {
+  // TODO: start thread
   return true;
 }
