@@ -58,6 +58,7 @@ bool JukeBox::start(string const &exeName, string const &configFilePath) {
 TResult<TSessionID> JukeBox::generateSession(optional<TPassword> const &pw,
                                              optional<string> const &nickname) {
   static int userID = 0;
+  static mutex userIDMutex;
   User user;
   auto conf = ConfigHandler::getInstance();
   auto adminPw = conf->getValueString("MainParams", "adminPassword");
@@ -75,9 +76,14 @@ TResult<TSessionID> JukeBox::generateSession(optional<TPassword> const &pw,
   }
 
   /* Generate a unique ID, consisting of a counter and the number of seconds
-   * since 1970 */
-  user.SessionID = "ID" + to_string(userID) + to_string(time(nullptr));
-  userID++;
+   * since 1970.
+   * Using a mutex, since this function may be called in multiple
+   * threads and 'userID' is a static variable. */
+  {
+    unique_lock<mutex> lck(userIDMutex);
+    user.SessionID = "ID" + to_string(userID) + to_string(time(nullptr));
+    userID++;
+  }
 
   mDataStore->addUser(user);
 
