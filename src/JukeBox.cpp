@@ -251,10 +251,6 @@ TResultOpt JukeBox::moveTrack(TSessionID const &sid,
     fromQueue = QueueType::Admin;
 
   /* Query the source queue for the track that is to be deleted */
-  auto retQueue = mDataStore->getQueue(fromQueue);
-  if (holds_alternative<Error>(retQueue))
-    return get<Error>(retQueue);
-  Queue queue = get<Queue>(retQueue);
   bool trackFound = get<bool>(mDataStore->hasTrack(trkid, fromQueue));
 
   if (!trackFound) {
