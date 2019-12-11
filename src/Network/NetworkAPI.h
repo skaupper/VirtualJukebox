@@ -21,6 +21,8 @@
 class NetworkAPI {
  public:
   NetworkAPI();
+  virtual ~NetworkAPI() {
+  }
 
   void setListener(NetworkListener *);
   virtual TResultOpt handleRequests() = 0;

@@ -1,3 +1,11 @@
+/*****************************************************************************/
+/**
+ * @file    Test_ConfigHandler.cpp
+ * @author  Michael Wurm <wurm.michael95@gmail.com>
+ * @brief   Test implementation for class ConfigHandler
+ */
+/*****************************************************************************/
+
 #include <gtest/gtest.h>
 
 #include <iostream>

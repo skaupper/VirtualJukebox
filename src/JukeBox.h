@@ -13,19 +13,26 @@
 #include <variant>
 #include <vector>
 
+#include "Datastore/DataStore.h"
+#include "MusicBackend.h"
 #include "Network/NetworkAPI.h"
 #include "NetworkListener.h"
 #include "Types/GlobalTypes.h"
 #include "Types/Queue.h"
 #include "Types/Result.h"
 
-//#include "DataStore.h"
-//#include "MusicBackend.h"
-//#include "User.h"
-
 class JukeBox : public NetworkListener {
  public:
-  bool start(std::string exeName, std::string configFilePath);
+  JukeBox();
+  ~JukeBox();
+
+  /**
+   * @brief Initializes ConfigHandler and LoggingHandler.
+   * @param exeName Name of the currently running executable.
+   * @param configFilePath Path to *.ini config file, relative to executable.
+   * @return True on success, false otherwise.
+   */
+  bool start(std::string const &exeName, std::string const &configFilePath);
 
   TResult<TSessionID> generateSession(
       std::optional<TPassword> const &pw,
@@ -42,13 +49,13 @@ class JukeBox : public NetworkListener {
   TResultOpt removeTrack(TSessionID const &sid, TTrackID const &trkid) override;
   TResultOpt moveTrack(TSessionID const &sid,
                        TTrackID const &trkid,
-                       QueueType type) override;
+                       QueueType toQueue) override;
   TResultOpt controlPlayer(TSessionID const &sid, PlayerAction action) override;
 
  private:
-  //  DataStore mDataStore;
+  DataStore *mDataStore;
   NetworkAPI *mNetwork;
-  //  MusicBackend mMusicBackend;
+  MusicBackend *mMusicBackend;
 };
 
 #endif /* _JUKEBOX_H_ */

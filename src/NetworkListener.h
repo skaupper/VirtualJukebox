@@ -27,10 +27,9 @@ class NetworkListener {
   /**
    * @brief Generate a session for an user.
    * @details A password may be provided to request admin privileges.
-   * @param pw The password used to authenticate as admin user.
-   * @param nickname A nickname the user gets associated with.
-   * @return On success the newly generated session ID is returned, an `Error`
-   * otherwise.
+   * @param pw (optional) Password to authenticate the user as an admin.
+   * @param nickname (optional) A human readable nickname for the user.
+   * @return The created Session ID string on success, `Error` otherwise.
    */
   virtual TResult<TSessionID> generateSession(
       std::optional<TPassword> const &pw,
@@ -48,7 +47,7 @@ class NetworkListener {
       std::string const &searchPattern, size_t const nrOfEntries) = 0;
 
   /**
-   * @brief Querie the content of the current queues.
+   * @brief Query the content of the current queues.
    * @details Additionally to the current normal and admin queue, the currently
    * playing track is returned as well (if any).
    *
@@ -141,7 +140,7 @@ class NetworkListener {
    * @param sid The session ID of the user. Used to authenticate as admin.
    * @param trkid The track to be moved. Has to be queried using `queryMusic`
    * beforehand.
-   * @param type Determines to which queue the track should be moved.
+   * @param toQueue Determines which queue the track should be moved to.
    * @return Returns an `Error` if something went wrong.
    *
    * @note To move a track from and to any queue, the user must have been
@@ -149,7 +148,7 @@ class NetworkListener {
    */
   virtual TResultOpt moveTrack(TSessionID const &sid,
                                TTrackID const &trkid,
-                               QueueType type) = 0;
+                               QueueType toQueue) = 0;
 };
 
 #endif /* _NETWORKLISTENER_H_ */

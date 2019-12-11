@@ -89,7 +89,7 @@ class SpotifyAuthorization : public httpserver::http_resource {
   std::string const cRedirectUriKey = "redirectUri";
   std::string const cScopesKey = "scopes";
   std::unique_ptr<std::thread> mServerThread;
-  bool shutdownServer = false;
+  bool shutdownServer = true;
   std::mutex mMutex;
 
   const std::shared_ptr<httpserver::http_response> render(
