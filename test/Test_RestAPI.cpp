@@ -237,7 +237,7 @@ TEST_F(RestAPIFixture, addTrackToQueue) {
   queueType = QueueType::Admin;
   testAddTrackToQueue(this, sid, trkid, queueType, 4);
 
-  // Empty IDs, normal queue
+  // Random IDs, normal queue
   sid = "TESTSESSION!§$%/&%&()=??\\";
   trkid = "1234567@ł€¶ŧ¶ł¶þø↓←";
   queueType = QueueType::Normal;
@@ -255,7 +255,29 @@ TEST_F(RestAPIFixture, voteTrack) {
   TTrackID trkid;
   TVote vote;
 
-  // TODO
+  // Empty IDs
+  sid = "";
+  trkid = "";
+  vote = false;
+  testVoteTrack(this, sid, trkid, vote, 1);
+
+  // Empty Track ID
+  sid = "asdf";
+  trkid = "";
+  vote = true;
+  testVoteTrack(this, sid, trkid, vote, 2);
+
+  // Empty session ID
+  sid = "";
+  trkid = "testtrack1";
+  vote = false;
+  testVoteTrack(this, sid, trkid, vote, 3);
+
+  // Random IDs
+  sid = "TESTSESSION!§$%/&%&()=??\\";
+  trkid = "1234567@ł€¶ŧ¶ł¶þø↓←";
+  vote = true;
+  testVoteTrack(this, sid, trkid, vote, 4);
 }
 
 //
@@ -268,7 +290,35 @@ TEST_F(RestAPIFixture, controlPlayer) {
   TSessionID sid;
   PlayerAction playerAction;
 
-  // TODO
+  // Empty ID, Pause
+  sid = "";
+  playerAction = PlayerAction::Pause;
+  testControlPlayer(this, sid, playerAction, 1);
+
+  // Play
+  sid = "1234";
+  playerAction = PlayerAction::Pause;
+  testControlPlayer(this, sid, playerAction, 2);
+
+  // Stop
+  sid = "4321";
+  playerAction = PlayerAction::Pause;
+  testControlPlayer(this, sid, playerAction, 3);
+
+  // Skip
+  sid = "1";
+  playerAction = PlayerAction::Pause;
+  testControlPlayer(this, sid, playerAction, 4);
+
+  // VolumeDown
+  sid = "//()/==??€@€¶";
+  playerAction = PlayerAction::VolumeDown;
+  testControlPlayer(this, sid, playerAction, 5);
+
+  // VolumeUp
+  sid = ".-.-.--..-.-.-";
+  playerAction = PlayerAction::VolumeUp;
+  testControlPlayer(this, sid, playerAction, 6);
 }
 
 //
@@ -282,13 +332,35 @@ TEST_F(RestAPIFixture, moveTrack) {
   TTrackID trkid;
   QueueType queueType;
 
-  // TODO
+  // Empty IDs, Pause
+  sid = "";
+  trkid = "";
+  queueType = QueueType::Normal;
+  testMoveTrack(this, sid, trkid, queueType, 1);
+
+  // Empty session ID
+  sid = "";
+  trkid = "asdf";
+  queueType = QueueType::Admin;
+  testMoveTrack(this, sid, trkid, queueType, 2);
+
+  // Empty track ID
+  sid = "445";
+  trkid = "";
+  queueType = QueueType::Normal;
+  testMoveTrack(this, sid, trkid, queueType, 3);
+
+  // Random IDs
+  sid = "uuuiipoiuUOUUOJÖLKŧøĸđ„·«”„“”";
+  trkid = "¢„æðđŋħĸłĸ";
+  queueType = QueueType::Admin;
+  testMoveTrack(this, sid, trkid, queueType, 4);
 }
 
 //
 // removeTrack
 //
-TEST_F(RestAPIFixture, removeTrack) {
+TEST_F(RestAPIFixture, DISABLED_removeTrack) {
   ASSERT_FALSE(listener.hasParametersRemoveTrack());
   ASSERT_EQ(listener.getCountRemoveTrack(), 0);
 

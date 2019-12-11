@@ -48,7 +48,8 @@ static optional<string> getCurrentExceptionMessage() {
 shared_ptr<http_response> const RestRequestHandler::NotFoundHandler(
     http_request const &req) {
   stringstream msg;
-  msg << "Endpoint '" << req.get_path() << "' was not found!";
+  msg << "Endpoint '" << req.get_path() << "' was not found (method '"
+      << req.get_method() << "'!";
   VLOG(1) << msg.str();
   return make_shared<string_response>(msg.str(), 404);
 }
@@ -131,7 +132,7 @@ shared_ptr<http_response> const RestRequestHandler::decodeAndDispatch(
           {{"/addTrackToQueue", "POST"}, addTrackToQueueHandler},   //
           {{"/voteTrack", "PUT"}, voteTrackHandler},                //
           {{"/controlPlayer", "PUT"}, controlPlayerHandler},        //
-          {{"/moveTracks", "PUT"}, moveTracksHandler},              //
+          {{"/moveTrack", "PUT"}, moveTracksHandler},               //
           {{"/removeTrack", "DELETE"}, removeTrackHandler}          //
       };
 

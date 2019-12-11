@@ -178,7 +178,7 @@ void testVoteTrack(RestAPIFixture *fixture,
   };
 
   // do request
-  auto resp = fixture->post("/voteTrack", requestBody.dump()).value();
+  auto resp = fixture->put("/voteTrack", requestBody.dump()).value();
 
   // check response
   ASSERT_EQ(resp.code, 200);
@@ -199,37 +199,42 @@ void testControlPlayer(RestAPIFixture *fixture,
                        PlayerAction expAction,
                        int count) {
   TSessionID sid;
-  TTrackID trkid;
-  QueueType queueType;
+  PlayerAction action;
 
   json requestBody{
       {"session_id", expSid},  //
-      {"track_id", expTrkid}   //
   };
 
-  string type = "";
+  string actionStr = "Invalid player action!";
   if (expAction == PlayerAction::Pause) {
-    type = "admin";
-  } else if (expQueueType == QueueType::Normal) {
-    type = "normal";
+    actionStr = "pause";
+  } else if (expAction == PlayerAction::Play) {
+    actionStr = "play";
+  } else if (expAction == PlayerAction::Stop) {
+    actionStr = "stop";
+  } else if (expAction == PlayerAction::Skip) {
+    actionStr = "skip";
+  } else if (expAction == PlayerAction::VolumeDown) {
+    actionStr = "volume_down";
+  } else if (expAction == PlayerAction::VolumeUp) {
+    actionStr = "volume_up";
   }
-  requestBody["queue_type"] = type;
+  requestBody["player_action"] = actionStr;
 
   // do request
-  auto resp = fixture->put("/moveTrack", requestBody.dump()).value();
+  auto resp = fixture->put("/controlPlayer", requestBody.dump()).value();
 
   // check response
   ASSERT_EQ(resp.code, 200);
   ASSERT_EQ(json::parse(resp.body), json{});
-  ASSERT_EQ(fixture->listener.getCountMoveTrack(), count);
+  ASSERT_EQ(fixture->listener.getCountControlPlayer(), count);
 
-  ASSERT_TRUE(fixture->listener.hasParametersMoveTrack());
-  fixture->listener.getLastParametersMoveTrack(sid, trkid, queueType);
-  ASSERT_FALSE(fixture->listener.hasParametersMoveTrack());
+  ASSERT_TRUE(fixture->listener.hasParametersControlPlayer());
+  fixture->listener.getLastParametersControlPlayer(sid, action);
+  ASSERT_FALSE(fixture->listener.hasParametersControlPlayer());
 
   ASSERT_EQ(sid, expSid);
-  ASSERT_EQ(trkid, expTrkid);
-  ASSERT_EQ(queueType, expQueueType);
+  ASSERT_EQ(action, expAction);
 }
 
 void testMoveTrack(RestAPIFixture *fixture,
@@ -271,6 +276,8 @@ void testMoveTrack(RestAPIFixture *fixture,
   ASSERT_EQ(queueType, expQueueType);
 }
 
+/**
+ * TODO: restclient-cpp cannot do DELETE requests with body
 void testRemoveTrack(RestAPIFixture *fixture,
                      TSessionID const &expSid,
                      TTrackID const &expTrkid,
@@ -284,7 +291,7 @@ void testRemoveTrack(RestAPIFixture *fixture,
   };
 
   // do request
-  auto resp = fixture->put("/moveTrack", requestBody.dump()).value();
+  auto resp = fixture->del("/removeTrack", requestBody.dump()).value();
 
   // check response
   ASSERT_EQ(resp.code, 200);
@@ -298,3 +305,4 @@ void testRemoveTrack(RestAPIFixture *fixture,
   ASSERT_EQ(sid, expSid);
   ASSERT_EQ(trkid, expTrkid);
 }
+*/
