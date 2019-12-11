@@ -1,3 +1,4 @@
+/*****************************************************************************/
 /**
  * @file    SpotifyAPITest.cpp
  * @author  Stefan Jahn <stefan.jahn332@gmail.com>
@@ -7,6 +8,7 @@
  * tests, because they can not be tested without a user interaction, or other
  * secret data which shouldn't be pushed in public repos
  */
+/*****************************************************************************/
 
 #include <gtest/gtest.h>
 
