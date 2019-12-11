@@ -133,7 +133,7 @@ TResult<QueueStatus> JukeBox::getCurrentQueues(TSessionID const &) {
   pbt.addedBy = tmp.addedBy;
   pbt.album = tmp.album;
   pbt.artist = tmp.artist;
-  pbt.duration = tmp.duration;
+  pbt.durationMs = tmp.durationMs;
   pbt.iconUri = tmp.iconUri;
   pbt.title = tmp.title;
   pbt.trackId = tmp.trackId;

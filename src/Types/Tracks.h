@@ -17,7 +17,7 @@ class BaseTrack {
   std::string title;
   std::string album;
   std::string artist;
-  unsigned duration;
+  unsigned durationMs;
   std::string iconUri;
   std::string addedBy;
   bool operator==(const BaseTrack &tr) {

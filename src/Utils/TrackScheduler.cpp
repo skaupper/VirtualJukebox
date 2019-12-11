@@ -75,10 +75,10 @@ bool TrackScheduler::doSchedule() {
    * Wakeup with a margin to the end of the track, so be able to set
    * the next track in time.
    */
-  if (trkSptfy.progressMs < trkSptfy.duration) {
+  if (trkSptfy.progressMs < trkSptfy.durationMs) {
     const unsigned setNewTrackMarginMs = 1000;
     unsigned sleepMs =
-        trkSptfy.duration - trkSptfy.progressMs - setNewTrackMarginMs;
+        trkSptfy.durationMs - trkSptfy.progressMs - setNewTrackMarginMs;
     this_thread::sleep_for(chrono::milliseconds(sleepMs));
   }
 

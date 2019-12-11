@@ -112,7 +112,7 @@ TResultOpt RAMDataStore::addTrack(BaseTrack const &track, QueueType q) {
     qtr.title = track.title;
     qtr.album = track.album;
     qtr.artist = track.artist;
-    qtr.duration = track.duration;
+    qtr.durationMs = track.durationMs;
     qtr.iconUri = track.iconUri;
     qtr.addedBy = track.addedBy;
     qtr.votes = 0;

@@ -78,7 +78,7 @@ TResult<std::vector<BaseTrack>> SpotifyBackend::queryTracks(
 
     track.title = elem.getName();
     track.album = elem.getAlbum().getName();
-    track.duration = elem.getDuration();
+    track.durationMs = elem.getDuration();
     track.trackId = elem.getUri();
 
     if (!elem.getAlbum().getImages().empty()) {
@@ -180,7 +180,7 @@ TResult<std::optional<PlaybackTrack>> SpotifyBackend::getCurrentPlayback(void) {
   playbackTrack.trackId = spotifyPlayingTrack.getUri();
   playbackTrack.artist = "";
   playbackTrack.iconUri = "";
-  playbackTrack.duration = spotifyPlayingTrack.getDuration();
+  playbackTrack.durationMs = spotifyPlayingTrack.getDuration();
   playbackTrack.album = spotifyPlayingTrack.getAlbum().getName();
   playbackTrack.isPlaying = playback.value().isPlaying();
   playbackTrack.title = spotifyPlayingTrack.getName();
@@ -333,7 +333,7 @@ TResult<BaseTrack> SpotifyBackend::createBaseTrack(TTrackID const &trackID) {
 
   baseTrack.title = track.getName();
   baseTrack.album = track.getAlbum().getName();
-  baseTrack.duration = track.getDuration();
+  baseTrack.durationMs = track.getDuration();
   baseTrack.trackId = track.getUri();
 
   if (!track.getAlbum().getImages().empty()) {
