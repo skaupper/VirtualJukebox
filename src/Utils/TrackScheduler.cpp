@@ -79,14 +79,22 @@ bool TrackScheduler::doSchedule() {
   /* Check playback progress and sleep.
    * Wakeup with a margin to the end of the track, so be able to set
    * the next track in time.
+   *
+   * Timing scheme:
+   * |-----------------------------------|----sleepTime-----|---margin----|
+   * 0                                progress                          duration
    */
-  if (trkSptfy.progressMs < trkSptfy.durationMs) {
+  while (1) {
     const unsigned setNewTrackMarginMs = 1000;
-    unsigned sleepMs =
-        trkSptfy.durationMs - trkSptfy.progressMs - setNewTrackMarginMs;
-    this_thread::sleep_for(chrono::milliseconds(sleepMs));
+    const unsigned sleepTimeMs = 500;
+    if (trkSptfy.progressMs + sleepTimeMs <=
+        trkSptfy.durationMs - setNewTrackMarginMs) {
+      this_thread::sleep_for(chrono::milliseconds(sleepTimeMs));
+    } else {
+      /* Slept long enough, track is getting to an end */
+      break;
+    }
   }
-
   /* Advance playlist in DataStore */
   auto ret = mDataStore->nextTrack();
   if (checkOptionalError(ret))
