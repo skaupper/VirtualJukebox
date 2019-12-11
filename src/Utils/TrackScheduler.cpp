@@ -39,42 +39,36 @@ bool TrackScheduler::start() {
 }
 
 bool TrackScheduler::doSchedule() {
-  static unsigned counter = 0;
+  unsigned counter = 0;
   while (counter < 10) {
     LOG(INFO) << "Hello World Scheduler [" << counter++ << "]";
     this_thread::sleep_for(chrono::milliseconds(100));
   }
 
-  auto ret = checkCurrentTrackConsistency();
-  if (checkAlternativeError(ret))
+  if (mDataStore == nullptr || mMusicBackend == nullptr) {
+    LOG(ERROR) << "TaskScheduler.doSchedule: nullptr";
     return false;
-
-  return true;
-}
-
-TResult<bool> TrackScheduler::checkCurrentTrackConsistency() {
-  if (mDataStore == nullptr || mMusicBackend == nullptr)
-    return Error(ErrorCode::InvalidValue, "nullptr");
+  }
 
   /* Get current track from DataStore */
   auto retStore = mDataStore->getPlayingTrack();
-  if (holds_alternative<Error>(retStore))
-    return get<Error>(retStore);
+  if (checkAlternativeError(retStore))
+    return false;
   QueuedTrack trkStore = get<QueuedTrack>(retStore);
 
   /* Get current track from Spotify */
   auto retSpotify = mMusicBackend->getCurrentPlayback();
-  if (holds_alternative<Error>(retSpotify))
-    return get<Error>(retSpotify);
+  if (checkAlternativeError(retSpotify))
+    return false;
   PlaybackTrack trkSptfy = get<PlaybackTrack>(retSpotify);
 
   /* Check consistency */
   if (!(trkStore == trkSptfy)) {
     string msg =
-        "TrackScheduler.checkCurrentTrackConsistency: Inconsistency between "
+        "TrackScheduler.doSchedule: Inconsistency between "
         "current playback track in Spotify and DataStore";
-    LOG(WARNING) << msg;
-    return Error(ErrorCode::InvalidValue, msg);
+    LOG(ERROR) << msg;
+    return false;
   }
 
   /* Check playback progress and sleep.
@@ -88,18 +82,20 @@ TResult<bool> TrackScheduler::checkCurrentTrackConsistency() {
     this_thread::sleep_for(chrono::milliseconds(sleepMs));
   }
 
-  /* Set next track */
+  /* Advance playlist in DataStore */
   auto ret = mDataStore->nextTrack();
-  if (ret.has_value())
-    return ret.value();
+  if (checkOptionalError(ret))
+    return false;
 
+  /* Get next track */
   auto nextTrk = mDataStore->getPlayingTrack();
-  if (holds_alternative<Error>(nextTrk))
-    return get<Error>(nextTrk);
+  if (checkAlternativeError(nextTrk))
+    return false;
 
+  /* Play the track */
   ret = mMusicBackend->setPlayback(get<QueuedTrack>(nextTrk));
-  if (ret.has_value())
-    return ret.value();
+  if (checkOptionalError(ret))
+    return false;
 
   return true;
 }

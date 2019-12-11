@@ -32,7 +32,6 @@ class TrackScheduler {
 
  private:
   bool doSchedule();
-  TResult<bool> checkCurrentTrackConsistency();
 
   DataStore* mDataStore;
   MusicBackend* mMusicBackend;
