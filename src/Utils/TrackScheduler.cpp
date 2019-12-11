@@ -60,36 +60,37 @@ bool TrackScheduler::doSchedule() {
     return false;
   }
 
-  /* Get current track from DataStore */
-  auto retStore = mDataStore->getPlayingTrack();
-  if (checkAlternativeError(retStore))
-    return false;
-  QueuedTrack trkStore = get<QueuedTrack>(retStore);
-
-  /* Get current track from Spotify */
-  auto retSpotify = mMusicBackend->getCurrentPlayback();
-  if (checkAlternativeError(retSpotify))
-    return false;
-  PlaybackTrack trkSptfy = get<PlaybackTrack>(retSpotify);
-
-  /* Check consistency */
-  if (!(trkStore == trkSptfy)) {
-    string msg =
-        "TrackScheduler.doSchedule: Inconsistency between "
-        "current playback track in Spotify and DataStore";
-    LOG(ERROR) << msg;
-    return false;
-  }
-
-  /* Check playback progress and sleep.
-   * Wakeup with a margin to the end of the track, so be able to set
-   * the next track in time.
-   *
-   * Timing scheme:
-   * |-----------------------------------|----sleepTime-----|---margin----|
-   * 0                                progress                          duration
-   */
+  /* Poll current playback progress */
   while (1) {
+    /* Get current track from DataStore */
+    auto retStore = mDataStore->getPlayingTrack();
+    if (checkAlternativeError(retStore))
+      return false;
+    QueuedTrack trkStore = get<QueuedTrack>(retStore);
+
+    /* Get current track from Spotify */
+    auto retSpotify = mMusicBackend->getCurrentPlayback();
+    if (checkAlternativeError(retSpotify))
+      return false;
+    PlaybackTrack trkSptfy = get<PlaybackTrack>(retSpotify);
+
+    /* Check consistency */
+    if (!(trkStore == trkSptfy)) {
+      string msg =
+          "TrackScheduler.doSchedule: Inconsistency between "
+          "current playback track in Spotify and DataStore";
+      LOG(ERROR) << msg;
+      return false;
+    }
+
+    /* Check playback progress and sleep.
+     * Wakeup with a margin to the end of the track, so be able to set
+     * the next track in time.
+     *
+     * Timing scheme:
+     * |-----------------------------------|----sleepTime-----|---margin----|
+     * 0                                progress duration
+     */
     const unsigned setNewTrackMarginMs = 1000;
     const unsigned sleepTimeMs = 500;
     if (trkSptfy.progressMs + sleepTimeMs <=
@@ -100,6 +101,7 @@ bool TrackScheduler::doSchedule() {
       break;
     }
   }
+
   /* Advance playlist in DataStore */
   auto ret = mDataStore->nextTrack();
   if (checkOptionalError(ret))
