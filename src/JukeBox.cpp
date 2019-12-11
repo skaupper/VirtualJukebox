@@ -263,16 +263,17 @@ TResultOpt JukeBox::moveTrack(TSessionID const &sid,
 
 TResultOpt JukeBox::controlPlayer(TSessionID const &sid, PlayerAction action) {
   int const volChangePercent = 10;
-  //  auto user = mDataStore->getUser(sid);
-  //  if (holds_alternative<Error>(user))
-  //    return get<Error>(user);
-  //
-  //  if (!user.isAdmin) {
-  //    LOG(WARNING) << "JukeBox.controlPlayer: User with session ID '" << sid
-  //                 << "' and nickname '" << user.name
-  //                 << "' is not priviledged to control the player.";
-  //    return Error(ErrorCode::AccessDenied, "User is not an admin.");
-  //  }
+  auto retUser = mDataStore->getUser(sid);
+  if (holds_alternative<Error>(retUser))
+    return get<Error>(retUser);
+
+  User user = get<User>(retUser);
+  if (!user.isAdmin) {
+    LOG(WARNING) << "JukeBox.controlPlayer: User with session ID '" << sid
+                 << "' and nickname '" << user.Name
+                 << "' is not priviledged to control the player.";
+    return Error(ErrorCode::AccessDenied, "User is not an admin.");
+  }
 
   TResultOpt ret;
   TResult<size_t> volume;
