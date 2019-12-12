@@ -194,6 +194,8 @@ SpotifyAuthorization::callbackHandler(httpserver::http_request const &request) {
     VLOG(100) << "scope: " << mToken.getScope();
     VLOG(100) << "expires in: " << mToken.getExpiresIn();
 
+    LOG(INFO) << "SpotifyAuthorization.callbackHandler: Access token acquired successfully";
+
   } else {
     // requested query not received
     LOG(ERROR) << "SpotifyAuthorization.callbackHandler: invalid query string";
