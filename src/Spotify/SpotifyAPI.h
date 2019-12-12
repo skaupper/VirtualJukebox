@@ -162,7 +162,7 @@ class SpotifyAPI {
    * @return on failure a Error object
    */
   TResultOpt transferUsersPlayback(std::string const &accessToken,
-                                   std::vector<Device> devices,
+                                   std::vector<Device> const &devices,
                                    bool play = false);
 
   /**

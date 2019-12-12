@@ -317,7 +317,7 @@ TResult<Track> SpotifyAPI::getTrack(std::string const &accessToken,
 }
 
 TResultOpt SpotifyAPI::transferUsersPlayback(std::string const &accessToken,
-                                             std::vector<Device> devices,
+                                             std::vector<Device> const &devices,
                                              bool play) {
   // build body
   nlohmann::json body;
@@ -326,6 +326,7 @@ TResultOpt SpotifyAPI::transferUsersPlayback(std::string const &accessToken,
   for (auto const &device : devices) {
     body["device_ids"].emplace_back(device.getID());
   }
+  body["play"] = play;
 
   auto responseRet =
       spotifyCall(accessToken, "/v1/me/player", HttpPut, "", body.dump());
