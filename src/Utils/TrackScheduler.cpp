@@ -46,7 +46,12 @@ void TrackScheduler::threadFunc() {
   }
 
   while (1) {
-    if (!doSchedule()) {
+    /* TODO: if (scheduler.isEnabled()) over this whole thing*/
+    bool ret = doSchedule();
+    if (ret) {
+      LOG(INFO) << "TrackScheduler::threadFunc: Restarted scheduler.";
+    }
+    if (!ret) {
       LOG(ERROR)
           << "TrackScheduler::threadFunc: doSchedule returned with an error";
       break;
@@ -54,6 +59,9 @@ void TrackScheduler::threadFunc() {
   }
 }
 
+/* TODO:
+ * return an int (0..success, 1..restart, -1..error) and handle in threadFunc()
+ */
 bool TrackScheduler::doSchedule() {
   if (mDataStore == nullptr || mMusicBackend == nullptr) {
     LOG(ERROR) << "TaskScheduler.doSchedule: nullptr";
@@ -95,6 +103,20 @@ bool TrackScheduler::doSchedule() {
     const unsigned sleepTimeMs = 500;
     if (trkSptfy.progressMs + sleepTimeMs <=
         trkSptfy.durationMs - setNewTrackMarginMs) {
+      /* TODO: replace sleep_for with wait_for(mutex, sleepTimeMsTimeout)
+       * see example here:
+       * http://www.cplusplus.com/reference/condition_variable/condition_variable/wait_for/
+       *
+       * like:
+       * condition_variable cv; // TrackScheduler member
+       * mutex mtx;             // local here
+       * cv.wait_for(mtx, chrono::seconds(1)) == cv_status::timeout) {
+       *   // woke up early -> the condition variable was set through notify()!
+       *   LOG(INFO) << "controlPlayer() was called and changed the
+       *   currently playing track! Restarting scheduler.";
+       *   break; //
+       * }
+       */
       this_thread::sleep_for(chrono::milliseconds(sleepTimeMs));
     } else {
       /* Slept long enough, track is getting to an end */

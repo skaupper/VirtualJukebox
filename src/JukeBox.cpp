@@ -58,6 +58,7 @@ bool JukeBox::start(string const &exeName, string const &configFilePath) {
   // TODO: check for available devices here? only works if initBackend blocks
   // until an access token has been acquired
 
+  /* TODO: make TrackScheduler a member */
   TrackScheduler scheduler(mDataStore, mMusicBackend);
   scheduler.start();
 
@@ -314,16 +315,20 @@ TResultOpt JukeBox::controlPlayer(TSessionID const &sid, PlayerAction action) {
 
   switch (action) {
     case PlayerAction::Play:
+      /* TODO: Enable trackscheduler */
       ret = mMusicBackend->play();
       break;
     case PlayerAction::Pause:
+      /* TODO: Disable trackscheduler */
       ret = mMusicBackend->pause();
       break;
     case PlayerAction::Stop:
+      /* TODO: Disable trackscheduler */
       /* TODO: Implement an actual stop functionality? */
       ret = mMusicBackend->pause();
       break;
     case PlayerAction::Skip:
+      /* TODO: Notify trackscheduler to restart itself */
       ret = mDataStore->nextTrack();
       if (ret.has_value())
         return ret.value();

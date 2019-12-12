@@ -27,6 +27,11 @@ class TrackScheduler {
    */
   void start();
 
+  /* TODO: functions below */
+  /* enable() */
+  /* disable() */
+  /* notify() */
+
  private:
   /**
    * @brief Schedules one track after another.
