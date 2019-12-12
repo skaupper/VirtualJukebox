@@ -20,7 +20,7 @@ TResult<Token> SpotifyAPI::getAccessToken(GrantType grantType,
                                           std::string const &redirectUri,
                                           std::string clientID,
                                           std::string clientSecret) {
-  (void) grantType;
+  (void)grantType;
 
   // only authorization code supported until now ..
   assert(grantType == AuthorizationCode);
@@ -471,8 +471,8 @@ Error SpotifyAPI::errorParser(SpotifyApi::SpotifyError const &error) {
     return Error(ErrorCode::SpotifyBadRequest, error.getMessage());
   } else {
     // unhandled spotify error
-    LOG(ERROR) << "SpotifyAPI.errorParser: Unhandled Spotify Error " << error.getMessage()
-               << " Status: " << error.getStatus();
+    LOG(ERROR) << "SpotifyAPI.errorParser: Unhandled Spotify Error "
+               << error.getMessage() << " Status: " << error.getStatus();
     return Error(ErrorCode::SpotifyAPIError, error.getMessage());
   }
 }
