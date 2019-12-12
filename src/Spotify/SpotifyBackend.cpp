@@ -89,11 +89,11 @@ TResult<std::vector<BaseTrack>> SpotifyBackend::queryTracks(
 
     bool firstArtist = true;
     for (auto &artist : elem.getArtists()) {
-        if (!firstArtist) {
-            track.artist += " & ";
-        }
-        track.artist += artist.getName();
-        firstArtist = false;
+      if (!firstArtist) {
+        track.artist += " & ";
+      }
+      track.artist += artist.getName();
+      firstArtist = false;
     }
 
     tracks.emplace_back(track);
@@ -169,7 +169,7 @@ TResult<PlaybackTrack> SpotifyBackend::getCurrentPlayback(void) {
   bool firstArtist = true;
   for (auto &artist : playback.getCurrentPlayingTrack().getArtists()) {
     if (!firstArtist) {
-        playbackTrack.artist += " & ";
+      playbackTrack.artist += " & ";
     }
     playbackTrack.artist += artist.getName();
     firstArtist = false;

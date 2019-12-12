@@ -50,8 +50,8 @@ bool JukeBox::start(string const &exeName, string const &configFilePath) {
 
   ret = mMusicBackend->initBackend();
   if (ret.has_value()) {
-      LOG(ERROR) << "Failed to initialize music backend";
-      return false;
+    LOG(ERROR) << "Failed to initialize music backend";
+    return false;
   }
 
   mNetwork->handleRequests();
