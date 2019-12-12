@@ -112,7 +112,7 @@ TResultOpt SpotifyBackend::setPlayback(BaseTrack const &track) {
 
   auto devices = std::get<std::vector<Device>>(devicesRet);
   if (devices.empty()) {
-    return Error(ErrorCode::KeyNotFound,
+    return Error(ErrorCode::SpotifyNoDevice,
                  "No devices for playing the track available");
   }
 
@@ -226,7 +226,7 @@ TResultOpt SpotifyBackend::setVolume(size_t const percent) {
 
   auto devices = std::get<std::vector<Device>>(devicesRet);
   if (devices.empty()) {
-    return Error(ErrorCode::KeyNotFound,
+    return Error(ErrorCode::SpotifyNoDevice,
                  "No devices for playing the track available");
   }
 

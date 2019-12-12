@@ -308,7 +308,8 @@ TResult<Track> SpotifyAPI::getTrack(std::string const &accessToken,
   auto response = std::get<RestClient::Response>(responseRet);
 
   if (response.code == cNoContent) {
-    LOG(INFO) << "SpotifyAPI.getTrack: No content received";
+    LOG(ERROR) << "SpotifyAPI.getTrack Spotify WebAPI Error, we never should reach here"<<std::endl;
+    return Error(ErrorCode::SpotifyAPIError,"SpotifyAPI.getTrack Spotify WebAPI Error, we never should reach here");
     return Track();
   }
 

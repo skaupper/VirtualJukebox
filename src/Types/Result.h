@@ -36,6 +36,7 @@ enum class ErrorCode {
   SpotifyAPIError,
   SpotifyBadRequest,
   SpotifyHttpTimeout,
+  SpotifyNoDevice,
   AlreadyExists,
   DoesntExist
 };
