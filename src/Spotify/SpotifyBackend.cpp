@@ -180,6 +180,17 @@ TResult<PlaybackTrack> SpotifyBackend::getCurrentPlayback(void) {
 
 TResultOpt SpotifyBackend::pause() {
   std::string token = mSpotifyAuth.getAccessToken();
+
+  TResult<Playback> playbackRes;
+  SPOTIFYCALL_WITH_REFRESH(
+      playbackRes, mSpotifyAPI.getCurrentPlayback(token), token);
+  auto playback = std::get<Playback>(playbackRes);
+
+  if (!playback.isPlaying()) {
+    VLOG(99) << "SpotifyBackend.pause: Playback already not playing";
+    return std::nullopt;
+  }
+
   TResultOpt pauseRes;
   SPOTIFYCALL_WITH_REFRESH_OPT(pauseRes, mSpotifyAPI.pause(token), token);
 
