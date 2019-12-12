@@ -350,6 +350,7 @@ TEST_F(SpotifyAPITest, playTryValidSong) {
       }
     } else {
       // device found, set volume on it
+
       auto playRes = mAPI.play(
           mAccessToken, vector<string>{"spotify:track:7HbGgElHEx4fpyzHYtfiox"});
       if (playRes.has_value()) {

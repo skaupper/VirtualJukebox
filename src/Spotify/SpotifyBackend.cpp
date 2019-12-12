@@ -132,6 +132,26 @@ TResultOpt SpotifyBackend::setPlayback(BaseTrack const &track) {
     }
   }
 
+  // check if a playback is available
+  TResult<std::optional<Playback>> playbackRes;
+  SPOTIFYCALL_WITH_REFRESH(
+      playbackRes, mSpotifyAPI.getCurrentPlayback(token), token);
+
+  auto playback = std::get<std::optional<Playback>>(playbackRes);
+
+  // if not set a playback to the current device
+  if (!playback.has_value()) {
+    TResultOpt ret;
+    ret = mSpotifyAPI.transferUsersPlayback(token, std::vector<Device>{device});
+    if (ret.has_value()) {
+      LOG(ERROR) << "SpotifyBackend.setPlayback: "
+                 << ret.value().getErrorMessage() << std::endl;
+      return ret.value();
+    }
+  }
+
+  auto playbackRet = mSpotifyAPI.getCurrentPlayback(token);
+
   TResultOpt playRes;
   SPOTIFYCALL_WITH_REFRESH_OPT(
       playRes,
