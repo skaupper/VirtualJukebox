@@ -734,6 +734,6 @@ string SpotifyAPITest::mPageString =
     "search?query=Frank+Sinatra&type=track&market=AT&offset=3&limit=3\",\n"
     "    \"offset\": 0,\n"
     "    \"previous\": null,\n"
-    "    \"total\": 13764\n"
+    "    \"total\": 13768\n"
     "  }\n"
     "}";

@@ -9,6 +9,8 @@
 #ifndef _SPOTIFYBACKEND_H_
 #define _SPOTIFYBACKEND_H_
 
+#include <mutex>
+
 #include "MusicBackend.h"
 #include "SpotifyAPI.h"
 #include "SpotifyAuthorization.h"
@@ -101,6 +103,9 @@ class SpotifyBackend : public MusicBackend {
   TResultOpt errorHandler(Error const &error);
   SpotifyApi::SpotifyAPI mSpotifyAPI;
   SpotifyApi::SpotifyAuthorization mSpotifyAuth;
+
+  std::mutex mPlayPauseMtx;
+  std::mutex mVolumeMtx;
 };
 
 #endif /* _SPOTIFYBACKEND_H_ */

@@ -103,6 +103,7 @@ TResult<std::vector<BaseTrack>> SpotifyBackend::queryTracks(
 }
 
 TResultOpt SpotifyBackend::setPlayback(BaseTrack const &track) {
+  std::unique_lock<std::mutex> myLock(mPlayPauseMtx);
   std::string token = mSpotifyAuth.getAccessToken();
 
   // check if playing devices are available
@@ -205,12 +206,8 @@ TResult<std::optional<PlaybackTrack>> SpotifyBackend::getCurrentPlayback(void) {
 }
 
 TResultOpt SpotifyBackend::pause() {
+  std::unique_lock<std::mutex> myLock(mPlayPauseMtx);
   std::string token = mSpotifyAuth.getAccessToken();
-
-  // TResult<Playback> playbackRes;
-  // SPOTIFYCALL_WITH_REFRESH(
-  //     playbackRes, mSpotifyAPI.getCurrentPlayback(token), token);
-  // auto playback = std::get<Playback>(playbackRes);
 
   auto playbackRes = getCurrentPlayback();
   if (auto error = std::get_if<Error>(&playbackRes)) {
@@ -232,6 +229,23 @@ TResultOpt SpotifyBackend::pause() {
 }
 
 TResultOpt SpotifyBackend::play() {
+  std::unique_lock<std::mutex> myLock(mPlayPauseMtx);
+
+  auto playbackRes = getCurrentPlayback();
+  if (auto error = std::get_if<Error>(&playbackRes)) {
+    return *error;
+  }
+  auto playback = std::get<std::optional<PlaybackTrack>>(playbackRes);
+
+  if (!playback.has_value()) {
+    VLOG(99)
+        << "SpotifyBackend.play: Error cant resume when no playback available";
+    return Error(ErrorCode::SpotifyBadRequest,"SpotifyBackend.play: Error cant resume when no playback available");
+  } else if (!playback.value().isPlaying){
+    VLOG(99)
+                    << "SpotifyBackend.play: Playback already playing";
+    return std::nullopt;
+  }
   std::string token = mSpotifyAuth.getAccessToken();
   TResultOpt playRes;
   SPOTIFYCALL_WITH_REFRESH_OPT(playRes, mSpotifyAPI.play(token), token);
@@ -240,6 +254,7 @@ TResultOpt SpotifyBackend::play() {
 }
 
 TResult<size_t> SpotifyBackend::getVolume() {
+  std::unique_lock<std::mutex> myLock(mVolumeMtx);
   std::string token = mSpotifyAuth.getAccessToken();
 
   TResult<std::optional<Playback>> playbackRes;
@@ -260,6 +275,7 @@ TResult<size_t> SpotifyBackend::getVolume() {
 }
 
 TResultOpt SpotifyBackend::setVolume(size_t const percent) {
+  std::unique_lock<std::mutex> myLock(mVolumeMtx);
   std::string token = mSpotifyAuth.getAccessToken();
 
   // check if playing devices are available
