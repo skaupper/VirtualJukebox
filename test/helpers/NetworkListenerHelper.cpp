@@ -51,7 +51,7 @@ void testQueryTracks(RestAPIFixture *fixture,
   int maxEntries;
 
   auto expTracks = fixture->gen.generateTracks(expMaxEntries);
-  json expResponseBody = {{"tracks", json{}}};
+  json expResponseBody = {{"tracks", json::array()}};
   for (auto &&track : expTracks) {
     expResponseBody["tracks"].push_back(Serializer::serialize(track));
   }
@@ -89,9 +89,9 @@ void testGetCurrentQueues(RestAPIFixture *fixture,
   auto expQueueStatus =
       fixture->gen.generateQueueStatus(normalNr, adminNr, playbackTrack);
   json expResponseBody = {
-      {"currently_playing", json{}},  //
-      {"normal_queue", json{}},       //
-      {"admin_queue", json{}}         //
+      {"currently_playing", json::object()},  //
+      {"normal_queue", json::array()},        //
+      {"admin_queue", json::array()}          //
   };
 
   if (expQueueStatus.currentTrack.has_value()) {
