@@ -9,6 +9,7 @@
 
 #include "SpotifyAPITypes.h"
 #include "Types/Result.h"
+#include "restclient.h"
 
 namespace SpotifyApi {
 
@@ -147,6 +148,24 @@ class SpotifyAPI {
                           std::string const &market = "AT");
 
   /**
+   * @brief enables a playback on the given device
+   * @details this function has to be called, when a device has no actual
+   * playback. Note: Note that a value of false for the play parameter when also
+   * transferring to another device_id will not pause playback. To ensure that
+   * playback is paused on the new device you should send a pause command to the
+   * currently active device before transferring to the new device_id
+   * @param accessToken valid access token
+   * @param devices its possible to set an array, but until now only a single
+   * device is currently supported
+   * @param play true ensures playback happends on new device otherwise keep the
+   * current playback state
+   * @return on failure a Error object
+   */
+  TResultOpt transferUsersPlayback(std::string const &accessToken,
+                                   std::vector<Device> devices,
+                                   bool play = false);
+
+  /**
    * @brief encodes the given string with http special characters
    * @param str string to encode
    * @return encoded string
@@ -167,6 +186,18 @@ class SpotifyAPI {
    * @return Error
    */
   Error errorParser(SpotifyError const &error);
+
+  enum HttpMethod { HttpGet, HttpPost, HttpPut };
+  TResult<RestClient::Response> spotifyCall(std::string const &accessToken,
+                                            std::string const &endpoint,
+                                            HttpMethod method,
+                                            std::string const &query = "",
+                                            std::string const &body = "");
+
+  template <typename SpotifyAPIType>
+  TResult<SpotifyAPIType> parseSpotifyCall(
+      RestClient::Response const &response);
+
   std::string const cSpotifyAuthUrl = "https://accounts.spotify.com";
   std::string const cSpotifyAPIUrl = "https://api.spotify.com";
   size_t const cRequestTimeout = 5;

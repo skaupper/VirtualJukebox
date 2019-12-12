@@ -37,7 +37,11 @@ class SpotifyAPITest : public ::testing::Test {
 
  protected:
   std::string mAccessToken =
-      "BQDCbTaHVmIZaAcR93-XU0825L_QOBpoK-ujduRJRpjm4xqpd5E3qVtY8sCUFLEN_vFac6qGeLAFd_1Fnn48AMOR16ctXzii1T8wl7jlXQUK_RL1YxhCuNIpUTUosV_heCIjBHnBUMF-3fwTGuvk0on8T01OKJaibK0koy2yjkQv9Q5unt3tjZuK2OMJx5QtKk1zr0Bzv41eEc3BZaFCKM1BXFR5_imIZIZxYv8dgQ";
+      "BQA4ZHRnVqt_t1uPU6prjgKI0pM1M-"
+      "Sz2zEzQF2lBASjwYCDcWyZFGgpTf4EVQBLgg6M8lPfM2u5g-wkbIAuCgg_"
+      "k8Zd68dALcULbq-08kvFxwv7WKnubGkBRBoI-8M5DP91BljMbRtP_E3quYlpk-"
+      "PyQEk8xslCr6jlxYiceLQ6d38MVzKvz-B9gL68XB5wsVF4koV_DJ-"
+      "TKh5DDrJoqDHAj1OLfYpUUjaeZuce9TiP";
   SpotifyAPI mAPI;
   static std::string mPageString;
   static std::string mInvalidDeviceString;
@@ -348,6 +352,57 @@ TEST_F(SpotifyAPITest, playTryValidSong) {
       // device found, set volume on it
       auto playRes = mAPI.play(
           mAccessToken, vector<string>{"spotify:track:7HbGgElHEx4fpyzHYtfiox"});
+      if (playRes.has_value()) {
+        // if we reach here not possible
+        EXPECT_EQ(0, 1);
+      } else {
+        EXPECT_EQ(playRes, nullopt);
+      }
+    }
+  }
+}
+
+TEST_F(SpotifyAPITest, play2Times) {
+  // check if there are devices available
+  auto devicesRet = mAPI.getAvailableDevices(mAccessToken);
+  if (auto value = get_if<Error>(&devicesRet)) {
+    value = value;
+    cout << "Error happend in getting devices.. can't happen!!" << endl;
+    EXPECT_EQ(0, 1);
+  } else {
+    auto devices = get<vector<Device>>(devicesRet);
+    if (devices.empty()) {
+      // if devices are empty test set on no device
+      auto playRes = mAPI.play(
+          mAccessToken, vector<string>{"spotify:track:7HbGgElHEx4fpyzHYtfiox"});
+      if (!playRes.has_value()) {
+        // cant reach here
+        EXPECT_EQ(0, 1);
+      } else {
+        EXPECT_EQ(ErrorCode::SpotifyNotFound, playRes.value().getErrorCode());
+        EXPECT_EQ("Player command failed: No active device found",
+                  playRes.value().getErrorMessage());
+      }
+    } else {
+      // device found, set volume on it
+      auto playRes = mAPI.play(
+          mAccessToken, vector<string>{"spotify:track:7HbGgElHEx4fpyzHYtfiox"});
+      if (playRes.has_value()) {
+        // if we reach here not possible
+        EXPECT_EQ(0, 1);
+      } else {
+        EXPECT_EQ(playRes, nullopt);
+      }
+      sleep(2);
+      playRes = mAPI.play(mAccessToken);
+      if (playRes.has_value()) {
+        // if we reach here not possible
+        EXPECT_EQ(0, 1);
+      } else {
+        EXPECT_EQ(playRes, nullopt);
+      }
+      sleep(2);
+      playRes = mAPI.play(mAccessToken);
       if (playRes.has_value()) {
         // if we reach here not possible
         EXPECT_EQ(0, 1);

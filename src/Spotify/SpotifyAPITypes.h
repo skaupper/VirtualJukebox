@@ -80,6 +80,22 @@ class Device {
 };
 
 /**
+ * @brief wrapper class for multiple devices
+ */
+class Devices {
+ public:
+  Devices() = default;
+  Devices(nlohmann::json const &devicesJson) {
+    if (devicesJson.find("devices") != devicesJson.end()) {
+      for (nlohmann::json const &elem : devicesJson["devices"]) {
+        mDevices.emplace_back(Device(elem));
+      }
+    }
+  }
+  std::vector<Device> mDevices;
+};
+
+/**
  * @brief simplified artist object
  */
 class Artist {
@@ -246,6 +262,17 @@ class SpotifyError {
  private:
   int mStatus;          /**< http status code */
   std::string mMessage; /**< a short description of the cause of the error */
+};
+
+/**
+ * @brief type gets used, when only no content data or Error get received
+ */
+class SpotifyDummy {
+ public:
+  SpotifyDummy() = default;
+  SpotifyDummy(nlohmann::json const &dummyJson) {
+    (void)dummyJson;
+  }
 };
 
 }  // namespace SpotifyApi
