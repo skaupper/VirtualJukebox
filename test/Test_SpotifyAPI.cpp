@@ -37,11 +37,7 @@ class SpotifyAPITest : public ::testing::Test {
 
  protected:
   std::string mAccessToken =
-      "BQDJ9IG9YnSLze9srPny-SqdKVm-"
-      "Msuzg3bjvUP5eEpPSOPc9eXrU4q3ZNIEzZp8GSP5LdrFeCToOZeXzTyQv6rO80CwsLiH7EbO"
-      "k3UT6AI9t5u_nCHpZ_ognzoVHeZ-"
-      "gc9381uEc0on8PTjFWG5nqJZTOcBYYZqYAXk77oBh6Pbep0-"
-      "4PcrFovjPDioceSgkkheXAh00KsU";
+      "BQDCbTaHVmIZaAcR93-XU0825L_QOBpoK-ujduRJRpjm4xqpd5E3qVtY8sCUFLEN_vFac6qGeLAFd_1Fnn48AMOR16ctXzii1T8wl7jlXQUK_RL1YxhCuNIpUTUosV_heCIjBHnBUMF-3fwTGuvk0on8T01OKJaibK0koy2yjkQv9Q5unt3tjZuK2OMJx5QtKk1zr0Bzv41eEc3BZaFCKM1BXFR5_imIZIZxYv8dgQ";
   SpotifyAPI mAPI;
   static std::string mPageString;
   static std::string mInvalidDeviceString;

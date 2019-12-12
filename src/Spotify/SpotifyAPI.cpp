@@ -468,7 +468,11 @@ Error SpotifyAPI::errorParser(SpotifyApi::SpotifyError const &error) {
   } else if (error.getStatus() == cHTTPForbidden) {
     return Error(ErrorCode::SpotifyForbidden, error.getMessage());
   } else if (error.getStatus() == cHTTPBadRequest) {
-    return Error(ErrorCode::SpotifyBadRequest, error.getMessage());
+    if (error.getMessage().find("Only valid bearer authentication supported") != std::string::npos) {
+      return Error(ErrorCode::SpotifyAccessDenied, "Invalid access token");
+    } else {
+      return Error(ErrorCode::SpotifyBadRequest, error.getMessage());
+    }
   } else {
     // unhandled spotify error
     LOG(ERROR) << "SpotifyAPI.errorParser: Unhandled Spotify Error "
