@@ -47,7 +47,15 @@ bool JukeBox::start(string const &exeName, string const &configFilePath) {
   }
 
   initLoggingHandler(exeName);
-  DLOG(INFO) << "Hello world from JukeBox main.cpp !";
+
+  ret = mMusicBackend->initBackend();
+  if (ret.has_value()) {
+    LOG(ERROR) << "Failed to initialize music backend";
+    return false;
+  }
+
+  // TODO: check for available devices here? only works if initBackend blocks
+  // until an access token has been acquired
 
   mNetwork->handleRequests();
 

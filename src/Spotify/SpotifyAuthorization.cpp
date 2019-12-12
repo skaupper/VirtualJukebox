@@ -22,7 +22,7 @@ SpotifyAuthorization::~SpotifyAuthorization() {
 }
 
 TResultOpt SpotifyAuthorization::startServer(void) {
-  VLOG(100) << "SpotifyAuthorization:: Start Server" << std::endl;
+  VLOG(100) << "SpotifyAuthorization: Start Server";
 
   // if(setupConfigParams() holds error return error
   // setup urlencode in building sendstring..
@@ -81,8 +81,8 @@ TResultOpt SpotifyAuthorization::refreshAccessToken(void) {
       mToken.getRefreshToken(), mClientID, mClientSecret);
 
   if (auto error = std::get_if<Error>(&ret)) {
-    LOG(ERROR) << "[SpotifyAuthorization] in refreshAccessToken: "
-               << error->getErrorMessage() << std::endl;
+    LOG(ERROR) << "SpotifyAuthorization.refreshAccessToken: "
+               << error->getErrorMessage();
     return *error;
   }
 
@@ -113,7 +113,7 @@ std::string SpotifyAuthorization::getScopes(void) {
 const std::shared_ptr<httpserver::http_response> SpotifyAuthorization::render(
     httpserver::http_request const &request) {
   // dispatch path
-  std::cout << request.get_path() << std::endl;
+  VLOG(100) << request.get_path();
   if (request.get_path().find("/spotifyLogin") != std::string::npos) {
     return loginHandler(request);
   } else if (request.get_path().find("/spotifyCallback") != std::string::npos) {
@@ -142,7 +142,7 @@ SpotifyAuthorization::loginHandler(httpserver::http_request const &request) {
       .append(SpotifyAPI::stringUrlEncode(mRedirectUri));
   redirectString.append("&state=").append(state);
 
-  std::cout << redirectString << std::endl;
+  VLOG(100) << redirectString;
 
   response->with_cookie("spotify_auth_state", state);
   response->with_header("Location", redirectString);
@@ -152,21 +152,20 @@ SpotifyAuthorization::loginHandler(httpserver::http_request const &request) {
 const std::shared_ptr<httpserver::http_response>
 SpotifyAuthorization::callbackHandler(httpserver::http_request const &request) {
   auto queryString = request.get_querystring();
-  std::cout << queryString << std::endl;
+  VLOG(100) << queryString;
 
   // check if the state is the same as the sent one
-  std::cout << getFromQueryString(queryString, "code") << std::endl;
-  std::cout << getFromQueryString(queryString, "state") << std::endl;
+  VLOG(100) << getFromQueryString(queryString, "code");
+  VLOG(100) << getFromQueryString(queryString, "state");
 
   if (getFromQueryString(queryString, "state") !=
       request.get_cookie("spotify_auth_state")) {
-    std::cout << "SpotifyAuthorization: received state != sent state"
-              << std::endl;
+    VLOG(100) << "SpotifyAuthorization: received state != sent state";
   }
 
   if (getFromQueryString(queryString, "error") != "") {
-    std::cout << "SpotifyAuthorization: callback error, reason: "
-              << getFromQueryString(queryString, "error") << std::endl;
+    LOG(ERROR) << "SpotifyAuthorization.callbackHandler:  "
+               << getFromQueryString(queryString, "error");
   } else if (getFromQueryString(queryString, "code") != "") {
     // successfull
     SpotifyAPI spotify;
@@ -176,8 +175,8 @@ SpotifyAuthorization::callbackHandler(httpserver::http_request const &request) {
                                       mClientID,
                                       mClientSecret);
     if (auto error = std::get_if<Error>(&ret)) {
-      LOG(ERROR) << "[SpotifyAuthorization] in getAccessToken: "
-                 << error->getErrorMessage() << std::endl;
+      LOG(ERROR) << "SpotifyAuthorization.callbackHandler: in getAccessToken: "
+                 << error->getErrorMessage();
       return std::make_shared<http_response>(
           string_response(std::string("Error: ") + error->getErrorMessage(),
                           http::http_utils::http_bad_request));
@@ -189,17 +188,18 @@ SpotifyAuthorization::callbackHandler(httpserver::http_request const &request) {
                             std::chrono::system_clock::now().time_since_epoch())
                             .count();
 
-    VLOG(100) << "access token: " << mToken.getAccessToken() << std::endl;
-    VLOG(100) << "refresh token: " << mToken.getRefreshToken() << std::endl;
-    VLOG(100) << "token type token: " << mToken.getTokenType() << std::endl;
-    VLOG(100) << "scope: " << mToken.getScope() << std::endl;
-    VLOG(100) << "expires in: " << mToken.getExpiresIn() << std::endl;
+    VLOG(100) << "access token: " << mToken.getAccessToken();
+    VLOG(100) << "refresh token: " << mToken.getRefreshToken();
+    VLOG(100) << "token type token: " << mToken.getTokenType();
+    VLOG(100) << "scope: " << mToken.getScope();
+    VLOG(100) << "expires in: " << mToken.getExpiresIn();
+
+    LOG(INFO) << "SpotifyAuthorization.callbackHandler: Access token acquired "
+                 "successfully";
 
   } else {
     // requested query not received
-    LOG(ERROR) << "[SpotifyAuthorization]: callback error, reason: invalid "
-                  "query string"
-               << std::endl;
+    LOG(ERROR) << "SpotifyAuthorization.callbackHandler: invalid query string";
     return std::make_shared<http_response>(
         string_response("SpotifyAuthorization callback error",
                         http::http_utils::http_bad_request));
@@ -215,8 +215,8 @@ TResultOpt SpotifyAuthorization::setupConfigParams() {
   // get port
   auto port = configHandler->getValueInt(cSectionKey, cPortKey);
   if (std::holds_alternative<Error>(port)) {
-    LOG(ERROR) << "[SpotifyAuthorization] no config " << cPortKey
-               << " available" << std::endl;
+    LOG(ERROR) << "SpotifyAuthorization.setupConfigParams: no config "
+               << cPortKey << " available";
     return std::get<Error>(port);
   }
 
@@ -224,16 +224,16 @@ TResultOpt SpotifyAuthorization::setupConfigParams() {
   auto redirectUri =
       configHandler->getValueString(cSectionKey, cRedirectUriKey);
   if (std::holds_alternative<Error>(redirectUri)) {
-    LOG(ERROR) << "[SpotifyAuthorization] no config " << cRedirectUriKey
-               << " available" << std::endl;
+    LOG(ERROR) << "SpotifyAuthorization.setupConfigParams: no config "
+               << cRedirectUriKey << " available";
     return std::get<Error>(redirectUri);
   }
 
   // get client id
   auto clientId = configHandler->getValueString(cSectionKey, cClientIDKey);
   if (std::holds_alternative<Error>(clientId)) {
-    LOG(ERROR) << "[SpotifyAuthorization] no config " << cClientIDKey
-               << " available" << std::endl;
+    LOG(ERROR) << "SpotifyAuthorization.setupConfigParams: no config "
+               << cClientIDKey << " available";
     return std::get<Error>(clientId);
   }
 
@@ -241,16 +241,16 @@ TResultOpt SpotifyAuthorization::setupConfigParams() {
   auto clientSecret =
       configHandler->getValueString(cSectionKey, cClientSecretKey);
   if (std::holds_alternative<Error>(clientSecret)) {
-    LOG(ERROR) << "[SpotifyAuthorization] no config " << cClientSecretKey
-               << " available" << std::endl;
+    LOG(ERROR) << "SpotifyAuthorization.setupConfigParams: no config "
+               << cClientSecretKey << " available";
     return std::get<Error>(clientSecret);
   }
 
   // get scopes
   auto scopes = configHandler->getValueString(cSectionKey, cScopesKey);
   if (std::holds_alternative<Error>(scopes)) {
-    LOG(ERROR) << "[SpotifyAuthorization] no config " << cScopesKey
-               << " available" << std::endl;
+    LOG(ERROR) << "SpotifyAuthorization.setupConfigParams: no config "
+               << cScopesKey << " available";
     return std::get<Error>(scopes);
   }
 

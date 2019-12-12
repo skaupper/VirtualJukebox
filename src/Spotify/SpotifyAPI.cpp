@@ -20,6 +20,8 @@ TResult<Token> SpotifyAPI::getAccessToken(GrantType grantType,
                                           std::string const &redirectUri,
                                           std::string clientID,
                                           std::string clientSecret) {
+  (void)grantType;
+
   // only authorization code supported until now ..
   assert(grantType == AuthorizationCode);
   auto client = std::make_unique<RestClient::Connection>(cSpotifyAuthUrl);
@@ -127,12 +129,9 @@ TResult<std::vector<Device>> SpotifyAPI::getAvailableDevices(
     std::string const &accessToken) {
   auto client = std::make_unique<RestClient::Connection>(cSpotifyAPIUrl);
   RestClient::HeaderFields headers;
-  headers.insert(
-      std::pair<std::string, std::string>("Accept", "application/json"));
-  headers.insert(
-      std::pair<std::string, std::string>("Content-Type", "application/json"));
-  headers.insert(std::pair<std::string, std::string>("Authorization",
-                                                     "Bearer " + accessToken));
+  headers.insert({"Accept", "application/json"});
+  headers.insert({"Content-Type", "application/json"});
+  headers.insert({"Authorization", "Bearer " + accessToken});
   client->SetHeaders(headers);
   client->SetTimeout(cRequestTimeout);
   auto response = client->get("/v1/me/player/devices");
@@ -162,7 +161,7 @@ TResult<std::vector<Device>> SpotifyAPI::getAvailableDevices(
   } catch (...) {
     // parse exception
     return Error(ErrorCode::SpotifyParseError,
-                 "[SpotifyAPI] received json couldn't be parsed");
+                 "Received json couldn't be parsed");
   }
   // if we reach here spotify sent an unexpected message
   return Error(ErrorCode::SpotifyAPIError,
@@ -174,20 +173,16 @@ TResult<Playback> SpotifyAPI::getCurrentPlayback(std::string const &accessToken,
   (void)market;
   auto client = std::make_unique<RestClient::Connection>(cSpotifyAPIUrl);
   RestClient::HeaderFields headers;
-  headers.insert(
-      std::pair<std::string, std::string>("Accept", "application/json"));
-  headers.insert(
-      std::pair<std::string, std::string>("Content-Type", "application/json"));
-  headers.insert(std::pair<std::string, std::string>("Authorization",
-                                                     "Bearer " + accessToken));
+  headers.insert({"Accept", "application/json"});
+  headers.insert({"Content-Type", "application/json"});
+  headers.insert({"Authorization", "Bearer " + accessToken});
   client->SetHeaders(headers);
   client->SetTimeout(cRequestTimeout);
   auto response = client->get("/v1/me/player");
 
   nlohmann::json playbackJson;
   if (response.code == cNoContent) {
-    LOG(INFO) << "[SpotifyAPI] in getCurrentPlayback, no content received"
-              << std::endl;
+    LOG(INFO) << "SpotifyAPI.getCurrentPlayback: No content received";
     return Playback();
   }
   try {
@@ -208,7 +203,7 @@ TResult<Playback> SpotifyAPI::getCurrentPlayback(std::string const &accessToken,
   } catch (...) {
     // parse exception
     return Error(ErrorCode::SpotifyParseError,
-                 "[SpotifyAPI] received json couldn't be parsed");
+                 "Received json couldn't be parsed");
   }
   // if we reach here spotify sent an unexpected message
   return Error(ErrorCode::SpotifyAPIError,
@@ -223,12 +218,9 @@ TResult<SpotifyPaging> SpotifyAPI::search(std::string const &accessToken,
                                           const std::string &market) {
   auto client = std::make_unique<RestClient::Connection>(cSpotifyAPIUrl);
   RestClient::HeaderFields headers;
-  headers.insert(
-      std::pair<std::string, std::string>("Accept", "application/json"));
-  headers.insert(
-      std::pair<std::string, std::string>("Content-Type", "application/json"));
-  headers.insert(std::pair<std::string, std::string>("Authorization",
-                                                     "Bearer " + accessToken));
+  headers.insert({"Accept", "application/json"});
+  headers.insert({"Content-Type", "application/json"});
+  headers.insert({"Authorization", "Bearer " + accessToken});
   client->SetHeaders(headers);
 
   // build query
@@ -242,7 +234,7 @@ TResult<SpotifyPaging> SpotifyAPI::search(std::string const &accessToken,
 
   nlohmann::json pagingJson;
   if (response.code == cNoContent) {
-    LOG(INFO) << "[SpotifyAPI] in search, no content received" << std::endl;
+    LOG(INFO) << "SpotifyAPI.search: No content received";
     return SpotifyPaging();
   }
   try {
@@ -263,7 +255,7 @@ TResult<SpotifyPaging> SpotifyAPI::search(std::string const &accessToken,
   } catch (...) {
     // parse exception
     return Error(ErrorCode::SpotifyParseError,
-                 "[SpotifyAPI] received json couldn't be parsed");
+                 "Received json couldn't be parsed");
   }
   // if we reach here spotify sent an unexpected message
   return Error(ErrorCode::SpotifyAPIError,
@@ -275,12 +267,9 @@ TResultOpt SpotifyAPI::setVolume(std::string const &accessToken,
                                  const SpotifyApi::Device &device) {
   auto client = std::make_unique<RestClient::Connection>(cSpotifyAPIUrl);
   RestClient::HeaderFields headers;
-  headers.insert(
-      std::pair<std::string, std::string>("Accept", "application/json"));
-  headers.insert(
-      std::pair<std::string, std::string>("Content-Type", "application/json"));
-  headers.insert(std::pair<std::string, std::string>("Authorization",
-                                                     "Bearer " + accessToken));
+  headers.insert({"Accept", "application/json"});
+  headers.insert({"Content-Type", "application/json"});
+  headers.insert({"Authorization", "Bearer " + accessToken});
   client->SetHeaders(headers);
 
   // set upper and lower bounds
@@ -316,7 +305,7 @@ TResultOpt SpotifyAPI::setVolume(std::string const &accessToken,
   } catch (...) {
     // parse exception
     return Error(ErrorCode::SpotifyParseError,
-                 "[SpotifyAPI] received json couldn't be parsed");
+                 "Received json couldn't be parsed");
   }
   // if we reach here spotify sent an unexpected message
   return Error(ErrorCode::SpotifyAPIError,
@@ -327,12 +316,9 @@ TResultOpt SpotifyAPI::pause(std::string const &accessToken,
                              const SpotifyApi::Device &device) {
   auto client = std::make_unique<RestClient::Connection>(cSpotifyAPIUrl);
   RestClient::HeaderFields headers;
-  headers.insert(
-      std::pair<std::string, std::string>("Accept", "application/json"));
-  headers.insert(
-      std::pair<std::string, std::string>("Content-Type", "application/json"));
-  headers.insert(std::pair<std::string, std::string>("Authorization",
-                                                     "Bearer " + accessToken));
+  headers.insert({"Accept", "application/json"});
+  headers.insert({"Content-Type", "application/json"});
+  headers.insert({"Authorization", "Bearer " + accessToken});
   client->SetHeaders(headers);
 
   // build query
@@ -363,7 +349,7 @@ TResultOpt SpotifyAPI::pause(std::string const &accessToken,
   } catch (...) {
     // parse exception
     return Error(ErrorCode::SpotifyParseError,
-                 "[SpotifyAPI] received json couldn't be parsed");
+                 "Received json couldn't be parsed");
   }
   // if we reach here spotify sent an unexpected message
   return Error(ErrorCode::SpotifyAPIError,
@@ -376,12 +362,9 @@ TResultOpt SpotifyAPI::play(std::string const &accessToken,
                             int positionMs) {
   auto client = std::make_unique<RestClient::Connection>(cSpotifyAPIUrl);
   RestClient::HeaderFields headers;
-  headers.insert(
-      std::pair<std::string, std::string>("Accept", "application/json"));
-  headers.insert(
-      std::pair<std::string, std::string>("Content-Type", "application/json"));
-  headers.insert(std::pair<std::string, std::string>("Authorization",
-                                                     "Bearer " + accessToken));
+  headers.insert({"Accept", "application/json"});
+  headers.insert({"Content-Type", "application/json"});
+  headers.insert({"Authorization", "Bearer " + accessToken});
   client->SetHeaders(headers);
 
   // build query
@@ -419,7 +402,7 @@ TResultOpt SpotifyAPI::play(std::string const &accessToken,
   } catch (...) {
     // parse exception
     return Error(ErrorCode::SpotifyParseError,
-                 "[SpotifyAPI] received json couldn't be parsed");
+                 "Received json couldn't be parsed");
   }
   // if we reach here spotify sent an unexpected message
   return Error(ErrorCode::SpotifyAPIError,
@@ -432,12 +415,9 @@ TResult<Track> SpotifyAPI::getTrack(std::string const &accessToken,
   (void)market;
   auto client = std::make_unique<RestClient::Connection>(cSpotifyAPIUrl);
   RestClient::HeaderFields headers;
-  headers.insert(
-      std::pair<std::string, std::string>("Accept", "application/json"));
-  headers.insert(
-      std::pair<std::string, std::string>("Content-Type", "application/json"));
-  headers.insert(std::pair<std::string, std::string>("Authorization",
-                                                     "Bearer " + accessToken));
+  headers.insert({"Accept", "application/json"});
+  headers.insert({"Content-Type", "application/json"});
+  headers.insert({"Authorization", "Bearer " + accessToken});
   client->SetHeaders(headers);
 
   client->SetTimeout(cRequestTimeout);
@@ -445,7 +425,7 @@ TResult<Track> SpotifyAPI::getTrack(std::string const &accessToken,
 
   nlohmann::json trackJson;
   if (response.code == cNoContent) {
-    LOG(INFO) << "[SpotifyAPI] in search, no content received" << std::endl;
+    LOG(INFO) << "SpotifyAPI.getTrack: No content received";
     return Track();
   }
   try {
@@ -466,7 +446,7 @@ TResult<Track> SpotifyAPI::getTrack(std::string const &accessToken,
   } catch (...) {
     // parse exception
     return Error(ErrorCode::SpotifyParseError,
-                 "[SpotifyAPI] received json couldn't be parsed");
+                 "Received json couldn't be parsed");
   }
   // if we reach here spotify sent an unexpected message
   return Error(ErrorCode::SpotifyAPIError,
@@ -491,8 +471,8 @@ Error SpotifyAPI::errorParser(SpotifyApi::SpotifyError const &error) {
     return Error(ErrorCode::SpotifyBadRequest, error.getMessage());
   } else {
     // unhandled spotify error
-    LOG(ERROR) << "[SpotifyAPI]: Unhandled Spotify Error " << error.getMessage()
-               << " Status: " << error.getStatus() << std::endl;
+    LOG(ERROR) << "SpotifyAPI.errorParser: Unhandled Spotify Error "
+               << error.getMessage() << " Status: " << error.getStatus();
     return Error(ErrorCode::SpotifyAPIError, error.getMessage());
   }
 }

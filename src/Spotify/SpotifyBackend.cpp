@@ -87,11 +87,14 @@ TResult<std::vector<BaseTrack>> SpotifyBackend::queryTracks(
                           .getUrl();  // on first place is the biggest one
     }
 
+    bool firstArtist = true;
     for (auto &artist : elem.getArtists()) {
-      track.artist += artist.getName() + " & ";
+      if (!firstArtist) {
+        track.artist += " & ";
+      }
+      track.artist += artist.getName();
+      firstArtist = false;
     }
-
-    track.artist.erase(track.artist.find_last_of(" & "), 3);
 
     tracks.emplace_back(track);
   }
@@ -163,17 +166,31 @@ TResult<PlaybackTrack> SpotifyBackend::getCurrentPlayback(void) {
                                 .getUrl();  // on first place is the biggest one
   }
 
+  bool firstArtist = true;
   for (auto &artist : playback.getCurrentPlayingTrack().getArtists()) {
-    playbackTrack.artist += artist.getName() + " & ";
+    if (!firstArtist) {
+      playbackTrack.artist += " & ";
+    }
+    playbackTrack.artist += artist.getName();
+    firstArtist = false;
   }
-  std::string test;
-  playbackTrack.artist.erase(playbackTrack.artist.find_last_of(" & "), 3);
 
   return playbackTrack;
 }
 
 TResultOpt SpotifyBackend::pause() {
   std::string token = mSpotifyAuth.getAccessToken();
+
+  TResult<Playback> playbackRes;
+  SPOTIFYCALL_WITH_REFRESH(
+      playbackRes, mSpotifyAPI.getCurrentPlayback(token), token);
+  auto playback = std::get<Playback>(playbackRes);
+
+  if (!playback.isPlaying()) {
+    VLOG(99) << "SpotifyBackend.pause: Playback already not playing";
+    return std::nullopt;
+  }
+
   TResultOpt pauseRes;
   SPOTIFYCALL_WITH_REFRESH_OPT(pauseRes, mSpotifyAPI.pause(token), token);
 
