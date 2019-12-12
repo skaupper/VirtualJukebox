@@ -24,7 +24,7 @@ class MusicBackend {
   virtual TResult<std::vector<BaseTrack>> queryTracks(
       std::string const &pattern, size_t const num) = 0;
   virtual TResultOpt setPlayback(BaseTrack const &track) = 0;
-  virtual TResult<PlaybackTrack> getCurrentPlayback(void) = 0;
+  virtual TResult<std::optional<PlaybackTrack>> getCurrentPlayback(void) = 0;
   virtual TResultOpt pause(void) = 0;
   virtual TResultOpt play() = 0;
   virtual TResult<size_t> getVolume(void) = 0;

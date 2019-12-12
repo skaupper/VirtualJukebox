@@ -56,9 +56,11 @@ class SpotifyBackend : public MusicBackend {
   /**
    * @brief returns the current playback of the active device as a playback
    * track
-   * @return actual playback track on success, otherwise Error
+   * @return actual playback track on success (or nothing if none is currently
+   * played), otherwise Error
    */
-  virtual TResult<PlaybackTrack> getCurrentPlayback(void) override;
+  virtual TResult<std::optional<PlaybackTrack>> getCurrentPlayback(
+      void) override;
 
   /**
    * @brief pauses the actual playback

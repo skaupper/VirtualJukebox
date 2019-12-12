@@ -68,7 +68,7 @@ class SpotifyAPI {
    * the given market (not implemented)
    * @details a playback is the actual status of the player, if its playing,
    * wich device, which track and so on..
-   * @return  if succeeded Playback object, else Error
+   * @return  if succeeded it returns eher a Playback object, else Error
    */
   TResult<Playback> getCurrentPlayback(std::string const &accessToken,
                                        std::string const &market = "AT");
