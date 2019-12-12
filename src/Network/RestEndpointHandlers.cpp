@@ -35,8 +35,6 @@ static shared_ptr<http_response> const mapErrorToResponse(Error const &err) {
   static const map<ErrorCode, int> ERROR_TO_HTTP_STATUS = {
       {ErrorCode::AccessDenied, 403},  //
       {ErrorCode::InvalidFormat, 422}  //
-
-      // TODO: add more error codes if they get fixed
   };
 
   int statusCode;
@@ -199,7 +197,7 @@ shared_ptr<http_response> const queryTracksHandler(
   // construct the response
   auto queriedTracks = get<vector<BaseTrack>>(result);
 
-  json jsonTracks;
+  json jsonTracks = json::array();
   for (auto &&track : queriedTracks) {
     jsonTracks.push_back(Serializer::serialize(track));
   }
@@ -229,9 +227,9 @@ shared_ptr<http_response> const getCurrentQueuesHandler(
   // construct the response
   auto queueStatus = get<QueueStatus>(result);
 
-  json playbackTrack;
-  json normalQueue;
-  json adminQueue;
+  json playbackTrack = json::object();
+  json normalQueue = json::array();
+  json adminQueue = json::array();
   if (queueStatus.currentTrack.has_value()) {
     playbackTrack = Serializer::serialize(queueStatus.currentTrack.value());
   }
