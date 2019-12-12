@@ -54,6 +54,9 @@ bool JukeBox::start(string const &exeName, string const &configFilePath) {
     return false;
   }
 
+  // TODO: check for available devices here? only works if initBackend blocks
+  // until an access token has been acquired
+
   mNetwork->handleRequests();
 
   return true;
