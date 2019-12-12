@@ -71,8 +71,8 @@ class SpotifyAPI {
    * wich device, which track and so on..
    * @return  if succeeded it returns eher a Playback object, else Error
    */
-  TResult<Playback> getCurrentPlayback(std::string const &accessToken,
-                                       std::string const &market = "AT");
+  TResult<std::optional<Playback>> getCurrentPlayback(
+      std::string const &accessToken, std::string const &market = "AT");
 
   /**
    * @brief searches for tracks,artists,albums or playlists with the given query

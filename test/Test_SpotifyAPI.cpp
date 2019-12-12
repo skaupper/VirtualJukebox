@@ -37,11 +37,11 @@ class SpotifyAPITest : public ::testing::Test {
 
  protected:
   std::string mAccessToken =
-      "BQA4ZHRnVqt_t1uPU6prjgKI0pM1M-"
-      "Sz2zEzQF2lBASjwYCDcWyZFGgpTf4EVQBLgg6M8lPfM2u5g-wkbIAuCgg_"
-      "k8Zd68dALcULbq-08kvFxwv7WKnubGkBRBoI-8M5DP91BljMbRtP_E3quYlpk-"
-      "PyQEk8xslCr6jlxYiceLQ6d38MVzKvz-B9gL68XB5wsVF4koV_DJ-"
-      "TKh5DDrJoqDHAj1OLfYpUUjaeZuce9TiP";
+      "BQB4Q_uFtZj8pUKfjNWKnt6_"
+      "SAwKca9erXth1jQkBvBq8O3sjnKuQyYEguCqfE82qOb9svGkd0X4sZZ0R4taJb4A0wj3VTEi"
+      "_qzPfls7f2NIjxs3HzMKD3JJmRghjam1F_"
+      "NPOBxQOqm1tZuM5u5tkQ3Fu1VN8DfLQbesimj9lWCRZQRj_siS6gJsyV2Q0LNdL_"
+      "SGJPMfpqY-GS0sm6XNQQHAP691PU6DAP8QFgzn9Qpd";
   SpotifyAPI mAPI;
   static std::string mPageString;
   static std::string mInvalidDeviceString;
@@ -87,7 +87,7 @@ TEST_F(SpotifyAPITest, GetCurrentPlaybackValid) {
     EXPECT_EQ(0, 1);
   } else {
     // playback can't get tested better, because the amount is user dependant
-    auto playback = get<Playback>(playbackRet);
+    auto playback = get<optional<Playback>>(playbackRet);
     EXPECT_EQ(1, 1);
   }
 }

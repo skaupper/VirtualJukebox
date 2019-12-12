@@ -138,8 +138,8 @@ TResult<std::vector<Device>> SpotifyAPI::getAvailableDevices(
   return std::get<Devices>(devicesRet).mDevices;
 }
 
-TResult<Playback> SpotifyAPI::getCurrentPlayback(std::string const &accessToken,
-                                                 std::string const &market) {
+TResult<std::optional<Playback>> SpotifyAPI::getCurrentPlayback(
+    std::string const &accessToken, std::string const &market) {
   (void)market;
 
   auto responseRet = spotifyCall(accessToken, "/v1/me/player", HttpGet);
@@ -150,11 +150,16 @@ TResult<Playback> SpotifyAPI::getCurrentPlayback(std::string const &accessToken,
 
   if (response.code == cNoContent) {
     LOG(INFO) << "SpotifyAPI.getCurrentPlayback: No content received";
-    return Playback();
+    return std::nullopt;
   }
 
   auto playbackRet = parseSpotifyCall<Playback>(response);
-  return playbackRet;
+  if (auto error = std::get_if<Error>(&playbackRet)) {
+    LOG(ERROR) << "SpotifyAPI.getCurrentPlayback: " << error->getErrorMessage()
+               << std::endl;
+    return *error;
+  }
+  return std::get<Playback>(playbackRet);
 }
 
 TResult<SpotifyPaging> SpotifyAPI::search(std::string const &accessToken,
@@ -308,8 +313,12 @@ TResult<Track> SpotifyAPI::getTrack(std::string const &accessToken,
   auto response = std::get<RestClient::Response>(responseRet);
 
   if (response.code == cNoContent) {
-    LOG(ERROR) << "SpotifyAPI.getTrack Spotify WebAPI Error, we never should reach here"<<std::endl;
-    return Error(ErrorCode::SpotifyAPIError,"SpotifyAPI.getTrack Spotify WebAPI Error, we never should reach here");
+    LOG(ERROR) << "SpotifyAPI.getTrack Spotify WebAPI Error, we never should "
+                  "reach here"
+               << std::endl;
+    return Error(
+        ErrorCode::SpotifyAPIError,
+        "SpotifyAPI.getTrack Spotify WebAPI Error, we never should reach here");
     return Track();
   }
 

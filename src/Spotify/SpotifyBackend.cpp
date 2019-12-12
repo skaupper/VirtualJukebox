@@ -144,15 +144,16 @@ TResultOpt SpotifyBackend::setPlayback(BaseTrack const &track) {
 TResult<std::optional<PlaybackTrack>> SpotifyBackend::getCurrentPlayback(void) {
   std::string token = mSpotifyAuth.getAccessToken();
 
-  TResult<Playback> playbackRes;
+  TResult<std::optional<Playback>> playbackRes;
   SPOTIFYCALL_WITH_REFRESH(
       playbackRes, mSpotifyAPI.getCurrentPlayback(token), token);
 
-  auto playback = std::get<Playback>(playbackRes);
-  if (!playback.getCurrentPlayingTrack().has_value()) {
+  auto playback = std::get<std::optional<Playback>>(playbackRes);
+  if (!playback.has_value()) {
     return std::nullopt;
   }
-  auto const &spotifyPlayingTrack = playback.getCurrentPlayingTrack().value();
+  auto const &spotifyPlayingTrack =
+      playback.value().getCurrentPlayingTrack().value();
 
   PlaybackTrack playbackTrack;
   playbackTrack.trackId = spotifyPlayingTrack.getUri();
@@ -160,9 +161,9 @@ TResult<std::optional<PlaybackTrack>> SpotifyBackend::getCurrentPlayback(void) {
   playbackTrack.iconUri = "";
   playbackTrack.duration = spotifyPlayingTrack.getDuration();
   playbackTrack.album = spotifyPlayingTrack.getAlbum().getName();
-  playbackTrack.isPlaying = playback.isPlaying();
+  playbackTrack.isPlaying = playback.value().isPlaying();
   playbackTrack.title = spotifyPlayingTrack.getName();
-  playbackTrack.progressMs = playback.getProgressMs();
+  playbackTrack.progressMs = playback.value().getProgressMs();
 
   if (!spotifyPlayingTrack.getAlbum().getImages().empty()) {
     playbackTrack.iconUri = spotifyPlayingTrack.getAlbum()
@@ -171,7 +172,8 @@ TResult<std::optional<PlaybackTrack>> SpotifyBackend::getCurrentPlayback(void) {
   }
 
   bool firstArtist = true;
-  for (auto &artist : playback.getCurrentPlayingTrack().getArtists()) {
+  for (auto &artist :
+       playback.value().getCurrentPlayingTrack().value().getArtists()) {
     if (!firstArtist) {
       playbackTrack.artist += " & ";
     }
@@ -185,13 +187,21 @@ TResult<std::optional<PlaybackTrack>> SpotifyBackend::getCurrentPlayback(void) {
 TResultOpt SpotifyBackend::pause() {
   std::string token = mSpotifyAuth.getAccessToken();
 
-  TResult<Playback> playbackRes;
-  SPOTIFYCALL_WITH_REFRESH(
-      playbackRes, mSpotifyAPI.getCurrentPlayback(token), token);
-  auto playback = std::get<Playback>(playbackRes);
+  // TResult<Playback> playbackRes;
+  // SPOTIFYCALL_WITH_REFRESH(
+  //     playbackRes, mSpotifyAPI.getCurrentPlayback(token), token);
+  // auto playback = std::get<Playback>(playbackRes);
 
-  if (!playback.isPlaying()) {
-    VLOG(99) << "SpotifyBackend.pause: Playback already not playing";
+  auto playbackRes = getCurrentPlayback();
+  if (auto error = std::get_if<Error>(&playbackRes)) {
+    return *error;
+  }
+
+  auto playback = std::get<std::optional<PlaybackTrack>>(playbackRes);
+
+  if (!playback.has_value() || !playback.value().isPlaying) {
+    VLOG(99)
+        << "SpotifyBackend.pause: Playback already not playing or no playback";
     return std::nullopt;
   }
 
@@ -212,12 +222,21 @@ TResultOpt SpotifyBackend::play() {
 TResult<size_t> SpotifyBackend::getVolume() {
   std::string token = mSpotifyAuth.getAccessToken();
 
-  TResult<Playback> playbackRes;
+  TResult<std::optional<Playback>> playbackRes;
   SPOTIFYCALL_WITH_REFRESH(
       playbackRes, mSpotifyAPI.getCurrentPlayback(token), token);
 
-  auto playback = std::get<Playback>(playbackRes);
-  return playback.getDevice().getVolume();
+  auto playback = std::get<std::optional<Playback>>(playbackRes);
+  if (!playback.has_value()) {
+    LOG(ERROR)
+        << "SpotifyBackend.getVolume: Cant get Volume when playback is empty"
+        << std::endl;
+    return Error(
+        ErrorCode::SpotifyBadRequest,
+        "SpotifyBackend.getVolume: Cant get Volume when playback is empty");
+  }
+
+  return playback.value().getDevice().getVolume();
 }
 
 TResultOpt SpotifyBackend::setVolume(size_t const percent) {

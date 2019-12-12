@@ -104,5 +104,14 @@ int main(void) {
     return -1;
   }
 
+  auto ret1 = api.play(accessToken);
+  auto ret2 = api.play(accessToken);
+
+  if (ret1.has_value()) {
+    cout << ret1.value().getErrorMessage();
+  }
+  if (ret2.has_value()) {
+    cout << ret1.value().getErrorMessage();
+  }
   return 0;
 }
