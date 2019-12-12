@@ -207,7 +207,7 @@ class Playback {
   size_t getProgressMs() const;
   bool isPlaying() const;
   std::string const &getCurrentPlayingType() const;
-  Track const &getCurrentPlayingTrack() const;
+  std::optional<Track> const &getCurrentPlayingTrack() const;
 
  private:
   Device mDevice;           /**< device that is currently active */
@@ -219,7 +219,7 @@ class Playback {
   bool mIsPlaying;    /**< if something is currently playing */
   std::string mCurrentPlayingType; /**< current playing type, can be "track",
                                      "episode", "ad", "unknown" */
-  Track mTrack;                    /**< currently playing track */
+  std::optional<Track> mTrack;     /**< currently playing track */
 };
 
 class SpotifyPaging {

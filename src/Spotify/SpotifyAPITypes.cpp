@@ -114,7 +114,12 @@ Playback::Playback(nlohmann::json const& playbackJson) {
     } else if (key == "currently_playing_type") {
       mCurrentPlayingType = value;
     } else if (key == "item") {
-      mTrack = Track(value);
+      // check for null values
+      if (value == nlohmann::json()) {
+        mTrack = std::nullopt;
+      } else {
+        mTrack = Track(value);
+      }
     }
   }
 }
@@ -131,7 +136,7 @@ std::string const& Playback::getRepeatState() const {
 size_t Playback::getProgressMs() const {
   return mProgressMs;
 }
-Track const& Playback::getCurrentPlayingTrack() const {
+std::optional<Track> const& Playback::getCurrentPlayingTrack() const {
   return mTrack;
 }
 std::string const& Playback::getCurrentPlayingType() const {

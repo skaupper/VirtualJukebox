@@ -141,27 +141,31 @@ TResultOpt SpotifyBackend::setPlayback(BaseTrack const &track) {
   return std::nullopt;
 }
 
-TResult<PlaybackTrack> SpotifyBackend::getCurrentPlayback(void) {
+TResult<std::optional<PlaybackTrack>> SpotifyBackend::getCurrentPlayback(void) {
   std::string token = mSpotifyAuth.getAccessToken();
 
   TResult<Playback> playbackRes;
   SPOTIFYCALL_WITH_REFRESH(
       playbackRes, mSpotifyAPI.getCurrentPlayback(token), token);
+
   auto playback = std::get<Playback>(playbackRes);
+  if (!playback.getCurrentPlayingTrack().has_value()) {
+    return std::nullopt;
+  }
+  auto const &spotifyPlayingTrack = playback.getCurrentPlayingTrack().value();
 
   PlaybackTrack playbackTrack;
-  playbackTrack.trackId = playback.getCurrentPlayingTrack().getUri();
+  playbackTrack.trackId = spotifyPlayingTrack.getUri();
   playbackTrack.artist = "";
   playbackTrack.iconUri = "";
-  playbackTrack.duration = playback.getCurrentPlayingTrack().getDuration();
-  playbackTrack.album = playback.getCurrentPlayingTrack().getAlbum().getName();
+  playbackTrack.duration = spotifyPlayingTrack.getDuration();
+  playbackTrack.album = spotifyPlayingTrack.getAlbum().getName();
   playbackTrack.isPlaying = playback.isPlaying();
-  playbackTrack.title = playback.getCurrentPlayingTrack().getName();
+  playbackTrack.title = spotifyPlayingTrack.getName();
   playbackTrack.progressMs = playback.getProgressMs();
 
-  if (!playback.getCurrentPlayingTrack().getAlbum().getImages().empty()) {
-    playbackTrack.iconUri = playback.getCurrentPlayingTrack()
-                                .getAlbum()
+  if (!spotifyPlayingTrack.getAlbum().getImages().empty()) {
+    playbackTrack.iconUri = spotifyPlayingTrack.getAlbum()
                                 .getImages()[0]
                                 .getUrl();  // on first place is the biggest one
   }
