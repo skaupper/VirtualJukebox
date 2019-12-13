@@ -58,7 +58,6 @@ shared_ptr<http_response> const RestRequestHandler::NotAllowedHandler(
   stringstream msg;
   msg << "Method '" << req.get_method() << "' is not allowed at endpoint '"
       << req.get_path() << "'!";
-  VLOG(1) << msg.str();
   return make_shared<string_response>(msg.str(), 405);
 }
 
@@ -78,7 +77,6 @@ shared_ptr<http_response> const RestRequestHandler::InternalErrorHandler(
     msg << "Exception:" << endl;
     msg << exceptionMessageOpt.value();
   }
-  LOG(ERROR) << msg.str();
   return make_shared<string_response>(msg.str(), 500);
 }
 
@@ -102,11 +100,12 @@ shared_ptr<http_response> const RestRequestHandler::render(
     return NotFoundHandler(req);
   }
 
-  VLOG(2) << "Path: " << req.get_path();
-  VLOG(2) << "Method: " << req.get_method();
-  VLOG(2) << "Body: " << req.get_content();
-  VLOG(2) << "Query parameters: " << req.get_querystring();
+  LOG(INFO) << "Path: " << req.get_path();
+  LOG(INFO) << "Method: " << req.get_method();
+  LOG(INFO) << "Body: " << req.get_content();
+  LOG(INFO) << "Query parameters: " << req.get_querystring();
 
+  // truncate the base path
   auto path = req.get_path().substr(API_BASE_PATH.size());
   auto response = decodeAndDispatch(RequestInformation{
       path,               //

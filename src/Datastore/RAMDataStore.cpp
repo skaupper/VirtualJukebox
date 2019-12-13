@@ -29,6 +29,8 @@ TResultOpt RAMDataStore::addUser(User const &user) {
   return nullopt;
 }
 
+// doesnt remove votes taken by this user
+TResult<User> RAMDataStore::removeUser(TSessionID const &ID) {
 TResult<User> RAMDataStore::getUser(TSessionID const &ID) {
   // Exclusive Access to User List
   unique_lock<shared_mutex> MyLock(mUserMutex);
@@ -87,17 +89,27 @@ TResultOpt RAMDataStore::addTrack(BaseTrack const &track, QueueType q) {
   // Exclusive Access to Song Queue
   unique_lock<shared_mutex> MyLock(mQueueMutex);
 
-  // select Queue
-  Queue *pQueue = SelectQueue(q);
-  if (pQueue == nullptr) {
+  // Get pointers for this Queue and for other Queue
+  Queue *pThisQueue = SelectQueue(q);
+  if (pThisQueue == nullptr) {
     return Error(ErrorCode::InvalidValue, "Invalid Parameter in Queue");
   }
+  Queue *pOtherQueue = q == QueueType::Admin ? &mNormalQueue : &mAdminQueue;
 
-  // check for existing Track
+  // check for existing Track in not selected Queue
   QueuedTrack qtr;
   qtr.trackId = track.trackId;
-  auto it = find(pQueue->tracks.begin(), pQueue->tracks.end(), qtr);
-  if (it == pQueue->tracks.end()) {
+  auto it = find(pOtherQueue->tracks.begin(), pOtherQueue->tracks.end(), qtr);
+  if (it != pOtherQueue->tracks.end()) {
+    // This Track already exists in the other Queue, dont add it here
+    return Error(ErrorCode::AlreadyExists,
+                 "Track already exists in other Queue");
+  }
+
+  // check for existing Track in selected Queue
+  qtr.trackId = track.trackId;
+  it = find(pThisQueue->tracks.begin(), pThisQueue->tracks.end(), qtr);
+  if (it == pThisQueue->tracks.end()) {
     // Track is unique, insert it into vector
     qtr.title = track.title;
     qtr.album = track.album;
@@ -107,10 +119,7 @@ TResultOpt RAMDataStore::addTrack(BaseTrack const &track, QueueType q) {
     qtr.addedBy = track.addedBy;
     qtr.votes = 0;
     qtr.insertedAt = time(nullptr);
-    qtr.LastPlayedxSongsAgo =
-        1;  // set to one so that votes of songs count immediately after
-            // insertion. See nextTrack and VoteTrack and Tracks operator<
-    pQueue->tracks.push_back(qtr);
+    pThisQueue->tracks.push_back(qtr);
     return nullopt;
   } else {
     return Error(ErrorCode::AlreadyExists, "Track already exists");
@@ -181,13 +190,7 @@ TResultOpt RAMDataStore::voteTrack(TSessionID const &sID,
   // find track in Queues
   QueuedTrack track;
   track.trackId = tID;
-  QueuedTrack *pAdminTrack = 0;
   QueuedTrack *pNormalTrack = 0;
-  auto it_admin =
-      find(mAdminQueue.tracks.begin(), mAdminQueue.tracks.end(), track);
-  if (it_admin != mAdminQueue.tracks.end()) {
-    pAdminTrack = &(*it_admin);
-  }
   auto it_normal =
       find(mNormalQueue.tracks.begin(), mNormalQueue.tracks.end(), track);
   if (it_normal != mNormalQueue.tracks.end()) {
@@ -207,9 +210,6 @@ TResultOpt RAMDataStore::voteTrack(TSessionID const &sID,
       // upvoted tracks and update vote counter in track
       it->votes.erase(it_track);
       // decrement its upvote counter
-      if (pAdminTrack != nullptr) {
-        pAdminTrack->votes--;
-      }
       if (pNormalTrack != nullptr) {
         pNormalTrack->votes--;
       }
@@ -221,9 +221,6 @@ TResultOpt RAMDataStore::voteTrack(TSessionID const &sID,
       // update counter
       it->votes.emplace_back(tID);
       // increment its upvote counter
-      if (pAdminTrack != nullptr) {
-        pAdminTrack->votes++;
-      }
       if (pNormalTrack != nullptr) {
         pNormalTrack->votes++;
       }
@@ -278,35 +275,20 @@ TResultOpt RAMDataStore::nextTrack() {
   // Exclusive Access to Song Queue
   unique_lock<shared_mutex> MyLock(mQueueMutex);
 
-  // Increment LastPlayed counter for all songs
-  for (size_t i = 0; i < mAdminQueue.tracks.size(); ++i) {
-    mAdminQueue.tracks[i].LastPlayedxSongsAgo += 1;
-  }
-  for (size_t i = 0; i < mNormalQueue.tracks.size(); ++i) {
-    mNormalQueue.tracks[i].LastPlayedxSongsAgo += 1;
-  }
-
   QueuedTrack tr;
 
-  // If there are songs in the Admin Queue, play the first of those and move it
-  // to the user queue
+  // If there are songs in the Admin Queue, play the first of those
   if (mAdminQueue.tracks.size()) {
     tr = mAdminQueue.tracks[0];
-
-    // move track from Admin Queue to user Queue if it doesn't already exist
-    // there and delete it from Admin Queue.
-    auto it = find(mNormalQueue.tracks.begin(), mNormalQueue.tracks.end(), tr);
-    if (it == mNormalQueue.tracks.end()) {
-      tr.LastPlayedxSongsAgo = 0;
-      mNormalQueue.tracks.push_back(tr);
-    } else {
-      it->LastPlayedxSongsAgo = 0;
-    }
     mAdminQueue.tracks.erase(mAdminQueue.tracks.begin());
-  } else {
+  } else if (mNormalQueue.tracks.size() != 0) {
     // no songs in the admin queue, use the first one from the user queue
     tr = mNormalQueue.tracks[0];
-    mNormalQueue.tracks[0].LastPlayedxSongsAgo = 0;
+    mNormalQueue.tracks.erase(mNormalQueue.tracks.begin());
+  } else {
+    // no next track available
+    return Error(ErrorCode::DoesntExist,
+                 "No more Tracks available in either Queue");
   }
 
   // sort Normal Queue
