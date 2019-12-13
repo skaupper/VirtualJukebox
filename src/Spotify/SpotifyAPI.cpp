@@ -155,8 +155,7 @@ TResult<std::optional<Playback>> SpotifyAPI::getCurrentPlayback(
 
   auto playbackRet = parseSpotifyCall<Playback>(response);
   if (auto error = std::get_if<Error>(&playbackRet)) {
-    LOG(ERROR) << "SpotifyAPI.getCurrentPlayback: " << error->getErrorMessage()
-               << std::endl;
+    LOG(ERROR) << "SpotifyAPI.getCurrentPlayback: " << error->getErrorMessage();
     return *error;
   }
   return std::get<Playback>(playbackRet);
@@ -225,7 +224,7 @@ TResultOpt SpotifyAPI::setVolume(std::string const &accessToken,
 
   // we should never reach here because this endpoint only sends Error or
   // noContent
-  LOG(ERROR) << "SpotifyAPI.setVolume: Fatal Error" << std::endl;
+  LOG(ERROR) << "SpotifyAPI.setVolume: Fatal Error";
   return Error(ErrorCode::SpotifyAPIError, "SpotifyAPI.setVolume: Fatal Error");
 }
 
@@ -255,7 +254,7 @@ TResultOpt SpotifyAPI::pause(std::string const &accessToken,
 
   // we should never reach here because this endpoint only sends Error or
   // noContent
-  LOG(ERROR) << "SpotifyAPI.pause: Fatal Error" << std::endl;
+  LOG(ERROR) << "SpotifyAPI.pause: Fatal Error";
   return Error(ErrorCode::SpotifyAPIError, "SpotifyAPI.pause: Fatal Error");
 }
 
@@ -296,7 +295,7 @@ TResultOpt SpotifyAPI::play(std::string const &accessToken,
 
   // we should never reach here because this endpoint only sends Error or
   // noContent
-  LOG(ERROR) << "SpotifyAPI.setVolume: Fatal Error" << std::endl;
+  LOG(ERROR) << "SpotifyAPI.play: Fatal Error";
   return Error(ErrorCode::SpotifyAPIError, "SpotifyAPI.play: Fatal Error");
 }
 
@@ -314,12 +313,10 @@ TResult<Track> SpotifyAPI::getTrack(std::string const &accessToken,
 
   if (response.code == cNoContent) {
     LOG(ERROR) << "SpotifyAPI.getTrack Spotify WebAPI Error, we never should "
-                  "reach here"
-               << std::endl;
+                  "reach here";
     return Error(
         ErrorCode::SpotifyAPIError,
         "SpotifyAPI.getTrack Spotify WebAPI Error, we never should reach here");
-    return Track();
   }
 
   auto trackRet = parseSpotifyCall<Track>(response);
@@ -356,7 +353,7 @@ TResultOpt SpotifyAPI::transferUsersPlayback(std::string const &accessToken,
 
   // we should never reach here because this endpoint only sends Error or
   // noContent
-  LOG(ERROR) << "SpotifyAPI.transferUsersPlayback: Fatal Error" << std::endl;
+  LOG(ERROR) << "SpotifyAPI.transferUsersPlayback: Fatal Error";
   return Error(ErrorCode::SpotifyAPIError,
                "SpotifyAPI.transferUsersPlayback: Fatal Error");
 }
