@@ -44,7 +44,7 @@ class SimpleScheduler {
    * Errors are printed within the function.
    */
 
-  enum SchedulerState { Idle, PlayNextSong, Playing };
+  enum SchedulerState { Idle, PlayNextSong, CheckPlaying, Playing };
   bool doSchedule();
 
   void threadFunc();
@@ -53,6 +53,10 @@ class SimpleScheduler {
   MusicBackend* mMusicBackend;
   SchedulerState mSchedulerState = Idle;
   PlaybackTrack mLastPlaybackTrack;
+
+  TResult<bool> areQueuesEmpty(void);
+  bool isTrackPlaying(PlaybackTrack const& last, PlaybackTrack const& current);
+  bool isTrackFinished(PlaybackTrack const& last, PlaybackTrack const& current);
 
   std::thread mThread;
 };
