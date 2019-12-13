@@ -48,6 +48,7 @@ void TrackScheduler::threadFunc() {
   while (1) {
     /* TODO: if (scheduler.isEnabled()) over this whole thing*/
     bool ret = doSchedule();
+    /* TODO: handle return values (see below) */
     if (ret) {
       LOG(INFO) << "TrackScheduler::threadFunc: Restarted scheduler.";
     }
@@ -80,7 +81,13 @@ bool TrackScheduler::doSchedule() {
     auto retSpotify = mMusicBackend->getCurrentPlayback();
     if (checkAlternativeError(retSpotify))
       return false;
-    PlaybackTrack trkSptfy = get<PlaybackTrack>(retSpotify);
+    auto retTrack = get<optional<PlaybackTrack>>(retSpotify);
+    if (!retTrack.has_value()) {
+      /* No track is currently playing - User needs to click 'Play' in order to
+       * start the scheduler. */
+      return false; /* TODO: return 1; */
+    }
+    PlaybackTrack trkSptfy = retTrack.value();
 
     /* Check consistency */
     if (!(trkStore == trkSptfy)) {
