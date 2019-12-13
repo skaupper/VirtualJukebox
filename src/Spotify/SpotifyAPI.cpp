@@ -19,13 +19,13 @@ TResult<Token> SpotifyAPI::getAccessToken(GrantType grantType,
                                           std::string clientID,
                                           std::string clientSecret) {
   (void)grantType;
+  LOG(INFO) << "SpotifyAPI.getAccessToken: Function called";
 
   // only authorization code supported until now ..
   assert(grantType == AuthorizationCode);
   auto client = std::make_unique<RestClient::Connection>(cSpotifyAuthUrl);
 
   // build body
-
   std::string body;
   body.append("grant_type=")
       .append("authorization_code")
@@ -76,7 +76,7 @@ TResult<Token> SpotifyAPI::refreshAccessToken(std::string const &refreshToken,
                                               std::string const &clientID,
                                               std::string const &clientSecret) {
   auto client = std::make_unique<RestClient::Connection>(cSpotifyAuthUrl);
-
+  LOG(INFO) << "SpotifyAPI.refreshAccessToken: Function called";
   // build body
 
   std::string body;
@@ -125,6 +125,8 @@ TResult<Token> SpotifyAPI::refreshAccessToken(std::string const &refreshToken,
 
 TResult<std::vector<Device>> SpotifyAPI::getAvailableDevices(
     std::string const &accessToken) {
+  LOG(INFO) << "SpotifyAPI.getAvailableDevices: Function called";
+
   auto responseRet = spotifyCall(accessToken, "/v1/me/player/devices", HttpGet);
   if (auto value = std::get_if<Error>(&responseRet)) {
     return *value;
@@ -142,6 +144,8 @@ TResult<std::optional<Playback>> SpotifyAPI::getCurrentPlayback(
     std::string const &accessToken, std::string const &market) {
   (void)market;
 
+  VLOG(100) << "SpotifyAPI.getCurrentPlayback: Function called";
+
   auto responseRet = spotifyCall(accessToken, "/v1/me/player", HttpGet);
   if (auto value = std::get_if<Error>(&responseRet)) {
     return *value;
@@ -158,6 +162,7 @@ TResult<std::optional<Playback>> SpotifyAPI::getCurrentPlayback(
     LOG(ERROR) << "SpotifyAPI.getCurrentPlayback: " << error->getErrorMessage();
     return *error;
   }
+  VLOG(100) << "SpotifyAPI.getCurrentPlayback: playback request succeeded";
   return std::get<Playback>(playbackRet);
 }
 
@@ -167,7 +172,7 @@ TResult<SpotifyPaging> SpotifyAPI::search(std::string const &accessToken,
                                           const int limit,
                                           int const offset,
                                           const std::string &market) {
-  auto client = std::make_unique<RestClient::Connection>(cSpotifyAPIUrl);
+  LOG(INFO) << "SpotifyAPI.search: Function called with querykey: " << queryKey;
 
   // build query
   std::stringstream queryStream;
@@ -195,6 +200,7 @@ TResult<SpotifyPaging> SpotifyAPI::search(std::string const &accessToken,
 TResultOpt SpotifyAPI::setVolume(std::string const &accessToken,
                                  int volume,
                                  const SpotifyApi::Device &device) {
+  LOG(INFO) << "SpotifyAPI.setVolume: Function called";
   // set upper and lower bounds
   volume = volume > 100 ? 100 : volume;
   volume = volume < 0 ? 0 : volume;
@@ -230,6 +236,7 @@ TResultOpt SpotifyAPI::setVolume(std::string const &accessToken,
 
 TResultOpt SpotifyAPI::pause(std::string const &accessToken,
                              const SpotifyApi::Device &device) {
+  LOG(INFO) << "SpotifyAPI.pause: Function called";
   // build query
   std::stringstream queryStream;
   if (!device.getID().empty()) {
@@ -262,6 +269,8 @@ TResultOpt SpotifyAPI::play(std::string const &accessToken,
                             std::vector<std::string> const &uris,
                             const SpotifyApi::Device &device,
                             int positionMs) {
+  LOG(INFO) << "SpotifyAPI.play: Function called";
+
   // build query
   std::stringstream queryStream;
   if (!device.getID().empty()) {
@@ -304,6 +313,8 @@ TResult<Track> SpotifyAPI::getTrack(std::string const &accessToken,
                                     const std::string &market) {
   (void)market;
 
+  LOG(INFO) << "SpotifyAPI.getTrack: Function called";
+
   auto responseRet =
       spotifyCall(accessToken, "/v1/tracks/" + spotifyID, HttpGet);
   if (auto value = std::get_if<Error>(&responseRet)) {
@@ -326,6 +337,8 @@ TResult<Track> SpotifyAPI::getTrack(std::string const &accessToken,
 TResultOpt SpotifyAPI::transferUsersPlayback(std::string const &accessToken,
                                              std::vector<Device> const &devices,
                                              bool play) {
+  LOG(INFO) << "SpotifyAPI.transferUsersPlayback: Function called";
+
   // build body
   nlohmann::json body;
   body["device_ids"] = nlohmann::json::array();
