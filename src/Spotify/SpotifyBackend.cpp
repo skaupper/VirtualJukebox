@@ -130,6 +130,11 @@ TResultOpt SpotifyBackend::setPlayback(BaseTrack const &track) {
         });
     if (dev != devices.cend()) {
       device = *dev;
+    } else {
+      // select first device if nothing is stored in the config file
+      if (!devices.empty()) {
+        device = devices[0];
+      }
     }
   }
 
