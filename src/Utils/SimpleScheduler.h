@@ -19,42 +19,42 @@
 #include "Types/Result.h"
 
 class SimpleScheduler {
-public:
-    SimpleScheduler(DataStore* const datastore, MusicBackend* const musicbackend);
-    ~SimpleScheduler();
+ public:
+  SimpleScheduler(DataStore* const datastore, MusicBackend* const musicbackend);
+  ~SimpleScheduler();
 
-    /**
-     * @brief Starts the scheduler thread.
-     */
-    void start();
+  /**
+   * @brief Starts the scheduler thread.
+   */
+  void start();
 
-    /* TODO: functions below */
-    /* enable() */
-    /* disable() */
-    /* notify() */
+  /* TODO: functions below */
+  /* enable() */
+  /* disable() */
+  /* notify() */
 
-private:
-    /**
-     * @brief Schedules one track after another.
-     * @details The next track is set to play, when the currently playing track
-     * reaches its' end. The thread only wakes up shortly before a tracks' end.
-     * The function also performs a consistency check between the DataStore and
-     * Spotify.
-     * @return True on success, false otherwise.
-     * Errors are printed within the function.
-     */
+ private:
+  /**
+   * @brief Schedules one track after another.
+   * @details The next track is set to play, when the currently playing track
+   * reaches its' end. The thread only wakes up shortly before a tracks' end.
+   * The function also performs a consistency check between the DataStore and
+   * Spotify.
+   * @return True on success, false otherwise.
+   * Errors are printed within the function.
+   */
 
-    enum SchedulerState{Idle,PlayNextSong,Playing};
-    bool doSchedule();
+  enum SchedulerState { Idle, PlayNextSong, Playing };
+  bool doSchedule();
 
-    void threadFunc();
+  void threadFunc();
 
-    DataStore* mDataStore;
-    MusicBackend* mMusicBackend;
-    SchedulerState mSchedulerState = Idle;
-    PlaybackTrack mLastPlaybackTrack;
+  DataStore* mDataStore;
+  MusicBackend* mMusicBackend;
+  SchedulerState mSchedulerState = Idle;
+  PlaybackTrack mLastPlaybackTrack;
 
-    std::thread mThread;
+  std::thread mThread;
 };
 
 #endif /* SIMPLE_SCHEDULER_H_INCLUDED */

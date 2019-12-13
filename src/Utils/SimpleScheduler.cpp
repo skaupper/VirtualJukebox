@@ -13,7 +13,7 @@
 using namespace std;
 
 SimpleScheduler::SimpleScheduler(DataStore* const datastore,
-                               MusicBackend* const musicbackend) {
+                                 MusicBackend* const musicbackend) {
   if (datastore == nullptr)
     LOG(ERROR) << "TrackScheduler Ctor: datastore is nullptr!";
   if (musicbackend == nullptr)
@@ -54,7 +54,7 @@ void SimpleScheduler::threadFunc() {
     }
     if (!ret) {
       LOG(ERROR)
-              << "TrackScheduler::threadFunc: doSchedule returned with an error";
+          << "TrackScheduler::threadFunc: doSchedule returned with an error";
       break;
     }
   }
@@ -73,32 +73,27 @@ bool SimpleScheduler::doSchedule() {
   this_thread::sleep_for(chrono::milliseconds(1000));
 
   auto playbackTrackRet = mMusicBackend->getCurrentPlayback();
-  if(auto error = std::get_if<Error>(&playbackTrackRet)){
-    LOG(ERROR)<< "SimpleScheduler: "<<error->getErrorMessage();
-    return false; // do nothing
+  if (auto error = std::get_if<Error>(&playbackTrackRet)) {
+    LOG(ERROR) << "SimpleScheduler: " << error->getErrorMessage();
+    return false;  // do nothing
   }
-  auto playbackTrackOpt = std::get<std::optional<PlaybackTrack>>(playbackTrackRet);
+  auto playbackTrackOpt =
+      std::get<std::optional<PlaybackTrack>>(playbackTrackRet);
 
-  switch(mSchedulerState){
-    case Idle:{
-      mDataStore->
+  switch (mSchedulerState) {
+    case Idle: {
+    } break;
 
-    }break;
+    case PlayNextSong: {
+    } break;
 
-    case PlayNextSong:{
-
-    }break;
-
-    case Playing:{
-
-    }break;
+    case Playing: {
+    } break;
   }
 
-
-  if(playbackTrackOpt.has_value()){
+  if (playbackTrackOpt.has_value()) {
     lastPlaybackTrack = playbackTrackOpt.value();
-  }
-  else{
+  } else {
     lastPlaybackTrack = PlaybackTrack();
   }
 
