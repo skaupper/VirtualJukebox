@@ -80,6 +80,22 @@ class Device {
 };
 
 /**
+ * @brief wrapper class for multiple devices
+ */
+class Devices {
+ public:
+  Devices() = default;
+  Devices(nlohmann::json const &devicesJson) {
+    if (devicesJson.find("devices") != devicesJson.end()) {
+      for (nlohmann::json const &elem : devicesJson["devices"]) {
+        mDevices.emplace_back(Device(elem));
+      }
+    }
+  }
+  std::vector<Device> mDevices;
+};
+
+/**
  * @brief simplified artist object
  */
 class Artist {
@@ -191,7 +207,7 @@ class Playback {
   size_t getProgressMs() const;
   bool isPlaying() const;
   std::string const &getCurrentPlayingType() const;
-  Track const &getCurrentPlayingTrack() const;
+  std::optional<Track> const &getCurrentPlayingTrack() const;
 
  private:
   Device mDevice;           /**< device that is currently active */
@@ -203,7 +219,7 @@ class Playback {
   bool mIsPlaying;    /**< if something is currently playing */
   std::string mCurrentPlayingType; /**< current playing type, can be "track",
                                      "episode", "ad", "unknown" */
-  Track mTrack;                    /**< currently playing track */
+  std::optional<Track> mTrack;     /**< currently playing track */
 };
 
 class SpotifyPaging {
@@ -246,6 +262,17 @@ class SpotifyError {
  private:
   int mStatus;          /**< http status code */
   std::string mMessage; /**< a short description of the cause of the error */
+};
+
+/**
+ * @brief type gets used, when only no content data or Error get received
+ */
+class SpotifyDummy {
+ public:
+  SpotifyDummy() = default;
+  SpotifyDummy(nlohmann::json const &dummyJson) {
+    (void)dummyJson;
+  }
 };
 
 }  // namespace SpotifyApi

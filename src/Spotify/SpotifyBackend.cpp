@@ -103,6 +103,7 @@ TResult<std::vector<BaseTrack>> SpotifyBackend::queryTracks(
 }
 
 TResultOpt SpotifyBackend::setPlayback(BaseTrack const &track) {
+  std::unique_lock<std::mutex> myLock(mPlayPauseMtx);
   std::string token = mSpotifyAuth.getAccessToken();
 
   // check if playing devices are available
@@ -112,7 +113,7 @@ TResultOpt SpotifyBackend::setPlayback(BaseTrack const &track) {
 
   auto devices = std::get<std::vector<Device>>(devicesRet);
   if (devices.empty()) {
-    return Error(ErrorCode::KeyNotFound,
+    return Error(ErrorCode::SpotifyNoDevice,
                  "No devices for playing the track available");
   }
 
@@ -132,6 +133,26 @@ TResultOpt SpotifyBackend::setPlayback(BaseTrack const &track) {
     }
   }
 
+  // check if a playback is available
+  TResult<std::optional<Playback>> playbackRes;
+  SPOTIFYCALL_WITH_REFRESH(
+      playbackRes, mSpotifyAPI.getCurrentPlayback(token), token);
+
+  auto playback = std::get<std::optional<Playback>>(playbackRes);
+
+  // if not set a playback to the current device
+  if (!playback.has_value()) {
+    TResultOpt ret;
+    ret = mSpotifyAPI.transferUsersPlayback(token, std::vector<Device>{device});
+    if (ret.has_value()) {
+      LOG(ERROR) << "SpotifyBackend.setPlayback: "
+                 << ret.value().getErrorMessage() << std::endl;
+      return ret.value();
+    }
+  }
+
+  auto playbackRet = mSpotifyAPI.getCurrentPlayback(token);
+
   TResultOpt playRes;
   SPOTIFYCALL_WITH_REFRESH_OPT(
       playRes,
@@ -141,33 +162,39 @@ TResultOpt SpotifyBackend::setPlayback(BaseTrack const &track) {
   return std::nullopt;
 }
 
-TResult<PlaybackTrack> SpotifyBackend::getCurrentPlayback(void) {
+TResult<std::optional<PlaybackTrack>> SpotifyBackend::getCurrentPlayback(void) {
   std::string token = mSpotifyAuth.getAccessToken();
 
-  TResult<Playback> playbackRes;
+  TResult<std::optional<Playback>> playbackRes;
   SPOTIFYCALL_WITH_REFRESH(
       playbackRes, mSpotifyAPI.getCurrentPlayback(token), token);
-  auto playback = std::get<Playback>(playbackRes);
+
+  auto playback = std::get<std::optional<Playback>>(playbackRes);
+  if (!playback.has_value()) {
+    return std::nullopt;
+  }
+  auto const &spotifyPlayingTrack =
+      playback.value().getCurrentPlayingTrack().value();
 
   PlaybackTrack playbackTrack;
-  playbackTrack.trackId = playback.getCurrentPlayingTrack().getUri();
+  playbackTrack.trackId = spotifyPlayingTrack.getUri();
   playbackTrack.artist = "";
   playbackTrack.iconUri = "";
-  playbackTrack.duration = playback.getCurrentPlayingTrack().getDuration();
-  playbackTrack.album = playback.getCurrentPlayingTrack().getAlbum().getName();
-  playbackTrack.isPlaying = playback.isPlaying();
-  playbackTrack.title = playback.getCurrentPlayingTrack().getName();
-  playbackTrack.progressMs = playback.getProgressMs();
+  playbackTrack.duration = spotifyPlayingTrack.getDuration();
+  playbackTrack.album = spotifyPlayingTrack.getAlbum().getName();
+  playbackTrack.isPlaying = playback.value().isPlaying();
+  playbackTrack.title = spotifyPlayingTrack.getName();
+  playbackTrack.progressMs = playback.value().getProgressMs();
 
-  if (!playback.getCurrentPlayingTrack().getAlbum().getImages().empty()) {
-    playbackTrack.iconUri = playback.getCurrentPlayingTrack()
-                                .getAlbum()
+  if (!spotifyPlayingTrack.getAlbum().getImages().empty()) {
+    playbackTrack.iconUri = spotifyPlayingTrack.getAlbum()
                                 .getImages()[0]
                                 .getUrl();  // on first place is the biggest one
   }
 
   bool firstArtist = true;
-  for (auto &artist : playback.getCurrentPlayingTrack().getArtists()) {
+  for (auto &artist :
+       playback.value().getCurrentPlayingTrack().value().getArtists()) {
     if (!firstArtist) {
       playbackTrack.artist += " & ";
     }
@@ -179,15 +206,19 @@ TResult<PlaybackTrack> SpotifyBackend::getCurrentPlayback(void) {
 }
 
 TResultOpt SpotifyBackend::pause() {
+  std::unique_lock<std::mutex> myLock(mPlayPauseMtx);
   std::string token = mSpotifyAuth.getAccessToken();
 
-  TResult<Playback> playbackRes;
-  SPOTIFYCALL_WITH_REFRESH(
-      playbackRes, mSpotifyAPI.getCurrentPlayback(token), token);
-  auto playback = std::get<Playback>(playbackRes);
+  auto playbackRes = getCurrentPlayback();
+  if (auto error = std::get_if<Error>(&playbackRes)) {
+    return *error;
+  }
 
-  if (!playback.isPlaying()) {
-    VLOG(99) << "SpotifyBackend.pause: Playback already not playing";
+  auto playback = std::get<std::optional<PlaybackTrack>>(playbackRes);
+
+  if (!playback.has_value() || !playback.value().isPlaying) {
+    VLOG(99)
+        << "SpotifyBackend.pause: Playback already not playing or no playback";
     return std::nullopt;
   }
 
@@ -198,6 +229,23 @@ TResultOpt SpotifyBackend::pause() {
 }
 
 TResultOpt SpotifyBackend::play() {
+  std::unique_lock<std::mutex> myLock(mPlayPauseMtx);
+
+  auto playbackRes = getCurrentPlayback();
+  if (auto error = std::get_if<Error>(&playbackRes)) {
+    return *error;
+  }
+  auto playback = std::get<std::optional<PlaybackTrack>>(playbackRes);
+
+  if (!playback.has_value()) {
+    VLOG(99)
+        << "SpotifyBackend.play: Error cant resume when no playback available";
+    return Error(ErrorCode::SpotifyBadRequest,
+                 "Error, cant resume when no playback available");
+  } else if (playback.value().isPlaying) {
+    VLOG(99) << "SpotifyBackend.play: Playback already playing";
+    return std::nullopt;
+  }
   std::string token = mSpotifyAuth.getAccessToken();
   TResultOpt playRes;
   SPOTIFYCALL_WITH_REFRESH_OPT(playRes, mSpotifyAPI.play(token), token);
@@ -206,17 +254,28 @@ TResultOpt SpotifyBackend::play() {
 }
 
 TResult<size_t> SpotifyBackend::getVolume() {
+  std::unique_lock<std::mutex> myLock(mVolumeMtx);
   std::string token = mSpotifyAuth.getAccessToken();
 
-  TResult<Playback> playbackRes;
+  TResult<std::optional<Playback>> playbackRes;
   SPOTIFYCALL_WITH_REFRESH(
       playbackRes, mSpotifyAPI.getCurrentPlayback(token), token);
 
-  auto playback = std::get<Playback>(playbackRes);
-  return playback.getDevice().getVolume();
+  auto playback = std::get<std::optional<Playback>>(playbackRes);
+  if (!playback.has_value()) {
+    LOG(ERROR)
+        << "SpotifyBackend.getVolume: Cant get Volume when playback is empty"
+        << std::endl;
+    return Error(
+        ErrorCode::SpotifyBadRequest,
+        "SpotifyBackend.getVolume: Cant get Volume when playback is empty");
+  }
+
+  return playback.value().getDevice().getVolume();
 }
 
 TResultOpt SpotifyBackend::setVolume(size_t const percent) {
+  std::unique_lock<std::mutex> myLock(mVolumeMtx);
   std::string token = mSpotifyAuth.getAccessToken();
 
   // check if playing devices are available
@@ -226,7 +285,7 @@ TResultOpt SpotifyBackend::setVolume(size_t const percent) {
 
   auto devices = std::get<std::vector<Device>>(devicesRet);
   if (devices.empty()) {
-    return Error(ErrorCode::KeyNotFound,
+    return Error(ErrorCode::SpotifyNoDevice,
                  "No devices for playing the track available");
   }
 

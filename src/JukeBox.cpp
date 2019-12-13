@@ -118,6 +118,8 @@ TResult<QueueStatus> JukeBox::getCurrentQueues(TSessionID const &) {
 
   /* Construct current PlaybackTrack through combining of information
    * in DataStore and Spotify */
+
+  // TODO: the datastore should support optional playing tracks too
   auto trackStore = mDataStore->getPlayingTrack();
   if (holds_alternative<Error>(trackStore))
     return get<Error>(trackStore);
@@ -136,7 +138,14 @@ TResult<QueueStatus> JukeBox::getCurrentQueues(TSessionID const &) {
   if (holds_alternative<Error>(trackSpotify))
     return get<Error>(trackSpotify);
 
-  PlaybackTrack pbtSpotify = get<PlaybackTrack>(trackSpotify);
+  auto pbtSpotifyOpt = get<optional<PlaybackTrack>>(trackSpotify);
+  if (!pbtSpotifyOpt.has_value()) {
+    // TODO: should double check with data store object
+    qs.currentTrack = nullopt;
+    return qs;
+  }
+
+  PlaybackTrack pbtSpotify = pbtSpotifyOpt.value();
   pbt.progressMs = pbtSpotify.progressMs;
   pbt.isPlaying = pbtSpotify.isPlaying;
 
