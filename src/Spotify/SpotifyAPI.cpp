@@ -16,8 +16,8 @@ using namespace SpotifyApi;
 TResult<Token> SpotifyAPI::getAccessToken(GrantType grantType,
                                           std::string const &code,
                                           std::string const &redirectUri,
-                                          std::string clientID,
-                                          std::string clientSecret) {
+                                          std::string const &clientID,
+                                          std::string const &clientSecret) {
   (void)grantType;
   LOG(INFO) << "SpotifyAPI.getAccessToken: Function called";
 

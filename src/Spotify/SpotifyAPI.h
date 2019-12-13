@@ -35,8 +35,8 @@ class SpotifyAPI {
   TResult<Token> getAccessToken(GrantType grantType,
                                 std::string const &code,
                                 std::string const &redirectUri,
-                                std::string clientID,
-                                std::string clientSecret);
+                                std::string const &clientID,
+                                std::string const &clientSecret);
 
   /**
    * @brief requests with the refresh token a new access token
