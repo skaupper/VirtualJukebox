@@ -29,8 +29,6 @@ TResultOpt RAMDataStore::addUser(User const &user) {
   return nullopt;
 }
 
-// doesnt remove votes taken by this user
-TResult<User> RAMDataStore::removeUser(TSessionID const &ID) {
 TResult<User> RAMDataStore::getUser(TSessionID const &ID) {
   // Exclusive Access to User List
   unique_lock<shared_mutex> MyLock(mUserMutex);

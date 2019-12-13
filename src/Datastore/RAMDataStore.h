@@ -35,6 +35,13 @@ class RAMDataStore : public DataStore {
    */
   TResultOpt addUser(User const &user);
   /**
+   * @brief    Get a User from the internal List of registered Users
+   * @param    TSessionID The ID of the User we want to get
+   * @retval   TResult<User> containing either the requested user  or an
+   * Error Message
+   */
+  TResult<User> getUser(TSessionID const &ID);
+  /**
    * @brief    Remove a User from the internal List of registered Users. Does
    * not remove votes taken by this user from the corresponding tracks
    * @param    ID ID number of the User to remove

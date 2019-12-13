@@ -25,11 +25,13 @@ static TResult<json const> parseJsonString(string const &str) {
   try {
     return json::parse(str);
   } catch (json::parse_error const &) {
+    VLOG(2) << "Failed to parse JSON body";
     return Error(ErrorCode::InvalidFormat, "Failed to parse body");
   }
 }
 
 static shared_ptr<http_response> const mapErrorToResponse(Error const &err) {
+  // TODO: extend the list of known error codes
   static const map<ErrorCode, int> ERROR_TO_HTTP_STATUS = {
       {ErrorCode::AccessDenied, 403},  //
       {ErrorCode::InvalidFormat, 422}  //
@@ -50,6 +52,8 @@ static shared_ptr<http_response> const mapErrorToResponse(Error const &err) {
     statusCode = statusCodeIt->second;
     msg = err.getErrorMessage();
   }
+
+  VLOG(2) << "Request lead to error: " << msg;
 
   // construct response
   json responseBody = {
@@ -191,7 +195,7 @@ shared_ptr<http_response> const queryTracksHandler(
   }
 
   // construct the response
-  auto queriedTracks = get<0>(result);
+  auto queriedTracks = get<vector<BaseTrack>>(result);
 
   json jsonTracks = json::array();
   for (auto &&track : queriedTracks) {
@@ -199,7 +203,6 @@ shared_ptr<http_response> const queryTracksHandler(
   }
 
   json responseBody = {{"tracks", jsonTracks}};
-
   return make_shared<string_response>(responseBody.dump());
 }
 
@@ -222,6 +225,7 @@ shared_ptr<http_response> const getCurrentQueuesHandler(
   }
 
   // construct the response
+  auto queueStatus = get<QueueStatus>(result);
 
   json playbackTrack = json::object();
   json normalQueue = json::array();
@@ -239,7 +243,6 @@ shared_ptr<http_response> const getCurrentQueuesHandler(
   json responseBody = {{"currently_playing", playbackTrack},
                        {"normal_queue", normalQueue},
                        {"admin_queue", adminQueue}};
-
   return make_shared<string_response>(responseBody.dump());
 }
 
@@ -249,7 +252,7 @@ shared_ptr<http_response> const getCurrentQueuesHandler(
 
 shared_ptr<http_response> const addTrackToQueueHandler(
     NetworkListener *listener, RequestInformation const &infos) {
-  assert(listener);  // parse body into JSON object
+  assert(listener);
 
   auto parseResult = parseJsonString(infos.body);
   if (holds_alternative<Error>(parseResult)) {
@@ -298,6 +301,7 @@ shared_ptr<http_response> const addTrackToQueueHandler(
 shared_ptr<http_response> const voteTrackHandler(
     NetworkListener *listener, RequestInformation const &infos) {
   assert(listener);
+
   auto parseResult = parseJsonString(infos.body);
   if (holds_alternative<Error>(parseResult)) {
     return mapErrorToResponse(get<Error>(parseResult));
@@ -331,6 +335,7 @@ shared_ptr<http_response> const voteTrackHandler(
 shared_ptr<http_response> const controlPlayerHandler(
     NetworkListener *listener, RequestInformation const &infos) {
   assert(listener);
+
   auto parseResult = parseJsonString(infos.body);
   if (holds_alternative<Error>(parseResult)) {
     return mapErrorToResponse(get<Error>(parseResult));
@@ -382,6 +387,7 @@ shared_ptr<http_response> const controlPlayerHandler(
 shared_ptr<http_response> const moveTracksHandler(
     NetworkListener *listener, RequestInformation const &infos) {
   assert(listener);
+
   auto parseResult = parseJsonString(infos.body);
   if (holds_alternative<Error>(parseResult)) {
     return mapErrorToResponse(get<Error>(parseResult));
