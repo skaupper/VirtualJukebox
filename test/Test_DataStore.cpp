@@ -37,7 +37,7 @@ TEST(DataStoreTest, GetQueue_1Normal) {
   tr.title = "anfjbsjdfb";
   tr.album = "sjfsdjfs";
   tr.artist = "uashdbfisud";
-  tr.duration = 100;
+  tr.durationMs = 100;
   tr.iconUri = "aishdkabsjdb";
   tr.addedBy = "aisdliahsld";
 
@@ -55,7 +55,7 @@ TEST(DataStoreTest, GetQueue_1Normal) {
   ASSERT_EQ(q.tracks[0].title, tr.title);
   ASSERT_EQ(q.tracks[0].album, tr.album);
   ASSERT_EQ(q.tracks[0].artist, tr.artist);
-  ASSERT_EQ(q.tracks[0].duration, tr.duration);
+  ASSERT_EQ(q.tracks[0].durationMs, tr.durationMs);
   ASSERT_EQ(q.tracks[0].iconUri, tr.iconUri);
   ASSERT_EQ(q.tracks[0].addedBy, tr.addedBy);
 }
@@ -67,7 +67,7 @@ TEST(DataStoreTest, GetQueue_1Admin) {
   tr.title = "anfjbsjdfb";
   tr.album = "sjfsdjfs";
   tr.artist = "uashdbfisud";
-  tr.duration = 100;
+  tr.durationMs = 100;
   tr.iconUri = "aishdkabsjdb";
   tr.addedBy = "aisdliahsld";
 
@@ -85,7 +85,7 @@ TEST(DataStoreTest, GetQueue_1Admin) {
   ASSERT_EQ(q.tracks[0].title, tr.title);
   ASSERT_EQ(q.tracks[0].album, tr.album);
   ASSERT_EQ(q.tracks[0].artist, tr.artist);
-  ASSERT_EQ(q.tracks[0].duration, tr.duration);
+  ASSERT_EQ(q.tracks[0].durationMs, tr.durationMs);
   ASSERT_EQ(q.tracks[0].iconUri, tr.iconUri);
   ASSERT_EQ(q.tracks[0].addedBy, tr.addedBy);
 }
@@ -193,7 +193,7 @@ TEST(DataStoreTest, votetest) {
   tr1.title = "anfjbsjdfb";
   tr1.album = "sjfsdjfs";
   tr1.artist = "uashdbfisud";
-  tr1.duration = 100;
+  tr1.durationMs = 100;
   tr1.iconUri = "aishdkabsjdb";
   tr1.addedBy = "aisdliahsld";
   BaseTrack tr2;
@@ -201,7 +201,7 @@ TEST(DataStoreTest, votetest) {
   tr2.title = "anfjb234sjdfb";
   tr2.album = "sjfs5345djfs";
   tr2.artist = "uash645dbfisud";
-  tr2.duration = 10230;
+  tr2.durationMs = 10230;
   tr2.iconUri = "aishd234kabsjdb";
   tr2.addedBy = "aisdli6434ahsld";
   BaseTrack tr3;
@@ -209,7 +209,7 @@ TEST(DataStoreTest, votetest) {
   tr3.title = "anfjb234sjdfb";
   tr3.album = "sjfs5345djfs";
   tr3.artist = "uash645dbfisud";
-  tr3.duration = 10230;
+  tr3.durationMs = 10230;
   tr3.iconUri = "aishd234kabsjdb";
   tr3.addedBy = "aisdli6434ahsld";
   BaseTrack tr4;
@@ -217,7 +217,7 @@ TEST(DataStoreTest, votetest) {
   tr4.title = "anfjb234sjdfb";
   tr4.album = "sjfs5345djfs";
   tr4.artist = "uash645dbfisud";
-  tr4.duration = 10230;
+  tr4.durationMs = 10230;
   tr4.iconUri = "aishd234kabsjdb";
   tr4.addedBy = "aisdli6434ahsld";
 
@@ -254,14 +254,14 @@ TEST(DataStoreTest, votetest) {
   ASSERT_EQ(q.tracks[0].title, tr1.title);
   ASSERT_EQ(q.tracks[0].album, tr1.album);
   ASSERT_EQ(q.tracks[0].artist, tr1.artist);
-  ASSERT_EQ(q.tracks[0].duration, tr1.duration);
+  ASSERT_EQ(q.tracks[0].durationMs, tr1.durationMs);
   ASSERT_EQ(q.tracks[0].iconUri, tr1.iconUri);
   ASSERT_EQ(q.tracks[0].addedBy, tr1.addedBy);
   ASSERT_EQ(q.tracks[1].trackId, tr2.trackId);
   ASSERT_EQ(q.tracks[1].title, tr2.title);
   ASSERT_EQ(q.tracks[1].album, tr2.album);
   ASSERT_EQ(q.tracks[1].artist, tr2.artist);
-  ASSERT_EQ(q.tracks[1].duration, tr2.duration);
+  ASSERT_EQ(q.tracks[1].durationMs, tr2.durationMs);
   ASSERT_EQ(q.tracks[1].iconUri, tr2.iconUri);
   ASSERT_EQ(q.tracks[1].addedBy, tr2.addedBy);
 
@@ -273,14 +273,14 @@ TEST(DataStoreTest, votetest) {
   ASSERT_EQ(q.tracks[0].title, tr3.title);
   ASSERT_EQ(q.tracks[0].album, tr3.album);
   ASSERT_EQ(q.tracks[0].artist, tr3.artist);
-  ASSERT_EQ(q.tracks[0].duration, tr3.duration);
+  ASSERT_EQ(q.tracks[0].durationMs, tr3.durationMs);
   ASSERT_EQ(q.tracks[0].iconUri, tr3.iconUri);
   ASSERT_EQ(q.tracks[0].addedBy, tr3.addedBy);
   ASSERT_EQ(q.tracks[1].trackId, tr4.trackId);
   ASSERT_EQ(q.tracks[1].title, tr4.title);
   ASSERT_EQ(q.tracks[1].album, tr4.album);
   ASSERT_EQ(q.tracks[1].artist, tr4.artist);
-  ASSERT_EQ(q.tracks[1].duration, tr4.duration);
+  ASSERT_EQ(q.tracks[1].durationMs, tr4.durationMs);
   ASSERT_EQ(q.tracks[1].iconUri, tr4.iconUri);
   ASSERT_EQ(q.tracks[1].addedBy, tr4.addedBy);
 
@@ -304,7 +304,7 @@ TEST(DataStoreTest, votetest) {
   ASSERT_EQ(q.tracks[0].title, tr1.title);
   ASSERT_EQ(q.tracks[0].album, tr1.album);
   ASSERT_EQ(q.tracks[0].artist, tr1.artist);
-  ASSERT_EQ(q.tracks[0].duration, tr1.duration);
+  ASSERT_EQ(q.tracks[0].durationMs, tr1.durationMs);
   ASSERT_EQ(q.tracks[0].iconUri, tr1.iconUri);
   ASSERT_EQ(q.tracks[0].addedBy, tr1.addedBy);
   ASSERT_EQ(q.tracks[0].votes, 0);
@@ -312,7 +312,7 @@ TEST(DataStoreTest, votetest) {
   ASSERT_EQ(q.tracks[1].title, tr2.title);
   ASSERT_EQ(q.tracks[1].album, tr2.album);
   ASSERT_EQ(q.tracks[1].artist, tr2.artist);
-  ASSERT_EQ(q.tracks[1].duration, tr2.duration);
+  ASSERT_EQ(q.tracks[1].durationMs, tr2.durationMs);
   ASSERT_EQ(q.tracks[1].iconUri, tr2.iconUri);
   ASSERT_EQ(q.tracks[1].addedBy, tr2.addedBy);
   ASSERT_EQ(q.tracks[1].votes, 0);
@@ -325,7 +325,7 @@ TEST(DataStoreTest, votetest) {
   ASSERT_EQ(q.tracks[0].title, tr3.title);
   ASSERT_EQ(q.tracks[0].album, tr3.album);
   ASSERT_EQ(q.tracks[0].artist, tr3.artist);
-  ASSERT_EQ(q.tracks[0].duration, tr3.duration);
+  ASSERT_EQ(q.tracks[0].durationMs, tr3.durationMs);
   ASSERT_EQ(q.tracks[0].iconUri, tr3.iconUri);
   ASSERT_EQ(q.tracks[0].addedBy, tr3.addedBy);
   ASSERT_EQ(q.tracks[0].votes, 1);
@@ -333,7 +333,7 @@ TEST(DataStoreTest, votetest) {
   ASSERT_EQ(q.tracks[1].title, tr4.title);
   ASSERT_EQ(q.tracks[1].album, tr4.album);
   ASSERT_EQ(q.tracks[1].artist, tr4.artist);
-  ASSERT_EQ(q.tracks[1].duration, tr4.duration);
+  ASSERT_EQ(q.tracks[1].durationMs, tr4.durationMs);
   ASSERT_EQ(q.tracks[1].iconUri, tr4.iconUri);
   ASSERT_EQ(q.tracks[1].addedBy, tr4.addedBy);
   ASSERT_EQ(q.tracks[1].votes, 0);
@@ -352,7 +352,7 @@ TEST(DataStoreTest, votetest) {
   ASSERT_EQ(q.tracks[0].title, tr1.title);
   ASSERT_EQ(q.tracks[0].album, tr1.album);
   ASSERT_EQ(q.tracks[0].artist, tr1.artist);
-  ASSERT_EQ(q.tracks[0].duration, tr1.duration);
+  ASSERT_EQ(q.tracks[0].durationMs, tr1.durationMs);
   ASSERT_EQ(q.tracks[0].iconUri, tr1.iconUri);
   ASSERT_EQ(q.tracks[0].addedBy, tr1.addedBy);
   ASSERT_EQ(q.tracks[0].votes, 0);
@@ -360,7 +360,7 @@ TEST(DataStoreTest, votetest) {
   ASSERT_EQ(q.tracks[1].title, tr2.title);
   ASSERT_EQ(q.tracks[1].album, tr2.album);
   ASSERT_EQ(q.tracks[1].artist, tr2.artist);
-  ASSERT_EQ(q.tracks[1].duration, tr2.duration);
+  ASSERT_EQ(q.tracks[1].durationMs, tr2.durationMs);
   ASSERT_EQ(q.tracks[1].iconUri, tr2.iconUri);
   ASSERT_EQ(q.tracks[1].addedBy, tr2.addedBy);
   ASSERT_EQ(q.tracks[1].votes, 0);
@@ -374,14 +374,14 @@ TEST(DataStoreTest, votetest) {
   ASSERT_EQ(q.tracks[0].album, tr4.album);
   ASSERT_EQ(q.tracks[0].artist, tr4.artist);
   ;
-  ASSERT_EQ(q.tracks[0].duration, tr4.duration);
+  ASSERT_EQ(q.tracks[0].durationMs, tr4.durationMs);
   ASSERT_EQ(q.tracks[0].iconUri, tr4.iconUri);
   ASSERT_EQ(q.tracks[0].addedBy, tr4.addedBy);
   ASSERT_EQ(q.tracks[0].votes, 1);
   ASSERT_EQ(q.tracks[1].title, tr3.title);
   ASSERT_EQ(q.tracks[1].album, tr3.album);
   ASSERT_EQ(q.tracks[1].artist, tr3.artist);
-  ASSERT_EQ(q.tracks[1].duration, tr3.duration);
+  ASSERT_EQ(q.tracks[1].durationMs, tr3.durationMs);
   ASSERT_EQ(q.tracks[1].iconUri, tr3.iconUri);
   ASSERT_EQ(q.tracks[1].addedBy, tr3.addedBy);
   ASSERT_EQ(q.tracks[1].votes, 0);
@@ -396,7 +396,7 @@ TEST(DataStoreTest, votetest) {
   ASSERT_EQ(tr.title, tr1.title);
   ASSERT_EQ(tr.album, tr1.album);
   ASSERT_EQ(tr.artist, tr1.artist);
-  ASSERT_EQ(tr.duration, tr1.duration);
+  ASSERT_EQ(tr.durationMs, tr1.durationMs);
   ASSERT_EQ(tr.iconUri, tr1.iconUri);
   ASSERT_EQ(tr.addedBy, tr1.addedBy);
 
@@ -409,7 +409,7 @@ TEST(DataStoreTest, votetest) {
   ASSERT_EQ(tr.title, tr2.title);
   ASSERT_EQ(tr.album, tr2.album);
   ASSERT_EQ(tr.artist, tr2.artist);
-  ASSERT_EQ(tr.duration, tr2.duration);
+  ASSERT_EQ(tr.durationMs, tr2.durationMs);
   ASSERT_EQ(tr.iconUri, tr2.iconUri);
   ASSERT_EQ(tr.addedBy, tr2.addedBy);
 
@@ -422,7 +422,7 @@ TEST(DataStoreTest, votetest) {
   ASSERT_EQ(tr.title, tr4.title);
   ASSERT_EQ(tr.album, tr4.album);
   ASSERT_EQ(tr.artist, tr4.artist);
-  ASSERT_EQ(tr.duration, tr4.duration);
+  ASSERT_EQ(tr.durationMs, tr4.durationMs);
   ASSERT_EQ(tr.iconUri, tr4.iconUri);
   ASSERT_EQ(tr.addedBy, tr4.addedBy);
 
@@ -435,7 +435,7 @@ TEST(DataStoreTest, votetest) {
   ASSERT_EQ(tr.title, tr3.title);
   ASSERT_EQ(tr.album, tr3.album);
   ASSERT_EQ(tr.artist, tr3.artist);
-  ASSERT_EQ(tr.duration, tr3.duration);
+  ASSERT_EQ(tr.durationMs, tr3.durationMs);
   ASSERT_EQ(tr.iconUri, tr3.iconUri);
   ASSERT_EQ(tr.addedBy, tr3.addedBy);
 
