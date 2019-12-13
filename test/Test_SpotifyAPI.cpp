@@ -20,7 +20,7 @@ using namespace SpotifyApi;
 
 class SpotifyAPITest : public ::testing::Test {
  public:
-  virtual void SetUp() {
+  void SetUp() override {
     // check if access token is valid
     auto testRet = mAPI.search(mAccessToken, "linkinPark", QueryType::track);
 
@@ -32,16 +32,14 @@ class SpotifyAPITest : public ::testing::Test {
       GTEST_SKIP_(" no valid access token given");
     }
   }
-  virtual void TearDown() {
-  }
 
  protected:
   std::string mAccessToken =
-      "BQB4Q_uFtZj8pUKfjNWKnt6_"
-      "SAwKca9erXth1jQkBvBq8O3sjnKuQyYEguCqfE82qOb9svGkd0X4sZZ0R4taJb4A0wj3VTEi"
-      "_qzPfls7f2NIjxs3HzMKD3JJmRghjam1F_"
-      "NPOBxQOqm1tZuM5u5tkQ3Fu1VN8DfLQbesimj9lWCRZQRj_siS6gJsyV2Q0LNdL_"
-      "SGJPMfpqY-GS0sm6XNQQHAP691PU6DAP8QFgzn9Qpd";
+      "BQBRiH8aS8aUF-"
+      "5uCXxZiGtMCoxysxkLCYI7w53QBiuVuZU7vbJbQi4eErbSgURmSXEyrqb8ON_H96Xjwq__q_"
+      "fyrnGKBWamw8TLoaHX8GcssUiT7dCmCkFRefshUS5WEB9V5jeNJMvBSSx3tZ7ZeMhXqYqgr_"
+      "foQRSlrGlJNppftbo1Jv3mgddKaRzSV4rerR01BEca6smAd_TEGEpVNvoAciTc-xeWb_"
+      "JiDSK13PP3";
   SpotifyAPI mAPI;
   static std::string mPageString;
   static std::string mInvalidDeviceString;
@@ -59,6 +57,9 @@ TEST_F(SpotifyAPITest, GetAvailableDevicesInvalid) {
 TEST_F(SpotifyAPITest, GetAvailableDevicesValid) {
   // test with invalid access token
   auto devicesRet = mAPI.getAvailableDevices(mAccessToken);
+  EXPECT_NO_THROW(std::get<vector<Device>>(devicesRet));
+
+  /*
   if (auto value = get_if<Error>(&devicesRet)) {
     value = value;
     EXPECT_EQ(0, 1);
@@ -68,13 +69,15 @@ TEST_F(SpotifyAPITest, GetAvailableDevicesValid) {
     cout << "Number of Devices: " << devices.size() << endl;
     EXPECT_EQ(1, 1);
   }
+   */
 }
 
 TEST_F(SpotifyAPITest, GetCurrentPlaybackInvalid) {
   // test with invalid access token
   auto playbackRet = mAPI.getCurrentPlayback("aiiiInvalid");
-  auto value = get<Error>(playbackRet);
+  EXPECT_NO_THROW(get<Error>(playbackRet));
 
+  auto value = get<Error>(playbackRet);
   EXPECT_EQ(ErrorCode::SpotifyAccessDenied, value.getErrorCode());
   EXPECT_EQ("Invalid access token", value.getErrorMessage());
 }
@@ -82,20 +85,14 @@ TEST_F(SpotifyAPITest, GetCurrentPlaybackInvalid) {
 TEST_F(SpotifyAPITest, GetCurrentPlaybackValid) {
   // test with invalid access token
   auto playbackRet = mAPI.getCurrentPlayback(mAccessToken);
-  if (auto value = get_if<Error>(&playbackRet)) {
-    value = value;
-    EXPECT_EQ(0, 1);
-  } else {
-    // playback can't get tested better, because the amount is user dependant
-    auto playback = get<optional<Playback>>(playbackRet);
-    EXPECT_EQ(1, 1);
-  }
+  EXPECT_NO_THROW(get<optional<Playback>>(playbackRet));
 }
 
 TEST_F(SpotifyAPITest, searchInvalidToken) {
   string query = "Frank Sinatra";
   // test with invalid access token
   auto searchRes = mAPI.search("aiiiInvalid", query, QueryType::track);
+  EXPECT_NO_THROW(get<Error>(searchRes));
   auto value = get<Error>(searchRes);
 
   EXPECT_EQ(ErrorCode::SpotifyAccessDenied, value.getErrorCode());
@@ -106,40 +103,31 @@ TEST_F(SpotifyAPITest, searchValidTracks) {
   string query = "Frank Sinatra";
   // test with invalid access token
   auto searchRes = mAPI.search(mAccessToken, query, QueryType::track, 3);
-  if (auto value = get_if<Error>(&searchRes)) {
-    value = value;
-    EXPECT_EQ(0, 1);
-  } else {
-    auto page = get<SpotifyPaging>(searchRes);
+  EXPECT_NO_THROW(get<SpotifyPaging>(searchRes));
 
-    // page string copied from the online request
+  auto page = get<SpotifyPaging>(searchRes);
 
-    nlohmann::json spotifyJson;
-    try {
-      spotifyJson = nlohmann::json::parse(mPageString);
-    } catch (...) {
-      cout << "Error in Test search, parsing must succeed" << endl;
-      EXPECT_EQ(1, 0);
-    }
-    SpotifyPaging spotifyPage(spotifyJson);
-    EXPECT_EQ(page.getTotal(), spotifyPage.getTotal());
-    EXPECT_EQ(page.getPrevious(), spotifyPage.getPrevious());
-    EXPECT_EQ(page.getLimit(), spotifyPage.getLimit());
-    EXPECT_EQ(page.getHref(), spotifyPage.getHref());
-    for (size_t i = 0; i < page.getTracks().size(); ++i) {
-      EXPECT_EQ(page.getTracks()[i].getName(),
-                spotifyPage.getTracks()[i].getName());
-      EXPECT_EQ(page.getTracks()[i].getUri(),
-                spotifyPage.getTracks()[i].getUri());
-      EXPECT_EQ(page.getTracks()[i].getHref(),
-                spotifyPage.getTracks()[i].getHref());
-      EXPECT_EQ(page.getTracks()[i].getDuration(),
-                spotifyPage.getTracks()[i].getDuration());
-      EXPECT_EQ(page.getTracks()[i].getArtists().size(),
-                spotifyPage.getTracks()[i].getArtists().size());
-    }
-    EXPECT_EQ(page.getArtists().size(), spotifyPage.getArtists().size());
+  nlohmann::json spotifyJson;
+  EXPECT_NO_THROW(spotifyJson = nlohmann::json::parse(mPageString));
+
+  // page string copied from the online request
+  SpotifyPaging spotifyPage(spotifyJson);
+  EXPECT_EQ(page.getPrevious(), spotifyPage.getPrevious());
+  EXPECT_EQ(page.getLimit(), spotifyPage.getLimit());
+  EXPECT_EQ(page.getHref(), spotifyPage.getHref());
+  for (size_t i = 0; i < page.getTracks().size(); ++i) {
+    EXPECT_EQ(page.getTracks()[i].getName(),
+              spotifyPage.getTracks()[i].getName());
+    EXPECT_EQ(page.getTracks()[i].getUri(),
+              spotifyPage.getTracks()[i].getUri());
+    EXPECT_EQ(page.getTracks()[i].getHref(),
+              spotifyPage.getTracks()[i].getHref());
+    EXPECT_EQ(page.getTracks()[i].getDuration(),
+              spotifyPage.getTracks()[i].getDuration());
+    EXPECT_EQ(page.getTracks()[i].getArtists().size(),
+              spotifyPage.getTracks()[i].getArtists().size());
   }
+  EXPECT_EQ(page.getArtists().size(), spotifyPage.getArtists().size());
 }
 
 TEST_F(SpotifyAPITest, searchInvalidMarket) {
@@ -147,54 +135,40 @@ TEST_F(SpotifyAPITest, searchInvalidMarket) {
   // test with invalid access token
   auto searchRes =
       mAPI.search(mAccessToken, query, QueryType::track, 3, 0, "AIII");
-  if (auto value = get_if<Error>(&searchRes)) {
-    EXPECT_EQ(value->getErrorCode(), ErrorCode::SpotifyBadRequest);
-    EXPECT_EQ(value->getErrorMessage(), "Invalid market code");
-  } else {
-    // cant reach here..
-    EXPECT_EQ(0, 1);
-  }
+  EXPECT_NO_THROW(get_if<Error>(&searchRes));
+  auto value = get_if<Error>(&searchRes);
+  EXPECT_EQ(value->getErrorCode(), ErrorCode::SpotifyBadRequest);
+  EXPECT_EQ(value->getErrorMessage(), "Invalid market code");
 }
 
 TEST_F(SpotifyAPITest, searchInvalidLimit1) {
   string query = "Frank Sinatra";
   // test with invalid access token
   auto searchRes = mAPI.search(mAccessToken, query, QueryType::track, 51);
-  if (auto value = get_if<Error>(&searchRes)) {
-    EXPECT_EQ(value->getErrorCode(), ErrorCode::SpotifyBadRequest);
-    EXPECT_EQ(value->getErrorMessage(), "Invalid limit");
-  } else {
-    // cant reach here..
-    EXPECT_EQ(0, 1);
-  }
+  EXPECT_NO_THROW(get_if<Error>(&searchRes));
+  auto value = get_if<Error>(&searchRes);
+  EXPECT_EQ(value->getErrorCode(), ErrorCode::SpotifyBadRequest);
+  EXPECT_EQ(value->getErrorMessage(), "Invalid limit");
 }
 
 TEST_F(SpotifyAPITest, searchInvalidLimit2) {
   string query = "Frank Sinatra";
   // test with invalid access token
   auto searchRes = mAPI.search(mAccessToken, query, QueryType::track, 0);
-  if (auto value = get_if<Error>(&searchRes)) {
-    EXPECT_EQ(value->getErrorCode(), ErrorCode::SpotifyBadRequest);
-    EXPECT_EQ(value->getErrorMessage(),
-              "Bad limit, limit must be larger than 0");
-  } else {
-    // cant reach here..
-    EXPECT_EQ(0, 1);
-  }
+  EXPECT_NO_THROW(get_if<Error>(&searchRes));
+  auto value = get_if<Error>(&searchRes);
+  EXPECT_EQ(value->getErrorCode(), ErrorCode::SpotifyBadRequest);
+  EXPECT_EQ(value->getErrorMessage(), "Bad limit, limit must be larger than 0");
 }
 
 TEST_F(SpotifyAPITest, searchInvalidLimit3) {
   string query = "Frank Sinatra";
   // test with invalid access token
   auto searchRes = mAPI.search(mAccessToken, query, QueryType::track, -100);
-  if (auto value = get_if<Error>(&searchRes)) {
-    EXPECT_EQ(value->getErrorCode(), ErrorCode::SpotifyBadRequest);
-    EXPECT_EQ(value->getErrorMessage(),
-              "Bad limit, limit must be larger than 0");
-  } else {
-    // cant reach here..
-    EXPECT_EQ(0, 1);
-  }
+  EXPECT_NO_THROW(get_if<Error>(&searchRes));
+  auto value = get_if<Error>(&searchRes);
+  EXPECT_EQ(value->getErrorCode(), ErrorCode::SpotifyBadRequest);
+  EXPECT_EQ(value->getErrorMessage(), "Bad limit, limit must be larger than 0");
 }
 
 TEST_F(SpotifyAPITest, searchInvalidOffset1) {
@@ -202,52 +176,40 @@ TEST_F(SpotifyAPITest, searchInvalidOffset1) {
   // test with invalid access token
   auto searchRes =
       mAPI.search(mAccessToken, query, QueryType::track, 10, 1000000);
-  if (auto value = get_if<Error>(&searchRes)) {
-    EXPECT_EQ(value->getErrorCode(), ErrorCode::SpotifyNotFound);
-    EXPECT_EQ(value->getErrorMessage(), "Not found.");
-  } else {
-    // cant reach here..
-    EXPECT_EQ(0, 1);
-  }
+  EXPECT_NO_THROW(get_if<Error>(&searchRes));
+  auto value = get_if<Error>(&searchRes);
+  EXPECT_EQ(value->getErrorCode(), ErrorCode::SpotifyNotFound);
+  EXPECT_EQ(value->getErrorMessage(), "Not found.");
 }
 
 TEST_F(SpotifyAPITest, searchInvalidOffset2) {
   string query = "Frank Sinatra";
   // test with invalid access token
   auto searchRes = mAPI.search(mAccessToken, query, QueryType::track, 10, -1);
-  if (auto value = get_if<Error>(&searchRes)) {
-    EXPECT_EQ(value->getErrorCode(), ErrorCode::SpotifyBadRequest);
-    EXPECT_EQ(value->getErrorMessage(),
-              "Bad offset, offset must be greater than or equal to 0");
-  } else {
-    // cant reach here..
-    EXPECT_EQ(0, 1);
-  }
+  EXPECT_NO_THROW(get_if<Error>(&searchRes));
+  auto value = get_if<Error>(&searchRes);
+  EXPECT_EQ(value->getErrorCode(), ErrorCode::SpotifyBadRequest);
+  EXPECT_EQ(value->getErrorMessage(),
+            "Bad offset, offset must be greater than or equal to 0");
 }
 
 TEST_F(SpotifyAPITest, setVolumeInvalidAccessToken) {
   // test with invalid access token
   auto volRes = mAPI.setVolume("AIII", 20);
-  if (!volRes.has_value()) {
-    // cant reach here
-    EXPECT_EQ(0, 1);
-  } else {
-    EXPECT_EQ(ErrorCode::SpotifyAccessDenied, volRes.value().getErrorCode());
-    EXPECT_EQ("Invalid access token", volRes.value().getErrorMessage());
-  }
+  EXPECT_NO_THROW(volRes.value());
+
+  EXPECT_EQ(ErrorCode::SpotifyAccessDenied, volRes.value().getErrorCode());
+  EXPECT_EQ("Invalid access token", volRes.value().getErrorMessage());
 }
 
 TEST_F(SpotifyAPITest, setVolumeInvalidDevice) {
   Device invalidDevice(nlohmann::json::parse(mInvalidDeviceString));
 
   auto volRes = mAPI.setVolume(mAccessToken, 20, invalidDevice);
-  if (!volRes.has_value()) {
-    // cant reach here
-    EXPECT_EQ(0, 1);
-  } else {
-    EXPECT_EQ(ErrorCode::SpotifyNotFound, volRes.value().getErrorCode());
-    EXPECT_EQ("Device not found", volRes.value().getErrorMessage());
-  }
+  EXPECT_NO_THROW(volRes.value());
+
+  EXPECT_EQ(ErrorCode::SpotifyNotFound, volRes.value().getErrorCode());
+  EXPECT_EQ("Device not found", volRes.value().getErrorMessage());
 }
 
 TEST_F(SpotifyAPITest, setVolumeTryOnDevice) {
