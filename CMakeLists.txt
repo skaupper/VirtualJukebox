@@ -125,8 +125,8 @@ set(TEST_HEADER         test/fixtures/RestAPIFixture.h
 
 # Libraries and include directories of dependencies used by the tests
 set(TEST_LIBRARIES      ${APP_LIBRARIES}
-                        ${CMAKE_THREAD_LIBS_INIT}
                         gtest)
+
 set(TEST_INCLUDE_DIRS   test/
                         test/fixtures/
                         test/mocks/

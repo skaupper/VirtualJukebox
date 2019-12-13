@@ -20,12 +20,6 @@
 #include "Types/Tracks.h"
 #include "Types/User.h"
 
-/*
- * TODO:
- * (1) Avoid having the same track in both queues
- *     --> a single track can only exist once
- */
-
 class RAMDataStore : public DataStore {
  public:
   TResultOpt addUser(User const &user);
