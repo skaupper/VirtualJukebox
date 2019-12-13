@@ -242,8 +242,8 @@ TResultOpt SpotifyBackend::play() {
         << "SpotifyBackend.play: Error cant resume when no playback available";
     return Error(
         ErrorCode::SpotifyBadRequest,
-        "SpotifyBackend.play: Error cant resume when no playback available");
-  } else if (!playback.value().isPlaying) {
+        "Error, cant resume when no playback available");
+  } else if (playback.value().isPlaying) {
     VLOG(99) << "SpotifyBackend.play: Playback already playing";
     return std::nullopt;
   }
