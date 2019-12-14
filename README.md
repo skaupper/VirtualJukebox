@@ -14,7 +14,9 @@ whose tracks are always played before any track from the user playlist. Besides 
 capabilities like controlling the playback behaviour of the music player which includes
 pausing/resuming/stopping/skipping the current track as well as adjusting the playback volume.
 
-This repository contains the sources for the server as well as instructions on how to install and test it.
+While tracks in the admin queue are always played in order of insertion (FIFO), the tracks in the user queue can be reordered using the voting system. Each user has the ability to vote for tracks in the user queue. The top most track (i.e. the track which gets played next) is the one with the most votes.
+
+This repository contains the sources for the server as well as instructions on how to install and test and use it.
 
 ## Dependencies
 
@@ -94,7 +96,49 @@ Additionally if you want to change the port for the authorization process the re
 
 ## How to use
 
-If all dependencies are installed and the Spotify application has been created, you can run the server.
+If all dependencies are installed and the Spotify application has been created, you can run the server. The application takes the path to the configuration file as first (and only) parameter or falls back to `../jukebox_config.ini` if none is given.
+
+### Authorization
+
+Before users can do any meaningful interactions with the server you have to authorize against Spotify and receive an access token.
+
+To do this the server provides a HTTP endpoint which can be reached at the URL `http://<server_ip>:<port>/spotifyLogin`. You need to replace the `server_ip` with the IP address of the server machine. The required value for `port` can be found in the configuration file in section `[Spotify]` with the key `port`.
+
+If you used the correct URL you get redirected to the Spotify authorization site where you need to log in using your Spotify account.
+
+After authorizing the application you get redirected to the URL specified in the configuration file (`[Spotify] redirectUri`). Be sure that this URI is [whitelisted on the Spotify dashboard](#spotify).
+
+If everything went fine the server should print `Access token acquired successfully` to the terminal.
+
+### Using the client endpoints
+
+If an access token has already been acquired the clients can start using the REST interface described [here](./docs/html/rest_interface.html).
+
+Since REST is a stateless protocol the first request has to be to the endpoint `/generateSession`, which generates a session ID the client can use to pass to other endpoints. Using this endpoint you can also authenticate yourself as the server administator.
+
+An example for a usual interaction with the server could be:
+
+1. Generating a user session (`/generateSession`).
+2. Listing available tracks (`/queryTracks`).
+3. Adding a track to the user queue (`/addTrackToQueue`).
+4. Voting for other tracks, so they will get played earlier (`/voteTrack`)).
+5. Revoking a vote again because you decided otherwise (also `/voteTrack`).
+
+Administrators may have different interactions (additionally to the ones of a normal user):
+
+1. Generating an admin session (also `/generateSession`).
+2. Removing some tracks from any queue (they may be inappropriate or simply not wanted) (`/removeTrack`).
+3. Adding tracks to the admin queue which get always played before any track of the normal queue (`/addTrackToQueue`).
+4. Control the behaviour of the player (i.e. pause/resume/skip/stop the playback of the current track or adjusting the volume) (`/controlPlayer`).
+
+## Troubleshooting
+
+### _No devices for playing the track available_
+
+This happens if no device, linked to the account which was used to get the access token, was found.
+To solve it, start Spotify on any device with that specific account.
+
+## TODO
 
 [1]: https://img.shields.io/travis/com/skaupper/virtualjukebox/master?label=Travis%20Build%20Status&logo=travis
 [2]: https://travis-ci.com/skaupper/VirtualJukebox
