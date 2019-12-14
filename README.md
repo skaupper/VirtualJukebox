@@ -62,6 +62,7 @@ listed dependencies, that are required to install manually.
 2. Change to the build directory and invoke CMake: `cd build; cmake ..`
 3. A Makefile was created. Use `make` to compile the application and the tests
 4. The application can be started using `./VirtualJukebox`
+    - To use the verbose logging feature (debug logs) you can set the environment variable `GLOG_v` to the desired verbosity level. Since these levels are not specified you have to dig through the source code for calls to `VLOG(...)` to get the desired level.
 5. The tests can be executed using:
     - `./testVirtualJukebox`: invokes the program directly
     - `make test`: using the CTest integration of CMake
@@ -93,7 +94,7 @@ Additionally if you want to change the port for the authorization process the re
 
 ## How to use
 
-TODO
+If all dependencies are installed and the Spotify application has been created, you can run the server.
 
 [1]: https://img.shields.io/travis/com/skaupper/virtualjukebox/master?label=Travis%20Build%20Status&logo=travis
 [2]: https://travis-ci.com/skaupper/VirtualJukebox
