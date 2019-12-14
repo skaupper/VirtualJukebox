@@ -74,6 +74,23 @@ the whole VirtualJukebox server but a subcomponent. This can be useful for debug
 a subcomponent with a custom one to show how the submodule. In the latter case the examples show how a component has to
 communicate with its environment (see also the test in `test/`).
 
+## Spotify
+
+In order to use this server properly, one needs to setup Spotify correctly. This section describes this setup process step by step.
+
+1. **Create a Spotify application**\
+Log into your Spotify account on the [Spotify Dashboard](https://developer.spotify.com/dashboard/login).
+
+2. **Create an application and receive client ID and client secret**\
+It doesn't matter what you set during the creation process. After you have created the application, you will get the client ID and client secret. Copy these two values to the file `jukebox_config.ini` appropriatly.
+
+3. **Whitelist a redirect URI**\
+For the authorization process to succeed you must whitelist the URI the authorization site redirects you to. The URI must match with the one set in the configuration file.\
+\
+However, if you do not want to authorize yourself on the machine the server is running on you have to change `localhost` to the IP of the server machine.\
+\
+Additionally if you want to change the port for the authorization process the redirect URI (as well as the whitelist entry on the dashboard) needs to be updated too!
+
 ## How to use
 
 TODO
