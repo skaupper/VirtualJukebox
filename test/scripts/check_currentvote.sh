@@ -53,6 +53,7 @@ fi
 
 # check the current queues
 RET=$(curl -sS -XGET http://$IP:$PORT/api/v1/getCurrentQueues?session_id=$SESSION_ID)
+# echo $RET | jq .
 COUNT=$(echo $RET | jq '.normal_queue | length')
 
 SUCCESS=true
