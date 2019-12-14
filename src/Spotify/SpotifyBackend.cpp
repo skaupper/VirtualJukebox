@@ -143,7 +143,8 @@ TResultOpt SpotifyBackend::setPlayback(BaseTrack const &track) {
   // if not set a playback to the current device
   if (!playback.has_value()) {
     TResultOpt ret;
-    ret = mSpotifyAPI.transferUsersPlayback(token, std::vector<Device>{device});
+    ret = mSpotifyAPI.transferUsersPlayback(
+        token, std::vector<Device>{device}, true);
     if (ret.has_value()) {
       LOG(ERROR) << "SpotifyBackend.setPlayback: "
                  << ret.value().getErrorMessage() << std::endl;

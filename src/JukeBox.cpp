@@ -17,7 +17,6 @@
 #include "Types/User.h"
 #include "Utils/ConfigHandler.h"
 #include "Utils/LoggingHandler.h"
-#include "Utils/SimpleScheduler.h"
 
 using namespace std;
 
@@ -25,6 +24,7 @@ JukeBox::JukeBox() {
   mDataStore = new RAMDataStore();
   mNetwork = new RestAPI();
   mMusicBackend = new SpotifyBackend();
+  mScheduler = new SimpleScheduler(mDataStore, mMusicBackend);
 
   mNetwork->setListener(this);
 }
@@ -58,8 +58,7 @@ bool JukeBox::start(string const &exeName, string const &configFilePath) {
   // TODO: check for available devices here? only works if initBackend blocks
   // until an access token has been acquired
 
-  SimpleScheduler scheduler(mDataStore, mMusicBackend);
-  scheduler.start();
+  mScheduler->start();
 
   mNetwork->handleRequests();
 
@@ -138,7 +137,7 @@ TResult<QueueStatus> JukeBox::getCurrentQueues(TSessionID const &) {
   pbt.title = tmp.title;
   pbt.trackId = tmp.trackId;
 
-  auto trackSpotify = mMusicBackend->getCurrentPlayback();
+  auto trackSpotify = mScheduler->getLastPlayback();
   if (holds_alternative<Error>(trackSpotify))
     return get<Error>(trackSpotify);
 
@@ -153,15 +152,21 @@ TResult<QueueStatus> JukeBox::getCurrentQueues(TSessionID const &) {
   pbt.progressMs = pbtSpotify.progressMs;
   pbt.isPlaying = pbtSpotify.isPlaying;
 
-  if (!(pbt == pbtSpotify)) {
-    string msg =
-        "Jukebox.getCurrentQueues: Inconsistency between current playback "
-        "track in Spotify and DataStore";
-    LOG(WARNING) << msg;
-    return Error(ErrorCode::InvalidValue, msg);
+  if (mScheduler->checkForInconsistency()) {
+    if (!(pbt == pbtSpotify)) {
+      string msg =
+          "Jukebox.getCurrentQueues: Inconsistency between current playback "
+          "track in Spotify and DataStore. Jukebox functionality resumes "
+          "when " +
+          pbt.artist + " - " + pbt.title + " resumes and finishes";
+      LOG(WARNING) << msg;
+      return Error(ErrorCode::InvalidValue, msg);
+    }
+    qs.currentTrack = pbt;
+  } else {
+    // if nothing is queued, return track which is played on spotify
+    qs.currentTrack = pbtSpotify;
   }
-
-  qs.currentTrack = pbt;
 
   return qs;
 }

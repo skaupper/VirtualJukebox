@@ -28,6 +28,9 @@ class SimpleScheduler {
    */
   void start();
 
+  TResult<std::optional<PlaybackTrack>> const& getLastPlayback();
+  bool checkForInconsistency();
+
   /* TODO: functions below */
   /* enable() */
   /* disable() */
@@ -45,18 +48,20 @@ class SimpleScheduler {
    */
 
   enum SchedulerState { Idle, PlayNextSong, CheckPlaying, Playing };
-  bool doSchedule();
+  TResultOpt doSchedule();
 
   void threadFunc();
+
+  int const cScheduleIntervalTimeMs = 1000;
 
   DataStore* mDataStore;
   MusicBackend* mMusicBackend;
   SchedulerState mSchedulerState = Idle;
-  PlaybackTrack mLastPlaybackTrack;
+  TResult<std::optional<PlaybackTrack>> mLastPlaybackTrack;
 
   TResult<bool> areQueuesEmpty(void);
-  bool isTrackPlaying(PlaybackTrack const& last, PlaybackTrack const& current);
-  bool isTrackFinished(PlaybackTrack const& last, PlaybackTrack const& current);
+  TResult<bool> isTrackPlaying(std::optional<PlaybackTrack> const& currentOpt);
+  TResult<bool> isTrackFinished(std::optional<PlaybackTrack> const& currentOpt);
 
   std::thread mThread;
 };
