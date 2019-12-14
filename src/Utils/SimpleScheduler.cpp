@@ -68,15 +68,14 @@ bool SimpleScheduler::checkForInconsistency() {
   }
   bool empty = std::get<bool>(emptyRet);
 
-  if (empty && mSchedulerState == Idle) {
-    return false;
+  // only check inconsistency when something is in the queue and state is in
+  // playing state
+  if (!empty && mSchedulerState != Idle) {
+    return true;
   }
-  return true;
+  return false;
 }
 
-/* TODO:
- * return an int (0..success, 1..restart, -1..error) and handle in threadFunc()
- */
 TResultOpt SimpleScheduler::doSchedule() {
   if (mDataStore == nullptr || mMusicBackend == nullptr) {
     return Error(ErrorCode::InvalidValue,
@@ -132,7 +131,7 @@ TResultOpt SimpleScheduler::doSchedule() {
       auto setTrackRet = mMusicBackend->setPlayback(actualTrack);
       if (setTrackRet.has_value()) {
         LOG(ERROR) << "SimpleScheduler: "
-                   << nextTrack.value().getErrorMessage();
+                   << setTrackRet.value().getErrorMessage();
         mSchedulerState = Idle;
         return setTrackRet.value();  // do nothing
       }
