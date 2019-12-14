@@ -122,7 +122,7 @@ TResultOpt SpotifyBackend::setPlayback(BaseTrack const &track) {
   auto config = ConfigHandler::getInstance();
   auto playingDeviceRes = config->getValueString("Spotify", "playingDevice");
 
-  Device device;
+  Device device = devices[0];
   if (auto value = std::get_if<std::string>(&playingDeviceRes)) {
     auto dev =
         std::find_if(devices.cbegin(), devices.cend(), [&](auto const &elem) {
@@ -130,11 +130,6 @@ TResultOpt SpotifyBackend::setPlayback(BaseTrack const &track) {
         });
     if (dev != devices.cend()) {
       device = *dev;
-    } else {
-      // select first device if nothing is stored in the config file
-      if (!devices.empty()) {
-        device = devices[0];
-      }
     }
   }
 
@@ -347,9 +342,15 @@ TResult<BaseTrack> SpotifyBackend::createBaseTrack(TTrackID const &trackID) {
                             .getUrl();  // on first place is the biggest one
   }
 
+  bool firstArtist = true;
   for (auto &artist : track.getArtists()) {
-    baseTrack.artist += artist.getName() + " & ";
+    if (!firstArtist) {
+      baseTrack.artist += " & ";
+    }
+    baseTrack.artist += artist.getName();
+    firstArtist = false;
   }
+
   return baseTrack;
 }
 
