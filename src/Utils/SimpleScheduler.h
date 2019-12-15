@@ -1,8 +1,7 @@
 /*****************************************************************************/
 /**
  * @file    SimpleScheduler.h
- * @authors Michael Wurm <wurm.michael95@gmail.com>
- * Stefan Jahn <stefan.jahn332@gmail.com>
+ * @authors Stefan Jahn <stefan.jahn332@gmail.com>
  * @brief   Class SimpleScheduler definition
  */
 /*****************************************************************************/
@@ -11,6 +10,7 @@
 #define SIMPLE_SCHEDULER_H_INCLUDED
 
 #include <memory>
+#include <shared_mutex>
 #include <string>
 #include <thread>
 
@@ -28,35 +28,49 @@ class SimpleScheduler {
    */
   void start();
 
+  /**
+   * @brief returns the last polled playback status
+   * @return returns playback status
+   */
   TResult<std::optional<PlaybackTrack>> const& getLastPlayback();
+
+  TResultOpt nextTrack();
+
+  /**
+   * @brief returns true if actual track from datastore and playback needs to be
+   * checked if they are equal
+   * @return true if check is required else false
+   */
   bool checkForInconsistency();
 
   /* TODO: functions below */
   /* enable() */
   /* disable() */
-  /* notify() */
 
  private:
   /**
+   * @brief enumaration represents state of the scheduler
+   */
+  enum class SchedulerState { Idle, PlayNextSong, CheckPlaying, Playing };
+
+  /**
    * @brief Schedules one track after another.
    * @details The next track is set to play, when the currently playing track
-   * reaches its' end. The thread only wakes up shortly before a tracks' end.
-   * The function also performs a consistency check between the DataStore and
-   * Spotify.
-   * @return True on success, false otherwise.
-   * Errors are printed within the function.
+   * reaches its' end. This thread continuously polls the actual playback.
+   * @return nullopt on success, otherwise Error object
    */
-
-  enum SchedulerState { Idle, PlayNextSong, CheckPlaying, Playing };
   TResultOpt doSchedule();
 
+  /**
+   * @brief threadfunction which handles the doSchedule task
+   */
   void threadFunc();
 
   int const cScheduleIntervalTimeMs = 1000;
 
   DataStore* mDataStore;
   MusicBackend* mMusicBackend;
-  SchedulerState mSchedulerState = Idle;
+  SchedulerState mSchedulerState = SchedulerState::Idle;
   TResult<std::optional<PlaybackTrack>> mLastPlaybackTrack;
 
   TResult<bool> areQueuesEmpty(void);
@@ -64,6 +78,8 @@ class SimpleScheduler {
   TResult<bool> isTrackFinished(std::optional<PlaybackTrack> const& currentOpt);
 
   std::thread mThread;
+  std::shared_mutex mMtxPlayback;
+  std::shared_mutex mMtxModifySchedulerState;
 };
 
 #endif /* SIMPLE_SCHEDULER_H_INCLUDED */

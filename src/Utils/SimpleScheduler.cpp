@@ -56,10 +56,27 @@ void SimpleScheduler::threadFunc() {
 
 TResult<std::optional<PlaybackTrack>> const &
 SimpleScheduler::getLastPlayback() {
+  std::shared_lock lock(mMtxPlayback);
   return mLastPlaybackTrack;
 }
 
+TResultOpt SimpleScheduler::nextTrack() {
+  std::unique_lock lockPlayback(mMtxPlayback);
+  std::unique_lock lockSchedulerState(mMtxModifySchedulerState);
+
+  if (auto error = std::get_if<Error>(&mLastPlaybackTrack)) {
+    return *error;
+  }
+
+  // TODO: maybe implement stop function in music backend an replace with it
+  // then
+  auto ret = mMusicBackend->pause();
+  mSchedulerState = SchedulerState::Idle;
+  return ret;
+}
+
 bool SimpleScheduler::checkForInconsistency() {
+  std::shared_lock lock(mMtxModifySchedulerState);
   auto emptyRet = areQueuesEmpty();
   if (auto error = std::get_if<Error>(&emptyRet)) {
     LOG(ERROR) << "SimpleScheduler: " << error->getErrorMessage();
@@ -70,7 +87,7 @@ bool SimpleScheduler::checkForInconsistency() {
 
   // only check inconsistency when something is in the queue and state is in
   // playing state
-  if (!empty && mSchedulerState != Idle) {
+  if (!empty && mSchedulerState != SchedulerState::Idle) {
     return true;
   }
   return false;
@@ -85,19 +102,20 @@ TResultOpt SimpleScheduler::doSchedule() {
   this_thread::sleep_for(chrono::milliseconds(cScheduleIntervalTimeMs));
 
   TResult<std::optional<PlaybackTrack>> playbackTrackRet;
-  //  if(mSchedulerState!=Idle) {
-  // only poll when not in idle state
   playbackTrackRet = mMusicBackend->getCurrentPlayback();
+  std::unique_lock lockPlayback(mMtxPlayback);
+  std::unique_lock lockSchedulerState(mMtxModifySchedulerState);
+
   if (auto error = std::get_if<Error>(&playbackTrackRet)) {
     mLastPlaybackTrack = playbackTrackRet;
     return *error;
   }
-  //  }
+
   auto playbackTrackOpt =
       std::get<std::optional<PlaybackTrack>>(playbackTrackRet);
 
   switch (mSchedulerState) {
-    case Idle: {
+    case SchedulerState::Idle: {
       VLOG(100) << "SimpleScheduler: Idle";
       auto emptyValRet = areQueuesEmpty();
       if (auto error = std::get_if<Error>(&emptyValRet)) {
@@ -105,25 +123,26 @@ TResultOpt SimpleScheduler::doSchedule() {
       }
       bool emptyVal = std::get<bool>(emptyValRet);
       if (!emptyVal) {
-        mSchedulerState = PlayNextSong;
+        mSchedulerState = SchedulerState::PlayNextSong;
       }
 
     } break;
 
-    case PlayNextSong: {
+    case SchedulerState::PlayNextSong: {
       VLOG(1000) << "SimpleScheduler: PlayNextSong";
       auto nextTrack = mDataStore->nextTrack();
       if (nextTrack.has_value()) {
         LOG(ERROR) << "SimpleScheduler: "
                    << nextTrack.value().getErrorMessage();
-        mSchedulerState = Idle;  // return to idle state on failure;
+        mSchedulerState =
+            SchedulerState::Idle;  // return to idle state on failure;
         return nextTrack.value();
       }
 
       auto actualTrackRet = mDataStore->getPlayingTrack();
       if (auto error = std::get_if<Error>(&actualTrackRet)) {
         LOG(ERROR) << "SimpleScheduler: " << error->getErrorMessage();
-        mSchedulerState = Idle;
+        mSchedulerState = SchedulerState::Idle;
         return *error;  // do nothing
       }
       auto actualTrack = std::get<QueuedTrack>(actualTrackRet);
@@ -132,39 +151,39 @@ TResultOpt SimpleScheduler::doSchedule() {
       if (setTrackRet.has_value()) {
         LOG(ERROR) << "SimpleScheduler: "
                    << setTrackRet.value().getErrorMessage();
-        mSchedulerState = Idle;
+        mSchedulerState = SchedulerState::Idle;
         return setTrackRet.value();  // do nothing
       }
 
-      mSchedulerState = CheckPlaying;
+      mSchedulerState = SchedulerState::CheckPlaying;
 
     } break;
 
-    case CheckPlaying: {
+    case SchedulerState::CheckPlaying: {
       VLOG(100) << "SimpleScheduler: CheckPlaying";
 
       auto isPlayingRet = isTrackPlaying(playbackTrackOpt);
       if (auto error = std::get_if<Error>(&isPlayingRet)) {
-        mSchedulerState = Idle;
+        mSchedulerState = SchedulerState::Idle;
         return *error;
       }
       bool isPlaying = std::get<bool>(isPlayingRet);
 
       if (isPlaying) {
-        mSchedulerState = Playing;
+        mSchedulerState = SchedulerState::Playing;
       }
     } break;
 
-    case Playing: {
+    case SchedulerState::Playing: {
       VLOG(100) << "SimpleScheduler: Playing";
       if (!playbackTrackOpt.has_value()) {
-        mSchedulerState = Idle;
+        mSchedulerState = SchedulerState::Idle;
         return Error(ErrorCode::InvalidValue,
                      "Someone closed Spotify Player on Playback Error");
       }
       auto trackFinishedRet = isTrackFinished(playbackTrackOpt);
       if (auto error = std::get_if<Error>(&trackFinishedRet)) {
-        mSchedulerState = Idle;
+        mSchedulerState = SchedulerState::Idle;
         return *error;
       }
       bool trackFinished = std::get<bool>(trackFinishedRet);
@@ -177,9 +196,9 @@ TResultOpt SimpleScheduler::doSchedule() {
         }
         bool emptyVal = std::get<bool>(emptyValRet);
         if (!emptyVal) {
-          mSchedulerState = PlayNextSong;
+          mSchedulerState = SchedulerState::PlayNextSong;
         } else {
-          mSchedulerState = Idle;
+          mSchedulerState = SchedulerState::Idle;
         }
       }
     } break;
