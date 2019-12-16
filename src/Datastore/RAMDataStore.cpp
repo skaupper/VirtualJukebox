@@ -16,7 +16,7 @@ using namespace std;
 
 TResultOpt RAMDataStore::addUser(User const &user) {
   // Exclusive Access to User List
-  unique_lock<shared_mutex> MyLock(mUserMutex);
+  unique_lock<recursive_mutex> MyLock(mUserMutex);
 
   // check for existing user
   auto it = find(mUsers.begin(), mUsers.end(), user);
@@ -31,7 +31,7 @@ TResultOpt RAMDataStore::addUser(User const &user) {
 
 TResult<User> RAMDataStore::getUser(TSessionID const &ID) {
   // Exclusive Access to User List
-  unique_lock<shared_mutex> MyLock(mUserMutex);
+  unique_lock<recursive_mutex> MyLock(mUserMutex);
 
   // find user
   User user;
@@ -49,7 +49,7 @@ TResult<User> RAMDataStore::getUser(TSessionID const &ID) {
 // doesn't remove votes taken by this user
 TResult<User> RAMDataStore::removeUser(TSessionID const &ID) {
   // Exclusive Access to User List
-  unique_lock<shared_mutex> MyLock(mUserMutex);
+  unique_lock<recursive_mutex> MyLock(mUserMutex);
 
   // find user
   User user;
@@ -68,12 +68,12 @@ TResult<User> RAMDataStore::removeUser(TSessionID const &ID) {
 
 // check expired sessions
 TResult<bool> RAMDataStore::isSessionExpired(TSessionID const &ID) {
+  // Exclusive Access to User List
+  unique_lock<recursive_mutex> MyLock(mUserMutex);
+
   auto retUser = getUser(ID);
   if (holds_alternative<Error>(retUser))
     return get<Error>(retUser);
-
-  // Exclusive Access to User List
-  unique_lock<shared_mutex> MyLock(mUserMutex);
 
   time_t now = time(nullptr);
   return (get<User>(retUser).ExpirationDate < now);
@@ -169,7 +169,7 @@ TResultOpt RAMDataStore::voteTrack(TSessionID const &sID,
                                    TVote vote) {
   // Exclusive Access to Song Queue and User
   unique_lock<shared_mutex> MyLockQueue(mQueueMutex, defer_lock);
-  unique_lock<shared_mutex> MyLockUser(mUserMutex, defer_lock);
+  unique_lock<recursive_mutex> MyLockUser(mUserMutex, defer_lock);
   lock(MyLockQueue, MyLockUser);
 
   // find user
@@ -252,7 +252,7 @@ TResult<QueuedTrack> RAMDataStore::getPlayingTrack() {
 
 TResult<bool> RAMDataStore::hasUser(TSessionID const &ID) {
   // Shared Access to User List
-  shared_lock<shared_mutex> MyLock(mUserMutex);
+  unique_lock<recursive_mutex> MyLock(mUserMutex);
 
   // find user
   User user;

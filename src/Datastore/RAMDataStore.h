@@ -41,7 +41,7 @@ class RAMDataStore : public DataStore {
   Queue mNormalQueue;
   QueuedTrack mCurrentTrack;
   std::vector<User> mUsers;
-  std::shared_mutex mUserMutex;
+  std::recursive_mutex mUserMutex;
   std::shared_mutex mQueueMutex;
 };
 
