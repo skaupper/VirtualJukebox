@@ -49,8 +49,8 @@ class DataStore {
   /**
    * @brief    Check if user session is expired.
    * @param    ID Session ID of the user to check
-   * @retval   Returns true if session expired, false if not. Returns an Error
-   * object on error.
+   * @retval   Returns false if session is not expired yet. Returns an Error
+   * object on session expiration or error.
    */
   virtual TResult<bool> isSessionExpired(TSessionID const &ID) = 0;
   /**

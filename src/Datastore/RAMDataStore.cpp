@@ -83,7 +83,9 @@ TResult<bool> RAMDataStore::isSessionExpired(TSessionID const &ID) {
     return false;
   }
 
-  return true;
+  string msg = "Session expired for user ID '" + ID + "'.";
+  LOG(WARNING) << msg;
+  return Error(ErrorCode::SessionExpired, msg);
 }
 
 TResultOpt RAMDataStore::addTrack(BaseTrack const &track, QueueType q) {
