@@ -115,6 +115,15 @@ TResult<vector<BaseTrack>> JukeBox::queryTracks(string const &searchPattern,
 }
 
 TResult<QueueStatus> JukeBox::getCurrentQueues(TSessionID const &sid) {
+  auto retIsExpired = mDataStore->isSessionExpired(sid);
+  if (holds_alternative<Error>(retIsExpired))
+    return get<Error>(retIsExpired);
+  if (get<bool>(retIsExpired)) {
+    string msg = "Session expired for user ID '" + sid + "'.";
+    LOG(WARNING) << msg;
+    return Error(ErrorCode::SessionExpired, msg);
+  }
+
   QueueStatus qs;
 
   auto ret = mDataStore->getQueue(QueueType::Admin);
@@ -182,6 +191,15 @@ TResult<QueueStatus> JukeBox::getCurrentQueues(TSessionID const &sid) {
 TResultOpt JukeBox::addTrackToQueue(TSessionID const &sid,
                                     TTrackID const &trkid,
                                     QueueType type) {
+  auto retIsExpired = mDataStore->isSessionExpired(sid);
+  if (holds_alternative<Error>(retIsExpired))
+    return get<Error>(retIsExpired);
+  if (get<bool>(retIsExpired)) {
+    string msg = "Session expired for user ID '" + sid + "'.";
+    LOG(WARNING) << msg;
+    return Error(ErrorCode::SessionExpired, msg);
+  }
+
   auto retUser = mDataStore->getUser(sid);
   if (holds_alternative<Error>(retUser))
     return get<Error>(retUser);
@@ -207,10 +225,28 @@ TResultOpt JukeBox::addTrackToQueue(TSessionID const &sid,
 TResultOpt JukeBox::voteTrack(TSessionID const &sid,
                               TTrackID const &trkid,
                               TVote vote) {
+  auto retIsExpired = mDataStore->isSessionExpired(sid);
+  if (holds_alternative<Error>(retIsExpired))
+    return get<Error>(retIsExpired);
+  if (get<bool>(retIsExpired)) {
+    string msg = "Session expired for user ID '" + sid + "'.";
+    LOG(WARNING) << msg;
+    return Error(ErrorCode::SessionExpired, msg);
+  }
+
   return mDataStore->voteTrack(sid, trkid, vote);
 }
 
 TResultOpt JukeBox::removeTrack(TSessionID const &sid, TTrackID const &trkid) {
+  auto retIsExpired = mDataStore->isSessionExpired(sid);
+  if (holds_alternative<Error>(retIsExpired))
+    return get<Error>(retIsExpired);
+  if (get<bool>(retIsExpired)) {
+    string msg = "Session expired for user ID '" + sid + "'.";
+    LOG(WARNING) << msg;
+    return Error(ErrorCode::SessionExpired, msg);
+  }
+
   auto retUser = mDataStore->getUser(sid);
   if (holds_alternative<Error>(retUser))
     return get<Error>(retUser);
@@ -269,6 +305,15 @@ TResultOpt JukeBox::removeTrack(TSessionID const &sid, TTrackID const &trkid) {
 TResultOpt JukeBox::moveTrack(TSessionID const &sid,
                               TTrackID const &trkid,
                               QueueType toQueue) {
+  auto retIsExpired = mDataStore->isSessionExpired(sid);
+  if (holds_alternative<Error>(retIsExpired))
+    return get<Error>(retIsExpired);
+  if (get<bool>(retIsExpired)) {
+    string msg = "Session expired for user ID '" + sid + "'.";
+    LOG(WARNING) << msg;
+    return Error(ErrorCode::SessionExpired, msg);
+  }
+
   auto retUser = mDataStore->getUser(sid);
   if (holds_alternative<Error>(retUser))
     return get<Error>(retUser);
@@ -308,6 +353,15 @@ TResultOpt JukeBox::moveTrack(TSessionID const &sid,
 }
 
 TResultOpt JukeBox::controlPlayer(TSessionID const &sid, PlayerAction action) {
+  auto retIsExpired = mDataStore->isSessionExpired(sid);
+  if (holds_alternative<Error>(retIsExpired))
+    return get<Error>(retIsExpired);
+  if (get<bool>(retIsExpired)) {
+    string msg = "Session expired for user ID '" + sid + "'.";
+    LOG(WARNING) << msg;
+    return Error(ErrorCode::SessionExpired, msg);
+  }
+
   int const volChangePercent = 10;
   auto retUser = mDataStore->getUser(sid);
   if (holds_alternative<Error>(retUser))
