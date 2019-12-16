@@ -91,6 +91,7 @@ class SpotifyAuthorization : public httpserver::http_resource {
   std::unique_ptr<std::thread> mServerThread;
   bool shutdownServer = true;
   std::mutex mMutex;
+  std::exception_ptr mpException = nullptr;
 
   const std::shared_ptr<httpserver::http_response> render(
       httpserver::http_request const &request);
