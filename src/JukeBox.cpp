@@ -10,6 +10,8 @@
     - rename `.currentVote` --> `.userHasVoted`
     - rename `.duration` --> `.durationMs`
     - rename `@retval` --> `@return`
+
+    - either always function(void); or function();
  */
 
 #include "JukeBox.h"
