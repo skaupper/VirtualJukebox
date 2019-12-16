@@ -58,8 +58,6 @@ include(cmake/FindGlog.cmake)
 set(ENTRYPOINT_SOURCE   src/main.cpp)
 # All source file (excluding main) for the application
 set(APP_SOURCES         src/JukeBox.cpp
-                        src/Types/Tracks.cpp
-                        src/Types/Queue.cpp
                         src/Utils/LoggingHandler.cpp
                         src/Utils/ConfigHandler.cpp
                         src/Utils/Serializer.cpp
@@ -68,7 +66,7 @@ set(APP_SOURCES         src/JukeBox.cpp
                         src/Spotify/SpotifyAPITypes.cpp
                         src/Spotify/SpotifyAPI.cpp
                         src/Spotify/SpotifyAuthorization.cpp
-                        src/Network/NetworkAPI.cpp
+                        src/NetworkAPI.cpp
                         src/Network/RestAPI.cpp
                         src/Network/RestRequestHandler.cpp
                         src/Network/RestEndpointHandlers.cpp
@@ -77,6 +75,8 @@ set(APP_SOURCES         src/JukeBox.cpp
 set(APP_HEADER          src/JukeBox.h
                         src/MusicBackend.h
                         src/NetworkListener.h
+                        src/DataStore.h
+                        src/NetworkAPI.h
                         src/Types/Tracks.h
                         src/Types/Queue.h
                         src/Types/Result.h
@@ -89,12 +89,10 @@ set(APP_HEADER          src/JukeBox.h
                         src/Spotify/SpotifyAPITypes.h
                         src/Spotify/SpotifyAPI.h
                         src/Spotify/SpotifyAuthorization.h
-                        src/Network/NetworkAPI.h
                         src/Network/RestAPI.h
                         src/Network/RestRequestHandler.h
                         src/Network/RestEndpointHandlers.h
                         src/Network/RequestInformation.h
-                        src/Datastore/DataStore.h
                         src/Datastore/RAMDataStore.h)
 
 # Libraries and include directories of dependencies used by the application
@@ -192,7 +190,7 @@ clang_format_add_target(${FORMATTING_SOURCES})
 if(DOXYGEN_FOUND)
   message(STATUS "Add Doxygen target")
   set(DOXYGEN_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/docs/)
-  doxygen_add_docs(doc ${DOC_SOURCES} ${ENTRYPOINT_SOURCE} ${APP_SOURCES} ${APP_HEADER} ${TEST_SOURCES})
+  doxygen_add_docs(doc ${DOC_SOURCES} ${ENTRYPOINT_SOURCE} ${APP_SOURCES} ${APP_HEADER})
 else()
   message(STATUS "Do not add Doxygen target (Doxygen was not found)")
 endif()

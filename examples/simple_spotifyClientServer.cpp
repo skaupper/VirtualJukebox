@@ -19,7 +19,7 @@
 using namespace std;
 using namespace SpotifyApi;
 
-int main(void) {
+int main() {
   // initialize config handler and logger
   auto config = ConfigHandler::getInstance();
   config->setConfigFilePath("../../jukebox_config.ini");

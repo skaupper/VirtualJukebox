@@ -50,7 +50,10 @@ class NetworkListener {
    * @brief Query the content of the current queues.
    * @details Additionally to the current normal and admin queue, the currently
    * playing track is returned as well (if any).
-   * @param sid The session ID of the user.
+   *
+   * @param sid The session ID of the user. Used to provide the information if
+   * the user has already voted for a specific track.
+   *
    * @return On success the current queues and the current track are returned,
    * an `Error` otherwise.
    */
@@ -86,7 +89,6 @@ class NetworkListener {
    * needed.
    * @param trkid The ID of the track to add to a queue. Has to be queried using
    * `queryMusic` beforehand.
-   * @param type Determines to which queue the track should be added.
    * @param vote Determines if a vote is set or revoked. There cannot be more
    * than 1 or less than 0 votes from the same user on the same track!
    *

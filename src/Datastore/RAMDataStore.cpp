@@ -1,8 +1,11 @@
-/** ----------------------------------------------------------------------------
+
+/*****************************************************************************/
+/**
  * @file    RAMDataStore.h
  * @author  Samuel Hick <samuel.hick@gmx.at>
  * @brief   Class RAMDataStore implementation
- * ---------------------------------------------------------------------------*/
+ */
+/*****************************************************************************/
 
 #include "Datastore/RAMDataStore.h"
 
@@ -136,8 +139,9 @@ TResult<BaseTrack> RAMDataStore::removeTrack(TTrackID const &ID, QueueType q) {
 
   Queue *pQueue = SelectQueue(q);
   QueuedTrack track;
-  if (pQueue == nullptr)
+  if (pQueue == nullptr) {
     return Error(ErrorCode::InvalidValue, "Invalid Parameter in SelectQueue");
+  }
 
   // Deep copy track, then remove it
   track.trackId = ID;

@@ -10,6 +10,10 @@
 
 #include "json/json.hpp"
 
+/**
+ * @brief Template class which can be used as a central class for serialization
+ * routines for different data types.
+ */
 class Serializer {
  public:
   template <class T>

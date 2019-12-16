@@ -1,8 +1,10 @@
-/** ----------------------------------------------------------------------------
+/*****************************************************************************/
+/**
  * @file    RAMDataStore.h
  * @author  Samuel Hick <samuel.hick@gmx.at>
  * @brief   Class RAMDataStore definition
- * ---------------------------------------------------------------------------*/
+ */
+/*****************************************************************************/
 
 #ifndef _RAMDATASTORE_H_
 #define _RAMDATASTORE_H_
@@ -13,13 +15,17 @@
 #include <variant>
 #include <vector>
 
-#include "Datastore/DataStore.h"
+#include "DataStore.h"
 #include "Types/GlobalTypes.h"
 #include "Types/Queue.h"
 #include "Types/Result.h"
 #include "Types/Tracks.h"
 #include "Types/User.h"
 
+/**
+ * @brief Implements a DataStore which stores its data purly in RAM (no
+ * persistance).
+ */
 class RAMDataStore : public DataStore {
  public:
   TResultOpt addUser(User const &user);

@@ -26,76 +26,40 @@
 class SpotifyBackend : public MusicBackend {
  public:
   /**
-   * @brief initalizes the backend
-   * @details this function must be called to start the authorization server
-   * which is responsible for accessing the "access token"
-   * @return none
+   * @details This function must be called to start the authorization server
+   * which is needed to acquire an *access token*.
+   * @copydoc MusicBackend::initBackend
    */
-  virtual TResultOpt initBackend(void) override;
+  virtual TResultOpt initBackend() override;
 
-  /**
-   * @brief starts a search request with the given pattern to the spotify api
-   * @param pattern search patten (can also contain 2 wildcards *)
-   * @param num maximum number of tracks get returned (max is 50)
-   * @return on success vector of BaseTrack, else Error
-   */
   virtual TResult<std::vector<BaseTrack>> queryTracks(
       std::string const &pattern, size_t const num) override;
 
   /**
-   * @brief set the given track as playback (means the track gets played)
-   * @details the method checks first if there are any spotify players
-   * (webplayer, smartphone,...), if not KeyNotFound Error gets returned. Next
-   * step is to check if in the config.ini is a playingDevice is given. if yes,
-   * and this playing device is found, this device gets selected for the
-   * playback, else the actual selected (spotify select) playing device gets
-   * used
-   * @param track track to play
-   * @return std::nullopt on succeed, otherwise Error
+   * @details This method checks if there are any active Spotify devices
+   * (webplayer, smartphone,...), if not \link #ErrorCode KeyNotFound\endlink is
+   * returned. \n
+   * The next step is to check if `playingDevice` is set in the configuration
+   * file. If yes, and this device is currently active, it gets
+   * selected for the playback, otherwise the currently selected (Spotify
+   * Connect) device is used.
+   * @copydoc MusicBackend::setPlayback
    */
   virtual TResultOpt setPlayback(BaseTrack const &track) override;
 
-  /**
-   * @brief returns the current playback of the active device as a playback
-   * track
-   * @return actual playback track on success (or nothing if none is currently
-   * played), otherwise Error
-   */
-  virtual TResult<std::optional<PlaybackTrack>> getCurrentPlayback(
-      void) override;
+  virtual TResult<std::optional<PlaybackTrack>> getCurrentPlayback() override;
 
-  /**
-   * @brief pauses the actual playback
-   * @return std::nullopt on success, else Error
-   */
-  virtual TResultOpt pause(void) override;
+  virtual TResultOpt pause() override;
 
-  /**
-   * @brief resumes the actual playback
-   * @return on failure (no active playback,..) returns Error
-   */
   virtual TResultOpt play() override;
 
-  /**
-   * @brief returns the volume of the actual device in percent
-   * @return volume in percent on success, otherwise Error
-   */
-  virtual TResult<size_t> getVolume(void) override;
+  virtual TResult<size_t> getVolume() override;
 
-  /**
-   * @brief sets a new volume
-   * @details if a device is given in the ini file, this device gets selected,
-   * if not found, the actual active device
-   * @param percent volume in percent
-   * @return on failure Error
-   */
   virtual TResultOpt setVolume(size_t const percent) override;
 
   /**
-   * @brief creates a new BaseTrack item with the given trackID
    * @details the trackID is the same as the spotify uri string
-   * @param trackID track id returned for example from queryTracks
-   * @return new BaseTrack object on success, otherwise Error
+   * @copydoc MusicBackend::createBaseTrack
    */
   virtual TResult<BaseTrack> createBaseTrack(TTrackID const &trackID) override;
 

@@ -1,5 +1,5 @@
 /**
- * @file    SpotifyAPI.h
+ * @file    SpotifyAuthorization.cpp
  * @author  Stefan Jahn <stefan.jahn332@gmail.com>
  * @brief   Class SpotifyAuthorization implementation
  */
@@ -21,7 +21,7 @@ SpotifyAuthorization::~SpotifyAuthorization() {
   stopServer();
 }
 
-TResultOpt SpotifyAuthorization::startServer(void) {
+TResultOpt SpotifyAuthorization::startServer() {
   VLOG(100) << "SpotifyAuthorization: Start Server";
 
   // if(setupConfigParams() holds error return error
@@ -53,13 +53,13 @@ void SpotifyAuthorization::stopServer() {
   }
 }
 
-std::string const &SpotifyAuthorization::getRefreshToken(void) {
+std::string const &SpotifyAuthorization::getRefreshToken() {
   return mToken.getRefreshToken();
 }
-std::string const &SpotifyAuthorization::getAccessToken(void) {
+std::string const &SpotifyAuthorization::getAccessToken() {
   return mToken.getAccessToken();
 }
-TResultOpt SpotifyAuthorization::refreshAccessToken(void) {
+TResultOpt SpotifyAuthorization::refreshAccessToken() {
   // check if refresh token is available
   if (mToken.getRefreshToken().empty()) {
     return Error(ErrorCode::InvalidValue, "No refresh token available");
@@ -97,7 +97,7 @@ TResultOpt SpotifyAuthorization::refreshAccessToken(void) {
   return std::nullopt;
 }
 
-__int64_t SpotifyAuthorization::getExpiresAt(void) {
+__int64_t SpotifyAuthorization::getExpiresAt() {
   return mTokenReceiveTime + mToken.getExpiresIn() -
          10;  // reduce by 10 to be sure (networktime delays,...)
 }
@@ -106,7 +106,7 @@ void SpotifyAuthorization::setScopes(std::string const &scopes) {
   mScopes = scopes;
 }
 
-std::string SpotifyAuthorization::getScopes(void) {
+std::string SpotifyAuthorization::getScopes() {
   return mScopes;
 }
 

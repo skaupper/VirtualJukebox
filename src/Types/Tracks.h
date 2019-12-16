@@ -11,6 +11,9 @@
 
 #include "Types/GlobalTypes.h"
 
+/**
+ * @brief The most basic representation of a track.
+ */
 class BaseTrack {
  public:
   TTrackID trackId;
@@ -25,6 +28,9 @@ class BaseTrack {
   }
 };
 
+/**
+ * @brief Specialized track which is found inside queues.
+ */
 struct QueuedTrack : public BaseTrack {
   int votes;
   TVote currentVote;
@@ -38,6 +44,9 @@ struct QueuedTrack : public BaseTrack {
   }
 };
 
+/**
+ * @brief Specialized track representing the currently playing track.
+ */
 struct PlaybackTrack : public BaseTrack {
   int progressMs;
   bool isPlaying;
