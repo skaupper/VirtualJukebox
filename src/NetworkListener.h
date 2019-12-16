@@ -6,6 +6,12 @@
  */
 /*****************************************************************************/
 
+/* TODO:
+ *  - rename all TSessionId --> TSessionID
+ *
+ *
+ */
+
 #ifndef _NETWORKLISTENER_H_
 #define _NETWORKLISTENER_H_
 
