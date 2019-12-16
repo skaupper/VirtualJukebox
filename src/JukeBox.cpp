@@ -249,7 +249,7 @@ TResultOpt JukeBox::removeTrack(TSessionID const &sid, TTrackID const &trkid) {
      */
     LOG(ERROR) << "Jukebox.moveTrack: TrackID '" << trkid
                << "' was found in both queues.";
-    return Error(ErrorCode::InvalidFormat, "Track found in both queues.");
+    return Error(ErrorCode::InvalidValue, "Track found in both queues.");
   }
 
   QueueType q;
@@ -332,9 +332,8 @@ TResultOpt JukeBox::controlPlayer(TSessionID const &sid, PlayerAction action) {
       ret = mMusicBackend->pause();
       break;
     case PlayerAction::Stop:
-      /* TODO: Implement an actual stop functionality? */
-      ret = mMusicBackend->pause();
-      break;
+      return Error(ErrorCode::NotImplemented,
+                   "Player action 'stop' is not implemented yet");
     case PlayerAction::Skip:
       ret = mScheduler->nextTrack();
       if (ret.has_value())

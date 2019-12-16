@@ -18,12 +18,10 @@ The known errors are:
   If a client requested a new admin session but specified a wrong password.
 - `403 Forbidden`\n
   The request was done by an unauthorized user. That includes requests to admin endpoints by non-admins or an attempt
-  to do multiple votes on the same track.
+  to do multiple votes on the same track. Additionally this error may be returned if the MusicBackend has an permission problem.
 - `404 Not found`\n
   The requested endpoint has not been found.\n
   For now, unknown `track_id`s also trigger this error.
-- `405 Method not allowed`\n
-  The requested endpoint was accessed with an unallowed method.
 - `422 Unprocessable Entity`\n
   The content of the request (JSON body) has an unexpected/invalid format.
 - `440 Login-Time-out`\n
@@ -32,6 +30,8 @@ The known errors are:
   This code may be encountered if the server catched an internal error (which may as well just have crashed the server)
   and was still able to send a response.\n
   If a client gets that status code, please notify the server team!
+- `502 Bad Gateway`
+  If a third party service responds with any unexpected error this error code is returned.
 
 **Note**: More errors may be added in the future!
 
@@ -80,7 +80,7 @@ which is needed if the user wants to undo a vote or prevents him from voting twi
 ~~~~~{.c}
 {
     "password": "<admin_password>",
-    "nickname" "<nickname>"
+    "nickname": "<nickname>"
 }
 ~~~~~
 
@@ -313,10 +313,8 @@ Using this endpoint the client can cause the player behaviour to change.
 
 The value of `player_action` controls which action the server should take. Valid values are:
 
-- `"play"`: Starts or resumes playback
+- `"play"`: Starts or resumes playback.
 - `"pause"`: Pauses the playback. If it is already paused or stopped nothing happens.
-- `"stop"`: Stops playback and remove the currently playing track (if any). If playback is paused remove
-  the track as well. If it is already stopped nothing happens.
 - `"skip"`: Removes the currently playing (or paused) track and play the next one in the queue. If playback is stopped
   remove the next queued track without resuming playback.
 - `"volume_up"`: Raises the volume by a fixed amount if it is not already at its maximum value.

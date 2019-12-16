@@ -30,7 +30,6 @@ static TResult<json const> parseJsonString(string const &str) {
 }
 
 static ResponseInformation const mapErrorToResponse(Error const &err) {
-  // TODO: extend the list of known error codes
   static const map<ErrorCode, int> ERROR_TO_HTTP_STATUS = {
       {ErrorCode::WrongPassword, 401},        //
       {ErrorCode::AccessDenied, 403},         //
@@ -41,8 +40,7 @@ static ResponseInformation const mapErrorToResponse(Error const &err) {
       {ErrorCode::InvalidValue, 400},         //
       {ErrorCode::NotImplemented, 500},       //
       {ErrorCode::NotInitialized, 400},       //
-      {ErrorCode::SpotifyNotFound, 400},      //
-      {ErrorCode::SpotifyAccessDenied, 403},  //
+      {ErrorCode::SpotifyNotFound, 404},      //
       {ErrorCode::SpotifyForbidden, 403},     //
       {ErrorCode::SpotifyAccessDenied, 403},  //
       {ErrorCode::SpotifyParseError, 400},    //
@@ -55,7 +53,6 @@ static ResponseInformation const mapErrorToResponse(Error const &err) {
   };
 
   int statusCode;
-  string msg;
 
   // map internal error codes to HTTP status codes
   // unhandled ErrorCodes trigger an internal server error
@@ -63,19 +60,16 @@ static ResponseInformation const mapErrorToResponse(Error const &err) {
   auto statusCodeIt = ERROR_TO_HTTP_STATUS.find(errorCode);
   if (statusCodeIt == ERROR_TO_HTTP_STATUS.cend()) {
     statusCode = 500;
-    msg = "Unhandled error code detected! Original error message: " +
-          err.getErrorMessage();
   } else {
     statusCode = statusCodeIt->second;
-    msg = err.getErrorMessage();
   }
 
-  VLOG(2) << "Request lead to error: " << msg;
+  VLOG(2) << "Request lead to error: " << err.getErrorMessage();
 
   // construct response
   json responseBody = {
-      {"status", statusCode},  //
-      {"error", msg}           //
+      {"status", statusCode},           //
+      {"error", err.getErrorMessage()}  //
   };
   return {responseBody.dump(), statusCode};
 }
