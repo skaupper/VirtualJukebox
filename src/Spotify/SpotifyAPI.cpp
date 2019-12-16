@@ -160,6 +160,13 @@ TResult<std::optional<Playback>> SpotifyAPI::getCurrentPlayback(
   auto playbackRet = parseSpotifyCall<Playback>(response);
   if (auto error = std::get_if<Error>(&playbackRet)) {
     LOG(ERROR) << "SpotifyAPI.getCurrentPlayback: " << error->getErrorMessage();
+
+    if (error->getErrorCode() == ErrorCode::SpotifyParseError) {
+      VLOG(101) << "Code: " << response.code;
+      VLOG(101) << "Body:";
+      VLOG(101) << response.body;
+    }
+
     return *error;
   }
   VLOG(100) << "SpotifyAPI.getCurrentPlayback: playback request succeeded";
@@ -421,6 +428,7 @@ template <typename SpotifyAPIType>
 TResult<SpotifyAPIType> SpotifyAPI::parseSpotifyCall(
     RestClient::Response const &response) {
   nlohmann::json jsonData;
+
   try {
     jsonData = nlohmann::json::parse(response.body);
 
@@ -471,18 +479,31 @@ Error SpotifyAPI::errorParser(SpotifyApi::SpotifyError const &error) {
 }
 
 std::string SpotifyAPI::stringUrlEncode(std::string const &str) {
-  std::map<char, std::string> const replaceMap = {
-      {' ', "%20"}, {'/', "%2F"}, {';', "%3B"}, {':', "%3A"}};
+  std::map<std::string, std::string> const replaceMap = {{" ", "%20"},
+                                                         {"/", "%2F"},
+                                                         {";", "%3B"},
+                                                         {":", "%3A"},
+                                                         {"Ä", "%C3%84"},
+                                                         {"Ö", "%C3%96"},
+                                                         {"Ü", "%C3%9C"},
+                                                         {"ß", "%C3%9F"},
+                                                         {"ä", "%C3%A4"},
+                                                         {"ö", "%C3%B6"},
+                                                         {"ü", "%C3%BC"},
+                                                         {"ẞ", "%E1%BA%9E"}};
 
-  std::string urlEncoded = "";
-  for (auto &elem : str) {
-    if (replaceMap.find(elem) != replaceMap.end()) {
-      urlEncoded.append(replaceMap.at(elem));
-    } else {
-      urlEncoded.append(1, elem);
-    }
-  }
-  return urlEncoded;
+  std::string urlEnc = str;
+
+  std::for_each(replaceMap.cbegin(),
+                replaceMap.cend(),
+                [&](std::pair<std::string, std::string> const &elem) {
+                  auto pos = urlEnc.find(elem.first);
+                  while (pos != std::string::npos) {
+                    urlEnc.replace(pos, elem.first.length(), elem.second);
+                    pos = urlEnc.find(elem.first, pos);
+                  }
+                });
+  return urlEnc;
 }
 
 std::string SpotifyAPI::stringBase64Encode(std::string const &str) {
