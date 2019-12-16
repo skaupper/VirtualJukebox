@@ -127,18 +127,43 @@ TResult<QueueStatus> JukeBox::getCurrentQueues(TSessionID const &sid) {
 
   QueueStatus qs;
 
+  /* Admin queue */
   auto ret = mDataStore->getQueue(QueueType::Admin);
   if (holds_alternative<Error>(ret))
     return get<Error>(ret);
   qs.adminQueue = get<Queue>(ret);
 
+  /* Set markers, if user has already voted for a track */
+  auto retUser = mDataStore->getUser(sid);
+  if (holds_alternative<Error>(retUser))
+    return get<Error>(retUser);
+  User user = get<User>(retUser);
+
+  for (auto &queueElem : qs.adminQueue.tracks) {
+    for (auto const &votedElem : user.votes) {
+      if (queueElem.trackId == votedElem)
+        /* User has voted for this track */
+        queueElem.currentVote = true;
+      else
+        queueElem.currentVote = false;
+    }
+  }
+
+  /* User queue */
   ret = mDataStore->getQueue(QueueType::Normal);
   if (holds_alternative<Error>(ret))
     return get<Error>(ret);
   qs.normalQueue = get<Queue>(ret);
 
-  /* Set markers, if user has already voted for a track */
-  //  for ()
+  for (auto &queueElem : qs.normalQueue.tracks) {
+    for (auto const &votedElem : user.votes) {
+      if (queueElem.trackId == votedElem)
+        /* User has voted for this track */
+        queueElem.currentVote = true;
+      else
+        queueElem.currentVote = false;
+    }
+  }
 
   /* Construct current PlaybackTrack through combining of information
    * in DataStore and Spotify */
