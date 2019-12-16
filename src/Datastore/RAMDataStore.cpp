@@ -66,21 +66,17 @@ TResult<User> RAMDataStore::removeUser(TSessionID const &ID) {
   }
 }
 
-// remove expired sessions
-TResultOpt RAMDataStore::checkSessionExpirations() {
+// check expired sessions
+TResult<bool> RAMDataStore::isSessionExpired(TSessionID const &ID) {
+  auto retUser = getUser(ID);
+  if (holds_alternative<Error>(retUser))
+    return get<Error>(retUser);
+
   // Exclusive Access to User List
   unique_lock<shared_mutex> MyLock(mUserMutex);
 
   time_t now = time(nullptr);
-  // custom predicate
-  auto checkExpired = [now](const User &user) {
-    return (user.ExpirationDate < now);
-  };
-  // actually remove all expired sessions
-  mUsers.erase(remove_if(mUsers.begin(), mUsers.end(), checkExpired),
-               mUsers.end());
-
-  return nullopt;
+  return (get<User>(retUser).ExpirationDate < now);
 }
 
 TResultOpt RAMDataStore::addTrack(BaseTrack const &track, QueueType q) {

@@ -167,23 +167,25 @@ TEST(DataStoreTest, UserTimeout) {
 
   // sleep 3 seconds, first user should timeout then
   this_thread::sleep_for(chrono::seconds(3));
-  ds.checkSessionExpirations();
+  res = ds.isSessionExpired(usr1.SessionID);
+  ASSERT_EQ(get<bool>(res), true);
   res = ds.hasUser(usr1.SessionID);
   ASSERT_EQ(checkAlternativeError(res), false);
-  ASSERT_EQ(get<bool>(res), false);
+  ASSERT_EQ(get<bool>(res), true);
   res = ds.hasUser(usr2.SessionID);
   ASSERT_EQ(checkAlternativeError(res), false);
   ASSERT_EQ(get<bool>(res), true);
 
   // sleep another 3 seconds, second user should timeout then
   this_thread::sleep_for(chrono::seconds(3));
-  ds.checkSessionExpirations();
+  res = ds.isSessionExpired(usr2.SessionID);
+  ASSERT_EQ(get<bool>(res), true);
   res = ds.hasUser(usr1.SessionID);
   ASSERT_EQ(checkAlternativeError(res), false);
-  ASSERT_EQ(get<bool>(res), false);
+  ASSERT_EQ(get<bool>(res), true);
   res = ds.hasUser(usr2.SessionID);
   ASSERT_EQ(checkAlternativeError(res), false);
-  ASSERT_EQ(get<bool>(res), false);
+  ASSERT_EQ(get<bool>(res), true);
 }
 
 TEST(DataStoreTest, votetest) {

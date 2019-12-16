@@ -47,12 +47,12 @@ class DataStore {
    */
   virtual TResult<User> removeUser(TSessionID const &ID) = 0;
   /**
-   * @brief    Check for users whose session has expired and remove those from
-   * the internal list
-   * @param    none
-   * @retval   TResultOpt possibly containing Error Message
+   * @brief    Check if user session is expired.
+   * @param    ID Session ID of the user to check
+   * @retval   Returns true if session expired, false if not. Returns an Error
+   * object on error.
    */
-  virtual TResultOpt checkSessionExpirations() = 0;
+  virtual TResult<bool> isSessionExpired(TSessionID const &ID) = 0;
   /**
    * @brief    Add Track to one of the internal Queues
    * @param    BaseTrack The Track to add
