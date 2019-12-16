@@ -102,6 +102,8 @@ TResult<TSessionID> JukeBox::generateSession(optional<TPassword> const &pw,
     userID++;
   }
 
+  user.ExpirationDate = time(nullptr) + sessionTimeoutAfterSeconds;
+
   mDataStore->addUser(user);
 
   return static_cast<TSessionID>(user.SessionID);

@@ -58,6 +58,8 @@ class JukeBox : public NetworkListener {
   NetworkAPI *mNetwork;
   MusicBackend *mMusicBackend;
   SimpleScheduler *mScheduler;
+
+  unsigned const sessionTimeoutAfterSeconds = 3600;
 };
 
 #endif /* _JUKEBOX_H_ */
