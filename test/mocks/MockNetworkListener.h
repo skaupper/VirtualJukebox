@@ -36,7 +36,7 @@ class MockNetworkListener : public NetworkListener {
   TResult<std::vector<BaseTrack>> queryTracks(
       std::string const &searchPattern, size_t const nrOfEntries) override;
 
-  TResult<QueueStatus> getCurrentQueues(TSessionID const &) override;
+  TResult<QueueStatus> getCurrentQueues(TSessionID const &sid) override;
 
   TResultOpt addTrackToQueue(TSessionID const &sid,
                              TTrackID const &trkid,

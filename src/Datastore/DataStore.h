@@ -118,6 +118,8 @@ class DataStore {
    * @retval   TResultOpt possibly containing an Error Message
    */
   virtual TResultOpt nextTrack() = 0;
+
+  unsigned const cSessionTimeoutAfterSeconds = 3600;
 };
 
 #endif /* _DATASTORE_H_ */

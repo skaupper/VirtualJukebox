@@ -101,8 +101,7 @@ TResult<TSessionID> JukeBox::generateSession(optional<TPassword> const &pw,
     user.SessionID = "ID" + to_string(userID) + to_string(time(nullptr));
     userID++;
   }
-
-  user.ExpirationDate = time(nullptr) + sessionTimeoutAfterSeconds;
+  user.ExpirationDate = time(nullptr) + mDataStore->cSessionTimeoutAfterSeconds;
 
   mDataStore->addUser(user);
 
@@ -115,7 +114,7 @@ TResult<vector<BaseTrack>> JukeBox::queryTracks(string const &searchPattern,
   return tracks;
 }
 
-TResult<QueueStatus> JukeBox::getCurrentQueues(TSessionID const &) {
+TResult<QueueStatus> JukeBox::getCurrentQueues(TSessionID const &sid) {
   QueueStatus qs;
 
   auto ret = mDataStore->getQueue(QueueType::Admin);

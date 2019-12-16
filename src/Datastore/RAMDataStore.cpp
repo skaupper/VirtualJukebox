@@ -76,7 +76,14 @@ TResult<bool> RAMDataStore::isSessionExpired(TSessionID const &ID) {
     return get<Error>(retUser);
 
   time_t now = time(nullptr);
-  return (get<User>(retUser).ExpirationDate < now);
+  if (now < get<User>(retUser).ExpirationDate) {
+    /* Session is not timed out. Advance expiration time, since user was active
+     * right now. */
+    get<User>(retUser).ExpirationDate = now + cSessionTimeoutAfterSeconds;
+    return false;
+  }
+
+  return true;
 }
 
 TResultOpt RAMDataStore::addTrack(BaseTrack const &track, QueueType q) {
