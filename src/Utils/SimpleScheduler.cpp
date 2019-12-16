@@ -95,7 +95,6 @@ bool SimpleScheduler::checkForInconsistency() {
   return false;
 }
 
-
 TResultOpt SimpleScheduler::doSchedule() {
   if (mDataStore == nullptr || mMusicBackend == nullptr) {
     return Error(ErrorCode::InvalidValue,
