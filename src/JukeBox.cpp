@@ -24,6 +24,7 @@ JukeBox::JukeBox() {
   mDataStore = new RAMDataStore();
   mNetwork = new RestAPI();
   mMusicBackend = new SpotifyBackend();
+  mScheduler = new SimpleScheduler(mDataStore, mMusicBackend);
 
   mNetwork->setListener(this);
 }
@@ -56,6 +57,8 @@ bool JukeBox::start(string const &exeName, string const &configFilePath) {
 
   // TODO: check for available devices here? only works if initBackend blocks
   // until an access token has been acquired
+
+  mScheduler->start();
 
   mNetwork->handleRequests();
 
@@ -134,7 +137,7 @@ TResult<QueueStatus> JukeBox::getCurrentQueues(TSessionID const &) {
   pbt.title = tmp.title;
   pbt.trackId = tmp.trackId;
 
-  auto trackSpotify = mMusicBackend->getCurrentPlayback();
+  auto trackSpotify = mScheduler->getLastPlayback();
   if (holds_alternative<Error>(trackSpotify))
     return get<Error>(trackSpotify);
 
@@ -149,15 +152,21 @@ TResult<QueueStatus> JukeBox::getCurrentQueues(TSessionID const &) {
   pbt.progressMs = pbtSpotify.progressMs;
   pbt.isPlaying = pbtSpotify.isPlaying;
 
-  if (!(pbt == pbtSpotify)) {
-    string msg =
-        "Jukebox.getCurrentQueues: Inconsistency between current playback "
-        "track in Spotify and DataStore";
-    LOG(WARNING) << msg;
-    return Error(ErrorCode::InvalidValue, msg);
+  if (mScheduler->checkForInconsistency()) {
+    if (!(pbt == pbtSpotify)) {
+      string msg =
+          "Jukebox.getCurrentQueues: Inconsistency between current playback "
+          "track in Spotify and DataStore. Jukebox functionality resumes "
+          "when " +
+          pbt.artist + " - " + pbt.title + " resumes and finishes";
+      LOG(WARNING) << msg;
+      return Error(ErrorCode::InvalidValue, msg);
+    }
+    qs.currentTrack = pbt;
+  } else {
+    // if nothing is queued, return track which is played on spotify
+    qs.currentTrack = pbtSpotify;
   }
-
-  qs.currentTrack = pbt;
 
   return qs;
 }
@@ -320,15 +329,10 @@ TResultOpt JukeBox::controlPlayer(TSessionID const &sid, PlayerAction action) {
       ret = mMusicBackend->pause();
       break;
     case PlayerAction::Skip:
-      ret = mDataStore->nextTrack();
+      ret = mScheduler->nextTrack();
       if (ret.has_value())
         return ret.value();
 
-      playingTrk = mDataStore->getPlayingTrack();
-      if (holds_alternative<Error>(playingTrk))
-        return get<Error>(playingTrk);
-
-      ret = mMusicBackend->setPlayback(get<QueuedTrack>(playingTrk));
       break;
     case PlayerAction::VolumeUp:
       volume = mMusicBackend->getVolume();

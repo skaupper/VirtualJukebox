@@ -20,6 +20,7 @@
 #include "Types/GlobalTypes.h"
 #include "Types/Queue.h"
 #include "Types/Result.h"
+#include "Utils/SimpleScheduler.h"
 
 class JukeBox : public NetworkListener {
  public:
@@ -56,6 +57,7 @@ class JukeBox : public NetworkListener {
   DataStore *mDataStore;
   NetworkAPI *mNetwork;
   MusicBackend *mMusicBackend;
+  SimpleScheduler *mScheduler;
 };
 
 #endif /* _JUKEBOX_H_ */

@@ -63,6 +63,7 @@ set(APP_SOURCES         src/JukeBox.cpp
                         src/Utils/LoggingHandler.cpp
                         src/Utils/ConfigHandler.cpp
                         src/Utils/Serializer.cpp
+                        src/Utils/SimpleScheduler.cpp
                         src/Spotify/SpotifyBackend.cpp
                         src/Spotify/SpotifyAPITypes.cpp
                         src/Spotify/SpotifyAPI.cpp
@@ -83,6 +84,7 @@ set(APP_HEADER          src/JukeBox.h
                         src/Utils/LoggingHandler.h
                         src/Utils/ConfigHandler.h
                         src/Utils/Serializer.h
+                        src/Utils/SimpleScheduler.h
                         src/Spotify/SpotifyBackend.h
                         src/Spotify/SpotifyAPITypes.h
                         src/Spotify/SpotifyAPI.h
