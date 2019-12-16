@@ -33,8 +33,23 @@ static TResult<json const> parseJsonString(string const &str) {
 static shared_ptr<http_response> const mapErrorToResponse(Error const &err) {
   // TODO: extend the list of known error codes
   static const map<ErrorCode, int> ERROR_TO_HTTP_STATUS = {
-      {ErrorCode::AccessDenied, 403},  //
-      {ErrorCode::InvalidFormat, 422}  //
+      {ErrorCode::AccessDenied, 403},         //
+      {ErrorCode::SessionExpired, 440},       //
+      {ErrorCode::InvalidFormat, 422},        //
+      {ErrorCode::InvalidValue, 400},         //
+      {ErrorCode::NotImplemented, 500},       //
+      {ErrorCode::NotInitialized, 400},       //
+      {ErrorCode::SpotifyNotFound, 400},      //
+      {ErrorCode::SpotifyAccessDenied, 403},  //
+      {ErrorCode::SpotifyForbidden, 403},     //
+      {ErrorCode::SpotifyAccessDenied, 403},  //
+      {ErrorCode::SpotifyParseError, 400},    //
+      {ErrorCode::SpotifyAPIError, 502},      //
+      {ErrorCode::SpotifyBadRequest, 400},    //
+      {ErrorCode::SpotifyHttpTimeout, 400},   //
+      {ErrorCode::SpotifyNoDevice, 404},      //
+      {ErrorCode::AlreadyExists, 400},        //
+      {ErrorCode::DoesntExist, 400}           //
   };
 
   int statusCode;
@@ -402,6 +417,10 @@ shared_ptr<http_response> const moveTracksHandler(
   PARSE_REQUIRED_STRING_FIELD(session_id, bodyJson);
   PARSE_REQUIRED_STRING_FIELD(track_id, bodyJson);
   PARSE_OPTIONAL_STRING_FIELD(queue_type, bodyJson);
+
+  if (!queue_type.has_value()) {
+    return Error(ErrorCode::InvalidFormat, "Missing field 'queue_type'!");
+  }
 
   // TODO: do deserialization using the JSON framework
   QueueType queueType;
