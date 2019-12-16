@@ -115,14 +115,16 @@ shared_ptr<http_response> const RestRequestHandler::render(
       req.get_args()      //
   });
 
-  if (response) {
-    return response;
+  if (response.has_value()) {
+    VLOG(2) << "Response: " << response.value().body;
+    return make_shared<string_response>(response.value().body,
+                                        response.value().code);
   }
 
   return NotFoundHandler(req);
 }
 
-shared_ptr<http_response> const RestRequestHandler::decodeAndDispatch(
+optional<ResponseInformation> RestRequestHandler::decodeAndDispatch(
     RequestInformation const &infos) {
   static const map<pair<string, string>, TEndpointHandler> AVAILABLE_ENDPOINTS =
       {
@@ -143,5 +145,5 @@ shared_ptr<http_response> const RestRequestHandler::decodeAndDispatch(
     return handlerIt->second(listener, infos);
   }
 
-  return nullptr;
+  return nullopt;
 }

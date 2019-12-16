@@ -9,36 +9,34 @@
 #ifndef _REST_ENDPOINT_HANDLERS_H_
 #define _REST_ENDPOINT_HANDLERS_H_
 
-#include <httpserver.hpp>
-
 #include "NetworkListener.h"
 #include "RequestInformation.h"
 
-typedef std::shared_ptr<httpserver::http_response> const (*TEndpointHandler)(
+typedef ResponseInformation const (*TEndpointHandler)(
     NetworkListener *, RequestInformation const &);
 
-std::shared_ptr<httpserver::http_response> const generateSessionHandler(
-    NetworkListener *, RequestInformation const &);
+ResponseInformation const generateSessionHandler(NetworkListener *,
+                                                 RequestInformation const &);
 
-std::shared_ptr<httpserver::http_response> const queryTracksHandler(
-    NetworkListener *, RequestInformation const &);
+ResponseInformation const queryTracksHandler(NetworkListener *,
+                                             RequestInformation const &);
 
-std::shared_ptr<httpserver::http_response> const getCurrentQueuesHandler(
-    NetworkListener *, RequestInformation const &);
+ResponseInformation const getCurrentQueuesHandler(NetworkListener *,
+                                                  RequestInformation const &);
 
-std::shared_ptr<httpserver::http_response> const addTrackToQueueHandler(
-    NetworkListener *, RequestInformation const &);
+ResponseInformation const addTrackToQueueHandler(NetworkListener *,
+                                                 RequestInformation const &);
 
-std::shared_ptr<httpserver::http_response> const voteTrackHandler(
-    NetworkListener *, RequestInformation const &);
+ResponseInformation const voteTrackHandler(NetworkListener *,
+                                           RequestInformation const &);
 
-std::shared_ptr<httpserver::http_response> const controlPlayerHandler(
-    NetworkListener *, RequestInformation const &);
+ResponseInformation const controlPlayerHandler(NetworkListener *,
+                                               RequestInformation const &);
 
-std::shared_ptr<httpserver::http_response> const moveTracksHandler(
-    NetworkListener *, RequestInformation const &);
+ResponseInformation const moveTracksHandler(NetworkListener *,
+                                            RequestInformation const &);
 
-std::shared_ptr<httpserver::http_response> const removeTrackHandler(
-    NetworkListener *, RequestInformation const &);
+ResponseInformation const removeTrackHandler(NetworkListener *,
+                                             RequestInformation const &);
 
 #endif  // _REST_ENDPOINT_HANDLERS_H_

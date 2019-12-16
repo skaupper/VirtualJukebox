@@ -80,9 +80,16 @@ TResult<TSessionID> JukeBox::generateSession(optional<TPassword> const &pw,
     name = nickname.value();
   user.Name = name;
 
-  if (pw.has_value() && pw.value() == get<string>(adminPw)) {
-    LOG(INFO) << "JukeBox.generateSession: User '" << name << "' is admin!";
-    user.isAdmin = true;
+  if (pw.has_value()) {
+    if (pw.value() == get<string>(adminPw)) {
+      LOG(INFO) << "JukeBox.generateSession: User '" << name << "' is admin!";
+      user.isAdmin = true;
+    } else {
+      LOG(ERROR) << "Given password '" << pw.value()
+                 << "' doesn't match with admin password";
+      return Error(ErrorCode::WrongPassword,
+                   "Given password doesn't match admin password");
+    }
   }
 
   /* Generate a unique ID, consisting of a counter and the number of seconds
@@ -242,7 +249,7 @@ TResultOpt JukeBox::removeTrack(TSessionID const &sid, TTrackID const &trkid) {
      */
     LOG(ERROR) << "Jukebox.moveTrack: TrackID '" << trkid
                << "' was found in both queues.";
-    return Error(ErrorCode::InvalidFormat, "Track found in both queues.");
+    return Error(ErrorCode::InvalidValue, "Track found in both queues.");
   }
 
   QueueType q;
@@ -325,9 +332,8 @@ TResultOpt JukeBox::controlPlayer(TSessionID const &sid, PlayerAction action) {
       ret = mMusicBackend->pause();
       break;
     case PlayerAction::Stop:
-      /* TODO: Implement an actual stop functionality? */
-      ret = mMusicBackend->pause();
-      break;
+      return Error(ErrorCode::NotImplemented,
+                   "Player action 'stop' is not implemented yet");
     case PlayerAction::Skip:
       ret = mScheduler->nextTrack();
       if (ret.has_value())

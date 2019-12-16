@@ -40,7 +40,7 @@ class RestRequestHandler : public httpserver::http_resource {
   std::shared_ptr<httpserver::http_response> const render(
       httpserver::http_request const &req) override;
 
-  std::shared_ptr<httpserver::http_response> const decodeAndDispatch(
+  std::optional<ResponseInformation> decodeAndDispatch(
       RequestInformation const &);
 };
 
