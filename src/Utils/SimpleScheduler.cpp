@@ -267,8 +267,8 @@ TResult<bool> SimpleScheduler::isTrackPlaying(
 TResult<bool> SimpleScheduler::isTrackFinished(
     std::optional<PlaybackTrack> const &currentOpt) {
   if (!currentOpt.has_value()) {
-    return ErrorCode::InvalidValue,
-           "Someone closed Spotify Player on playing Error";
+    return Error(ErrorCode::InvalidValue,
+           "Someone closed Spotify Player on playing Error");
   }
 
   auto playingTrackRet = mDataStore->getPlayingTrack();
