@@ -139,12 +139,11 @@ TResult<QueueStatus> JukeBox::getCurrentQueues(TSessionID const &sid) {
   qs.normalQueue = get<Queue>(ret);
 
   for (auto &queueElem : qs.normalQueue.tracks) {
+    queueElem.currentVote = false;
     for (auto const &votedElem : user.votes) {
       if (queueElem.trackId == votedElem)
         /* User has voted for this track */
-        queueElem.currentVote = true;
-      else
-        queueElem.currentVote = false;
+        queueElem.currentVote = true;;
     }
   }
 
