@@ -6,6 +6,11 @@
  */
 /*****************************************************************************/
 
+/* TODO:
+    - rename `.currentVote` --> `.userHasVoted`
+    - rename `.duration` --> `.durationMs`
+ */
+
 #include "JukeBox.h"
 
 #include <ctime>
