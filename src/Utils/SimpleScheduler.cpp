@@ -95,27 +95,6 @@ bool SimpleScheduler::checkForInconsistency() {
   return false;
 }
 
-/*
-TResultOpt SimpleScheduler::isDataIncosistent() {
-  std::shared_lock lockPlayback(mMtxPlayback);
-  std::shared_lock lockSchedulerState(mMtxModifySchedulerState);
-
-  auto emptyRet = areQueuesEmpty();
-  if (auto error = std::get_if<Error>(&emptyRet)) {
-    LOG(ERROR) << "SimpleScheduler: " << error->getErrorMessage();
-    // if error occurs, check for incosistence, so client can notify it
-    return *error;
-  }
-  bool empty = std::get<bool>(emptyRet);
-
-  // only check inconsistency when something is in the queue and state is in
-  // playing state
-  if (!empty && mSchedulerState == SchedulerState::Playing) {
-    return true;
-  }
-
-}
-*/
 
 TResultOpt SimpleScheduler::doSchedule() {
   if (mDataStore == nullptr || mMusicBackend == nullptr) {

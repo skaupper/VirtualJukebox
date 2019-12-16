@@ -47,8 +47,6 @@ class SimpleScheduler {
    */
   bool checkForInconsistency();
 
-  TResultOpt isDataIncosistent(void);
-
   /* TODO: functions below */
   /* enable() */
   /* disable() */
