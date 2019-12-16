@@ -30,7 +30,11 @@ struct QueuedTrack : public BaseTrack {
   TVote currentVote;
   uint64_t insertedAt;
   bool operator<(const QueuedTrack tr) {
-    return votes > tr.votes;
+    if (votes == tr.votes) {
+      return insertedAt < tr.insertedAt;
+    } else {
+      return votes > tr.votes;
+    }
   }
 };
 
