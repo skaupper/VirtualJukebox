@@ -20,4 +20,9 @@ struct RequestInformation {
   std::map<std::string, std::string, httpserver::http::arg_comparator> args;
 };
 
+struct ResponseInformation {
+  std::string body;
+  int code = 200;
+};
+
 #endif  // _REQUEST_INFORMATION_H_

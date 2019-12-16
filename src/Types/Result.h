@@ -38,7 +38,8 @@ enum class ErrorCode {
   SpotifyHttpTimeout,
   SpotifyNoDevice,
   AlreadyExists,
-  DoesntExist
+  DoesntExist,
+  WrongPassword
 };
 
 /**

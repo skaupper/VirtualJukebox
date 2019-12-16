@@ -14,7 +14,6 @@
 #include "json/json.hpp"
 
 using namespace std;
-using namespace httpserver;
 using json = nlohmann::json;
 
 //
@@ -25,16 +24,19 @@ static TResult<json const> parseJsonString(string const &str) {
   try {
     return json::parse(str);
   } catch (json::parse_error const &) {
-    VLOG(2) << "Failed to parse JSON body";
+    VLOG(2) << "Failed to parse JSON body: '" << str << "'";
     return Error(ErrorCode::InvalidFormat, "Failed to parse body");
   }
 }
 
-static shared_ptr<http_response> const mapErrorToResponse(Error const &err) {
+static ResponseInformation const mapErrorToResponse(Error const &err) {
   // TODO: extend the list of known error codes
   static const map<ErrorCode, int> ERROR_TO_HTTP_STATUS = {
+      {ErrorCode::WrongPassword, 401},        //
       {ErrorCode::AccessDenied, 403},         //
       {ErrorCode::SessionExpired, 440},       //
+      {ErrorCode::FileNotFound, 404},         //
+      {ErrorCode::KeyNotFound, 404},          //
       {ErrorCode::InvalidFormat, 422},        //
       {ErrorCode::InvalidValue, 400},         //
       {ErrorCode::NotImplemented, 500},       //
@@ -75,7 +77,7 @@ static shared_ptr<http_response> const mapErrorToResponse(Error const &err) {
       {"status", statusCode},  //
       {"error", msg}           //
   };
-  return make_shared<string_response>(responseBody.dump(), statusCode);
+  return {responseBody.dump(), statusCode};
 }
 
 //
@@ -157,7 +159,7 @@ static shared_ptr<http_response> const mapErrorToResponse(Error const &err) {
 // GENERATE SESSION
 //
 
-shared_ptr<http_response> const generateSessionHandler(
+ResponseInformation const generateSessionHandler(
     NetworkListener *listener, RequestInformation const &infos) {
   assert(listener);
 
@@ -185,15 +187,15 @@ shared_ptr<http_response> const generateSessionHandler(
   json responseBody = {
       {"session_id", static_cast<string>(sessionId)}  //
   };
-  return make_shared<string_response>(responseBody.dump());
+  return {responseBody.dump()};
 }
 
 //
 // QUERY TRACKS
 //
 
-shared_ptr<http_response> const queryTracksHandler(
-    NetworkListener *listener, RequestInformation const &infos) {
+ResponseInformation const queryTracksHandler(NetworkListener *listener,
+                                             RequestInformation const &infos) {
   assert(listener);
 
   // parse request parameters
@@ -218,14 +220,14 @@ shared_ptr<http_response> const queryTracksHandler(
   }
 
   json responseBody = {{"tracks", jsonTracks}};
-  return make_shared<string_response>(responseBody.dump());
+  return {responseBody.dump()};
 }
 
 //
 // GET CURRENT QUEUES
 //
 
-shared_ptr<http_response> const getCurrentQueuesHandler(
+ResponseInformation const getCurrentQueuesHandler(
     NetworkListener *listener, RequestInformation const &infos) {
   assert(listener);
 
@@ -258,14 +260,14 @@ shared_ptr<http_response> const getCurrentQueuesHandler(
   json responseBody = {{"currently_playing", playbackTrack},
                        {"normal_queue", normalQueue},
                        {"admin_queue", adminQueue}};
-  return make_shared<string_response>(responseBody.dump());
+  return {responseBody.dump()};
 }
 
 //
 // ADD TRACK TO QUEUE
 //
 
-shared_ptr<http_response> const addTrackToQueueHandler(
+ResponseInformation const addTrackToQueueHandler(
     NetworkListener *listener, RequestInformation const &infos) {
   assert(listener);
 
@@ -306,15 +308,15 @@ shared_ptr<http_response> const addTrackToQueueHandler(
 
   // construct the response
   json responseBody = json::object();
-  return make_shared<string_response>(responseBody.dump());
+  return {responseBody.dump()};
 }
 
 //
 // VOTE TRACK
 //
 
-shared_ptr<http_response> const voteTrackHandler(
-    NetworkListener *listener, RequestInformation const &infos) {
+ResponseInformation const voteTrackHandler(NetworkListener *listener,
+                                           RequestInformation const &infos) {
   assert(listener);
 
   auto parseResult = parseJsonString(infos.body);
@@ -340,14 +342,14 @@ shared_ptr<http_response> const voteTrackHandler(
 
   // construct the response
   json responseBody = json::object();
-  return make_shared<string_response>(responseBody.dump());
+  return {responseBody.dump()};
 }
 
 //
 // CONTROL PLAYER
 //
 
-shared_ptr<http_response> const controlPlayerHandler(
+ResponseInformation const controlPlayerHandler(
     NetworkListener *listener, RequestInformation const &infos) {
   assert(listener);
 
@@ -392,15 +394,15 @@ shared_ptr<http_response> const controlPlayerHandler(
 
   // construct the response
   json responseBody = json::object();
-  return make_shared<string_response>(responseBody.dump());
+  return {responseBody.dump()};
 }
 
 //
 // MOVE TRACK
 //
 
-shared_ptr<http_response> const moveTracksHandler(
-    NetworkListener *listener, RequestInformation const &infos) {
+ResponseInformation const moveTracksHandler(NetworkListener *listener,
+                                            RequestInformation const &infos) {
   assert(listener);
 
   auto parseResult = parseJsonString(infos.body);
@@ -419,7 +421,8 @@ shared_ptr<http_response> const moveTracksHandler(
   PARSE_OPTIONAL_STRING_FIELD(queue_type, bodyJson);
 
   if (!queue_type.has_value()) {
-    return Error(ErrorCode::InvalidFormat, "Missing field 'queue_type'!");
+    return mapErrorToResponse(
+        Error(ErrorCode::InvalidFormat, "Missing field 'queue_type'"));
   }
 
   // TODO: do deserialization using the JSON framework
@@ -442,15 +445,15 @@ shared_ptr<http_response> const moveTracksHandler(
 
   // construct the response
   json responseBody = json::object();
-  return make_shared<string_response>(responseBody.dump());
+  return {responseBody.dump()};
 }
 
 //
 // REMOVE TRACK
 //
 
-shared_ptr<http_response> const removeTrackHandler(
-    NetworkListener *listener, RequestInformation const &infos) {
+ResponseInformation const removeTrackHandler(NetworkListener *listener,
+                                             RequestInformation const &infos) {
   assert(listener);
 
   // TODO: this endpoint should use query parameters since the DELETE method
@@ -477,5 +480,5 @@ shared_ptr<http_response> const removeTrackHandler(
 
   // construct the response
   json responseBody = json::object();
-  return make_shared<string_response>(responseBody.dump());
+  return {responseBody.dump()};
 }
