@@ -125,6 +125,11 @@ TResult<QueueStatus> JukeBox::getCurrentQueues(TSessionID const &sid) {
     return Error(ErrorCode::DoesntExist, msg);
   }
 
+  auto retUser = mDataStore->getUser(sid);
+  if (holds_alternative<Error>(retUser))
+    return get<Error>(retUser);
+  User user = get<User>(retUser);
+
   QueueStatus qs;
 
   /* Admin queue */
@@ -134,11 +139,6 @@ TResult<QueueStatus> JukeBox::getCurrentQueues(TSessionID const &sid) {
   qs.adminQueue = get<Queue>(ret);
 
   /* Set markers, if user has already voted for a track */
-  auto retUser = mDataStore->getUser(sid);
-  if (holds_alternative<Error>(retUser))
-    return get<Error>(retUser);
-  User user = get<User>(retUser);
-
   for (auto &queueElem : qs.adminQueue.tracks) {
     for (auto const &votedElem : user.votes) {
       if (queueElem.trackId == votedElem)
