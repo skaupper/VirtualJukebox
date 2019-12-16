@@ -200,10 +200,7 @@ TResultOpt JukeBox::addTrackToQueue(TSessionID const &sid,
     return Error(ErrorCode::SessionExpired, msg);
   }
 
-  auto retUser = mDataStore->getUser(sid);
-  if (holds_alternative<Error>(retUser))
-    return get<Error>(retUser);
-  User user = get<User>(retUser);
+  User user = get<User>(mDataStore->getUser(sid));
 
   if (type == QueueType::Admin && !user.isAdmin) {
     LOG(WARNING) << "JukeBox.addTrackToQueue: User with session ID '" << sid
@@ -247,10 +244,7 @@ TResultOpt JukeBox::removeTrack(TSessionID const &sid, TTrackID const &trkid) {
     return Error(ErrorCode::SessionExpired, msg);
   }
 
-  auto retUser = mDataStore->getUser(sid);
-  if (holds_alternative<Error>(retUser))
-    return get<Error>(retUser);
-  User user = get<User>(retUser);
+  User user = get<User>(mDataStore->getUser(sid));
 
   if (!user.isAdmin) {
     LOG(WARNING) << "JukeBox.removeTrack: User with session ID '" << sid
@@ -314,10 +308,7 @@ TResultOpt JukeBox::moveTrack(TSessionID const &sid,
     return Error(ErrorCode::SessionExpired, msg);
   }
 
-  auto retUser = mDataStore->getUser(sid);
-  if (holds_alternative<Error>(retUser))
-    return get<Error>(retUser);
-  User user = get<User>(retUser);
+  User user = get<User>(mDataStore->getUser(sid));
 
   if (!user.isAdmin) {
     LOG(WARNING) << "JukeBox.moveTrack: User with session ID '" << sid
@@ -353,6 +344,8 @@ TResultOpt JukeBox::moveTrack(TSessionID const &sid,
 }
 
 TResultOpt JukeBox::controlPlayer(TSessionID const &sid, PlayerAction action) {
+  int const volChangePercent = 10;
+
   auto retIsExpired = mDataStore->isSessionExpired(sid);
   if (holds_alternative<Error>(retIsExpired))
     return get<Error>(retIsExpired);
@@ -362,11 +355,7 @@ TResultOpt JukeBox::controlPlayer(TSessionID const &sid, PlayerAction action) {
     return Error(ErrorCode::SessionExpired, msg);
   }
 
-  int const volChangePercent = 10;
-  auto retUser = mDataStore->getUser(sid);
-  if (holds_alternative<Error>(retUser))
-    return get<Error>(retUser);
-  User user = get<User>(retUser);
+  User user = get<User>(mDataStore->getUser(sid));
 
   if (!user.isAdmin) {
     LOG(WARNING) << "JukeBox.controlPlayer: User with session ID '" << sid
