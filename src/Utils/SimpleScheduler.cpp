@@ -109,6 +109,12 @@ TResultOpt SimpleScheduler::doSchedule() {
   std::unique_lock lockSchedulerState(mMtxModifySchedulerState);
 
   if (auto error = std::get_if<Error>(&playbackTrackRet)) {
+    if (error->getErrorCode() == ErrorCode::SpotifyHttpTimeout) {
+      // on timeout clients do not need to know, because polling is handled from
+      // the server, just log it
+      LOG(ERROR) << "SimpleScheduler.doSchedule: " << error->getErrorMessage();
+      return std::nullopt;
+    }
     mLastPlaybackTrack = playbackTrackRet;
     return *error;
   }
