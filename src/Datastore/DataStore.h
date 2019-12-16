@@ -28,13 +28,13 @@ class DataStore {
   /**
    * @brief    Add a User to the internal List of registered Users
    * @param    User The User class to add
-   * @return   TResultOpt possibly containing Error Message
+   * @retval   TResultOpt possibly containing Error Message
    */
   virtual TResultOpt addUser(User const &user) = 0;
   /**
    * @brief    Get a User from the internal List of registered Users
    * @param    TSessionID The ID of the User we want to get
-   * @return   TResult<User> containing either the requested user  or an
+   * @retval   TResult<User> containing either the requested user  or an
    * Error Message
    */
   virtual TResult<User> getUser(TSessionID const &ID) = 0;
@@ -42,7 +42,7 @@ class DataStore {
    * @brief    Remove a User from the internal List of registered Users. Does
    * not remove votes taken by this user from the corresponding tracks
    * @param    ID ID number of the User to remove
-   * @return   TResult<User> containing either the user that was removed or an
+   * @retval   TResult<User> containing either the user that was removed or an
    * Error Message
    */
   virtual TResult<User> removeUser(TSessionID const &ID) = 0;
@@ -58,7 +58,7 @@ class DataStore {
    * @param    BaseTrack The Track to add
    * @param   QueueType Identifier for determining which Queue the Track should
    * be added to
-   * @return   TResultOpt possibly containing Error Message
+   * @retval   TResultOpt possibly containing Error Message
    */
   virtual TResultOpt addTrack(BaseTrack const &track, QueueType q) = 0;
   /**
@@ -66,7 +66,7 @@ class DataStore {
    * @param    TTrackID The ID of the Track to remove
    * @param   QueueType Identifier for determining which Queue the Track should
    * be removed from
-   * @return   TResult<BaseTrack> Containing either the removed track or an
+   * @retval   TResult<BaseTrack> Containing either the removed track or an
    * Error Message
    */
   virtual TResult<BaseTrack> removeTrack(TTrackID const &ID, QueueType q) = 0;
@@ -75,7 +75,7 @@ class DataStore {
    * @param    TTrackID The ID of the Track to check for
    * @param    QueueType Identifier for determining which Queue should be
    * checked for the Track
-   * @return   TResult<bool> Containing either a boolean answer or an Error
+   * @retval   TResult<bool> Containing either a boolean answer or an Error
    * Message
    */
   virtual TResult<bool> hasTrack(TTrackID const &ID, QueueType q) = 0;
@@ -85,7 +85,7 @@ class DataStore {
    * @param    TTrackID The ID of the Track to vote for
    * @param    TVote The Vote which determines whether a new upvote should be
    * made or an old one removed
-   * @return   TResultOpt possibly containing an Error Message
+   * @retval   TResultOpt possibly containing an Error Message
    */
   virtual TResultOpt voteTrack(TSessionID const &sID,
                                TTrackID const &tID,
@@ -94,28 +94,27 @@ class DataStore {
    * @brief    Get entire Queue
    * @param    QueueType Identifier for determining which Queue should be
    * returned
-   * @return   TResult<Queue> Containing either the requested Queue or an Error
+   * @retval   TResult<Queue> Containing either the requested Queue or an Error
    * Message
    */
   virtual TResult<Queue> getQueue(QueueType q) = 0;
   /**
    * @brief    Get the currently playing track.
    * @param    none
-   * @return   TResult<QueuedTrack> Containing either the requested Track or an
+   * @retval   TResult<QueuedTrack> Containing either the requested Track or an
    * Error Message
    */
   virtual TResult<QueuedTrack> getPlayingTrack() = 0;
   /**
    * @brief    Query the internal user list whether a certain user exists
    * @param    TSessionID The ID of the user to check for
-   * @return   bool Containing either a boolean answer to the request
-   * or an Error Message
+   * @retval   Returns true if user was found, false otherwise.
    */
   virtual bool hasUser(TSessionID const &ID) = 0;
   /**
    * @brief    Play next Track in Queue
    * @param    none
-   * @return   TResultOpt possibly containing an Error Message
+   * @retval   TResultOpt possibly containing an Error Message
    */
   virtual TResultOpt nextTrack() = 0;
 
