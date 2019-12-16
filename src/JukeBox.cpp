@@ -119,6 +119,12 @@ TResult<QueueStatus> JukeBox::getCurrentQueues(TSessionID const &sid) {
   if (holds_alternative<Error>(retIsExpired))
     return get<Error>(retIsExpired);
 
+  if (!mDataStore->hasUser(sid)) {
+    string msg = "User with session ID '" + sid + "' does not exist.";
+    LOG(WARNING) << msg;
+    return Error(ErrorCode::DoesntExist, msg);
+  }
+
   QueueStatus qs;
 
   auto ret = mDataStore->getQueue(QueueType::Admin);
@@ -130,6 +136,9 @@ TResult<QueueStatus> JukeBox::getCurrentQueues(TSessionID const &sid) {
   if (holds_alternative<Error>(ret))
     return get<Error>(ret);
   qs.normalQueue = get<Queue>(ret);
+
+  /* Set markers, if user has already voted for a track */
+  //  for ()
 
   /* Construct current PlaybackTrack through combining of information
    * in DataStore and Spotify */

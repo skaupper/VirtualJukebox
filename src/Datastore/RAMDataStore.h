@@ -32,7 +32,7 @@ class RAMDataStore : public DataStore {
   TResultOpt voteTrack(TSessionID const &sID, TTrackID const &tID, TVote vote);
   TResult<Queue> getQueue(QueueType q);
   TResult<QueuedTrack> getPlayingTrack();
-  TResult<bool> hasUser(TSessionID const &ID);
+  bool hasUser(TSessionID const &ID);
   TResultOpt nextTrack();
 
  private:

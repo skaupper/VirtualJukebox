@@ -260,7 +260,7 @@ TResult<QueuedTrack> RAMDataStore::getPlayingTrack() {
   return mCurrentTrack;
 }
 
-TResult<bool> RAMDataStore::hasUser(TSessionID const &ID) {
+bool RAMDataStore::hasUser(TSessionID const &ID) {
   // Shared Access to User List
   unique_lock<recursive_mutex> MyLock(mUserMutex);
 
