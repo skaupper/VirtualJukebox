@@ -9,6 +9,7 @@
 /* TODO:
     - rename `.currentVote` --> `.userHasVoted`
     - rename `.duration` --> `.durationMs`
+    - rename `@retval` --> `@return`
  */
 
 #include "JukeBox.h"
