@@ -34,6 +34,10 @@ class SimpleScheduler {
    */
   TResult<std::optional<PlaybackTrack>> const& getLastPlayback();
 
+  /**
+   * @brief plays the next song from the queue
+   * @return Error on failure, otherwise nullopt
+   */
   TResultOpt nextTrack();
 
   /**
@@ -42,6 +46,8 @@ class SimpleScheduler {
    * @return true if check is required else false
    */
   bool checkForInconsistency();
+
+  TResultOpt isDataIncosistent(void);
 
   /* TODO: functions below */
   /* enable() */

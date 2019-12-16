@@ -1,8 +1,8 @@
 /*****************************************************************************/
 /**
- * @file    TrackScheduler.cpp
- * @author  Michael Wurm <wurm.michael95@gmail.com>
- * @brief   Class TrackScheduler implementation
+ * @file    SimpleScheduler.cpp
+ * @authors Stefan Jahn <stefan.jahn332@gmail.com>
+ * @brief   Class SimpleScheduler implementation
  */
 /*****************************************************************************/
 
@@ -76,7 +76,9 @@ TResultOpt SimpleScheduler::nextTrack() {
 }
 
 bool SimpleScheduler::checkForInconsistency() {
-  std::shared_lock lock(mMtxModifySchedulerState);
+  std::shared_lock lockPlayback(mMtxPlayback);
+  std::shared_lock lockSchedulerState(mMtxModifySchedulerState);
+
   auto emptyRet = areQueuesEmpty();
   if (auto error = std::get_if<Error>(&emptyRet)) {
     LOG(ERROR) << "SimpleScheduler: " << error->getErrorMessage();
@@ -87,11 +89,33 @@ bool SimpleScheduler::checkForInconsistency() {
 
   // only check inconsistency when something is in the queue and state is in
   // playing state
-  if (!empty && mSchedulerState != SchedulerState::Idle) {
+  if (!empty && mSchedulerState == SchedulerState::Playing) {
     return true;
   }
   return false;
 }
+
+/*
+TResultOpt SimpleScheduler::isDataIncosistent() {
+  std::shared_lock lockPlayback(mMtxPlayback);
+  std::shared_lock lockSchedulerState(mMtxModifySchedulerState);
+
+  auto emptyRet = areQueuesEmpty();
+  if (auto error = std::get_if<Error>(&emptyRet)) {
+    LOG(ERROR) << "SimpleScheduler: " << error->getErrorMessage();
+    // if error occurs, check for incosistence, so client can notify it
+    return *error;
+  }
+  bool empty = std::get<bool>(emptyRet);
+
+  // only check inconsistency when something is in the queue and state is in
+  // playing state
+  if (!empty && mSchedulerState == SchedulerState::Playing) {
+    return true;
+  }
+
+}
+*/
 
 TResultOpt SimpleScheduler::doSchedule() {
   if (mDataStore == nullptr || mMusicBackend == nullptr) {
