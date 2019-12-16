@@ -11,6 +11,7 @@
 
 #include "Types/GlobalTypes.h"
 #include "Types/Result.h"
+#include "Utils/LoggingHandler.h"
 
 using namespace std;
 
