@@ -27,8 +27,21 @@ int main(int argc, char* argv[]) {
     cout << "INFO: No filename was specified for *.ini configuration file. "
          << "Using '" << configFilePath << "' as a default fallback." << endl;
   }
-
   JukeBox jukebox;
+
+  // clang-format off
+  LOG(INFO) << "#########################################################################\n";
+  LOG(INFO) << " __     ___      _               _     _       _        _                ";
+  LOG(INFO) << " \\ \\   / (_)_ __| |_ _   _  __ _| |   | |_   _| | _____| |__   _____  __ ";
+  LOG(INFO) << "  \\ \\ / /| | '__| __| | | |/ _` | |_  | | | | | |/ / _ \\ '_ \\ / _ \\ \\/ / ";
+  LOG(INFO) << "   \\ V / | | |  | |_| |_| | (_| | | |_| | |_| |   <  __/ |_) | (_) >  <  ";
+  LOG(INFO) << "    \\_/  |_|_|   \\__|\\__,_|\\__,_|_|\\___/ \\__,_|_|\\_\\___|_.__/ \\___/_/\\_\\ ";
+  LOG(INFO) << "";
+  LOG(INFO) << "#########################################################################";
+  LOG(INFO) << "Compiled at: " << __DATE__ << " " << __TIME__;
+  LOG(INFO) << "#########################################################################";
+  // clang-format on
+
   if (!jukebox.start(argv[0], configFilePath)) {
     /* Print to cerr here, since LoggingHandler is uninitialized */
     cerr << "ERROR: Exiting program due to fatal error in Jukebox.start()"
