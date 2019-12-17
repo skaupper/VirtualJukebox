@@ -1,10 +1,10 @@
 <diagram program="umletino" version="14.3.0"><zoom_level>10</zoom_level><help_text>Space for diagram notes</help_text><element><id>UMLClass</id><coordinates><x>1370</x><y>643</y><w>180</w><h>110</h></coordinates><panel_attributes>User
 --
-+ sessionID: TSessionId
++ sessionID: TSessionID
 + ExpirationDate: time_t
 + Name: string
 + isAdmin: bool
-+ votes: vector&lt;TTrackId&gt;</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>680</x><y>843</y><w>160</w><h>100</h></coordinates><panel_attributes>PlaybackTrack
++ votes: vector&lt;TTrackID&gt;</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>680</x><y>843</y><w>160</w><h>100</h></coordinates><panel_attributes>PlaybackTrack
 --
 + progressMs: int
 + isPlaying: bool</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>270</x><y>843</y><w>170</w><h>50</h></coordinates><panel_attributes>Queue
@@ -14,28 +14,28 @@ DataStore
 --
 /+ addUser(User): TResultOpt/
 /+ getUser(TSessionID): TResult&lt;User&gt;/
-/+ removeUser(TSessionId): TResult&lt;User&gt;/
-/+ isSessionExpired(TSessionId): TResult&lt;bool&gt;/
+/+ removeUser(TSessionID): TResult&lt;User&gt;/
+/+ isSessionExpired(TSessionID): TResult&lt;bool&gt;/
 /+ addTrack(BaseTrack, QueueType): TResultOpt/
-/+ removeTrack(TTrackId, QueueType): TResult&lt;BaseTrack&gt;/
-/+ hasTrack(TTrackId, QueueType): TResult&lt;bool&gt;/
-/+ voteTrack(TSessionId, TTrackId, TVote): TResultOpt/
+/+ removeTrack(TTrackID, QueueType): TResult&lt;BaseTrack&gt;/
+/+ hasTrack(TTrackID, QueueType): TResult&lt;bool&gt;/
+/+ voteTrack(TSessionID, TTrackID, TVote): TResultOpt/
 /+ getQueue(QueueType): TResult&lt;Queue&gt;/
 /+ getPlayingTrack(): TResult&lt;QueuedTrack&gt;/
-/+ hasUser(TSessionId): bool/
+/+ hasUser(TSessionID): bool/
 /+ nextTrack(): TResultOpt/</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>2950</x><y>1043</y><w>330</w><h>310</h></coordinates><panel_attributes>RAMDataStore
 --
 + addUser(User): TResultOpt
 + getUser(TSessionID): TResult&lt;User&gt;
-+ removeUser(TSessionId): TResult&lt;User&gt;
-+ isSessionExpired(TSessionId): TResult&lt;bool&gt;
++ removeUser(TSessionID): TResult&lt;User&gt;
++ isSessionExpired(TSessionID): TResult&lt;bool&gt;
 + addTrack(BaseTrack, QueueType): TResultOpt
-+ removeTrack(TTrackId, QueueType): TResult&lt;BaseTrack&gt;
-+ hasTrack(TTrackId, QueueType): TResult&lt;bool&gt;
-+ voteTrack(TSessionId, TTrackId, TVote): TResultOpt
++ removeTrack(TTrackID, QueueType): TResult&lt;BaseTrack&gt;
++ hasTrack(TTrackID, QueueType): TResult&lt;bool&gt;
++ voteTrack(TSessionID, TTrackID, TVote): TResultOpt
 + getQueue(QueueType): TResult&lt;Queue&gt;
 + getPlayingTrack(): TResult&lt;QueuedTrack&gt;
-+ hasUser(TSessionId): bool
++ hasUser(TSessionID): bool
 + nextTrack(): TResultOpt
 --
 - mAdminQueue: Queue
@@ -44,7 +44,7 @@ DataStore
 - mUsers: vector&lt;User&gt;
 - mUserMutex : recursive_mutex
 - mQueueMutex : shared_mutex
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>3320</x><y>733</y><w>130</w><h>30</h></coordinates><panel_attributes>TVote = bool</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>3320</x><y>693</y><w>130</w><h>30</h></coordinates><panel_attributes>TSessionId = string</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>3320</x><y>653</y><w>130</w><h>30</h></coordinates><panel_attributes>TTrackId = string</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>3320</x><y>473</y><w>140</w><h>80</h></coordinates><panel_attributes>&lt;&lt; enumeration &gt;&gt;
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>3320</x><y>733</y><w>130</w><h>30</h></coordinates><panel_attributes>TVote = bool</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>3320</x><y>693</y><w>130</w><h>30</h></coordinates><panel_attributes>TSessionID = string</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>3320</x><y>653</y><w>130</w><h>30</h></coordinates><panel_attributes>TTrackID = string</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>3320</x><y>473</y><w>140</w><h>80</h></coordinates><panel_attributes>&lt;&lt; enumeration &gt;&gt;
 QueueType
 --
 Admin
@@ -59,9 +59,9 @@ MusicBackend
 /+ play(): TResultOpt/
 /+ setVolume(int): TResultOpt/
 /+ getVolume(): TResult&lt;size_t&gt;/
-/+ createBaseTrack(TTrackId) : TResult&lt;BaseTrack&gt;/</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1670</x><y>893</y><w>370</w><h>240</h></coordinates><panel_attributes>SpotifyBackend
+/+ createBaseTrack(TTrackID) : TResult&lt;BaseTrack&gt;/</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1670</x><y>893</y><w>370</w><h>240</h></coordinates><panel_attributes>SpotifyBackend
 --
-+ initBackend(): void 
++ initBackend(): void
 + queryTracks(string, int) : TResult&lt;vector&lt;BaseTrack&gt;&gt;
 + setPlayback(BaseTrack) : TResultOpt
 + getCurrentPlayback(): TResult&lt;optional&lt;PlaybackTrack&gt;&gt;
@@ -69,18 +69,18 @@ MusicBackend
 + play(): TResultOpt
 + setVolume(int): TResultOpt
 + getVolume(): TResult&lt;size_t&gt;
-+ createBaseTrack(TTrackId) : TResult&lt;BaseTrack&gt;
++ createBaseTrack(TTrackID) : TResult&lt;BaseTrack&gt;
 --
 - mSpotifyAPI : SpotifyAPI
 - mSpotifyAuth : SpotifyAuthorization
 - mPlayPauseMtx : mutex
 - mVolumeMtx : mutex</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1840</x><y>823</y><w>30</w><h>90</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;10;10;70</additional_attributes></element><element><id>UMLClass</id><coordinates><x>2080</x><y>893</y><w>490</w><h>220</h></coordinates><panel_attributes>SpotifyAPI
 --
-+ getAccessToken(GrantType grantType, string, string, string, string) : TResult&lt;Token&gt; 
-+ refreshAccessToken(string, string, string) : TResult&lt;Token&gt; 
-+ getAvailableDevices(string) : TResult&lt;vector&lt;Device&gt;&gt; 
-+ getCurrentPlayback(string, string) : TResult&lt;optional&lt;Playback&gt;&gt; 
-+ search(string, string, QueryType, int, int, string) : TResult&lt;SpotifyPaging&gt; 
++ getAccessToken(GrantType grantType, string, string, string, string) : TResult&lt;Token&gt;
++ refreshAccessToken(string, string, string) : TResult&lt;Token&gt;
++ getAvailableDevices(string) : TResult&lt;vector&lt;Device&gt;&gt;
++ getCurrentPlayback(string, string) : TResult&lt;optional&lt;Playback&gt;&gt;
++ search(string, string, QueryType, int, int, string) : TResult&lt;SpotifyPaging&gt;
 + setVolume(string, int, Device) : TResultOpt
 + pause(string, Device) : TResultOpt
 + play(string, vector&lt;string&gt;, Device, int) : TResultOpt
@@ -110,7 +110,7 @@ MusicBackend
 --
 - ConfigHandler()
 - mInstance : shared_ptr&lt;ConfigHandler&gt;
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1070</x><y>683</y><w>60</w><h>70</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;40;10;40;50;10;50</additional_attributes></element><element><id>UMLClass</id><coordinates><x>480</x><y>843</y><w>150</w><h>100</h></coordinates><panel_attributes>QueueTrack 
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1070</x><y>683</y><w>60</w><h>70</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;40;10;40;50;10;50</additional_attributes></element><element><id>UMLClass</id><coordinates><x>480</x><y>843</y><w>150</w><h>100</h></coordinates><panel_attributes>QueueTrack
 --
 + votes: int
 + currentVote: TVote
@@ -138,19 +138,19 @@ MusicBackend
 - mMtxPlayback : shared_mutex
 - mMtxModifySchedulerState : shared_mutex
 
-- mDataStore : DataStore* 
+- mDataStore : DataStore*
 - mMusicBackend : MusicBackend*
 - mSchedulerState : SchedulerState
 - mLastPlaybackTrack : TResult&lt;optional&lt;PlaybackTrack&gt;&gt;</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>2380</x><y>313</y><w>470</w><h>160</h></coordinates><panel_attributes>/NetworkListener/
 --
-/+ generateSession(optional&lt;TPassword&gt;, optional&lt;string&gt;): TResult&lt;TSessionId&gt;/
+/+ generateSession(optional&lt;TPassword&gt;, optional&lt;string&gt;): TResult&lt;TSessionID&gt;/
 /+ queryTracks(string, TCount): TResult&lt;vector&lt;BaseTrack&gt;&gt;/
-/+ getCurrentQueues(TSessionId): TResult&lt;QueueStatus&gt;/
-/+ addTrackToQueue(TSessionId, TTrackId, QueueType): TResultOpt/
-/+ voteTrack(TSessionId, TTrackId, TVote): TResultOpt/
-/+ controlPlayer(TSessionId, PlayerAction): TResultOpt/
-/+ removeTrack(TSessionId, TTrackId): TResultOpt/
-/+ moveTrack(TSessionId, TTrackId, QueueType): TResultOpt/</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>2610</x><y>463</y><w>30</w><h>160</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;10;10;140</additional_attributes></element><element><id>UMLClass</id><coordinates><x>2950</x><y>503</y><w>330</w><h>140</h></coordinates><panel_attributes>RestAPI
+/+ getCurrentQueues(TSessionID): TResult&lt;QueueStatus&gt;/
+/+ addTrackToQueue(TSessionID, TTrackID, QueueType): TResultOpt/
+/+ voteTrack(TSessionID, TTrackID, TVote): TResultOpt/
+/+ controlPlayer(TSessionID, PlayerAction): TResultOpt/
+/+ removeTrack(TSessionID, TTrackID): TResultOpt/
+/+ moveTrack(TSessionID, TTrackID, QueueType): TResultOpt/</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>2610</x><y>463</y><w>30</w><h>160</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;10;10;140</additional_attributes></element><element><id>UMLClass</id><coordinates><x>2950</x><y>503</y><w>330</w><h>140</h></coordinates><panel_attributes>RestAPI
 --
 + handleRequests(): TResultOpt
 + stopServer() : void
@@ -168,7 +168,7 @@ VolumeDown</panel_attributes><additional_attributes></additional_attributes></el
 + getErrorCode(): ErrorCode
 + getErrorMessage(): string</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>3320</x><y>573</y><w>250</w><h>30</h></coordinates><panel_attributes>TResult&lt;GOOD&gt; = variant&lt;GOOD, Error&gt;</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>590</x><y>613</y><w>140</w><h>150</h></coordinates><panel_attributes>BaseTrack
 --
-+ trackId: TTrackId
++ trackId: TTrackID
 + title: string
 + album: string
 + artist: string
@@ -191,14 +191,14 @@ FileNotFound
 --
 + start(string, string): void
 
-+ generateSession(optional&lt;TPassword&gt;, optional&lt;string&gt;): TResult&lt;TSessionId&gt;
++ generateSession(optional&lt;TPassword&gt;, optional&lt;string&gt;): TResult&lt;TSessionID&gt;
 + queryTracks(string, TCount): TResult&lt;vector&lt;BaseTrack&gt;&gt;
-+ getCurrentQueues(TSessionId): TResult&lt;QueueStatus&gt;
-+ addTrackToQueue(TSessionId, TTrackId, QueueType): TResultOpt
-+ voteTrack(TSessionId, TTrackId, TVote): TResultOpt
-+ controlPlayer(TSessionId, PlayerAction): TResultOpt
-+ removeTrack(TSessionId, TTrackId): TResultOpt
-+ moveTrack(TSessionId, TTrackId, QueueType): TResultOpt
++ getCurrentQueues(TSessionID): TResult&lt;QueueStatus&gt;
++ addTrackToQueue(TSessionID, TTrackID, QueueType): TResultOpt
++ voteTrack(TSessionID, TTrackID, TVote): TResultOpt
++ controlPlayer(TSessionID, PlayerAction): TResultOpt
++ removeTrack(TSessionID, TTrackID): TResultOpt
++ moveTrack(TSessionID, TTrackID, QueueType): TResultOpt
 --
 - mDataStore : DataStore*
 - mNetwork : NetworkAPI*
