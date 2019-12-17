@@ -88,10 +88,8 @@ class SpotifyAuthorization : public httpserver::http_resource {
   std::string const cPortKey = "port";
   std::string const cRedirectUriKey = "redirectUri";
   std::string const cScopesKey = "scopes";
-  std::unique_ptr<std::thread> mServerThread;
-  bool shutdownServer = true;
+  std::unique_ptr<httpserver::webserver> mWebserver;
   std::mutex mMutex;
-  std::exception_ptr mpException = nullptr;
 
   const std::shared_ptr<httpserver::http_response> render(
       httpserver::http_request const &request);
@@ -101,7 +99,6 @@ class SpotifyAuthorization : public httpserver::http_resource {
   const std::shared_ptr<httpserver::http_response> callbackHandler(
       httpserver::http_request const &request);
 
-  void startServerThread();
   TResultOpt setupConfigParams();
   std::string generateRandomString(size_t length);
   std::string getFromQueryString(std::string const &query,

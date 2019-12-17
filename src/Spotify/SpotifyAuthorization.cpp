@@ -30,44 +30,21 @@ TResultOpt SpotifyAuthorization::startServer(void) {
   if (readConfigRet.has_value()) {
     return readConfigRet;
   }
-  shutdownServer = false;
-  mServerThread = std::make_unique<std::thread>(
-      &SpotifyAuthorization::startServerThread, this);
 
-  std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-  // if after 1 sec no exception ptr is catched, server started successfully
-  if (mpException != nullptr) {
-    // exception occured return error..
-    shutdownServer = true;
-    try {
-      std::rethrow_exception(mpException);
-    } catch (std::exception const &e) {
-      return Error(ErrorCode::NotInitialized, e.what());
-    }
+  mWebserver = std::make_unique<httpserver::webserver>(create_webserver(mPort));
+  mWebserver->register_resource("/", this, true);
+
+  try {
+    mWebserver->start(false);
+  } catch (std::exception const &e) {
+    return Error(ErrorCode::NotInitialized, e.what());
   }
 
   return std::nullopt;
 }
 
-void SpotifyAuthorization::startServerThread() {
-  try {
-    webserver ws = create_webserver(mPort);
-    ws.register_resource("/", this, true);
-
-    ws.start(false);
-    while (!shutdownServer) {
-      usleep(100000);
-    };
-
-  } catch (const std::exception &) {
-    mpException = std::current_exception();
-  }
-}
 void SpotifyAuthorization::stopServer() {
-  if (!shutdownServer) {
-    shutdownServer = true;
-    mServerThread->join();
-  }
+  mWebserver->stop();
 }
 
 std::string const &SpotifyAuthorization::getRefreshToken(void) {

@@ -82,6 +82,7 @@ class SimpleScheduler {
   TResult<bool> isTrackFinished(std::optional<PlaybackTrack> const& currentOpt);
 
   std::thread mThread;
+  bool mCloseThread=false;
   std::shared_mutex mMtxPlayback;
   std::shared_mutex mMtxModifySchedulerState;
 };

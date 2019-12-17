@@ -24,6 +24,7 @@ SimpleScheduler::SimpleScheduler(DataStore *const datastore,
 }
 
 SimpleScheduler::~SimpleScheduler() {
+  mCloseThread=true;
   if (mThread.joinable())
     mThread.join();
 
@@ -45,7 +46,7 @@ void SimpleScheduler::threadFunc() {
     this_thread::sleep_for(chrono::milliseconds(100));
   }
 
-  while (1) {
+  while (!mCloseThread) {
     auto ret = doSchedule();
     if (ret.has_value()) {
       LOG(ERROR) << "SimpleScheduler.doSchedule: "
