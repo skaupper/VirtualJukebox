@@ -174,21 +174,7 @@ TResult<QueueStatus> JukeBox::getCurrentQueues(TSessionID const &sid) {
   /* Construct current PlaybackTrack through combining of information
    * in DataStore and Spotify */
 
-  // TODO: the datastore should support optional playing tracks too
-  auto trackStore = mDataStore->getPlayingTrack();
-  if (holds_alternative<Error>(trackStore))
-    return get<Error>(trackStore);
-
-  QueuedTrack tmp = get<QueuedTrack>(trackStore);
-  PlaybackTrack pbt;
-  pbt.addedBy = tmp.addedBy;
-  pbt.album = tmp.album;
-  pbt.artist = tmp.artist;
-  pbt.durationMs = tmp.durationMs;
-  pbt.iconUri = tmp.iconUri;
-  pbt.title = tmp.title;
-  pbt.trackId = tmp.trackId;
-
+  // query Spotify playback
   auto trackSpotify = mScheduler->getLastPlayback();
   if (holds_alternative<Error>(trackSpotify))
     return get<Error>(trackSpotify);
@@ -199,8 +185,29 @@ TResult<QueueStatus> JukeBox::getCurrentQueues(TSessionID const &sid) {
     qs.currentTrack = nullopt;
     return qs;
   }
-
   PlaybackTrack pbtSpotify = pbtSpotifyOpt.value();
+
+  // query expected playback
+  auto currentTrackOptRes = mDataStore->getPlayingTrack();
+  if (holds_alternative<Error>(currentTrackOptRes))
+    return get<Error>(currentTrackOptRes);
+
+  auto currentTrackOpt = get<optional<QueuedTrack>>(currentTrackOptRes);
+  if (!currentTrackOpt.has_value()) {
+    qs.currentTrack = nullopt;
+    return qs;
+  }
+  auto currentTrack = currentTrackOpt.value();
+
+  // construct playback track
+  PlaybackTrack pbt;
+  pbt.addedBy = currentTrack.addedBy;
+  pbt.album = currentTrack.album;
+  pbt.artist = currentTrack.artist;
+  pbt.durationMs = currentTrack.durationMs;
+  pbt.iconUri = currentTrack.iconUri;
+  pbt.title = currentTrack.title;
+  pbt.trackId = currentTrack.trackId;
   pbt.progressMs = pbtSpotify.progressMs;
   pbt.isPlaying = pbtSpotify.isPlaying;
 
@@ -216,7 +223,8 @@ TResult<QueueStatus> JukeBox::getCurrentQueues(TSessionID const &sid) {
     }
     qs.currentTrack = pbt;
   } else {
-    // if nothing is queued, return track which is played on spotify
+    // if nothing is queued, return track which is played on Spotify
+    pbtSpotify.addedBy = pbt.addedBy;
     qs.currentTrack = pbtSpotify;
   }
 

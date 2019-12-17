@@ -142,13 +142,23 @@ TResultOpt SimpleScheduler::doSchedule() {
         return nextTrack.value();
       }
 
-      auto actualTrackRet = mDataStore->getPlayingTrack();
-      if (auto error = std::get_if<Error>(&actualTrackRet)) {
+      auto actualTrackOptRet = mDataStore->getPlayingTrack();
+      if (auto error = std::get_if<Error>(&actualTrackOptRet)) {
         LOG(ERROR) << "SimpleScheduler: " << error->getErrorMessage();
         mSchedulerState = SchedulerState::Idle;
         return *error;  // do nothing
       }
-      auto actualTrack = std::get<QueuedTrack>(actualTrackRet);
+
+      auto actualTrackOpt =
+          std::get<std::optional<QueuedTrack>>(actualTrackOptRet);
+      if (!actualTrackOpt.has_value()) {
+        LOG(ERROR)
+            << "SimpleScheduler: No current playback track has been found";
+        return Error(ErrorCode::DoesntExist,
+                     "No current playback track has been found");
+      }
+
+      auto actualTrack = actualTrackOpt.value();
 
       auto setTrackRet = mMusicBackend->setPlayback(actualTrack);
       if (setTrackRet.has_value()) {
@@ -244,7 +254,11 @@ TResult<bool> SimpleScheduler::isTrackPlaying(
     return false;
   }
 
-  auto playingTrack = std::get<QueuedTrack>(playingTrackRet);
+  auto playingTrackOpt = std::get<std::optional<QueuedTrack>>(playingTrackRet);
+  if (!playingTrackOpt.has_value()) {
+    return false;
+  }
+  auto playingTrack = playingTrackOpt.value();
 
   if (!currentOpt.value().isPlaying) {
     mMusicBackend->play();
@@ -276,7 +290,13 @@ TResult<bool> SimpleScheduler::isTrackFinished(
   if (auto error = std::get_if<Error>(&playingTrackRet)) {
     return *error;
   }
-  auto playingTrack = std::get<QueuedTrack>(playingTrackRet);
+
+  auto playingTrackOpt = std::get<std::optional<QueuedTrack>>(playingTrackRet);
+  if (!playingTrackOpt.has_value()) {
+    return Error(ErrorCode::DoesntExist,
+                 "No current playback track has been found");
+  }
+  auto playingTrack = playingTrackOpt.value();
 
   if (currentOpt.value().progressMs == 0 &&
       currentOpt.value().isPlaying == false) {

@@ -103,9 +103,9 @@ class DataStore {
 
   /**
    * @brief    Get the currently playing track.
-   * @return   Either the requested Track or an Error message.
+   * @return   Returns the currently playing track (if any) or an Error message.
    */
-  virtual TResult<QueuedTrack> getPlayingTrack() = 0;
+  virtual TResult<std::optional<QueuedTrack>> getPlayingTrack() = 0;
 
   /**
    * @brief    Query the internal user list whether a certain user exists
