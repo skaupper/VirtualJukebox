@@ -47,11 +47,12 @@ class DataStore {
   virtual TResult<User> removeUser(TSessionID const &sID) = 0;
 
   /**
-   * @brief    Check for users whose session has expired and remove those from
-   * the internal list
-   * @return   An Error message or nothing at all (at success).
+   * @brief    Check if user session is expired.
+   * @param    sID Session ID of the user to check
+   * @retval   Returns false if session is not expired yet. Returns an Error
+   * object on session expiration or error.
    */
-  virtual TResultOpt checkSessionExpirations() = 0;
+  virtual TResult<bool> isSessionExpired(TSessionID const &sID) = 0;
 
   /**
    * @brief    Add Track to one of the internal Queues
@@ -109,15 +110,17 @@ class DataStore {
   /**
    * @brief    Query the internal user list whether a certain user exists
    * @param    sID The ID of the user to check for
-   * @return   Either a boolean answer to the request or an Error message
+   * @return   `true` if an user with this ID exists, `false` otherwise
    */
-  virtual TResult<bool> hasUser(TSessionID const &sID) = 0;
+  virtual bool hasUser(TSessionID const &sID) = 0;
 
   /**
    * @brief    Play next Track in Queue
    * @return   An Error message or nothing at all (at success).
    */
   virtual TResultOpt nextTrack() = 0;
+
+  static unsigned const cSessionTimeoutAfterSeconds = 3600;
 };
 
 #endif /* _DATASTORE_H_ */
