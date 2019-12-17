@@ -9,7 +9,7 @@
 /* TODO:
  *  - rename all TSessionId --> TSessionID
  *  - check spelling of all types (w/o leading 'T')
- *
+ *  - add all members
  *
  */
 
