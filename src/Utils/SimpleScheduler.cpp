@@ -24,6 +24,7 @@ SimpleScheduler::SimpleScheduler(DataStore *const datastore,
 }
 
 SimpleScheduler::~SimpleScheduler() {
+  mCloseThread = true;
   if (mThread.joinable())
     mThread.join();
 
@@ -45,7 +46,7 @@ void SimpleScheduler::threadFunc() {
     this_thread::sleep_for(chrono::milliseconds(100));
   }
 
-  while (1) {
+  while (!mCloseThread) {
     auto ret = doSchedule();
     if (ret.has_value()) {
       LOG(ERROR) << "SimpleScheduler.doSchedule: "
@@ -109,6 +110,12 @@ TResultOpt SimpleScheduler::doSchedule() {
   std::unique_lock lockSchedulerState(mMtxModifySchedulerState);
 
   if (auto error = std::get_if<Error>(&playbackTrackRet)) {
+    if (error->getErrorCode() == ErrorCode::SpotifyHttpTimeout) {
+      // on timeout clients do not need to know, because polling is handled from
+      // the server, just log it
+      LOG(ERROR) << "SimpleScheduler.doSchedule: " << error->getErrorMessage();
+      return std::nullopt;
+    }
     mLastPlaybackTrack = playbackTrackRet;
     return *error;
   }

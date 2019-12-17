@@ -30,26 +30,22 @@ TResultOpt SpotifyAuthorization::startServer() {
   if (readConfigRet.has_value()) {
     return readConfigRet;
   }
-  shutdownServer = false;
-  mServerThread = std::make_unique<std::thread>(
-      &SpotifyAuthorization::startServerThread, this);
+
+  mWebserver = std::make_unique<httpserver::webserver>(create_webserver(mPort));
+  mWebserver->register_resource("/", this, true);
+
+  try {
+    mWebserver->start(false);
+  } catch (std::exception const &e) {
+    return Error(ErrorCode::NotInitialized, e.what());
+  }
 
   return std::nullopt;
 }
 
-void SpotifyAuthorization::startServerThread() {
-  webserver ws = create_webserver(mPort);
-  ws.register_resource("/", this, true);
-
-  ws.start(false);
-  while (!shutdownServer) {
-    usleep(100000);
-  };
-}
 void SpotifyAuthorization::stopServer() {
-  if (!shutdownServer) {
-    shutdownServer = true;
-    mServerThread->join();
+  if (mWebserver != nullptr) {
+    mWebserver->stop();
   }
 }
 

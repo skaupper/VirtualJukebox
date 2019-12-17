@@ -160,13 +160,6 @@ TResult<std::optional<Playback>> SpotifyAPI::getCurrentPlayback(
   auto playbackRet = parseSpotifyCall<Playback>(response);
   if (auto error = std::get_if<Error>(&playbackRet)) {
     LOG(ERROR) << "SpotifyAPI.getCurrentPlayback: " << error->getErrorMessage();
-
-    if (error->getErrorCode() == ErrorCode::SpotifyParseError) {
-      VLOG(101) << "Code: " << response.code;
-      VLOG(101) << "Body:";
-      VLOG(101) << response.body;
-    }
-
     return *error;
   }
   VLOG(100) << "SpotifyAPI.getCurrentPlayback: playback request succeeded";
@@ -417,8 +410,15 @@ TResult<RestClient::Response> SpotifyAPI::spotifyCall(
       return Error(ErrorCode::SpotifyAPIError, "Invalid Http method");
   }
 
-  if (response.code == cHTTPTimeout) {
-    return Error(ErrorCode::SpotifyHttpTimeout, "Timout on Spotify request");
+  // check for curl errors and restclient error
+  if (response.code == CURLE_OPERATION_TIMEDOUT ||
+      response.code == cHTTPTimeout) {
+    return Error(ErrorCode::SpotifyHttpTimeout, "Timeout on Spotify request");
+  } else if (response.code == CURLE_SSL_CERTPROBLEM) {
+    return Error(ErrorCode::SpotifyAPIError, response.body);
+  } else if (response.code == -1) {
+    return Error(ErrorCode::SpotifyAPIError,
+                 response.body + " (maybe no internet connection)");
   }
 
   return response;
@@ -446,6 +446,9 @@ TResult<SpotifyAPIType> SpotifyAPI::parseSpotifyCall(
     // message
   } catch (...) {
     // parse exception
+    LOG(ERROR) << "ErrorCode: " << response.code;
+    LOG(ERROR) << "Body";
+    LOG(ERROR) << response.body;
     return Error(ErrorCode::SpotifyParseError,
                  "Received json couldn't be parsed");
   }
