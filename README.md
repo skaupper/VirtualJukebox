@@ -4,7 +4,7 @@
 
 ## Introduction
 
-This project is developed as part of an university lecture regarding software projects.
+This project is developed as part of an university lecture regarding software projects at the University of Applied Sciences Hagenberg, in the program Embedded Systems Design.
 
 The main purpose of __VirtualJukebox__ is to provide a server application which manages a music playlist shared by
 multiple clients. The clients are capable of adding tracks to a user playlist and voting on tracks to play next. The track
