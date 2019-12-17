@@ -33,7 +33,7 @@ class BaseTrack {
  */
 struct QueuedTrack : public BaseTrack {
   int votes;
-  TVote currentVote;
+  TVote userHasVoted;
   uint64_t insertedAt;
   bool operator<(const QueuedTrack tr) {
     if (votes == tr.votes) {

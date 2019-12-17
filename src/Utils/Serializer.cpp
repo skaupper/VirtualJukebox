@@ -30,7 +30,7 @@ template <>
 json Serializer::serialize<QueuedTrack>(QueuedTrack const &track) {
   json result = Serializer::serialize<BaseTrack>(track);
   result["votes"] = track.votes;
-  result["current_vote"] = (track.currentVote ? 1 : 0);
+  result["current_vote"] = (track.userHasVoted ? 1 : 0);
   return result;
 }
 

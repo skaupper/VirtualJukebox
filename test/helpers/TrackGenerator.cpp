@@ -61,7 +61,7 @@ std::vector<QueuedTrack> TrackGenerator::generateQueuedTracks(int nr) const {
 
     track.insertedAt = rand();
     track.votes = rand();
-    track.currentVote = rand();
+    track.userHasVoted = rand();
 
     result.push_back(track);
   }
