@@ -275,34 +275,3 @@ void testMoveTrack(RestAPIFixture *fixture,
   ASSERT_EQ(trkid, expTrkid);
   ASSERT_EQ(queueType, expQueueType);
 }
-
-/**
- * TODO: restclient-cpp cannot do DELETE requests with body
-void testRemoveTrack(RestAPIFixture *fixture,
-                     TSessionID const &expSid,
-                     TTrackID const &expTrkid,
-                     int count) {
-  TSessionID sid;
-  TTrackID trkid;
-
-  json requestBody{
-      {"session_id", expSid},  //
-      {"track_id", expTrkid}   //
-  };
-
-  // do request
-  auto resp = fixture->del("/removeTrack", requestBody.dump()).value();
-
-  // check response
-  ASSERT_EQ(resp.code, 200);
-  ASSERT_EQ(json::parse(resp.body), json{});
-  ASSERT_EQ(fixture->listener.getCountMoveTrack(), count);
-
-  ASSERT_TRUE(fixture->listener.hasParametersRemoveTrack());
-  fixture->listener.getLastParametersRemoveTrack(sid, trkid);
-  ASSERT_FALSE(fixture->listener.hasParametersRemoveTrack());
-
-  ASSERT_EQ(sid, expSid);
-  ASSERT_EQ(trkid, expTrkid);
-}
-*/
