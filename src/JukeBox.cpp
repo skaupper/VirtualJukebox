@@ -7,8 +7,6 @@
 /*****************************************************************************/
 
 /* TODO:
-    - rename `@retval` --> `@return`
-
     - either always function(void); or function();
  */
 
