@@ -24,7 +24,7 @@ SimpleScheduler::SimpleScheduler(DataStore *const datastore,
 }
 
 SimpleScheduler::~SimpleScheduler() {
-  mCloseThread=true;
+  mCloseThread = true;
   if (mThread.joinable())
     mThread.join();
 

@@ -44,7 +44,9 @@ TResultOpt SpotifyAuthorization::startServer(void) {
 }
 
 void SpotifyAuthorization::stopServer() {
-  mWebserver->stop();
+  if (mWebserver != nullptr) {
+    mWebserver->stop();
+  }
 }
 
 std::string const &SpotifyAuthorization::getRefreshToken(void) {
