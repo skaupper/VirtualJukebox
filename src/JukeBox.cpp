@@ -49,6 +49,19 @@ bool JukeBox::start(string const &exeName, string const &configFilePath) {
 
   initLoggingHandler(exeName);
 
+  // clang-format off
+  LOG(INFO) << "#########################################################################\n";
+  LOG(INFO) << " __     ___      _               _     _       _        _                ";
+  LOG(INFO) << " \\ \\   / (_)_ __| |_ _   _  __ _| |   | |_   _| | _____| |__   _____  __ ";
+  LOG(INFO) << "  \\ \\ / /| | '__| __| | | |/ _` | |_  | | | | | |/ / _ \\ '_ \\ / _ \\ \\/ / ";
+  LOG(INFO) << "   \\ V / | | |  | |_| |_| | (_| | | |_| | |_| |   <  __/ |_) | (_) >  <  ";
+  LOG(INFO) << "    \\_/  |_|_|   \\__|\\__,_|\\__,_|_|\\___/ \\__,_|_|\\_\\___|_.__/ \\___/_/\\_\\ ";
+  LOG(INFO) << "";
+  LOG(INFO) << "#########################################################################";
+  LOG(INFO) << "Compiled at: " << __DATE__ << " " << __TIME__;
+  LOG(INFO) << "#########################################################################";
+  // clang-format on
+
   ret = mMusicBackend->initBackend();
   if (ret.has_value()) {
     LOG(ERROR) << "Failed to initialize music backend ("
