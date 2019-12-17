@@ -51,7 +51,12 @@ TResultOpt RestAPI::handleRequests() {
   ws->register_resource("/", &handler, true);
 
   // run the webserver in blocking mode
-  ws->start(true);
+  try {
+    ws->start(true);
+  } catch (invalid_argument const &) {
+    return Error(ErrorCode::NotInitialized,
+                 "Port '" + to_string(port) + "' already taken");
+  }
 
   return nullopt;
 }

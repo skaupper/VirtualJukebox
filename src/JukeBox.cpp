@@ -61,7 +61,12 @@ bool JukeBox::start(string const &exeName, string const &configFilePath) {
 
   mScheduler->start();
 
-  mNetwork->handleRequests();
+  ret = mNetwork->handleRequests();
+  if (ret.has_value()) {
+    LOG(ERROR) << "Failed to start network API: "
+               << ret.value().getErrorMessage();
+    return false;
+  }
 
   return true;
 }
@@ -145,9 +150,13 @@ TResult<QueueStatus> JukeBox::getCurrentQueues(TSessionID const &sid) {
       if (queueElem.trackId == votedElem)
         /* User has voted for this track */
         queueElem.currentVote = true;
-      ;
     }
   }
+
+  ret = mDataStore->getQueue(QueueType::Admin);
+  if (holds_alternative<Error>(ret))
+    return get<Error>(ret);
+  qs.adminQueue = get<Queue>(ret);
 
   /* Construct current PlaybackTrack through combining of information
    * in DataStore and Spotify */
