@@ -20,7 +20,7 @@ class BaseTrack {
   std::string title;
   std::string album;
   std::string artist;
-  unsigned duration;
+  unsigned durationMs;
   std::string iconUri;
   std::string addedBy;
   bool operator==(const BaseTrack &tr) {
@@ -33,7 +33,7 @@ class BaseTrack {
  */
 struct QueuedTrack : public BaseTrack {
   int votes;
-  TVote currentVote;
+  TVote userHasVoted;
   uint64_t insertedAt;
   bool operator<(const QueuedTrack tr) {
     if (votes == tr.votes) {

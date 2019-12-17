@@ -36,7 +36,7 @@ vector<BaseTrack> TrackGenerator::generateTracks(int nr) const {
     track.title = randomString();
     track.album = randomString();
     track.artist = randomString();
-    track.duration = rand();
+    track.durationMs = rand();
     track.iconUri = randomString();
     track.addedBy = randomString();
 
@@ -55,13 +55,13 @@ std::vector<QueuedTrack> TrackGenerator::generateQueuedTracks(int nr) const {
     track.title = randomString();
     track.album = randomString();
     track.artist = randomString();
-    track.duration = rand();
+    track.durationMs = rand();
     track.iconUri = randomString();
     track.addedBy = randomString();
 
     track.insertedAt = rand();
     track.votes = rand();
-    track.currentVote = rand();
+    track.userHasVoted = rand();
 
     result.push_back(track);
   }
@@ -75,7 +75,7 @@ PlaybackTrack TrackGenerator::generatePlaybackTrack() const {
   track.title = randomString();
   track.album = randomString();
   track.artist = randomString();
-  track.duration = rand();
+  track.durationMs = rand();
   track.iconUri = randomString();
   track.addedBy = randomString();
 

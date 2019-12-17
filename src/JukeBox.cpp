@@ -145,11 +145,11 @@ TResult<QueueStatus> JukeBox::getCurrentQueues(TSessionID const &sid) {
   qs.normalQueue = get<Queue>(ret);
 
   for (auto &queueElem : qs.normalQueue.tracks) {
-    queueElem.currentVote = false;
+    queueElem.userHasVoted = false;
     for (auto const &votedElem : user.votes) {
       if (queueElem.trackId == votedElem)
         /* User has voted for this track */
-        queueElem.currentVote = true;
+        queueElem.userHasVoted = true;
     }
   }
 
@@ -171,7 +171,7 @@ TResult<QueueStatus> JukeBox::getCurrentQueues(TSessionID const &sid) {
   pbt.addedBy = tmp.addedBy;
   pbt.album = tmp.album;
   pbt.artist = tmp.artist;
-  pbt.duration = tmp.duration;
+  pbt.durationMs = tmp.durationMs;
   pbt.iconUri = tmp.iconUri;
   pbt.title = tmp.title;
   pbt.trackId = tmp.trackId;
@@ -281,13 +281,6 @@ TResultOpt JukeBox::removeTrack(TSessionID const &sid, TTrackID const &trkid) {
     LOG(WARNING) << "Jukebox.moveTrack: TrackID '" << trkid
                  << "' could not be found.";
     return Error(ErrorCode::DoesntExist, "Track not found.");
-  }
-  if (trackFoundAdmin && trackFoundNormal) {
-    /* TODO: This situation needs to be avoided in function DataStore.addTrack!
-     */
-    LOG(ERROR) << "Jukebox.moveTrack: TrackID '" << trkid
-               << "' was found in both queues.";
-    return Error(ErrorCode::InvalidValue, "Track found in both queues.");
   }
 
   QueueType q;

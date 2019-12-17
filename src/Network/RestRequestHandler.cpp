@@ -138,7 +138,7 @@ optional<ResponseInformation> RestRequestHandler::decodeAndDispatch(
           {{"/removeTrack", "DELETE"}, removeTrackHandler}          //
       };
 
-  // TODO: the Method Not Allowed handler wont ever be called
+  // TODO: the Method NotAllowedHandler won't ever be called
 
   auto handlerIt = AVAILABLE_ENDPOINTS.find({infos.path, infos.method});
   if (handlerIt != AVAILABLE_ENDPOINTS.cend()) {

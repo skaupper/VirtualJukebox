@@ -362,16 +362,3 @@ TEST_F(RestAPIFixture, moveTrack_goodCases) {
   queueType = QueueType::Admin;
   testMoveTrack(this, sid, trkid, queueType, 4);
 }
-
-//
-// removeTrack
-//
-TEST_F(RestAPIFixture, DISABLED_removeTrack_goodCases) {
-  ASSERT_FALSE(listener.hasParametersRemoveTrack());
-  ASSERT_EQ(listener.getCountRemoveTrack(), 0);
-
-  TSessionID sid;
-  TTrackID trkid;
-
-  // TODO
-}

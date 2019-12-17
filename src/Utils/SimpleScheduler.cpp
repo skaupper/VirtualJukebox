@@ -40,12 +40,6 @@ void SimpleScheduler::start() {
 }
 
 void SimpleScheduler::threadFunc() {
-  unsigned counter = 0;
-  while (counter < 10) {
-    LOG(INFO) << "Hello World Scheduler [" << counter++ << "]";
-    this_thread::sleep_for(chrono::milliseconds(100));
-  }
-
   while (!mCloseThread) {
     auto ret = doSchedule();
     if (ret.has_value()) {
