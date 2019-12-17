@@ -61,7 +61,12 @@ bool JukeBox::start(string const &exeName, string const &configFilePath) {
 
   mScheduler->start();
 
-  mNetwork->handleRequests();
+  ret = mNetwork->handleRequests();
+  if (ret.has_value()) {
+    LOG(ERROR) << "Failed to start network API: "
+               << ret.value().getErrorMessage();
+    return false;
+  }
 
   return true;
 }

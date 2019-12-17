@@ -36,10 +36,5 @@ int main(int argc, char* argv[]) {
     return 1;
   }
 
-  DLOG(INFO) << "Logging a DEBUG message!";
-  LOG(INFO) << "Logging an INFO message!";
-  LOG(WARNING) << "Logging a WARNING message!";
-  LOG(ERROR) << "Logging an ERROR message!";
-
   return 0;
 }
