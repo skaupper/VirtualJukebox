@@ -28,18 +28,20 @@
  */
 class RAMDataStore : public DataStore {
  public:
-  TResultOpt addUser(User const &user);
-  TResult<User> getUser(TSessionID const &ID);
-  TResult<User> removeUser(TSessionID const &ID);
-  TResult<bool> isSessionExpired(TSessionID const &ID);
-  TResultOpt addTrack(BaseTrack const &track, QueueType q);
-  TResult<BaseTrack> removeTrack(TTrackID const &ID, QueueType q);
-  TResult<bool> hasTrack(TTrackID const &ID, QueueType q);
-  TResultOpt voteTrack(TSessionID const &sID, TTrackID const &tID, TVote vote);
-  TResult<Queue> getQueue(QueueType q);
-  TResult<QueuedTrack> getPlayingTrack();
-  bool hasUser(TSessionID const &ID);
-  TResultOpt nextTrack();
+  TResultOpt addUser(User const &user) override;
+  TResult<User> getUser(TSessionID const &ID) override;
+  TResult<User> removeUser(TSessionID const &ID) override;
+  TResult<bool> isSessionExpired(TSessionID const &ID) override;
+  TResultOpt addTrack(BaseTrack const &track, QueueType q) override;
+  TResult<BaseTrack> removeTrack(TTrackID const &ID, QueueType q) override;
+  TResult<bool> hasTrack(TTrackID const &ID, QueueType q) override;
+  TResultOpt voteTrack(TSessionID const &sID,
+                       TTrackID const &tID,
+                       TVote vote) override;
+  TResult<Queue> getQueue(QueueType q) override;
+  TResult<std::optional<QueuedTrack>> getPlayingTrack() override;
+  bool hasUser(TSessionID const &ID) override;
+  TResultOpt nextTrack() override;
 
  private:
   void removeVotesForTrack(TTrackID const &);
@@ -47,7 +49,7 @@ class RAMDataStore : public DataStore {
   Queue *SelectQueue(QueueType q);
   Queue mAdminQueue;
   Queue mNormalQueue;
-  QueuedTrack mCurrentTrack;
+  std::optional<QueuedTrack> mCurrentTrack = std::nullopt;
   std::vector<User> mUsers;
   std::recursive_mutex mUserMutex;
   std::shared_mutex mQueueMutex;

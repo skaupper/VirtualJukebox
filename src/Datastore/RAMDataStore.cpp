@@ -273,7 +273,7 @@ TResult<Queue> RAMDataStore::getQueue(QueueType q) {
   return (const Queue)(*pQueue);
 }
 
-TResult<QueuedTrack> RAMDataStore::getPlayingTrack() {
+TResult<optional<QueuedTrack>> RAMDataStore::getPlayingTrack() {
   // Shared Access to Song Queue
   shared_lock<shared_mutex> MyLock(mQueueMutex);
 
