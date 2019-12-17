@@ -20,7 +20,7 @@ json Serializer::serialize<BaseTrack>(BaseTrack const &track) {
   result["title"] = track.title;
   result["album"] = track.album;
   result["artist"] = track.artist;
-  result["duration"] = track.duration;
+  result["duration"] = track.durationMs;
   result["icon_uri"] = track.iconUri;
   result["added_by"] = track.addedBy;  // TODO: move to QueuedTrack!
   return result;

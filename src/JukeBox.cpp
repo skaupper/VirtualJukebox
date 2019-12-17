@@ -7,7 +7,6 @@
 /*****************************************************************************/
 
 /* TODO:
-    - rename `.duration` --> `.durationMs`
     - rename `@retval` --> `@return`
 
     - either always function(void); or function();
@@ -178,7 +177,7 @@ TResult<QueueStatus> JukeBox::getCurrentQueues(TSessionID const &sid) {
   pbt.addedBy = tmp.addedBy;
   pbt.album = tmp.album;
   pbt.artist = tmp.artist;
-  pbt.duration = tmp.duration;
+  pbt.durationMs = tmp.durationMs;
   pbt.iconUri = tmp.iconUri;
   pbt.title = tmp.title;
   pbt.trackId = tmp.trackId;
