@@ -50,11 +50,11 @@ class NetworkListener {
    * @brief Query the content of the current queues.
    * @details Additionally to the current normal and admin queue, the currently
    * playing track is returned as well (if any).
-   *
+   * @param sid The session ID of the user.
    * @return On success the current queues and the current track are returned,
    * an `Error` otherwise.
    */
-  virtual TResult<QueueStatus> getCurrentQueues(TSessionID const &) = 0;
+  virtual TResult<QueueStatus> getCurrentQueues(TSessionID const &sid) = 0;
 
   /**
    * @brief Add a track to a given queue (normal or admin).

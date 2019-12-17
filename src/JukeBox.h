@@ -40,7 +40,7 @@ class JukeBox : public NetworkListener {
       std::optional<std::string> const &nickname) override;
   TResult<std::vector<BaseTrack>> queryTracks(
       std::string const &searchPattern, size_t const nrOfEntries) override;
-  TResult<QueueStatus> getCurrentQueues(TSessionID const &);
+  TResult<QueueStatus> getCurrentQueues(TSessionID const &sid);
   TResultOpt addTrackToQueue(TSessionID const &sid,
                              TTrackID const &trkid,
                              QueueType type) override;
