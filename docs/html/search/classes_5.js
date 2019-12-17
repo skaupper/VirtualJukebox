@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['networkapi_65',['NetworkAPI',['../classNetworkAPI.html',1,'']]],
-  ['networklistener_66',['NetworkListener',['../classNetworkListener.html',1,'']]]
+  ['image_137',['Image',['../classSpotifyApi_1_1Image.html',1,'SpotifyApi']]]
 ];

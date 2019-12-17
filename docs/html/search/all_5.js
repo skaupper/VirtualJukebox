@@ -1,6 +1,21 @@
 var searchData=
 [
-  ['logginghandler_16',['LoggingHandler',['../classLoggingHandler.html',1,'']]],
-  ['logginghandler_2ecpp_17',['LoggingHandler.cpp',['../LoggingHandler_8cpp.html',1,'']]],
-  ['logginghandler_2eh_18',['LoggingHandler.h',['../LoggingHandler_8h.html',1,'']]]
+  ['generatesession_20',['generateSession',['../classJukeBox.html#a42a91fa2ca2060a1481e5be03c909332',1,'JukeBox::generateSession()'],['../classNetworkListener.html#a9c987d6bf2bfb3ac32528c19e1cd9317',1,'NetworkListener::generateSession()']]],
+  ['getaccesstoken_21',['getAccessToken',['../classSpotifyApi_1_1SpotifyAPI.html#af1167ea72c6bae03deec8d8d3325ba54',1,'SpotifyApi::SpotifyAPI::getAccessToken()'],['../classSpotifyApi_1_1SpotifyAuthorization.html#a4f585bfa111c73298109d6a43e02450b',1,'SpotifyApi::SpotifyAuthorization::getAccessToken()']]],
+  ['getavailabledevices_22',['getAvailableDevices',['../classSpotifyApi_1_1SpotifyAPI.html#a8c53faad5ef80cd0121ede0c48aca28d',1,'SpotifyApi::SpotifyAPI']]],
+  ['getcurrentplayback_23',['getCurrentPlayback',['../classMusicBackend.html#a25a901920a84a9834152c2aacf28efbf',1,'MusicBackend::getCurrentPlayback()'],['../classSpotifyBackend.html#a36c663bbf4f607a40af21b5213a9a0b9',1,'SpotifyBackend::getCurrentPlayback()'],['../classSpotifyApi_1_1SpotifyAPI.html#ac44c5580af168ab1b71139774c19a582',1,'SpotifyApi::SpotifyAPI::getCurrentPlayback()']]],
+  ['getcurrentqueues_24',['getCurrentQueues',['../classJukeBox.html#ab4552d328bbc8ddf9bfda905061d98dd',1,'JukeBox::getCurrentQueues()'],['../classNetworkListener.html#a5a04722db64e24631450f9ca5d1ef7dd',1,'NetworkListener::getCurrentQueues()']]],
+  ['getexpiresat_25',['getExpiresAt',['../classSpotifyApi_1_1SpotifyAuthorization.html#a1fe628cb5c782e6ed2b3dc43cf892f7d',1,'SpotifyApi::SpotifyAuthorization']]],
+  ['getlastplayback_26',['getLastPlayback',['../classSimpleScheduler.html#a0f6396c941bcfb0102d57dfcdb9f4c30',1,'SimpleScheduler']]],
+  ['getplayingtrack_27',['getPlayingTrack',['../classDataStore.html#a26e949891a194a7126017fc4493e7657',1,'DataStore::getPlayingTrack()'],['../classRAMDataStore.html#a590c3f45a352599f4ba164c1f05ac6c0',1,'RAMDataStore::getPlayingTrack()']]],
+  ['getqueue_28',['getQueue',['../classDataStore.html#afeebbf533d0b21aca9fcba83754b1f4a',1,'DataStore::getQueue()'],['../classRAMDataStore.html#acb413affd5c8fcad837f0f817ded8f20',1,'RAMDataStore::getQueue()']]],
+  ['getrefreshtoken_29',['getRefreshToken',['../classSpotifyApi_1_1SpotifyAuthorization.html#a6f9572508052dae2a5a445854263f39e',1,'SpotifyApi::SpotifyAuthorization']]],
+  ['getscopes_30',['getScopes',['../classSpotifyApi_1_1SpotifyAuthorization.html#af14742b62d6de55558a39d2c5aec5f03',1,'SpotifyApi::SpotifyAuthorization']]],
+  ['gettrack_31',['getTrack',['../classSpotifyApi_1_1SpotifyAPI.html#a7c239d1b61c8e80fdc01f757197100e8',1,'SpotifyApi::SpotifyAPI']]],
+  ['getuser_32',['getUser',['../classDataStore.html#ae2101b1f6b1f8fd00b0216bbca112691',1,'DataStore::getUser()'],['../classRAMDataStore.html#a6b1d53b36ee4e9d401342c0853206f7c',1,'RAMDataStore::getUser()']]],
+  ['getvalueint_33',['getValueInt',['../classConfigHandler.html#aec101acc1e0961ec88c6897d9393da3f',1,'ConfigHandler']]],
+  ['getvaluestring_34',['getValueString',['../classConfigHandler.html#a0739c6cfe676547dfba163bfdcfe8974',1,'ConfigHandler']]],
+  ['getvolume_35',['getVolume',['../classMusicBackend.html#a9c6d972426ee071034a7ab2c3cae990e',1,'MusicBackend::getVolume()'],['../classSpotifyBackend.html#a54530275a3787b8d22b99369b07f53fa',1,'SpotifyBackend::getVolume()']]],
+  ['globaltypes_2eh_36',['GlobalTypes.h',['../GlobalTypes_8h.html',1,'']]],
+  ['granttype_37',['GrantType',['../SpotifyAPITypes_8h.html#a4afaee2515de500ea4bfce9537ca0ceb',1,'SpotifyApi']]]
 ];

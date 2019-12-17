@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['removetrack_104',['removeTrack',['../classJukeBox.html#a4ef7b0f9ab225fc18b606a1ec3fb830d',1,'JukeBox::removeTrack()'],['../classNetworkListener.html#a017bf4541619e098880ad115fd1ba6e7',1,'NetworkListener::removeTrack()']]]
+  ['movetrack_225',['moveTrack',['../classJukeBox.html#a47da68cdc2e529fc5b74c846ac196db5',1,'JukeBox::moveTrack()'],['../classNetworkListener.html#a2d0015c8ce1c73931662102539709a5f',1,'NetworkListener::moveTrack()']]]
 ];

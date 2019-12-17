@@ -1,8 +1,6 @@
 var searchData=
 [
-  ['networkapi_23',['NetworkAPI',['../classNetworkAPI.html',1,'']]],
-  ['networkapi_2ecpp_24',['NetworkAPI.cpp',['../NetworkAPI_8cpp.html',1,'']]],
-  ['networkapi_2eh_25',['NetworkAPI.h',['../NetworkAPI_8h.html',1,'']]],
-  ['networklistener_26',['NetworkListener',['../classNetworkListener.html',1,'']]],
-  ['networklistener_2eh_27',['NetworkListener.h',['../NetworkListener_8h.html',1,'']]]
+  ['image_40',['Image',['../classSpotifyApi_1_1Image.html',1,'SpotifyApi']]],
+  ['initbackend_41',['initBackend',['../classMusicBackend.html#a9c20d8af1a5dd01766cb1595a2546ece',1,'MusicBackend::initBackend()'],['../classSpotifyBackend.html#ad1cb12d1fa585e6d4e25d7437bdbdde4',1,'SpotifyBackend::initBackend()']]],
+  ['issessionexpired_42',['isSessionExpired',['../classDataStore.html#aa7582a831e7f5b10d52ffd42526acd4b',1,'DataStore::isSessionExpired()'],['../classRAMDataStore.html#a5741d23da3acb2de51a9789be973997f',1,'RAMDataStore::isSessionExpired()']]]
 ];

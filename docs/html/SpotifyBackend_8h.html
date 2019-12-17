@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.16"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>VirtualJukebox: src/SpotifyBackend.h File Reference</title>
+<title>VirtualJukebox: src/Spotify/SpotifyBackend.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -61,7 +61,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_03ba4c266e378ccffb87dd5fa6a12b43.html">Spotify</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -74,18 +74,20 @@ $(function() {
 
 <p>Class handles Music Playback with a Spotify Backend.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="GlobalTypes_8h_source.html">GlobalTypes.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &lt;mutex&gt;</code><br />
 <code>#include &quot;<a class="el" href="MusicBackend_8h_source.html">MusicBackend.h</a>&quot;</code><br />
-<code>#include &quot;PlaybackTrack.h&quot;</code><br />
-<code>#include &quot;<a class="el" href="Queue_8h_source.html">Queue.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="Result_8h_source.html">Result.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="Track_8h_source.html">Track.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="SpotifyAPI_8h_source.html">SpotifyAPI.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="SpotifyAuthorization_8h_source.html">SpotifyAuthorization.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="GlobalTypes_8h_source.html">Types/GlobalTypes.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="Queue_8h_source.html">Types/Queue.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="Result_8h_source.html">Types/Result.h</a>&quot;</code><br />
 </div>
 <p><a href="SpotifyBackend_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSpotifyBackend.html">SpotifyBackend</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">spotify music backend class which handles api calls and starts the authentication process  <a href="classSpotifyBackend.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>

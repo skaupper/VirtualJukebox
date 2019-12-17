@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['main_2ecpp_19',['main.cpp',['../main_8cpp.html',1,'']]],
-  ['movetrack_20',['moveTrack',['../classJukeBox.html#acbf13a27d1dfe0922389b3871739a52b',1,'JukeBox::moveTrack()'],['../classNetworkListener.html#aa40327e801fb55a41362afe09825396c',1,'NetworkListener::moveTrack()']]],
-  ['musicbackend_21',['MusicBackend',['../classMusicBackend.html',1,'']]],
-  ['musicbackend_2eh_22',['MusicBackend.h',['../MusicBackend_8h.html',1,'']]]
+  ['hastrack_38',['hasTrack',['../classDataStore.html#a3e86350d2533c5e8fe4a3cc294819ba7',1,'DataStore::hasTrack()'],['../classRAMDataStore.html#abc3b8321530d0398f4ec1bd707410d07',1,'RAMDataStore::hasTrack()']]],
+  ['hasuser_39',['hasUser',['../classDataStore.html#a534c91e2d79168a6fd1bd582b6692514',1,'DataStore::hasUser()'],['../classRAMDataStore.html#aa121f84da8d284abee666d835a133af8',1,'RAMDataStore::hasUser()']]]
 ];

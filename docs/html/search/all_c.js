@@ -1,12 +1,8 @@
 var searchData=
 [
-  ['tpassword_49',['TPassword',['../GlobalTypes_8h.html#a0427177b8e88da62a10f9acfcece1359',1,'GlobalTypes.h']]],
-  ['track_50',['Track',['../classTrack.html',1,'']]],
-  ['track_2ecpp_51',['Track.cpp',['../Track_8cpp.html',1,'']]],
-  ['track_2eh_52',['Track.h',['../Track_8h.html',1,'']]],
-  ['tresult_53',['TResult',['../Result_8h.html#a442760d03514e6c849a35e3f0c768bef',1,'Result.h']]],
-  ['tresultopt_54',['TResultOpt',['../Result_8h.html#aada7d5476a077b5984176864eefe0c5f',1,'Result.h']]],
-  ['tsessionid_55',['TSessionID',['../GlobalTypes_8h.html#a0de933f1c954bae9fd7edbff41cf9a91',1,'GlobalTypes.h']]],
-  ['ttrackid_56',['TTrackID',['../GlobalTypes_8h.html#a913b47270997e628c2767eebc80a2e6a',1,'GlobalTypes.h']]],
-  ['tvote_57',['TVote',['../GlobalTypes_8h.html#a5842247e6ba9809bdba7898b9fe2b3dd',1,'GlobalTypes.h']]]
+  ['pause_58',['pause',['../classMusicBackend.html#a8b3eb02f10084c51ab27de3c50e5de33',1,'MusicBackend::pause()'],['../classSpotifyBackend.html#a9eb9e84f3399e3fd67a13fa88e10053b',1,'SpotifyBackend::pause()'],['../classSpotifyApi_1_1SpotifyAPI.html#ace9f4542cf96fe6c544196c6e0403374',1,'SpotifyApi::SpotifyAPI::pause()']]],
+  ['play_59',['play',['../classMusicBackend.html#acb1ce1a8225076a2a9c0ee9a33e61c15',1,'MusicBackend::play()'],['../classSpotifyBackend.html#afe8f265ec12956750085be2101f468b6',1,'SpotifyBackend::play()'],['../classSpotifyApi_1_1SpotifyAPI.html#a3bd3dcd0260422e8db16fb3c6efb0b06',1,'SpotifyApi::SpotifyAPI::play()']]],
+  ['playback_60',['Playback',['../classSpotifyApi_1_1Playback.html',1,'SpotifyApi']]],
+  ['playbacktrack_61',['PlaybackTrack',['../structPlaybackTrack.html',1,'']]],
+  ['playeraction_62',['PlayerAction',['../GlobalTypes_8h.html#aea132397c26cad8f8637a9422260deca',1,'GlobalTypes.h']]]
 ];

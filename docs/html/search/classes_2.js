@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['jukebox_62',['JukeBox',['../classJukeBox.html',1,'']]]
+  ['confighandler_132',['ConfigHandler',['../classConfigHandler.html',1,'']]]
 ];
