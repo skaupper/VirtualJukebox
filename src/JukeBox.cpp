@@ -232,6 +232,8 @@ TResultOpt JukeBox::addTrackToQueue(TSessionID const &sid,
                  << trkid << "'.";
     return get<Error>(query);
   }
+  auto track = get<BaseTrack>(query);
+  track.addedBy = user.Name;
 
   return mDataStore->addTrack(get<BaseTrack>(query), type);
 }
