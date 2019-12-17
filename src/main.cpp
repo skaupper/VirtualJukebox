@@ -2,7 +2,7 @@
 /**
  * @file    main.cpp
  * @author  Team Server
- * @brief   Main program for project "Virtual JukeBox"
+ * @brief   Main program for project "VirtualJukeBox"
  * @details Usage: ./executable [<filepath-to-config-file.ini>]
  */
 /*****************************************************************************/
@@ -27,6 +27,7 @@ int main(int argc, char* argv[]) {
     cout << "INFO: No filename was specified for *.ini configuration file. "
          << "Using '" << configFilePath << "' as a default fallback." << endl;
   }
+
   JukeBox jukebox;
 
   // clang-format off
