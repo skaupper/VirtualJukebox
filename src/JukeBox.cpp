@@ -409,7 +409,7 @@ TResultOpt JukeBox::controlPlayer(TSessionID const &sid, PlayerAction action) {
       if (holds_alternative<Error>(volume))
         return get<Error>(volume);
 
-      ret = mMusicBackend->setVolume(get<size_t>(volume) + volChangePercent);
+      ret = mMusicBackend->setVolume(get<size_t>(volume) - volChangePercent);
       break;
 
     default:
