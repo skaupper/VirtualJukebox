@@ -43,8 +43,8 @@ class RAMDataStore : public DataStore {
 
  private:
   void removeVotesForTrack(TTrackID const &);
-
   Queue *SelectQueue(QueueType q);
+
   Queue mAdminQueue;
   Queue mNormalQueue;
   QueuedTrack mCurrentTrack;
