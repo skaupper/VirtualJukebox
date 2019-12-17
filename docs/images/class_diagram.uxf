@@ -9,41 +9,46 @@
 + progressMs: int
 + isPlaying: bool</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>270</x><y>843</y><w>170</w><h>50</h></coordinates><panel_attributes>Queue
 --
-+ tracks: vector&lt;QueueTrack&gt;</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>2950</x><y>773</y><w>330</w><h>210</h></coordinates><panel_attributes>&lt;&lt;interface&gt;&gt;
++ tracks: vector&lt;QueueTrack&gt;</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>2950</x><y>723</y><w>330</w><h>240</h></coordinates><panel_attributes>&lt;&lt;interface&gt;&gt;
 DataStore
 --
 /+ addUser(User): TResultOpt/
+/+ getUser(TSessionID): TResult&lt;User&gt;/
 /+ removeUser(TSessionId): TResult&lt;User&gt;/
-/+ checkSessionExpirations(): TResult&lt;vector&lt;User&gt;&gt;/
-/+ addTrack(Track, QueueType): TResultOpt/
-/+ removeTrack(TTrackId, QueueType): TResult&lt;Track&gt;/
+/+ isSessionExpired(TSessionId): TResult&lt;bool&gt;/
+/+ addTrack(BaseTrack, QueueType): TResultOpt/
+/+ removeTrack(TTrackId, QueueType): TResult&lt;BaseTrack&gt;/
 /+ hasTrack(TTrackId, QueueType): TResult&lt;bool&gt;/
 /+ voteTrack(TSessionId, TTrackId, TVote): TResultOpt/
 /+ getQueue(QueueType): TResult&lt;Queue&gt;/
-/+ getPlayingTrack(): TResult&lt;Track&gt;/
-/+ hasUser(TSessionId): TResult&lt;bool&gt;/
-/+ nextTrack(): TResultOpt/</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>2950</x><y>1033</y><w>330</w><h>270</h></coordinates><panel_attributes>RAMDataStore
+/+ getPlayingTrack(): TResult&lt;QueuedTrack&gt;/
+/+ hasUser(TSessionId): bool/
+/+ nextTrack(): TResultOpt/</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>2950</x><y>1043</y><w>330</w><h>310</h></coordinates><panel_attributes>RAMDataStore
 --
 + addUser(User): TResultOpt
++ getUser(TSessionID): TResult&lt;User&gt;
 + removeUser(TSessionId): TResult&lt;User&gt;
-+ checkSessionExpirations(): TResult&lt;vector&lt;User&gt;&gt;
-+ addTrack(Track, QueueType): TResultOpt
-+ removeTrack(TTrackId, QueueType): TResult&lt;Track&gt;
++ isSessionExpired(TSessionId): TResult&lt;bool&gt;
++ addTrack(BaseTrack, QueueType): TResultOpt
++ removeTrack(TTrackId, QueueType): TResult&lt;BaseTrack&gt;
 + hasTrack(TTrackId, QueueType): TResult&lt;bool&gt;
 + voteTrack(TSessionId, TTrackId, TVote): TResultOpt
 + getQueue(QueueType): TResult&lt;Queue&gt;
-+ getPlayingTrack(): TResult&lt;Track&gt;
-+ hasUser(TSessionId): TResult&lt;bool&gt;
++ getPlayingTrack(): TResult&lt;QueuedTrack&gt;
++ hasUser(TSessionId): bool
 + nextTrack(): TResultOpt
 --
 - mAdminQueue: Queue
 - mNormalQueue: Queue
-- mCurrentTrack: Track
-- mUser: vector&lt;User&gt;</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>3320</x><y>733</y><w>130</w><h>30</h></coordinates><panel_attributes>TVote = bool</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>3320</x><y>693</y><w>130</w><h>30</h></coordinates><panel_attributes>TSessionId = string</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>3320</x><y>653</y><w>130</w><h>30</h></coordinates><panel_attributes>TTrackId = string</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>3320</x><y>473</y><w>140</w><h>80</h></coordinates><panel_attributes>&lt;&lt; enumeration &gt;&gt;
+- mCurrentTrack: QueuedTrack
+- mUsers: vector&lt;User&gt;
+- mUserMutex : recursive_mutex
+- mQueueMutex : shared_mutex
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>3320</x><y>733</y><w>130</w><h>30</h></coordinates><panel_attributes>TVote = bool</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>3320</x><y>693</y><w>130</w><h>30</h></coordinates><panel_attributes>TSessionId = string</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>3320</x><y>653</y><w>130</w><h>30</h></coordinates><panel_attributes>TTrackId = string</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>3320</x><y>473</y><w>140</w><h>80</h></coordinates><panel_attributes>&lt;&lt; enumeration &gt;&gt;
 QueueType
 --
 Admin
-Normal</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>3120</x><y>973</y><w>30</w><h>80</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;10;10;60</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1670</x><y>653</y><w>370</w><h>180</h></coordinates><panel_attributes>&lt;&lt;Interface&gt;&gt;
+Normal</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>3100</x><y>953</y><w>30</w><h>110</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;10;10;90</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1670</x><y>653</y><w>370</w><h>180</h></coordinates><panel_attributes>&lt;&lt;Interface&gt;&gt;
 MusicBackend
 --
 /+ initBackend(): void /
@@ -54,7 +59,7 @@ MusicBackend
 /+ play(): TResultOpt/
 /+ setVolume(int): TResultOpt/
 /+ getVolume(): TResult&lt;size_t&gt;/
-/+ createBaseTrack(TTrackId) : TResult&lt;BaseTrack&gt;/</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1670</x><y>893</y><w>370</w><h>200</h></coordinates><panel_attributes>SpotifyBackend
+/+ createBaseTrack(TTrackId) : TResult&lt;BaseTrack&gt;/</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1670</x><y>893</y><w>370</w><h>240</h></coordinates><panel_attributes>SpotifyBackend
 --
 + initBackend(): void 
 + queryTracks(string, int) : TResult&lt;vector&lt;BaseTrack&gt;&gt;
@@ -64,7 +69,12 @@ MusicBackend
 + play(): TResultOpt
 + setVolume(int): TResultOpt
 + getVolume(): TResult&lt;size_t&gt;
-+ createBaseTrack(TTrackId) : TResult&lt;BaseTrack&gt;</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1840</x><y>823</y><w>30</w><h>90</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;10;10;70</additional_attributes></element><element><id>UMLClass</id><coordinates><x>2080</x><y>893</y><w>490</w><h>200</h></coordinates><panel_attributes>SpotifyAPI
++ createBaseTrack(TTrackId) : TResult&lt;BaseTrack&gt;
+--
+- mSpotifyAPI : SpotifyAPI
+- mSpotifyAuth : SpotifyAuthorization
+- mPlayPauseMtx : mutex
+- mVolumeMtx : mutex</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1840</x><y>823</y><w>30</w><h>90</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;10;10;70</additional_attributes></element><element><id>UMLClass</id><coordinates><x>2080</x><y>893</y><w>490</w><h>220</h></coordinates><panel_attributes>SpotifyAPI
 --
 + getAccessToken(GrantType grantType, string, string, string, string) : TResult&lt;Token&gt; 
 + refreshAccessToken(string, string, string) : TResult&lt;Token&gt; 
@@ -75,7 +85,9 @@ MusicBackend
 + pause(string, Device) : TResultOpt
 + play(string, vector&lt;string&gt;, Device, int) : TResultOpt
 + getTrack(string, string, string) : TResult&lt;Track&gt;
-+ transferUsersPlayback(string, vector&lt;Device&gt;, bool) : TResultOpt</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1370</x><y>803</y><w>140</w><h>30</h></coordinates><panel_attributes>RestAPI (Server)</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1370</x><y>893</y><w>260</w><h>200</h></coordinates><panel_attributes>SpotifyAuthorization
++ transferUsersPlayback(string, vector&lt;Device&gt;, bool) : TResultOpt
++ stringUrlEncode(string) : string
++ stringBase64Encode(string) : string</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1370</x><y>803</y><w>140</w><h>30</h></coordinates><panel_attributes>RestAPI (Server)</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1330</x><y>893</y><w>300</w><h>200</h></coordinates><panel_attributes>SpotifyAuthorization
 --
 + startServer() : TResultOpt
 + stopServer() : void
@@ -84,34 +96,52 @@ MusicBackend
 + refreshAccessToken() : TResultOpt
 + getExpiresAt() : int64_t
 + setScopes(string) : void
-+ getScopes() : string</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>2200</x><y>803</y><w>140</w><h>30</h></coordinates><panel_attributes>RestAPI (Client)</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>2270</x><y>823</y><w>30</w><h>90</h></coordinates><panel_attributes>lt=&lt;.</panel_attributes><additional_attributes>10;10;10;70</additional_attributes></element><element><id>Relation</id><coordinates><x>1420</x><y>823</y><w>30</w><h>90</h></coordinates><panel_attributes>lt=&lt;.</panel_attributes><additional_attributes>10;10;10;70</additional_attributes></element><element><id>Relation</id><coordinates><x>2030</x><y>983</y><w>70</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;50;10</additional_attributes></element><element><id>Relation</id><coordinates><x>1620</x><y>983</y><w>70</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>50;10;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>760</x><y>643</y><w>310</w><h>140</h></coordinates><panel_attributes>ConfigHandler
++ getScopes() : string
 --
-# ConfigHandler()
-_+ initInstance(TConfigPath): void_
-_+ getInstance(): shared_ptr&lt;ConfigHandler&gt;_
+- mMutex : mutex
+- mWebserver : unique_ptr&lt;httpserver::webserver&gt;</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>2200</x><y>803</y><w>140</w><h>30</h></coordinates><panel_attributes>RestAPI (Client)</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>2270</x><y>823</y><w>30</w><h>90</h></coordinates><panel_attributes>lt=&lt;.</panel_attributes><additional_attributes>10;10;10;70</additional_attributes></element><element><id>Relation</id><coordinates><x>1420</x><y>823</y><w>30</w><h>90</h></coordinates><panel_attributes>lt=&lt;.</panel_attributes><additional_attributes>10;10;10;70</additional_attributes></element><element><id>Relation</id><coordinates><x>2030</x><y>983</y><w>70</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;50;10</additional_attributes></element><element><id>Relation</id><coordinates><x>1620</x><y>983</y><w>70</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>50;10;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>750</x><y>643</y><w>330</w><h>160</h></coordinates><panel_attributes>ConfigHandler
+--
++ setConfigFilePath(string): TResultOpt
++ getInstance(): shared_ptr&lt;ConfigHandler&gt;
 
-_- instance: shared_ptr&lt;ConfigHandler&gt;_
++ getValueString(string, string) : TResult&lt;string&gt;
++ getValueInt(string, string) : TResult&lt;int&gt;
++ isInitialized() : bool
 --
-+ getValue(TSectionName, TKeyName): TValue</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1060</x><y>683</y><w>60</w><h>70</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;40;10;40;50;10;50</additional_attributes></element><element><id>UMLClass</id><coordinates><x>480</x><y>843</y><w>150</w><h>100</h></coordinates><panel_attributes>QueueTrack 
+- ConfigHandler()
+- mInstance : shared_ptr&lt;ConfigHandler&gt;
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1070</x><y>683</y><w>60</w><h>70</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;40;10;40;50;10;50</additional_attributes></element><element><id>UMLClass</id><coordinates><x>480</x><y>843</y><w>150</w><h>100</h></coordinates><panel_attributes>QueueTrack 
 --
 + votes: int
 + currentVote: TVote
 + insertedAt: uint64_t</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>2950</x><y>303</y><w>330</w><h>150</h></coordinates><panel_attributes>NetworkAPI
 --
 + setListener(NetworkListener *): void
-/+ handleRequests(): void/</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>2840</x><y>373</y><w>130</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>110;10;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>2370</x><y>663</y><w>500</w><h>210</h></coordinates><panel_attributes>JukeBox
+/+ handleRequests(): TResultOpt/
 --
-+ start(TConfigPath): void
+# mListener : NetworkListener*</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>2840</x><y>373</y><w>130</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>110;10;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>2380</x><y>1123</y><w>500</w><h>330</h></coordinates><panel_attributes>SimpleScheduler
 --
-+ generateSession(optional&lt;TPassword&gt;, optional&lt;string&gt;): TResult&lt;TSessionId&gt;
-+ queryTracks(string, TCount): TResult&lt;vector&lt;BaseTrack&gt;&gt;
-+ getCurrentQueues(TSessionId): TResult&lt;QueueStatus&gt;
-+ addTrackToQueue(TSessionId, TTrackId, QueueType): TResultOpt
-+ voteTrack(TSessionId, TTrackId, TVote): TResultOpt
-+ controlPlayer(TSessionId, PlayerAction): TResultOpt
-+ removeTrack(TSessionId, TTrackId): TResultOpt
-+ moveTrack(TSessionId, TTrackId, QueueType): TResultOpt
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>2380</x><y>313</y><w>470</w><h>150</h></coordinates><panel_attributes>/NetworkListener/
++ start(): void
+
++ getLastPlayback(): TResult&lt;optional&lt;PlaybackTrack&gt;&gt;
++ nextTrack() : TResultOpt
++ checkForInconsistency() : bool
+--
+- doSchedule() : TResultOpt
+- threadFunc() : void
+- areQueuesEmpty() : TResult&lt;bool&gt;
+- isTrackPlaying(optional&lt;PlaybackTrack&gt;) : TResult&lt;bool&gt;
+- isTrackFinished(optional&lt;PlaybackTrack&gt;) : TResult&lt;bool&gt;
+--
+- mThread : thread
+- mCloseThread : bool
+- mMtxPlayback : shared_mutex
+- mMtxModifySchedulerState : shared_mutex
+
+- mDataStore : DataStore* 
+- mMusicBackend : MusicBackend*
+- mSchedulerState : SchedulerState
+- mLastPlaybackTrack : TResult&lt;optional&lt;PlaybackTrack&gt;&gt;</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>2380</x><y>313</y><w>470</w><h>160</h></coordinates><panel_attributes>/NetworkListener/
 --
 /+ generateSession(optional&lt;TPassword&gt;, optional&lt;string&gt;): TResult&lt;TSessionId&gt;/
 /+ queryTracks(string, TCount): TResult&lt;vector&lt;BaseTrack&gt;&gt;/
@@ -120,11 +150,12 @@ _- instance: shared_ptr&lt;ConfigHandler&gt;_
 /+ voteTrack(TSessionId, TTrackId, TVote): TResultOpt/
 /+ controlPlayer(TSessionId, PlayerAction): TResultOpt/
 /+ removeTrack(TSessionId, TTrackId): TResultOpt/
-/+ moveTrack(TSessionId, TTrackId, QueueType): TResultOpt/</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>2610</x><y>453</y><w>30</w><h>230</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;10;10;210</additional_attributes></element><element><id>UMLClass</id><coordinates><x>2950</x><y>503</y><w>330</w><h>200</h></coordinates><panel_attributes>RestAPI
+/+ moveTrack(TSessionId, TTrackId, QueueType): TResultOpt/</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>2610</x><y>463</y><w>30</w><h>160</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;10;10;140</additional_attributes></element><element><id>UMLClass</id><coordinates><x>2950</x><y>503</y><w>330</w><h>140</h></coordinates><panel_attributes>RestAPI
 --
-+ handleRequests(): void
-- newRequest(Connection*): void
-- decodeAndDispatch(Path, Method, Content): void</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>3100</x><y>443</y><w>30</w><h>80</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;60</additional_attributes></element><element><id>Relation</id><coordinates><x>2860</x><y>413</y><w>110</w><h>310</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;290;50;290;50;10;90;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>3320</x><y>303</y><w>210</w><h>150</h></coordinates><panel_attributes>&lt;&lt;enumeration&gt;&gt;
++ handleRequests(): TResultOpt
++ stopServer() : void
+--
+mWebserver : unique_ptr&lt;httpserver::webserver&gt;</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>3100</x><y>443</y><w>30</w><h>80</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;60</additional_attributes></element><element><id>Relation</id><coordinates><x>2860</x><y>403</y><w>110</w><h>270</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;250;50;250;50;10;90;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>3320</x><y>303</y><w>210</w><h>150</h></coordinates><panel_attributes>&lt;&lt;enumeration&gt;&gt;
 PlayerAction
 --
 Play
@@ -132,10 +163,10 @@ Pause
 Stop
 Skip
 VolumeUp
-VolumeDown</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>2860</x><y>833</y><w>110</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;90;10</additional_attributes></element><element><id>Relation</id><coordinates><x>2030</x><y>713</y><w>360</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>340;10;10;10</additional_attributes></element><element><id>UMLInterface</id><coordinates><x>2240</x><y>593</y><w>40</w><h>70</h></coordinates><panel_attributes>main</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>2260</x><y>603</y><w>130</w><h>110</h></coordinates><panel_attributes>lt=&lt;.</panel_attributes><additional_attributes>110;90;50;70;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1160</x><y>643</y><w>190</w><h>70</h></coordinates><panel_attributes>Error
+VolumeDown</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>2860</x><y>733</y><w>110</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;90;10</additional_attributes></element><element><id>Relation</id><coordinates><x>2030</x><y>663</y><w>360</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>340;10;10;10</additional_attributes></element><element><id>UMLInterface</id><coordinates><x>2240</x><y>563</y><w>40</w><h>70</h></coordinates><panel_attributes>main</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>2260</x><y>583</y><w>130</w><h>70</h></coordinates><panel_attributes>lt=&lt;.</panel_attributes><additional_attributes>110;50;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1160</x><y>643</y><w>190</w><h>70</h></coordinates><panel_attributes>Error
 --
 + getErrorCode(): ErrorCode
-+ getErrorMessage(): string</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>3320</x><y>573</y><w>250</w><h>30</h></coordinates><panel_attributes>TResult&lt;GOOD&gt; = variant&lt;GOOD, Error&gt;</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>590</x><y>593</y><w>140</w><h>170</h></coordinates><panel_attributes>BaseTrack
++ getErrorMessage(): string</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>3320</x><y>573</y><w>250</w><h>30</h></coordinates><panel_attributes>TResult&lt;GOOD&gt; = variant&lt;GOOD, Error&gt;</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>590</x><y>613</y><w>140</w><h>150</h></coordinates><panel_attributes>BaseTrack
 --
 + trackId: TTrackId
 + title: string
@@ -144,9 +175,9 @@ VolumeDown</panel_attributes><additional_attributes></additional_attributes></el
 + durationMs: uint
 + iconUri: string
 + addedBy: string
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>650</x><y>753</y><w>120</w><h>110</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;50;100;50;100;90</additional_attributes></element><element><id>Relation</id><coordinates><x>560</x><y>753</y><w>120</w><h>110</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>100;10;100;50;10;50;10;90</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1862</x><y>0</y><w>340</w><h>60</h></coordinates><panel_attributes>Object
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>650</x><y>753</y><w>120</w><h>110</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;60;100;60;100;90</additional_attributes></element><element><id>Relation</id><coordinates><x>560</x><y>753</y><w>120</w><h>110</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>100;10;100;60;10;60;10;90</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1862</x><y>0</y><w>340</w><h>60</h></coordinates><panel_attributes>Object
 --
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>652</x><y>50</y><w>1330</w><h>560</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>1310;10;1310;150;10;150;10;540</additional_attributes></element><element><id>Relation</id><coordinates><x>932</x><y>50</y><w>1090</w><h>610</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>1070;10;1070;210;10;210;10;590</additional_attributes></element><element><id>Relation</id><coordinates><x>1252</x><y>50</y><w>810</w><h>610</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>790;10;790;270;10;270;10;590</additional_attributes></element><element><id>Relation</id><coordinates><x>1452</x><y>50</y><w>630</w><h>610</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>610;10;610;300;10;300;10;590</additional_attributes></element><element><id>Relation</id><coordinates><x>1582</x><y>50</y><w>520</w><h>860</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>500;10;500;330;10;330;10;840</additional_attributes></element><element><id>Relation</id><coordinates><x>1842</x><y>50</y><w>280</w><h>620</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>260;10;260;380;10;380;10;600</additional_attributes></element><element><id>Relation</id><coordinates><x>2102</x><y>50</y><w>40</w><h>860</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>20;10;18;840</additional_attributes></element><element><id>Relation</id><coordinates><x>2132</x><y>50</y><w>510</w><h>280</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;210;490;210;490;260</additional_attributes></element><element><id>Relation</id><coordinates><x>2152</x><y>50</y><w>980</w><h>270</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;180;960;180;960;250</additional_attributes></element><element><id>Relation</id><coordinates><x>2172</x><y>50</y><w>1150</w><h>740</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;150;1130;150;1130;690;940;690;940;720</additional_attributes></element><element><id>UMLClass</id><coordinates><x>3320</x><y>613</y><w>250</w><h>30</h></coordinates><panel_attributes>TResultOpt = optional&lt;Error&gt;</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>3320</x><y>773</y><w>130</w><h>30</h></coordinates><panel_attributes>TTime = uint64_t</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1160</x><y>753</y><w>140</w><h>110</h></coordinates><panel_attributes>&lt;&lt;enumeration&gt;&gt;
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>652</x><y>50</y><w>1330</w><h>580</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>1310;10;1310;150;10;150;10;560</additional_attributes></element><element><id>Relation</id><coordinates><x>922</x><y>50</y><w>1100</w><h>610</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>1080;10;1080;210;20;210;18;590</additional_attributes></element><element><id>Relation</id><coordinates><x>1252</x><y>50</y><w>810</w><h>610</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>790;10;790;270;10;270;10;590</additional_attributes></element><element><id>Relation</id><coordinates><x>1452</x><y>50</y><w>630</w><h>610</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>610;10;610;300;10;300;10;590</additional_attributes></element><element><id>Relation</id><coordinates><x>1572</x><y>50</y><w>530</w><h>860</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>510;10;510;330;20;330;18;840</additional_attributes></element><element><id>Relation</id><coordinates><x>1842</x><y>50</y><w>280</w><h>620</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>260;10;260;380;10;380;10;600</additional_attributes></element><element><id>Relation</id><coordinates><x>2102</x><y>50</y><w>40</w><h>860</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>20;10;18;840</additional_attributes></element><element><id>Relation</id><coordinates><x>2132</x><y>50</y><w>510</w><h>280</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;210;490;210;490;260</additional_attributes></element><element><id>Relation</id><coordinates><x>2152</x><y>50</y><w>980</w><h>270</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;180;960;180;960;250</additional_attributes></element><element><id>Relation</id><coordinates><x>2172</x><y>50</y><w>1150</w><h>690</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;150;1130;150;1130;640;940;640;940;670</additional_attributes></element><element><id>UMLClass</id><coordinates><x>3320</x><y>613</y><w>250</w><h>30</h></coordinates><panel_attributes>TResultOpt = optional&lt;Error&gt;</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1160</x><y>753</y><w>140</w><h>110</h></coordinates><panel_attributes>&lt;&lt;enumeration&gt;&gt;
 ErrorCode
 --
 AccessDenied
@@ -156,4 +187,20 @@ FileNotFound
 --
 + normalQueue: Queue
 + adminQueue: Queue
-+ currentTrack: optional&lt;PlaybackTrack&gt;</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>220</x><y>845</y><w>70</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;50;10</additional_attributes></element><element><id>Relation</id><coordinates><x>430</x><y>845</y><w>70</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;50;10</additional_attributes></element><element><id>Relation</id><coordinates><x>221</x><y>885</y><w>480</w><h>100</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;40;10;40;80;440;80;440;30;460;30</additional_attributes></element><element><id>Relation</id><coordinates><x>352</x><y>50</y><w>1570</w><h>810</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>1550;10;1550;70;20;70;18;790</additional_attributes></element><element><id>Relation</id><coordinates><x>152</x><y>50</y><w>1750</w><h>800</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>1730;10;1730;40;20;40;18;780</additional_attributes></element></diagram>
++ currentTrack: optional&lt;PlaybackTrack&gt;</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>220</x><y>845</y><w>70</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;50;10</additional_attributes></element><element><id>Relation</id><coordinates><x>430</x><y>845</y><w>70</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;50;10</additional_attributes></element><element><id>Relation</id><coordinates><x>221</x><y>885</y><w>480</w><h>100</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;40;10;40;80;440;80;440;30;460;30</additional_attributes></element><element><id>Relation</id><coordinates><x>352</x><y>50</y><w>1570</w><h>810</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>1550;10;1550;70;20;70;18;790</additional_attributes></element><element><id>Relation</id><coordinates><x>152</x><y>50</y><w>1750</w><h>800</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>1730;10;1730;40;20;40;18;780</additional_attributes></element><element><id>UMLClass</id><coordinates><x>2370</x><y>603</y><w>500</w><h>250</h></coordinates><panel_attributes>JukeBox
+--
++ start(string, string): void
+
++ generateSession(optional&lt;TPassword&gt;, optional&lt;string&gt;): TResult&lt;TSessionId&gt;
++ queryTracks(string, TCount): TResult&lt;vector&lt;BaseTrack&gt;&gt;
++ getCurrentQueues(TSessionId): TResult&lt;QueueStatus&gt;
++ addTrackToQueue(TSessionId, TTrackId, QueueType): TResultOpt
++ voteTrack(TSessionId, TTrackId, TVote): TResultOpt
++ controlPlayer(TSessionId, PlayerAction): TResultOpt
++ removeTrack(TSessionId, TTrackId): TResultOpt
++ moveTrack(TSessionId, TTrackId, QueueType): TResultOpt
+--
+- mDataStore : DataStore*
+- mNetwork : NetworkAPI*
+- mMusicBackend : MusicBackend*
+- mScheduler : SimpleScheduler*</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>2860</x><y>760</y><w>70</w><h>450</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;50;10;50;430;20;430</additional_attributes></element></diagram>
