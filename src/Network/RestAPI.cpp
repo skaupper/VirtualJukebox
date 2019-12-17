@@ -54,7 +54,7 @@ TResultOpt RestAPI::handleRequests() {
   try {
     ws->start(true);
   } catch (invalid_argument const &) {
-    return Error(ErrorCode::InvalidValue,
+    return Error(ErrorCode::NotInitialized,
                  "Port '" + to_string(port) + "' already taken");
   }
 
