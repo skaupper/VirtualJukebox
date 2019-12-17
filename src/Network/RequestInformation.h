@@ -13,6 +13,9 @@
 #include <map>
 #include <string>
 
+/**
+ * @brief Wraps all relevant pieces of information provided by a HTTP request.
+ */
 struct RequestInformation {
   std::string path;
   std::string method;
@@ -20,6 +23,9 @@ struct RequestInformation {
   std::map<std::string, std::string, httpserver::http::arg_comparator> args;
 };
 
+/**
+ * @brief Wraps all needed pieces of information to form a proper HTTP response.
+ */
 struct ResponseInformation {
   std::string body;
   int code = 200;

@@ -17,6 +17,10 @@
 #include "../lib/SimpleIni/SimpleIni.h"
 #include "Types/Result.h"
 
+/**
+ * @brief Singleton class which provides shared access to the configuration file
+ * used.
+ */
 class ConfigHandler {
  public:
   ~ConfigHandler() = default;

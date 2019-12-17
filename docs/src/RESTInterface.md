@@ -7,7 +7,7 @@ This page describes the available REST endpoints provided for clients and how th
 Each of the following requests define a method, a path and JSON format for the request/response body which is
 expected/can be expected.
 
-## Status response {#status_responses}
+# Status response {#status_responses}
 
 Since it cannot be guaranteed that every request can be handled as intended, there needs to be some kind of status report.\n
 Requests which are handled successfully always respond with a HTTP status code of `200 OK`. Every other code indicates an error.
@@ -30,7 +30,7 @@ The known errors are:
   This code may be encountered if the server catched an internal error (which may as well just have crashed the server)
   and was still able to send a response.\n
   If a client gets that status code, please notify the server team!
-- `502 Bad Gateway`
+- `502 Bad Gateway`\n
   If a third party service responds with any unexpected error this error code is returned.
 
 **Note**: More errors may be added in the future!
@@ -47,7 +47,7 @@ In case of an error (i.e. HTTP status code is not `200`) the response body looks
 `status_code` will be the repeated HTTP status code (403 for example).\n
 `error` contains a short description which can be used to display an error message to the end user.
 
-## Available requests {#available_requests}
+# Available requests {#available_requests}
 
 This section lists all available REST endpoints and their intended usages. Additionally the needed HTTP method
 as well as the path and the body layout is specified.
@@ -60,7 +60,7 @@ The bodies of other methods and all responses are expected/can be expected in th
 
 **Note**: Invalid JSON (or missing required fields) will trigger an `422` error!
 
-### Generating a session {#generate_session}
+## Generating a session {#generate_session}
 
 Before doing other requests clients need to get a session ID. This ID is used to identify the user between multiple requests,
 which is needed if the user wants to undo a vote or prevents him from voting twice on the same track.
@@ -69,7 +69,7 @@ which is needed if the user wants to undo a vote or prevents him from voting twi
 
 **Note**: If the client drops the session ID on purpose the voting system can be exploited!
 
-#### Request
+### Request
 
 - Method:   \n
   `POST`
@@ -93,7 +93,7 @@ each track when using [getCurrentQueues](#get_current_queues).
 
 **TODO**: Allow refreshing an old session.
 
-#### Response
+### Response
 
 - Statuscode:   \n
   200 OK
@@ -105,7 +105,7 @@ each track when using [getCurrentQueues](#get_current_queues).
 }
 ~~~~~
 
-### Querying tracks {#query_tracks}
+## Querying tracks {#query_tracks}
 
 Before the user can add tracks to the queue he has to query the available tracks. The available tracks are queried with
 a user given pattern and are returned in an backend-specific order. To increase flexibility clients may specify the
@@ -113,7 +113,7 @@ maximum number of tracks returned.
 
 **Note**: In the future some kind of paging may be implemented.
 
-#### Request
+### Request
 
 - Method:   \n
   `GET`
@@ -123,7 +123,7 @@ maximum number of tracks returned.
   - `pattern`: A search pattern for filtering (and sorting) the tracks.
   - `max_entries`: Specifies the maximum number of returned tracks. Optional, defaults to `50`.
 
-#### Response
+### Response
 
 ~~~~~{.c}
 {
@@ -143,7 +143,7 @@ maximum number of tracks returned.
 
 If a track has no associated `album` and/or `artist` these fields may be omitted.
 
-### Get current queues {#get_current_queues}
+## Get current queues {#get_current_queues}
 
 Queries the current queues (normal and admin queue) as well as the currently playing track.
 
@@ -151,7 +151,7 @@ Queries the current queues (normal and admin queue) as well as the currently pla
 
 **Note**: For now this endpoint does not provide information on since when or how long a track is still playing!
 
-#### Request
+### Request
 
 - Method:   \n
   `GET`
@@ -162,7 +162,7 @@ Queries the current queues (normal and admin queue) as well as the currently pla
 
 The parameter `session_id` may be omitted in this version.
 
-#### Response
+### Response
 
 ~~~~~{.c}
 {
@@ -216,14 +216,14 @@ The nickname of the user who added a specific track can be found in the `added_b
 in the normal queue depends on the vote count (and insertion date) the admin queue is ordered only using the insertion date.
 The currently playing track also does not contain the vote fields because he will not be requeued afterwards anyway.
 
-### Add track to queue {#add_track}
+## Add track to queue {#add_track}
 
 Adds a track to the specified queue on the server.
 
 **Note**: The same track can only be queued once at a time (i.e. as long as a track is returned by [getCurrentQueues](#get_current_queues),
 it cannot be queued again).
 
-#### Request
+### Request
 
 - Method:   \n
   `POST`
@@ -243,7 +243,7 @@ it cannot be queued again).
 The content for `track_id` has to be queried with a call to [queryTracks](#query_tracks).\n
 `queue_type` indicates in which queue the track should be added. Valid values are `admin` or `normal`. If omitted it is set to `normal`.
 
-#### Response
+### Response
 
 ~~~~~{.c}
 {
@@ -252,13 +252,13 @@ The content for `track_id` has to be queried with a call to [queryTracks](#query
 
 A successful call responds with an empty JSON object.
 
-### Vote track {#vote_track}
+## Vote track {#vote_track}
 
 Vote for a track or revoke a vote.
 
 **Note**: A user cannot vote for the same track twice, nor can he revoke non existing votes causing a downvote.
 
-#### Request
+### Request
 
 - Method:   \n
   `PUT`
@@ -279,7 +279,7 @@ If `vote` is a `0` an already given vote is revoked, while setting `vote` to a n
 
 **Note**: The actual value of non-zero values are not important (it will always count as `1`)!
 
-#### Response
+### Response
 
 ~~~~~{.c}
 {
@@ -288,7 +288,7 @@ If `vote` is a `0` an already given vote is revoked, while setting `vote` to a n
 
 A successful call responds with an empty JSON object.
 
-### Control player {#control_player}
+## Control player {#control_player}
 
 Using this endpoint the client can cause the player behaviour to change.
 
@@ -296,7 +296,7 @@ Using this endpoint the client can cause the player behaviour to change.
 
 **Note**: For now querying the current player state is not possible!
 
-#### Request
+### Request
 
 - Method:   \n
   `PUT`
@@ -322,7 +322,7 @@ The value of `player_action` controls which action the server should take. Valid
 
 **Note**: The current volume level cannot be queried by now.
 
-#### Response
+### Response
 
 ~~~~~{.c}
 {
@@ -331,7 +331,7 @@ The value of `player_action` controls which action the server should take. Valid
 
 A successful call responds with an empty JSON object.
 
-### Move tracks between queues {#move_track}
+## Move tracks between queues {#move_track}
 
 Moving a track between the admin and the normal queue.
 
@@ -341,7 +341,7 @@ nickname of the admin etc.).
 
 **Note**: This endpoint can only be used by the admin.
 
-#### Request
+### Request
 
 - Method:   \n
   `PUT`
@@ -361,7 +361,7 @@ nickname of the admin etc.).
 `queue_type` may either be `admin` or `normal` depending whether the track should be moved to the admin queue or the
 normal queue. When `queue_type` specifies the queue the track is already in, nothing happens (no votes are lost).
 
-#### Response
+### Response
 
 ~~~~~{.c}
 {
@@ -370,13 +370,13 @@ normal queue. When `queue_type` specifies the queue the track is already in, not
 
 A successful call (the track was moved or was already in the right queue) responds with an empty JSON object.
 
-### Remove tracks from queues {#remove_track}
+## Remove tracks from queues {#remove_track}
 
 Removes a track from either the admin or the normal queue.
 
 **Note**: This endpoint can only be used by the admin.
 
-#### Request
+### Request
 
 - Method:   \n
   `DELETE`
@@ -394,7 +394,7 @@ Removes a track from either the admin or the normal queue.
 `track_id` specifies the track to be removed. Since one track can only be in one queue at a time no ambiguities are possible!
 This ID can be received by [getCurrentQueues](#get_current_queues).
 
-#### Response
+### Response
 
 ~~~~~{.c}
 {

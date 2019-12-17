@@ -12,7 +12,7 @@
 #include <httpserver.hpp>
 #include <memory>
 
-#include "Network/NetworkAPI.h"
+#include "NetworkAPI.h"
 
 /**
  * @class RestAPI

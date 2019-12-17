@@ -1,6 +1,6 @@
 /*****************************************************************************/
 /**
- * @file    SpotifyBackend.h
+ * @file    SpotifyBackend.cpp
  * @author  Stefan Jahn <stefan.jahn332@gmail.com>
  * @brief   Class handles Music Playback with a Spotify Backend
  */
@@ -163,7 +163,7 @@ TResultOpt SpotifyBackend::setPlayback(BaseTrack const &track) {
   return std::nullopt;
 }
 
-TResult<std::optional<PlaybackTrack>> SpotifyBackend::getCurrentPlayback(void) {
+TResult<std::optional<PlaybackTrack>> SpotifyBackend::getCurrentPlayback() {
   std::string token = mSpotifyAuth.getAccessToken();
 
   TResult<std::optional<Playback>> playbackRes;
@@ -174,6 +174,7 @@ TResult<std::optional<PlaybackTrack>> SpotifyBackend::getCurrentPlayback(void) {
   if (!playback.has_value()) {
     return std::nullopt;
   }
+
   auto const &spotifyPlayingTrack =
       playback.value().getCurrentPlayingTrack().value();
 
@@ -200,6 +201,7 @@ TResult<std::optional<PlaybackTrack>> SpotifyBackend::getCurrentPlayback(void) {
       playbackTrack.artist += " & ";
     }
     playbackTrack.artist += artist.getName();
+    firstArtist = false;
     firstArtist = false;
   }
 

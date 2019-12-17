@@ -80,7 +80,7 @@ class Device {
 };
 
 /**
- * @brief wrapper class for multiple devices
+ * @brief Wrapper class for multiple devices
  */
 class Devices {
  public:
@@ -96,7 +96,7 @@ class Devices {
 };
 
 /**
- * @brief simplified artist object
+ * @brief Simplified artist object
  */
 class Artist {
  public:
@@ -135,7 +135,7 @@ class Image {
 };
 
 /**
- * @brief simplified Spotify Album class
+ * @brief Simplified Spotify Album class
  */
 class Album {
  public:
@@ -167,7 +167,7 @@ class Album {
 };
 
 /**
- * @brief simplified track object
+ * @brief Simplified track object
  */
 class Track {
  public:
@@ -193,7 +193,7 @@ class Track {
 };
 
 /**
- * @brief contains infos about the actual playback
+ * @brief Contains infos about the actual playback
  */
 class Playback {
  public:
@@ -222,6 +222,9 @@ class Playback {
   std::optional<Track> mTrack;     /**< currently playing track */
 };
 
+/**
+ * @brief Represents one page of search results.
+ */
 class SpotifyPaging {
  public:
   SpotifyPaging() = default;
@@ -251,7 +254,7 @@ class SpotifyPaging {
 };
 
 /**
- * @brief error type
+ * @brief Error type
  */
 class SpotifyError {
  public:
@@ -265,7 +268,7 @@ class SpotifyError {
 };
 
 /**
- * @brief type gets used, when only no content data or Error get received
+ * @brief Type gets used, when no content data or Error is received
  */
 class SpotifyDummy {
  public:

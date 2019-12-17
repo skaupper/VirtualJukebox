@@ -6,7 +6,7 @@
  */
 /*****************************************************************************/
 
-#include "Network/NetworkAPI.h"
+#include "NetworkAPI.h"
 
 #include <cassert>
 

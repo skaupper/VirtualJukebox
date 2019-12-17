@@ -1,5 +1,5 @@
 /**
- * @file    SpotifyAPI.h
+ * @file    SpotifyAuthorization.h
  * @author  Stefan Jahn <stefan.jahn332@gmail.com>
  * @brief   Class SpotifyAuthorization definition
  */
@@ -28,36 +28,36 @@ class SpotifyAuthorization : public httpserver::http_resource {
    * @return if failed Error object gets returned and no server has been
    * created..
    */
-  TResultOpt startServer(void);
+  TResultOpt startServer();
 
   /**
    * @brief stops the server
    */
-  void stopServer(void);
+  void stopServer();
 
   /**
    * @brief returns refresh token
    * @return refresh token string
    */
-  std::string const &getRefreshToken(void);
+  std::string const &getRefreshToken();
 
   /**
    * @brief returns access token
    * @return refresh access string
    */
-  std::string const &getAccessToken(void);
+  std::string const &getAccessToken();
 
   /**
    * @brief refreshes the access token (!! not implemented yet!!)
    * @return on failer Error object
    */
-  TResultOpt refreshAccessToken(void);
+  TResultOpt refreshAccessToken();
 
   /**
    * @brief returns when the token expires
    * @return time when the token expires (in epoch format and seconds)
    */
-  __int64_t getExpiresAt(void);
+  __int64_t getExpiresAt();
 
   /**
    * @brief sets the scopes to ask on the permission
@@ -72,7 +72,7 @@ class SpotifyAuthorization : public httpserver::http_resource {
    * @brief return scopes
    * @return scopes
    */
-  std::string getScopes(void);
+  std::string getScopes();
 
  private:
   Token mToken;

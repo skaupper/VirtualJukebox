@@ -14,10 +14,13 @@
 #include <string>
 #include <thread>
 
-#include "Datastore/DataStore.h"
+#include "DataStore.h"
 #include "MusicBackend.h"
 #include "Types/Result.h"
 
+/**
+ * @brief A simple track scheduler (for presentation purposes).
+ */
 class SimpleScheduler {
  public:
   SimpleScheduler(DataStore* const datastore, MusicBackend* const musicbackend);
@@ -77,7 +80,7 @@ class SimpleScheduler {
   SchedulerState mSchedulerState = SchedulerState::Idle;
   TResult<std::optional<PlaybackTrack>> mLastPlaybackTrack;
 
-  TResult<bool> areQueuesEmpty(void);
+  TResult<bool> areQueuesEmpty();
   TResult<bool> isTrackPlaying(std::optional<PlaybackTrack> const& currentOpt);
   TResult<bool> isTrackFinished(std::optional<PlaybackTrack> const& currentOpt);
 

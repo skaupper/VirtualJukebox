@@ -1,5 +1,5 @@
 /**
- * @file    SpotifyAPITypes.h
+ * @file    SpotifyAPITypes.cpp
  * @author  Stefan Jahn <stefan.jahn332@gmail.com>
  * @brief   Contains Structures for the Spotify Api implementation
  * @details These Structures are implemented as described the Spotify Object

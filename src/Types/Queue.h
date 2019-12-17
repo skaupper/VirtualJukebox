@@ -14,10 +14,17 @@
 
 #include "Tracks.h"
 
+/**
+ * @brief Respresents a queue which is returned to the clients.
+ */
 struct Queue {
   std::vector<QueuedTrack> tracks;
 };
 
+/**
+ * @brief Wraps all information to return if a client requests the current queue
+ * status.
+ */
 struct QueueStatus {
   Queue normalQueue;
   Queue adminQueue;
