@@ -77,7 +77,7 @@ the whole VirtualJukebox server but a subcomponent. This can be useful for debug
 a subcomponent with a custom one to show how the submodule. In the latter case the examples show how a component has to
 communicate with its environment (see also the test in `test/`).
 
-## Setup
+## Spotify Setup
 
 In order to use this server properly, one needs to setup Spotify correctly. This requires a Spotify Premium account.
 
@@ -87,30 +87,35 @@ This section describes this setup process step by step.
 Log into your Spotify account on the [Spotify Dashboard](https://developer.spotify.com/dashboard/login).
 
 2. **Create an application and receive client ID and client secret**\
-After you have created the application, the client ID and client secret will be shown. Copy these two values to the file `jukebox_config.ini` into the respective key names.
+After you have created the application, the client ID and client secret will be shown. Replace the respective key values in the file `jukebox_config.ini` .
 
 3. **Whitelist a redirect URI**\
-For the authorization process to succeed you must whitelist the URI the authorization site redirects you to. The URI must match with the one set in the configuration file.\
+The authorization process redirects to a specific URI that is set in the configuration file. This URI must be whitelisted in Spotify.\
 \
-However, if you do not want to authorize yourself on the machine the server is running on you have to change `localhost` to the IP of the server machine.\
+The URI in the configuration file needs to be adapted to the IP address of the machine the VirtualJukeBox server program is running on. Of course, `localhost` can be used as well. The port number can be adapted too, of course.\
 \
-Additionally if you want to change the port for the authorization process the redirect URI (as well as the whitelist entry on the dashboard) needs to be updated too!
+To whitelist the URI, open the created application from the dashboard and click 'Edit Settings'. Paste the URI from the configuration file into the respective field 'Redirect URIs' in the pop-up window and click 'Add'.
+
 
 ## How to use
 
-If all dependencies are installed and the Spotify application has been created, you can run the server. The application takes the path to the configuration file as first (and only) parameter or falls back to `../jukebox_config.ini` if none is given.
+If all software dependencies are installed and the Spotify dashboard application has been created, you can run the server. The application takes the path to the configuration file as first (and only) parameter. It falls back to `../jukebox_config.ini` if none is given.
 
 ### Authorization
 
-Before users can do any meaningful interactions with the server you have to authorize against Spotify and receive an access token.
+This needs to be done on every server program start.
+
+Before users can do any interactions with the server you have to authorize against Spotify and receive an access token.
 
 To do this the server provides a HTTP endpoint which can be reached at the URL `http://<server_ip>:<port>/spotifyLogin`. You need to replace the `server_ip` with the IP address of the server machine. The required value for `port` can be found in the configuration file in section `[Spotify]` with the key `port`.
 
-If you used the correct URL you get redirected to the Spotify authorization site where you need to log in using your Spotify account.
+Copy & paste this URL into your favourite browser and open it.
 
-After authorizing the application you get redirected to the URL specified in the configuration file (`[Spotify] redirectUri`). Be sure that this URI is [whitelisted on the Spotify dashboard](#spotify).
+If you used the correct URL you get redirected to the Spotify authorization site where you need to log in using your Spotify account. This is only required the first time. Following attempts will only show an empty page.
 
-If everything went fine the server should print `Access token acquired successfully` to the terminal.
+After authorizing the application you get redirected to the URL specified in the configuration file in section `[Spotify]` key `redirectUri`. Make sure that this URI was [whitelisted on the Spotify dashboard](#spotify-setup).
+
+If everything was successful the server should print `Access token acquired successfully` to the terminal.
 
 ### Using the client endpoints
 
