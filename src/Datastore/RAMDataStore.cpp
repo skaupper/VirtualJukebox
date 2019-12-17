@@ -18,6 +18,16 @@
 
 using namespace std;
 
+void RAMDataStore::removeVotesForTrack(TTrackID const &id) {
+  unique_lock<recursive_mutex> MyUserLock(mUserMutex);
+  for (auto &&user : mUsers) {
+    auto it = find(user.votes.begin(), user.votes.end(), id);
+    if (it != user.votes.end()) {
+      user.votes.erase(it);
+    }
+  }
+}
+
 TResultOpt RAMDataStore::addUser(User const &user) {
   // Exclusive Access to User List
   unique_lock<recursive_mutex> MyLock(mUserMutex);
@@ -134,25 +144,31 @@ TResultOpt RAMDataStore::addTrack(BaseTrack const &track, QueueType q) {
 }
 
 TResult<BaseTrack> RAMDataStore::removeTrack(TTrackID const &ID, QueueType q) {
-  // Exclusive Access to Song Queue
-  unique_lock<shared_mutex> MyLock(mQueueMutex);
-
-  Queue *pQueue = SelectQueue(q);
   QueuedTrack track;
-  if (pQueue == nullptr) {
-    return Error(ErrorCode::InvalidValue, "Invalid Parameter in SelectQueue");
+
+  // remove track from queue
+  {
+    // Exclusive Access to Song Queue
+    unique_lock<shared_mutex> MyLock(mQueueMutex);
+
+    Queue *pQueue = SelectQueue(q);
+    if (pQueue == nullptr) {
+      return Error(ErrorCode::InvalidValue, "Invalid Parameter in SelectQueue");
+    }
+
+    // Deep copy track, then remove it
+    track.trackId = ID;
+    auto it = find(pQueue->tracks.begin(), pQueue->tracks.end(), track);
+    if (it == pQueue->tracks.end()) {
+      return Error(ErrorCode::DoesntExist, "Track doesn't exist in this Queue");
+    } else {
+      track = *it;
+      // Found track, remove it from vector
+      pQueue->tracks.erase(it);
+    }
   }
 
-  // Deep copy track, then remove it
-  track.trackId = ID;
-  auto it = find(pQueue->tracks.begin(), pQueue->tracks.end(), track);
-  if (it == pQueue->tracks.end()) {
-    return Error(ErrorCode::DoesntExist, "Track doesn't exist in this Queue");
-  } else {
-    track = *it;
-    // Found track, remove it from vector
-    pQueue->tracks.erase(it);
-  }
+  removeVotesForTrack(track.trackId);
 
   return track;
 }
@@ -280,30 +296,34 @@ bool RAMDataStore::hasUser(TSessionID const &ID) {
 }
 
 TResultOpt RAMDataStore::nextTrack() {
-  // Exclusive Access to Song Queue
-  unique_lock<shared_mutex> MyLock(mQueueMutex);
+  QueuedTrack track;
 
-  QueuedTrack tr;
+  {
+    // Exclusive Access to Song Queue
+    unique_lock<shared_mutex> MyLock(mQueueMutex);
 
-  // If there are songs in the Admin Queue, play the first of those
-  if (mAdminQueue.tracks.size()) {
-    tr = mAdminQueue.tracks[0];
-    mAdminQueue.tracks.erase(mAdminQueue.tracks.begin());
-  } else if (mNormalQueue.tracks.size() != 0) {
-    // no songs in the admin queue, use the first one from the user queue
-    tr = mNormalQueue.tracks[0];
-    mNormalQueue.tracks.erase(mNormalQueue.tracks.begin());
-  } else {
-    // no next track available
-    return Error(ErrorCode::DoesntExist,
-                 "No more Tracks available in either Queue");
+    // If there are songs in the Admin Queue, play the first of those
+    if (mAdminQueue.tracks.size()) {
+      track = mAdminQueue.tracks[0];
+      mAdminQueue.tracks.erase(mAdminQueue.tracks.begin());
+    } else if (mNormalQueue.tracks.size() != 0) {
+      // no songs in the admin queue, use the first one from the user queue
+      track = mNormalQueue.tracks[0];
+      mNormalQueue.tracks.erase(mNormalQueue.tracks.begin());
+    } else {
+      // no next track available
+      return Error(ErrorCode::DoesntExist,
+                   "No more Tracks available in either Queue");
+    }
+
+    // sort Normal Queue
+    sort(mNormalQueue.tracks.begin(), mNormalQueue.tracks.end());
+
+    // Set Current Track
+    mCurrentTrack = track;
   }
 
-  // sort Normal Queue
-  sort(mNormalQueue.tracks.begin(), mNormalQueue.tracks.end());
-
-  // Set Current Track
-  mCurrentTrack = tr;
+  removeVotesForTrack(track.trackId);
 
   return nullopt;
 }

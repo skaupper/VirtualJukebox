@@ -42,6 +42,8 @@ class RAMDataStore : public DataStore {
   TResultOpt nextTrack();
 
  private:
+  void removeVotesForTrack(TTrackID const &);
+
   Queue *SelectQueue(QueueType q);
   Queue mAdminQueue;
   Queue mNormalQueue;
