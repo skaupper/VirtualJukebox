@@ -6,10 +6,6 @@
  */
 /*****************************************************************************/
 
-/* TODO:
-    - either always function(void); or function();
- */
-
 #include "JukeBox.h"
 
 #include <ctime>
