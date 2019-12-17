@@ -143,7 +143,8 @@ TResult<QueueStatus> JukeBox::getCurrentQueues(TSessionID const &sid) {
     for (auto const &votedElem : user.votes) {
       if (queueElem.trackId == votedElem)
         /* User has voted for this track */
-        queueElem.currentVote = true;;
+        queueElem.currentVote = true;
+      ;
     }
   }
 
