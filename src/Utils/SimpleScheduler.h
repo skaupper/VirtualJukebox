@@ -73,16 +73,16 @@ class SimpleScheduler {
    */
   void threadFunc();
 
-  int const cScheduleIntervalTimeMs = 1000;
+  TResult<bool> areQueuesEmpty();
+  TResult<bool> isTrackPlaying(std::optional<PlaybackTrack> const& currentOpt);
+  TResult<bool> isTrackFinished(std::optional<PlaybackTrack> const& currentOpt);
 
   DataStore* mDataStore;
   MusicBackend* mMusicBackend;
   SchedulerState mSchedulerState = SchedulerState::Idle;
   TResult<std::optional<PlaybackTrack>> mLastPlaybackTrack;
 
-  TResult<bool> areQueuesEmpty();
-  TResult<bool> isTrackPlaying(std::optional<PlaybackTrack> const& currentOpt);
-  TResult<bool> isTrackFinished(std::optional<PlaybackTrack> const& currentOpt);
+  int const cScheduleIntervalTimeMs = 1000;
 
   std::thread mThread;
   bool mCloseThread = false;
