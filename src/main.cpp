@@ -2,7 +2,7 @@
 /**
  * @file    main.cpp
  * @author  Team Server
- * @brief   Main program for project "Virtual JukeBox"
+ * @brief   Main program for project "VirtualJukeBox"
  * @details Usage: ./executable [<filepath-to-config-file.ini>]
  */
 /*****************************************************************************/
