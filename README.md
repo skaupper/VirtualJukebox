@@ -7,14 +7,14 @@
 This project is developed as part of an university lecture regarding software projects.
 
 The main purpose of __VirtualJukebox__ is to provide a server application which manages a music playlist shared by
-multiple clients. The clients are capable of adding tracks to the user playlist and voting on tracks to play next. The track
+multiple clients. The clients are capable of adding tracks to a user playlist and voting on tracks to play next. The track
 with the highest vote count is played next.
-Additionally, a client can authenticate as administrator who is then capable of adding tracks to the admin playlist
+Additionally, a client can authenticate as an administrator who is then capable of adding tracks to an admin playlist
 whose tracks are always played before any track from the user playlist. Besides that, the administrator has some further
-capabilities like controlling the playback behaviour of the music player which includes
-pausing/resuming/stopping/skipping the current track as well as adjusting the playback volume.
+capabilities like controlling the playback behaviour of the music player. This includes
+pausing, resuming, stopping, skipping the current track as well as adjusting the playback volume.
 
-While tracks in the admin queue are always played in order of insertion (FIFO), the tracks in the user queue can be reordered using the voting system. Each user has the ability to vote for tracks in the user queue. The top most track (i.e. the track which gets played next) is the one with the most votes.
+While tracks in the admin queue are always played in order of insertion (FIFO principle), the tracks in the user queue can be reordered using the voting system. Each user has the ability to vote for tracks in the user queue. The top most track (i.e. the track which gets played next) is the one with the most votes.
 
 This repository contains the sources for the server as well as instructions on how to install and test and use it.
 
@@ -30,14 +30,13 @@ This repository contains the sources for the server as well as instructions on h
 - libhttpserver-dev
 - librestclient-cpp-dev
 
-Check your distros package manager if there are proper packages available. For some of the dependencies there are
+Check your Linux distributions' package manager if there are proper packages available. For some of the dependencies there are
 usually no packages available, so they got bundled in this repository including proper install scripts.
 
 ### Bundled dependencies
 
 Some dependencies are bundled with this repository as submodules to allow a less painful installation process.
-For these dependencies there are scripts provided which clone, build and install the libraries for your system.
-Note that these scripts require root privileges in order to install the library files and the corresponding headers
+Scripts are provided which clone, build and install the libraries for your system. Note that these scripts require root privileges in order to install the library files and the corresponding headers
 to your system directories (the final step gets executed using `sudo`)!
 
 NOTE: Install dependencies in below listed order.
@@ -47,7 +46,7 @@ Bundled dependencies are:
 - libhttpserver
 - librestclient-cpp
 
-### Installation of dependencies on Ubuntu 18.04
+### Example installation of dependencies on Ubuntu 18.04
 
 Since installing the dependencies is not always straight-forward, the following commands can be used to install all
 listed dependencies, that are required to install manually.
@@ -58,7 +57,7 @@ listed dependencies, that are required to install manually.
 - `./scripts/install_libhttpserver.sh`
 - `./scripts/install_librestclient-cpp.sh`
 
-## Installation
+## Compile and test
 
 1. Create a build directory: `mkdir build`
 2. Change to the build directory and invoke CMake: `cd build; cmake ..`
@@ -143,9 +142,10 @@ Administrators may have different interactions (additionally to the ones of a no
 ### _No devices for playing the track available_
 
 This happens if no device, linked to the account which was used to get the access token, was found.
-To solve it, start Spotify on any device with that specific account.
+To solve it, start Spotify on any device with that specific account.\
+\
+_**NOTE:** Missing an instruction step above, or anything is unclear in the documentation? Feel free to open an issue ticket [here](https://github.com/skaupper/VirtualJukebox/issues)._
 
-## TODO
 
 [1]: https://img.shields.io/travis/com/skaupper/virtualjukebox/master?label=Travis%20Build%20Status&logo=travis
 [2]: https://travis-ci.com/skaupper/VirtualJukebox
