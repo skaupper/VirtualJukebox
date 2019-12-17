@@ -104,37 +104,23 @@ TEST(DataStoreTest, UserAddHas) {
   usr2.Name = "admin";
 
   // user not present
-  auto res = ds.hasUser(usr1.SessionID);
-  ASSERT_EQ(checkAlternativeError(res), false);
-  ASSERT_EQ(get<bool>(res), false);
+  ASSERT_EQ(ds.hasUser(usr1.SessionID), false);
 
   // add 2 users and check for both of them
   ds.addUser(usr1);
   ds.addUser(usr2);
-  res = ds.hasUser(usr1.SessionID);
-  ASSERT_EQ(checkAlternativeError(res), false);
-  ASSERT_EQ(get<bool>(res), true);
-  res = ds.hasUser(usr2.SessionID);
-  ASSERT_EQ(checkAlternativeError(res), false);
-  ASSERT_EQ(get<bool>(res), true);
+  ASSERT_EQ(ds.hasUser(usr1.SessionID), true);
+  ASSERT_EQ(ds.hasUser(usr2.SessionID), true);
 
   // remove 1 user and check for both
   ds.removeUser(usr1.SessionID);
-  res = ds.hasUser(usr1.SessionID);
-  ASSERT_EQ(checkAlternativeError(res), false);
-  ASSERT_EQ(get<bool>(res), false);
-  res = ds.hasUser(usr2.SessionID);
-  ASSERT_EQ(checkAlternativeError(res), false);
-  ASSERT_EQ(get<bool>(res), true);
+  ASSERT_EQ(ds.hasUser(usr1.SessionID), false);
+  ASSERT_EQ(ds.hasUser(usr2.SessionID), true);
 
   // remove other user and check
   ds.removeUser(usr2.SessionID);
-  res = ds.hasUser(usr1.SessionID);
-  ASSERT_EQ(checkAlternativeError(res), false);
-  ASSERT_EQ(get<bool>(res), false);
-  res = ds.hasUser(usr2.SessionID);
-  ASSERT_EQ(checkAlternativeError(res), false);
-  ASSERT_EQ(get<bool>(res), false);
+  ASSERT_EQ(ds.hasUser(usr1.SessionID), false);
+  ASSERT_EQ(ds.hasUser(usr2.SessionID), false);
 }
 
 TEST(DataStoreTest, UserTimeout) {
@@ -151,41 +137,27 @@ TEST(DataStoreTest, UserTimeout) {
   usr2.Name = "admin";
 
   // user not present
-  auto res = ds.hasUser(usr1.SessionID);
-  ASSERT_EQ(checkAlternativeError(res), false);
-  ASSERT_EQ(get<bool>(res), false);
+  ASSERT_EQ(ds.hasUser(usr1.SessionID), false);
 
   // add 2 users and check for both of them
   ds.addUser(usr1);
   ds.addUser(usr2);
-  res = ds.hasUser(usr1.SessionID);
-  ASSERT_EQ(checkAlternativeError(res), false);
-  ASSERT_EQ(get<bool>(res), true);
-  res = ds.hasUser(usr2.SessionID);
-  ASSERT_EQ(checkAlternativeError(res), false);
-  ASSERT_EQ(get<bool>(res), true);
+  ASSERT_EQ(ds.hasUser(usr1.SessionID), true);
+  ASSERT_EQ(ds.hasUser(usr2.SessionID), true);
 
   // sleep 3 seconds, first user should timeout then
   this_thread::sleep_for(chrono::seconds(3));
-  res = ds.isSessionExpired(usr1.SessionID);
+  auto res = ds.isSessionExpired(usr1.SessionID);
   ASSERT_EQ(checkAlternativeError(res), true);
-  res = ds.hasUser(usr1.SessionID);
-  ASSERT_EQ(checkAlternativeError(res), false);
-  ASSERT_EQ(get<bool>(res), true);
-  res = ds.hasUser(usr2.SessionID);
-  ASSERT_EQ(checkAlternativeError(res), false);
-  ASSERT_EQ(get<bool>(res), true);
+  ASSERT_EQ(ds.hasUser(usr1.SessionID), true);
+  ASSERT_EQ(ds.hasUser(usr2.SessionID), true);
 
   // sleep another 3 seconds, second user should timeout then
   this_thread::sleep_for(chrono::seconds(3));
   res = ds.isSessionExpired(usr2.SessionID);
   ASSERT_EQ(checkAlternativeError(res), true);
-  res = ds.hasUser(usr1.SessionID);
-  ASSERT_EQ(checkAlternativeError(res), false);
-  ASSERT_EQ(get<bool>(res), true);
-  res = ds.hasUser(usr2.SessionID);
-  ASSERT_EQ(checkAlternativeError(res), false);
-  ASSERT_EQ(get<bool>(res), true);
+  ASSERT_EQ(ds.hasUser(usr1.SessionID), true);
+  ASSERT_EQ(ds.hasUser(usr2.SessionID), true);
 }
 
 TEST(DataStoreTest, votetest) {
@@ -289,12 +261,8 @@ TEST(DataStoreTest, votetest) {
   // add users and check for them
   ds.addUser(usr1);
   ds.addUser(usr2);
-  auto resu = ds.hasUser(usr1.SessionID);
-  ASSERT_EQ(checkAlternativeError(res), false);
-  ASSERT_EQ(get<bool>(resu), true);
-  resu = ds.hasUser(usr2.SessionID);
-  ASSERT_EQ(checkAlternativeError(res), false);
-  ASSERT_EQ(get<bool>(resu), true);
+  ASSERT_EQ(ds.hasUser(usr1.SessionID), true);
+  ASSERT_EQ(ds.hasUser(usr2.SessionID), true);
 
   ds.voteTrack(usr1.SessionID, tr3.trackId, true);
 

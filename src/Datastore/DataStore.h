@@ -108,10 +108,9 @@ class DataStore {
   /**
    * @brief    Query the internal user list whether a certain user exists
    * @param    TSessionID The ID of the user to check for
-   * @retval   TResult<bool> Containing either a boolean answer to the request
-   * or an Error Message
+   * @retval   Returns true if user was found, false otherwise.
    */
-  virtual TResult<bool> hasUser(TSessionID const &ID) = 0;
+  virtual bool hasUser(TSessionID const &ID) = 0;
   /**
    * @brief    Play next Track in Queue
    * @param    none
