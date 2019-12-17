@@ -33,13 +33,13 @@ TEST(DataStoreTest, GetQueue_Empty) {
 TEST(DataStoreTest, GetQueue_1Normal) {
   RAMDataStore ds;
   BaseTrack tr;
-  tr.trackId = "ahbsjkfbasdjhfb";
-  tr.title = "anfjbsjdfb";
-  tr.album = "sjfsdjfs";
-  tr.artist = "uashdbfisud";
+  tr.trackId = "trackId_example";
+  tr.title = "title_example";
+  tr.album = "album_example";
+  tr.artist = "artist_example";
   tr.durationMs = 100;
-  tr.iconUri = "aishdkabsjdb";
-  tr.addedBy = "aisdliahsld";
+  tr.iconUri = "iconUri_example";
+  tr.addedBy = "addedBy_example";
 
   ds.addTrack(tr, QueueType::Normal);
 
@@ -63,13 +63,13 @@ TEST(DataStoreTest, GetQueue_1Normal) {
 TEST(DataStoreTest, GetQueue_1Admin) {
   RAMDataStore ds;
   BaseTrack tr;
-  tr.trackId = "ahbsjkfbasdjhfb";
-  tr.title = "anfjbsjdfb";
-  tr.album = "sjfsdjfs";
-  tr.artist = "uashdbfisud";
+  tr.trackId = "trackId_example";
+  tr.title = "title_example";
+  tr.album = "album_example";
+  tr.artist = "artist_example";
   tr.durationMs = 100;
-  tr.iconUri = "aishdkabsjdb";
-  tr.addedBy = "aisdliahsld";
+  tr.iconUri = "iconUri_example";
+  tr.addedBy = "addedBy_example";
 
   ds.addTrack(tr, QueueType::Admin);
 
@@ -164,12 +164,12 @@ TEST(DataStoreTest, votetest) {
   RAMDataStore ds;
   BaseTrack tr1;
   tr1.trackId = "song1";
-  tr1.title = "anfjbsjdfb";
-  tr1.album = "sjfsdjfs";
-  tr1.artist = "uashdbfisud";
+  tr1.title = "title_example";
+  tr1.album = "album_example";
+  tr1.artist = "artist_example";
   tr1.durationMs = 100;
-  tr1.iconUri = "aishdkabsjdb";
-  tr1.addedBy = "aisdliahsld";
+  tr1.iconUri = "iconUri_example";
+  tr1.addedBy = "addedBy_example";
   BaseTrack tr2;
   tr2.trackId = "song2";
   tr2.title = "anfjb234sjdfb";
