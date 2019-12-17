@@ -89,12 +89,10 @@ Requests which are handled successfully always respond with a HTTP status code o
 <li><code>401 Unauthorized</code><br  />
  If a client requested a new admin session but specified a wrong password.</li>
 <li><code>403 Forbidden</code><br  />
- The request was done by an unauthorized user. That includes requests to admin endpoints by non-admins or an attempt to do multiple votes on the same track.</li>
+ The request was done by an unauthorized user. That includes requests to admin endpoints by non-admins or an attempt to do multiple votes on the same track. Additionally this error may be returned if the <a class="el" href="classMusicBackend.html" title="Provides an abstracted interface to a MusicBackend s.">MusicBackend</a> has an permission problem.</li>
 <li><code>404 Not found</code><br  />
  The requested endpoint has not been found.<br  />
  For now, unknown <code>track_id</code>s also trigger this error.</li>
-<li><code>405 Method not allowed</code><br  />
- The requested endpoint was accessed with an unallowed method.</li>
 <li><code>422 Unprocessable Entity</code><br  />
  The content of the request (JSON body) has an unexpected/invalid format.</li>
 <li><code>440 Login-Time-out</code><br  />
@@ -102,6 +100,8 @@ Requests which are handled successfully always respond with a HTTP status code o
 <li><code>500 Internal Server <a class="el" href="classError.html" title="A customized error type.">Error</a></code><br  />
  This code may be encountered if the server catched an internal error (which may as well just have crashed the server) and was still able to send a response.<br  />
  If a client gets that status code, please notify the server team!</li>
+<li><code>502 Bad Gateway</code><br  />
+ If a third party service responds with any unexpected error this error code is returned.</li>
 </ul>
 <p><b>Note</b>: More errors may be added in the future!</p>
 <p>In case of an error (i.e. HTTP status code is not <code>200</code>) the response body looks like this:</p>
@@ -132,7 +132,7 @@ Request</h3>
 <li>Body: <br  />
  <div class="fragment"><div class="line">{</div>
 <div class="line">    <span class="stringliteral">&quot;password&quot;</span>: <span class="stringliteral">&quot;&lt;admin_password&gt;&quot;</span>,</div>
-<div class="line">    <span class="stringliteral">&quot;nickname&quot;</span> <span class="stringliteral">&quot;&lt;nickname&gt;&quot;</span></div>
+<div class="line">    <span class="stringliteral">&quot;nickname&quot;</span>: <span class="stringliteral">&quot;&lt;nickname&gt;&quot;</span></div>
 <div class="line">}</div>
 </div><!-- fragment --></li>
 </ul>
@@ -320,9 +320,8 @@ Request</h3>
 </ul>
 <p>The value of <code>player_action</code> controls which action the server should take. Valid values are:</p>
 <ul>
-<li><code>"play"</code>: Starts or resumes playback</li>
+<li><code>"play"</code>: Starts or resumes playback.</li>
 <li><code>"pause"</code>: Pauses the playback. If it is already paused or stopped nothing happens.</li>
-<li><code>"stop"</code>: Stops playback and remove the currently playing track (if any). If playback is paused remove the track as well. If it is already stopped nothing happens.</li>
 <li><code>"skip"</code>: Removes the currently playing (or paused) track and play the next one in the queue. If playback is stopped remove the next queued track without resuming playback.</li>
 <li><code>"volume_up"</code>: Raises the volume by a fixed amount if it is not already at its maximum value.</li>
 <li><code>"volume_down"</code>: Lowers the volume by a fixed amount if it is not already at its minimum value.</li>

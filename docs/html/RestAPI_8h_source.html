@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.16"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>VirtualJukebox: src/RestAPI.h Source File</title>
+<title>VirtualJukebox: src/Network/RestAPI.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -61,7 +61,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_0c0333544ec44c57ec7d33d873fe36a2.html">Network</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -83,13 +83,17 @@ $(function() {
 <div class="line"><a name="l00022"></a><span class="lineno"><a class="line" href="classRestAPI.html">   22</a></span>&#160;<span class="keyword">class </span><a class="code" href="classRestAPI.html">RestAPI</a> : <span class="keyword">public</span> <a class="code" href="classNetworkAPI.html">NetworkAPI</a> {</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; <span class="keyword">public</span>:</div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;  <a class="code" href="Result_8h.html#aada7d5476a077b5984176864eefe0c5f">TResultOpt</a> handleRequests() <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;};</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;  <span class="keywordtype">void</span> stopServer();</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* _REST_API_H_ */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;  std::unique_ptr&lt;httpserver::webserver&gt; ws;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;};</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* _REST_API_H_ */</span><span class="preprocessor"></span></div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="aNetworkAPI_8h_html"><div class="ttname"><a href="NetworkAPI_8h.html">NetworkAPI.h</a></div><div class="ttdoc">Definition of class NetworkAPI.</div></div>
 <div class="ttc" id="aclassNetworkAPI_html"><div class="ttname"><a href="classNetworkAPI.html">NetworkAPI</a></div><div class="ttdoc">Base class for all implementations of network interfaces.</div><div class="ttdef"><b>Definition:</b> NetworkAPI.h:21</div></div>
-<div class="ttc" id="aResult_8h_html_aada7d5476a077b5984176864eefe0c5f"><div class="ttname"><a href="Result_8h.html#aada7d5476a077b5984176864eefe0c5f">TResultOpt</a></div><div class="ttdeci">std::optional&lt; Error &gt; TResultOpt</div><div class="ttdoc">Used as an optional return type of functions.</div><div class="ttdef"><b>Definition:</b> Result.h:69</div></div>
+<div class="ttc" id="aResult_8h_html_aada7d5476a077b5984176864eefe0c5f"><div class="ttname"><a href="Result_8h.html#aada7d5476a077b5984176864eefe0c5f">TResultOpt</a></div><div class="ttdeci">std::optional&lt; Error &gt; TResultOpt</div><div class="ttdoc">Used as an optional return type of functions.</div><div class="ttdef"><b>Definition:</b> Result.h:85</div></div>
 <div class="ttc" id="aclassRestAPI_html"><div class="ttname"><a href="classRestAPI.html">RestAPI</a></div><div class="ttdoc">Implementation of the REST API.</div><div class="ttdef"><b>Definition:</b> RestAPI.h:22</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['track_72',['Track',['../classTrack.html',1,'']]]
+  ['queue_144',['Queue',['../structQueue.html',1,'']]],
+  ['queuedtrack_145',['QueuedTrack',['../structQueuedTrack.html',1,'']]],
+  ['queuestatus_146',['QueueStatus',['../structQueueStatus.html',1,'']]]
 ];

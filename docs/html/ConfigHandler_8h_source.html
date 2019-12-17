@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.16"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>VirtualJukebox: src/ConfigHandler.h Source File</title>
+<title>VirtualJukebox: src/Utils/ConfigHandler.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -61,7 +61,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_a7363e98f9e0bdd87618633653859815.html">Utils</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -81,38 +81,40 @@ $(function() {
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#include &quot;../lib/SimpleIni/SimpleIni.h&quot;</span></div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="Result_8h.html">Result.h</a>&quot;</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="Result_8h.html">Types/Result.h</a>&quot;</span></div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
-<div class="line"><a name="l00020"></a><span class="lineno"><a class="line" href="classConfigHandler.html">   20</a></span>&#160;<span class="keyword">class </span><a class="code" href="classConfigHandler.html">ConfigHandler</a> {</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;  ~<a class="code" href="classConfigHandler.html">ConfigHandler</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;  <span class="keyword">static</span> std::shared_ptr&lt;ConfigHandler&gt; <span class="keyword">const</span> getInstance();</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;  <a class="code" href="Result_8h.html#aada7d5476a077b5984176864eefe0c5f">TResultOpt</a> <a class="code" href="classConfigHandler.html#a384913951094cc79279cf3b6f13a360a">setConfigFilePath</a>(std::string <span class="keyword">const</span>&amp; filepath);</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;  <a class="code" href="Result_8h.html#a442760d03514e6c849a35e3f0c768bef">TResult&lt;std::string&gt;</a> <a class="code" href="classConfigHandler.html#a0739c6cfe676547dfba163bfdcfe8974">getValueString</a>(std::string <span class="keyword">const</span>&amp; section,</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;                                      std::string <span class="keyword">const</span>&amp; key);</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;  <a class="code" href="Result_8h.html#a442760d03514e6c849a35e3f0c768bef">TResult&lt;int&gt;</a> <a class="code" href="classConfigHandler.html#aec101acc1e0961ec88c6897d9393da3f">getValueInt</a>(std::string <span class="keyword">const</span>&amp; section, std::string <span class="keyword">const</span>&amp; key);</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;  <a class="code" href="classConfigHandler.html">ConfigHandler</a>() = <span class="keywordflow">default</span>;                                <span class="comment">// hide default ctor</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;  <a class="code" href="classConfigHandler.html">ConfigHandler</a>(<a class="code" href="classConfigHandler.html">ConfigHandler</a> <span class="keyword">const</span>&amp;) = <span class="keyword">delete</span>;             <span class="comment">// delete copy ctor</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;  <a class="code" href="classConfigHandler.html">ConfigHandler</a>&amp; operator=(<a class="code" href="classConfigHandler.html">ConfigHandler</a> <span class="keyword">const</span>&amp;) = <span class="keyword">delete</span>;  <span class="comment">// assignment ctor</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="classConfigHandler.html">   24</a></span>&#160;<span class="keyword">class </span><a class="code" href="classConfigHandler.html">ConfigHandler</a> {</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;  ~<a class="code" href="classConfigHandler.html">ConfigHandler</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;  <span class="keyword">static</span> std::shared_ptr&lt;ConfigHandler&gt; <span class="keyword">const</span> getInstance();</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;  <a class="code" href="Result_8h.html#aada7d5476a077b5984176864eefe0c5f">TResultOpt</a> <a class="code" href="classConfigHandler.html#a384913951094cc79279cf3b6f13a360a">setConfigFilePath</a>(std::string <span class="keyword">const</span>&amp; filepath);</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;  <a class="code" href="Result_8h.html#a442760d03514e6c849a35e3f0c768bef">TResult&lt;std::string&gt;</a> <a class="code" href="classConfigHandler.html#a0739c6cfe676547dfba163bfdcfe8974">getValueString</a>(std::string <span class="keyword">const</span>&amp; section,</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;                                      std::string <span class="keyword">const</span>&amp; key);</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;  <a class="code" href="Result_8h.html#a442760d03514e6c849a35e3f0c768bef">TResult&lt;int&gt;</a> <a class="code" href="classConfigHandler.html#aec101acc1e0961ec88c6897d9393da3f">getValueInt</a>(std::string <span class="keyword">const</span>&amp; section, std::string <span class="keyword">const</span>&amp; key);</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;  <span class="keywordtype">bool</span> isInitialized();</div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;  <span class="keyword">static</span> std::shared_ptr&lt;ConfigHandler&gt; mInstance;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;  std::string mConfigFilePath;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;  CSimpleIniA mIni;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;};</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* _CONFIGHANDLER_H_ */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;  <a class="code" href="classConfigHandler.html">ConfigHandler</a>() = <span class="keywordflow">default</span>;                                <span class="comment">// hide default ctor</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;  <a class="code" href="classConfigHandler.html">ConfigHandler</a>(<a class="code" href="classConfigHandler.html">ConfigHandler</a> <span class="keyword">const</span>&amp;) = <span class="keyword">delete</span>;             <span class="comment">// delete copy ctor</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;  <a class="code" href="classConfigHandler.html">ConfigHandler</a>&amp; operator=(<a class="code" href="classConfigHandler.html">ConfigHandler</a> <span class="keyword">const</span>&amp;) = <span class="keyword">delete</span>;  <span class="comment">// assignment ctor</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;  <span class="keyword">static</span> std::shared_ptr&lt;ConfigHandler&gt; mInstance;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;  std::string mConfigFilePath;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;  CSimpleIniA mIni;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;  <span class="keywordtype">bool</span> mIsInitialized = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;};</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* _CONFIGHANDLER_H_ */</span><span class="preprocessor"></span></div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="aclassConfigHandler_html"><div class="ttname"><a href="classConfigHandler.html">ConfigHandler</a></div><div class="ttdef"><b>Definition:</b> ConfigHandler.h:20</div></div>
-<div class="ttc" id="aclassConfigHandler_html_a0739c6cfe676547dfba163bfdcfe8974"><div class="ttname"><a href="classConfigHandler.html#a0739c6cfe676547dfba163bfdcfe8974">ConfigHandler::getValueString</a></div><div class="ttdeci">TResult&lt; std::string &gt; getValueString(std::string const &amp;section, std::string const &amp;key)</div><div class="ttdoc">Returns value of a key as a string.</div><div class="ttdef"><b>Definition:</b> ConfigHandler.cpp:42</div></div>
+<div class="ttc" id="aclassConfigHandler_html"><div class="ttname"><a href="classConfigHandler.html">ConfigHandler</a></div><div class="ttdoc">Singleton class which provides shared access to the configuration file used.</div><div class="ttdef"><b>Definition:</b> ConfigHandler.h:24</div></div>
+<div class="ttc" id="aclassConfigHandler_html_a0739c6cfe676547dfba163bfdcfe8974"><div class="ttname"><a href="classConfigHandler.html#a0739c6cfe676547dfba163bfdcfe8974">ConfigHandler::getValueString</a></div><div class="ttdeci">TResult&lt; std::string &gt; getValueString(std::string const &amp;section, std::string const &amp;key)</div><div class="ttdoc">Returns value of a key as a string.</div><div class="ttdef"><b>Definition:</b> ConfigHandler.cpp:45</div></div>
 <div class="ttc" id="aResult_8h_html"><div class="ttname"><a href="Result_8h.html">Result.h</a></div><div class="ttdoc">Defines function return values and types.</div></div>
-<div class="ttc" id="aResult_8h_html_aada7d5476a077b5984176864eefe0c5f"><div class="ttname"><a href="Result_8h.html#aada7d5476a077b5984176864eefe0c5f">TResultOpt</a></div><div class="ttdeci">std::optional&lt; Error &gt; TResultOpt</div><div class="ttdoc">Used as an optional return type of functions.</div><div class="ttdef"><b>Definition:</b> Result.h:69</div></div>
-<div class="ttc" id="aResult_8h_html_a442760d03514e6c849a35e3f0c768bef"><div class="ttname"><a href="Result_8h.html#a442760d03514e6c849a35e3f0c768bef">TResult</a></div><div class="ttdeci">std::variant&lt; GOOD_TYPE, Error &gt; TResult</div><div class="ttdoc">Used as return type of functions.</div><div class="ttdef"><b>Definition:</b> Result.h:59</div></div>
+<div class="ttc" id="aResult_8h_html_aada7d5476a077b5984176864eefe0c5f"><div class="ttname"><a href="Result_8h.html#aada7d5476a077b5984176864eefe0c5f">TResultOpt</a></div><div class="ttdeci">std::optional&lt; Error &gt; TResultOpt</div><div class="ttdoc">Used as an optional return type of functions.</div><div class="ttdef"><b>Definition:</b> Result.h:85</div></div>
+<div class="ttc" id="aResult_8h_html_a442760d03514e6c849a35e3f0c768bef"><div class="ttname"><a href="Result_8h.html#a442760d03514e6c849a35e3f0c768bef">TResult</a></div><div class="ttdeci">std::variant&lt; GOOD_TYPE, Error &gt; TResult</div><div class="ttdoc">Used as return type of functions.</div><div class="ttdef"><b>Definition:</b> Result.h:75</div></div>
 <div class="ttc" id="aclassConfigHandler_html_a384913951094cc79279cf3b6f13a360a"><div class="ttname"><a href="classConfigHandler.html#a384913951094cc79279cf3b6f13a360a">ConfigHandler::setConfigFilePath</a></div><div class="ttdeci">TResultOpt setConfigFilePath(std::string const &amp;filepath)</div><div class="ttdoc">Configures file path to *.ini file, configures the SimpleIni reader and loads the ini-file.</div><div class="ttdef"><b>Definition:</b> ConfigHandler.cpp:27</div></div>
-<div class="ttc" id="aclassConfigHandler_html_aec101acc1e0961ec88c6897d9393da3f"><div class="ttname"><a href="classConfigHandler.html#aec101acc1e0961ec88c6897d9393da3f">ConfigHandler::getValueInt</a></div><div class="ttdeci">TResult&lt; int &gt; getValueInt(std::string const &amp;section, std::string const &amp;key)</div><div class="ttdoc">Returns value of a key as integer.</div><div class="ttdef"><b>Definition:</b> ConfigHandler.cpp:62</div></div>
+<div class="ttc" id="aclassConfigHandler_html_aec101acc1e0961ec88c6897d9393da3f"><div class="ttname"><a href="classConfigHandler.html#aec101acc1e0961ec88c6897d9393da3f">ConfigHandler::getValueInt</a></div><div class="ttdeci">TResult&lt; int &gt; getValueInt(std::string const &amp;section, std::string const &amp;key)</div><div class="ttdoc">Returns value of a key as integer.</div><div class="ttdef"><b>Definition:</b> ConfigHandler.cpp:70</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

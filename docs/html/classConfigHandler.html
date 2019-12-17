@@ -69,6 +69,11 @@ $(function() {
 <div class="title">ConfigHandler Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Singleton class which provides shared access to the configuration file used.  
+ <a href="classConfigHandler.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="ConfigHandler_8h_source.html">ConfigHandler.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -83,6 +88,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aec101acc1e0961ec88c6897d9393da3f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="Result_8h.html#a442760d03514e6c849a35e3f0c768bef">TResult</a>&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigHandler.html#aec101acc1e0961ec88c6897d9393da3f">getValueInt</a> (std::string const &amp;section, std::string const &amp;key)</td></tr>
 <tr class="memdesc:aec101acc1e0961ec88c6897d9393da3f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns value of a key as integer.  <a href="classConfigHandler.html#aec101acc1e0961ec88c6897d9393da3f">More...</a><br /></td></tr>
 <tr class="separator:aec101acc1e0961ec88c6897d9393da3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a315fa01f3465cc997b30b164676edcf0"><td class="memItemLeft" align="right" valign="top"><a id="a315fa01f3465cc997b30b164676edcf0"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isInitialized</b> ()</td></tr>
+<tr class="separator:a315fa01f3465cc997b30b164676edcf0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -90,7 +98,9 @@ Static Public Member Functions</h2></td></tr>
 static const std::shared_ptr&lt; <a class="el" href="classConfigHandler.html">ConfigHandler</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getInstance</b> ()</td></tr>
 <tr class="separator:aeadf5226e22bbd29c3dcd6e520e44faa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Function Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Singleton class which provides shared access to the configuration file used. </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="aec101acc1e0961ec88c6897d9393da3f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aec101acc1e0961ec88c6897d9393da3f">&#9670;&nbsp;</a></span>getValueInt()</h2>
 
@@ -123,8 +133,8 @@ static const std::shared_ptr&lt; <a class="el" href="classConfigHandler.html">Co
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>src/<a class="el" href="ConfigHandler_8h_source.html">ConfigHandler.h</a></li>
-<li>src/<a class="el" href="ConfigHandler_8cpp.html">ConfigHandler.cpp</a></li>
+<li>src/Utils/<a class="el" href="ConfigHandler_8h_source.html">ConfigHandler.h</a></li>
+<li>src/Utils/<a class="el" href="ConfigHandler_8cpp.html">ConfigHandler.cpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

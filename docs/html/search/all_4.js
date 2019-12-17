@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['jukebox_13',['JukeBox',['../classJukeBox.html',1,'']]],
-  ['jukebox_2ecpp_14',['JukeBox.cpp',['../JukeBox_8cpp.html',1,'']]],
-  ['jukebox_2eh_15',['JukeBox.h',['../JukeBox_8h.html',1,'']]]
+  ['error_18',['Error',['../classError.html',1,'']]],
+  ['errorcode_19',['ErrorCode',['../Result_8h.html#a59e56af19e754a6aa26a612ebf91d05f',1,'Result.h']]]
 ];
