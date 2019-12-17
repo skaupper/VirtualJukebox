@@ -282,13 +282,6 @@ TResultOpt JukeBox::removeTrack(TSessionID const &sid, TTrackID const &trkid) {
                  << "' could not be found.";
     return Error(ErrorCode::DoesntExist, "Track not found.");
   }
-  if (trackFoundAdmin && trackFoundNormal) {
-    /* TODO: This situation needs to be avoided in function DataStore.addTrack!
-     */
-    LOG(ERROR) << "Jukebox.moveTrack: TrackID '" << trkid
-               << "' was found in both queues.";
-    return Error(ErrorCode::InvalidValue, "Track found in both queues.");
-  }
 
   QueueType q;
   if (trackFoundAdmin)
