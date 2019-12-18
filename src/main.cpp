@@ -23,10 +23,18 @@ int main(int argc, char* argv[]) {
   string configFilePath = "../jukebox_config.ini";
   if (argc > 1) {
     configFilePath = argv[1];
-  } else {
+  // LINTING IS MESSED UP HERE:
+  }
+
+  else
+     {
     cout << "INFO: No filename was specified for *.ini configuration file. "
          << "Using '" << configFilePath << "' as a default fallback." << endl;
   }
+
+
+
+
 
   JukeBox jukebox;
   if (!jukebox.start(argv[0], configFilePath)) {
