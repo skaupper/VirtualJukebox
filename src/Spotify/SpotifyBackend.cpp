@@ -175,8 +175,12 @@ TResult<std::optional<PlaybackTrack>> SpotifyBackend::getCurrentPlayback() {
     return std::nullopt;
   }
 
-  auto const &spotifyPlayingTrack =
-      playback.value().getCurrentPlayingTrack().value();
+  auto const &spotifyPlayingTrackOpt =
+      playback.value().getCurrentPlayingTrack();
+  if (!spotifyPlayingTrackOpt.has_value()) {
+    return std::nullopt;
+  }
+  auto const &spotifyPlayingTrack = spotifyPlayingTrackOpt.value();
 
   PlaybackTrack playbackTrack;
   playbackTrack.trackId = spotifyPlayingTrack.getUri();
